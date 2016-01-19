@@ -52,7 +52,7 @@ const testLintOptions = {
 gulp.task('lint', lint('app/scripts/**/*.js'));
 gulp.task('lint:test', lint('test/spec/**/*.js', testLintOptions));
 
-gulp.task('test', ['scripts'], () => {
+gulp.task('test', ['scripts', 'lint'], () => {
   return gulp.src('test/spec/**/*.js')
     .pipe(mocha({reporter: 'mocha-teamcity-reporter'}));
 });
