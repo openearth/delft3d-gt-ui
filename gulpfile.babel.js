@@ -4,6 +4,7 @@ import gulpLoadPlugins from 'gulp-load-plugins';
 import browserSync from 'browser-sync';
 import del from 'del';
 import {stream as wiredep} from 'wiredep';
+import mocha from 'gulp-mocha';
 
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
@@ -50,6 +51,11 @@ const testLintOptions = {
 
 gulp.task('lint', lint('app/scripts/**/*.js'));
 gulp.task('lint:test', lint('test/spec/**/*.js', testLintOptions));
+
+gulp.task('test', ['scripts'], () => {
+  return gulp.src('test/spec/**/*.js')
+    .pipe(mocha({reporter: 'mocha-teamcity-reporter'}));
+});
 
 gulp.task('html', ['styles', 'scripts'], () => {
   return gulp.src('app/*.html')
