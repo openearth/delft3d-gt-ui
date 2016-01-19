@@ -1,0 +1,297 @@
+<!doctype html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>delft3d gt ui</title>
+
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <!-- Place favicon.ico in the root directory -->
+
+    <!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:css styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/website.css">
+    <!-- endbuild -->
+    
+
+    <!-- build:js scripts/vendor/modernizr.js -->
+    <script src="/bower_components/modernizr/modernizr.js"></script>
+    <!-- endbuild -->
+  </head>
+  <body>
+    <!--[if lt IE 10]>
+      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+   
+
+<!--
+This is a placeholder layout
+-->
+
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="panel panel-primary">
+            <div class="panel-heading">
+              <h3 class="panel-title">Delft3D-GT Dashboard</h3>
+              <span class="pull-right">
+                
+                <!-- Tabs -->
+                <ul class="nav panel-tabs">
+                <li class="active"><a href="#tab-dashboard" data-toggle="tab"><i class="glyphicon glyphicon-user"></i> Dashboard</a></li>
+                  <li><a href="#tab-run" data-toggle="tab"><i class="glyphicon glyphicon-tasks"></i> Run</a></li>
+                  <li><a href="#tab-newrun" data-toggle="tab"><i class="glyphicon glyphicon-cog"></i> New run</a></li>
+                  <li><a href="#tab-post" data-toggle="tab"><i class="glyphicon glyphicon-eye-open"></i> Post-processing</a></li>
+                </ul>
+
+              </span>
+            </div>
+
+            <div class="panel-body">
+              <div class="tab-content">
+
+                <!-- dashboard panel -->
+                <div class="tab-pane active" id="tab-dashboard">
+?
+
+                </div>
+                
+                <!-- run overview panel, shows which models are running -->
+                <div class="tab-pane" id="tab-run">
+
+                    <h3>Active runs</h3>
+
+                    <table id="table-active-runs">
+                      <thead>
+                        <tr>
+                          <td>Run #</td>
+                          <td>Start time</td>
+                          <td>% completed</td>
+                          <td>Approx. time left</td>
+                          <td></td>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <tr class="row_0">
+                          <td>Run 1</td>
+                          <td>08:00 - 19 Jan</td>
+                          <td>
+                            
+                            <div class="progress-bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" data-toggle="tooltip" data-placement="top" title="Progress">
+                              <div class="bar" style="width: 50%">50%</div>
+                            </div>
+
+                          </td>
+                          <td>3h 10m</td>
+                          <td><a href="#">view</a></td>
+                        </tr>
+
+                        <tr class="row_1">
+                          <td>Run 1</td>
+                          <td>08:00 - 19 Jan</td>
+                          <td>
+                            <div class="progress-bar" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100" data-toggle="tooltip" data-placement="top" title="Progress">
+                              <div class="bar" style="width: 15%">15%</div>
+                            </div>
+                          </td>
+                          <td>3h 10m</td>
+                          <td>View</td>
+                        </tr>
+
+                        <tr class="row_0">
+                          <td>Run 1</td>
+                          <td>08:00 - 19 Jan</td>
+                          <td>
+                            <div class="progress-bar" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="90" data-toggle="tooltip" data-placement="top" title="Progress">
+                              <div class="bar" style="width: 90%">90%</div>
+                            </div>
+                          </td>
+                          <td>3h 10m</td>
+                          <td>View</td>
+                        </tr>
+                      </tbody>
+
+                    </table>
+
+                    <button name="" class="btn btn-warning">Abort selected run</button>
+
+                </div>
+
+
+                <!-- run a new model panel -->
+                <div class="tab-pane" id="tab-newrun">
+
+                  <div class="field-group">
+                    <label for="select-run-environment">Select run environment</label>
+                    <div class="input-group ">
+                      <span id="input-group-environment" class="input-group-addon">
+                        Environment
+                      </span>
+
+                      <select class="form-control" id="select-run-environment" aria-describedby="input-group-environment">
+                        <option>Deltares</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="field-group">
+                    <label for="select-runs">Which runs</label>
+                    <div class="input-group">
+                      <span id="input-group-runs" class="input-group-addon">
+                        Select run(s)
+                      </span>
+
+                      <select class="form-control" id="select-runs" aria-describedby="input-group-runs">
+                        <option>Run 1</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="field-group">
+                    <label for="select-modelengine">Select model engine and version</label>
+                    <div class="input-group">
+                      <span id="input-group-modelengine" class="input-group-addon">
+                        Engine
+                      </span>
+
+                      <select class="form-control" id="select-modelengine" aria-describedby="input-group-modelengine">
+                        <option>Delft3D-FLOW 1.234</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="field-group">
+                    <label for="select-outputinterval">Output interval model engine</label>
+                    <div class="input-group">
+                      <span id="input-group-outputinterval" class="input-group-addon">
+                        Output interval
+                      </span>
+
+                      <select class="form-control" id="select-outputinterval" aria-describedby="input-group-outputinterval">
+                        <option>Every 1 hour</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="field-group">
+                    <label for="select-scriptinterval">Interval for script runs</label>
+                    <div class="input-group">
+                      <span id="input-group-scriptinterval" class="input-group-addon">
+                        Script interval
+                      </span>
+
+                      <select class="form-control" id="select-scriptinterval" aria-describedby="input-group-scriptinterval">
+                        <option>Every 1 hour</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="field-group">
+                    <div class="input-group">
+                      <input type="checkbox" name="chk-send-email" id="chk-send-email" value="send-email"  /><label for="chk-send-email"> Send e-mail when ready</label>                
+                    </div>
+                  </div>
+
+                  <table class="table-standard">
+                    <thead>                    
+                      <tr>
+                        <td colspan="2">Scenario labels</td>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr>
+                        <td>Name</td>
+                        <td><input type="text" class="form-control" /></td>
+                      </tr>
+
+                      <tr>
+                        <td>User</td>
+                        <td>Username</td>
+                      </tr>
+
+                      <tr>
+                        <td>Description</td>
+                        <td><textarea class="form-control"></textarea></td>
+                      </tr>
+
+                      <tr>
+                        <td>Free label</td>
+                        <td><input type="text" class="form-control" /></td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                   <button name="" class="btn btn-success">Run model</button>
+
+                </div>
+
+                <!-- post processing panel -->
+                <div class="tab-pane" id="tab-post">
+                  
+                  <button name="">Upload custom script(s)</button>
+                  <button name="">Select custom script(s)</button>
+                  <button name="">Select runs for postprocessing</button>
+                  <button name="">Combine</button>
+
+                  <button name="">Visualize</button>
+
+                  <button name="">Publish</button>
+
+
+                  <button name="">Delete</button>
+
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+    <script>
+      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+      e.src='https://www.google-analytics.com/analytics.js';
+      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+      ga('create','UA-XXXXX-X');ga('send','pageview');
+    </script>
+
+    <!-- build:js scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+    
+    <!-- build:js scripts/plugins.js -->
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/affix.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/alert.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/dropdown.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tooltip.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/modal.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/transition.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/button.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/popover.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/carousel.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/scrollspy.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tab.js"></script>
+    <!-- endbuild -->
+    
+    <!-- build:js scripts/main.js -->
+    <script src="scripts/main.js"></script>
+    <!-- endbuild -->
+  </body>
+</html>
