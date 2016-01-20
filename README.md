@@ -18,6 +18,11 @@ $ npm install --global eslint
 $ npm install --global mocha
 ```
 
+You can also install scss_lint if you want to check the stylesheets
+```sh
+$ gem install scss_lint
+```
+
 #### Install packages a
 ```sh
 $ npm install
@@ -26,6 +31,35 @@ $ bower install
 
 #### Run gulp:
 
+Serve a local development website:
 ```sh
 $ gulp serve
 ```
+
+Build a static website:
+```sh
+$ gulp
+```
+
+Inject dependencies in the html pages:
+```sh
+$ gulp wiredep
+```
+
+Check the javascript:
+```sh
+$ gulp lint
+```
+
+Check the stylesheets:
+```sh
+$ gulp lint:scss
+```
+
+Check the tests:
+```sh
+$ gulp lint:test
+```
+
+
+
