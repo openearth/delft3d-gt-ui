@@ -18,14 +18,20 @@
     "gulp-if": "^1.2.5",
     "gulp-imagemin": "^2.2.1",
     "gulp-load-plugins": "^0.10.0",
+    "gulp-mocha": "^2.2.0",
     "gulp-plumber": "^1.0.1",
     "gulp-sass": "^2.0.0",
+    "gulp-scss-lint": "^0.3.9",
     "gulp-size": "^1.2.1",
     "gulp-sourcemaps": "^1.5.0",
     "gulp-uglify": "^1.1.0",
     "gulp-useref": "^3.0.0",
     "main-bower-files": "^2.5.0",
+    "mocha-teamcity-reporter": "^1.0.0",
     "wiredep": "^2.2.2"
+  },
+  "scripts": {
+    "test": "gulp test"
   },
   "eslintConfig": {
     "env": {
