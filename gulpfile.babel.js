@@ -177,6 +177,13 @@ gulp.task('wiredep', () => {
       ignorePath: /^(\.\.\/)*\.\./
     }))
     .pipe(gulp.dest('app'));
+  gulp.src('test/index.html')
+    .pipe(wiredep({
+      exclude: ['bootstrap-sass'],
+      ignorePath: /^(\.\.\/)*\.\./
+    }))
+    .pipe(gulp.dest('test'));
+
 });
 
 gulp.task('build', ['lint', 'html', 'images', 'fonts', 'extras'], () => {
