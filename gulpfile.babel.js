@@ -59,6 +59,10 @@ gulp.task('lint:scss', function() {
 
 gulp.task('test', ['scripts', 'lint'], () => {
   return gulp.src('test/spec/**/*.js')
+    .pipe(mocha({}));
+});
+gulp.task('teamcity', ['scripts', 'lint'], () => {
+  return gulp.src('test/spec/**/*.js')
     .pipe(mocha({reporter: 'mocha-teamcity-reporter'}));
 });
 
