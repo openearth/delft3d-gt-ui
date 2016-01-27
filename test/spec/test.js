@@ -1,3 +1,4 @@
+/*jshint quotmark: double */
 (function () {
   'use strict';
 
@@ -8,4 +9,16 @@
       });
     });
   });
+
+
+	describe('Example tests 1', function () {
+    describe('Check if values add up', function () {
+      it('1+1 = ?', function () {
+
+      		assert.equal(3, Models.MochaTest( 1, 2 ) );
+
+      });
+    });
+  });
+
 })();

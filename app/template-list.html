@@ -1,0 +1,179 @@
+<!doctype html>
+<html class="no-js" lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>delft3d gt ui</title>
+
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <!-- Place favicon.ico in the root directory -->
+
+    <!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:css styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+    
+
+    <!-- build:js scripts/vendor/modernizr.js -->
+    <script src="/bower_components/modernizr/modernizr.js"></script>
+
+    <!-- endbuild -->
+  </head>
+  <body>
+    <!--[if lt IE 10]>
+      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+   
+
+<!--
+This is a placeholder layout
+-->
+
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="panel panel-primary">
+
+              <div class="col-lg-12">
+                <h2 class="site-title">Delft3D-GT Dashboard</h2>
+              </div>
+
+
+              <div class="panel-body">
+
+
+
+                <div class="col-lg-12">
+
+                  <div class="heading-bar">
+                    <h2>Running models</h2>
+                  </div>
+
+                  <table id="list-model-status" class="table-default col-lg-12">
+
+                    <thead>
+                      <tr>
+                        <td>Run #</td>
+                        <td>Status</td>
+                        <td>Est. time left</td>
+                        <td class="column-actions">&nbsp;</td>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr class="row_0">
+                        <td c>Run 1</td>
+                        <td>Calculating - 50%</td>
+                        <td>2 days 10 min</td>
+                        <td>&nbsp;</td>
+                      </tr>
+
+                      <tr class="row_1">
+                        <td>Run 2</td>
+                        <td>Calculating - 50%</td>
+                        <td>2 days 10 min</td>
+                        <td>&nbsp;</td>
+                      </tr>
+
+                      <tr class="row_0 finished">
+                        <td>Run 3</td>
+                        <td>Finished</td>
+                        <td>&nbsp;</td>
+                        <td><span class="glyphicon glyphicon-record"></td>
+                      </tr>
+
+
+                      <tr class="row_1 warning">
+                        <td>Run 4</td>
+                        <td>Finished</td>
+                        <td></td>
+                        <td>&nbsp;</td>
+                      </tr>                      
+                    </tbody>
+                  </table>
+
+                  <h2>Start new run</h2>
+                 
+
+                  <div class="col-lg-12" id="run-model-input-properties">
+                   
+                    <h3>Run properties</h3>
+      
+                    <div class="input-group">
+                     
+                      <span class="input-group-addon item-group-title" id="newrun-name-label">Run id</span>
+                      <input type="text" class="form-control"  id="newrun-name"  aria-describedby="newrun-name-label">
+                      <span class="input-group-addon input-group-addon-info item-group-width">Name for the model</span>
+                    </div>
+
+                    <div class="input-group">
+                      <span class="input-group-addon"><input type="checkbox" disabled="disabled" checked="checked" /></span>
+                      <span class="input-group-addon  item-group-title" id="newrun-riverwidth-label">Model time step</span>
+                      <input type="text" class="form-control"  id="newrun-riverwidth" min="1" max="50" aria-describedby="newrun-riverwidth-label">
+                      <span class="input-group-addon input-group-addon-info item-group-width">Time step of model [s] (min. 1 second)</span>
+                    </div>
+
+                  </div>
+
+
+                  <div class="col-lg-12 default-hidden"  id="newrun-alert">
+                    <div class="alert" role="alert">
+                      <strong>Warning!</strong> Better check yourself, you're not looking too good.
+                    </div>
+                  </div>
+
+                  <div class="col-lg-2">
+
+                    <div class="btn-group">
+                         <button class="form-control btn btn-primary"  id="newrun_submit" value="">Create</button>
+                    </div>
+                  </div>
+
+                 <div class="col-lg-10">
+
+                  
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+
+    <!-- build:js scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+    
+    <!-- build:js scripts/plugins.js -->
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/affix.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/alert.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/dropdown.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tooltip.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/modal.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/transition.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/button.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/popover.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/carousel.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/scrollspy.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js"></script>
+    <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tab.js"></script>
+    <!-- endbuild -->
+    
+    <!-- build:js scripts/main.js -->  
+    <script src="scripts/app.ui.js"></script>
+    <script src="scripts/app.models.js"></script>
+
+    <script src="scripts/main.js"></script>
+    <!-- endbuild -->
+  </body>
+</html>

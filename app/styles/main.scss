@@ -5,9 +5,51 @@ $icon-font-path: '../fonts/';
 // endbower
 
 
+@mixin shadowed()
+{
+	-webkit-box-shadow: 0px 0px 16px 0px rgba(50, 50, 50, 0.75);
+	-moz-box-shadow:    0px 0px 16px 0px rgba(50, 50, 50, 0.75);
+	box-shadow:         0px 0px 16px 0px rgba(50, 50, 50, 0.75);
+}
+
+@mixin rectangle-corners()
+{
+	border-radius: 0px;
+}
+
+
+.site-title
+{
+	font-size: 32px;
+	
+}
+
+.panel 
+{
+	border-radius: 0px;
+
+	@include shadowed();
+}
+
+// Override rounded corners, default bootstrap style
+.input-group-addon
+{
+	@include rectangle-corners();
+}
+
+#run-model-input-properties
+{
+	margin-bottom: 32px;
+}
+
+
+
+
+
 body
 {
-	background-color: #53687A;
+	background-color: #6b6d73;
+	padding-top: 32px
 }
 
 
@@ -21,15 +63,149 @@ body
 }
 
 
-.row_0
+.table-default
 {
-	background-color: #cecece;
+	// Color variables, we use automatic colors for hover based upon these
+	$row-color-finished: #e1f3d6;
+	$row-color-warning: #ebe3bd;
+	$row-color-error: #f8cdcd;
+	$row-color-even: #efefef;
+	$row-color-odd: #ffffff;
+
+
+	margin-bottom: 32px;
+
+	td
+	{
+		border: 1px solid #c2c3c6;
+		height: 32px;
+	}
+
+	thead
+	{
+		td
+		{
+			
+			font-weight: bold;
+			background-color: #c2c3c6;
+			text-align: center;
+			border: 1px solid #cecece;
+		}
+
+	}
+
+	tbody
+	{
+
+		td
+		{
+			padding-left: 8px;
+		}
+
+		.row_0
+		{
+			background-color: $row-color-even;
+
+			&:hover
+			{
+				background-color: mix($row-color-even,#ffffff, 50%);		
+			}				
+		}
+
+		.row_1
+		{
+			background-color: $row-color-odd;
+
+			&:hover
+			{
+				background-color: mix($row-color-odd,#ffffff, 50%);		
+			}				
+		}
+
+		.finished
+		{
+			
+
+			background-color: $row-color-finished;
+
+			&:hover
+			{
+				background-color: mix($row-color-finished,#ffffff, 50%);		
+			}			
+		}
+
+		.warning
+		{
+			background-color: $row-color-warning;
+
+			&:hover
+			{
+				background-color: mix($row-color-warning,#ffffff, 50%);		
+			}				
+		}	
+
+		.error
+		{
+			background-color: $row-color-error;
+
+			&:hover
+			{
+				background-color: mix($row-color-error,#ffffff, 50%);			
+			}
+		}
+
+
+
+	}
 }
 
-.row_1
+.btn
 {
-	background-color: #ffffff;
+	@include rectangle-corners();
 }
+
+.btn-border
+{
+	border: 1px solid #cecece;
+	margin: 2px;
+}
+
+.input-group-addon-info
+{
+	background-color: #efefef;
+}
+
+.input-group
+{
+	margin-bottom: 16px;
+}
+
+.column-actions
+{
+	width: 10%;
+	text-align: center;	
+}
+
+
+.item-group-title
+{
+	font-weight: bold;
+	min-width: 160px;
+}
+
+.default-hidden
+{
+	display: none;
+}
+
+.heading-bar
+{
+	//background-color: #cecece;
+	//margin-left: -31px;
+	//margin-right: -31px;
+}
+
+
 
 #table-active-runs
 {
