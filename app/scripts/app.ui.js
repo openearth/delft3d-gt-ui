@@ -3,7 +3,8 @@ var UI = {};
 //var dependency = dependency || require('./dependency');
 (function()
 {
-  'use strict';
+  "use strict";
+  /*global Models*/
 
 // Refresh GUI with new server data.
 // Should be done with templates later.
@@ -11,7 +12,7 @@ UI.UpdateModelList = function(data)
 {
 
 
-  if (!(data !== undefined && $.isArray(data.models) === true))
+  if (!(data !== undefined && $.isArray(data) === true))
   {
     console.log("not an array");
     return;
@@ -23,41 +24,59 @@ UI.UpdateModelList = function(data)
 
   // Create new content:
   var str = "";
-  for(var i = 0; i < data.models.length; i++)
+  //for(var i = 0; i < data.length; i++)
+  var i = 0;
+  $.each( data, function( key, value )
   {
-    var model = data.models[i];
+    var model = value.fields; //data.fields[i];
 
-    str += "<tr class='row_" + (i%2) + " " +model.status + "'>";
-    str += "<td>" + model.runid + "</td>";
+
+    str += "<tr id='model-" + model.uuid + "' class='" + model.status + "'>";
+    str += "<td>" + model.name + "</td>";
     str += "<td>" + model.status + " " + model.progress + "%</td>";
     str += "<td>" + model.timeleft + "</td>";
-    //str += "<td class='column-actions'><button class='btn btn-border btn-small'><span class='glyphicon glyphicon-info-sign'></span></button></td>";
-    str += "<td>&nbsp;</td>";
+    str += "<td class='column-actions'><button class='btn btn-border btn-small btn-model-delete' data-uuid='" + model.uuid + "'><span class='glyphicon glyphicon-remove' ></span></button></td>";
+
     str += "</tr>";
 
-  }
+    i++;
+  });
 
   tbody.html(str);
+
+  // Add event handlers for these items.
+  tbody.find(".btn-model-delete").click( function()
+  {
+    // Remove this item.
+    var uuid = $(this).data("uuid");
+    Models.deleteModel( { "uuid": uuid }, function () {
+      $("#model-" + uuid).remove();
+    } );
+  });
+
 };
 
 // Register event handler for the current GUI.
 // For model start test primarily.
-UI.RegisterHandlers = function()
+UI.registerHandlers = function()
 {
 
   // Submit button has been pressed
   $("#newrun_submit").click( function()
   {
-      var scenario_options = {};
-      var model_options = {};
+      var ScenarioOptions = {};
+      var ModelOptions = {};
 
-      scenario_options.runid = $("newrun-name").val();
-      scenario_options.author = "placeholder";
+      ScenarioOptions.runid = $("#newrun-name").val();
+      ScenarioOptions.author = "placeholder";
 
-      model_options.timestep = $("#newrun-riverwidth").val();
+      ModelOptions.timestep = $("#newrun-timestep").val();
 
+
+
+//return;
       // [TODO] We skip input validation at the moment!
-      Models.runModel( scenario_options, model_options, function(ret)
+      Models.runModel( ScenarioOptions, ModelOptions, function(ret)
       {
 
         if (ret !== undefined)
@@ -73,25 +92,29 @@ UI.RegisterHandlers = function()
 
             }
 
-            if (ret.status.code === "ok")
+            if (ret.status.code === "success")
             {
               $("#newrun-alert .alert").html("Model is starting...");
               $("#newrun-alert .alert").removeClass("alert-warning").addClass("alert-success");
               $("#newrun-alert").show();
             }
+
+            // Do a hard refresh right now:
+            Models.getModels( UI.UpdateModelList );
+
           }
 
         }
       });
   });
-
-
 };
 
 
 
+
+
 // export the namespace object
-if (typeof module !== 'undefined' && module.exports)
+if (typeof module !== "undefined" && module.exports)
 {
   module.exports = UI;
 }
