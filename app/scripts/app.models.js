@@ -1,8 +1,8 @@
-/*jshint quotmark: double */
+/*global validator */
 
 var Models = {};
 
-//var dependency = dependency || require('./dependency');
+
 (function()
 {
   "use strict";
@@ -20,7 +20,7 @@ var Models = {};
 	};
 
 
-	// Enable autorefresh or disable it.
+	// Enable autorefresh or disable it (interval = 0)
 	Models.toggleAutoUIRefresh = function(callback, interval)
 	{
 		var self = this;
@@ -64,16 +64,25 @@ var Models = {};
 	{
 		var self = this;
 
-		// No options defined:
-		if (ScenarioOptions === undefined)
+		// Validate input of run model.
+		// Depends on validator class
+		function validateRunModel(so, mo)
 		{
+			console.log(so);
+
+			var CheckRunId = (validator.isAlphanumeric(so.runid) === true) && (validator.isLength(so.runid, {min: 0, max: 64 }) === true);
+			var CheckDt = (validator.isInt(mo.timestep, {min: 1, max: 3600}) === true);
+
+			return CheckRunId && CheckDt;
+		}
+
+
+		if (validateRunModel(ScenarioOptions, ModelOptions) === false)
+		{
+
 			return false;
 		}
 
-		if (ModelOptions === undefined)
-		{
-			return false;
-		}
 
 		// [TODO] Validate parameters before sending. (is everything included?)
 
@@ -89,25 +98,23 @@ var Models = {};
 		//serveroptions.scenario = ScenarioOptions;
 		//serveroptions.model = ModelOptions;
 
-
-
 		$.ajax(
 		{
 			url: self.BaseURL + "/createrun/",
 			//url: "sampledata/runmodel-ok.json",
 			data: serveroptions,
-			method: "GET" // Should be a POST later
+			method: "GET", // Should be a POST later
+			"done": function(data) { //moved here for Mocha.
 
-
-		}).done(function(data)
-		{
-
-			if (callback !== undefined)
-			{
-				callback(data);
+				if (callback !== undefined)
+				{
+					callback(data);
+				}
 			}
+
 		});
 
+		return true;
 
 	};
 

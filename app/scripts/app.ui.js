@@ -6,29 +6,29 @@ var UI = {};
   "use strict";
   /*global Models*/
 
+
 // Refresh GUI with new server data.
 // Should be done with templates later.
 UI.UpdateModelList = function(data)
 {
-
-
+  // Check if data is present
   if (!(data !== undefined && $.isArray(data) === true))
   {
     console.log("not an array");
     return;
   }
 
-
+  // Our target table
   var tbody = $("#list-model-status tbody");
   tbody.empty();
 
   // Create new content:
   var str = "";
-  //for(var i = 0; i < data.length; i++)
   var i = 0;
+
   $.each( data, function( key, value )
   {
-    var model = value.fields; //data.fields[i];
+    var model = value.fields;
 
 
     str += "<tr id='model-" + model.uuid + "' class='" + model.status + "'>";
@@ -72,9 +72,6 @@ UI.registerHandlers = function()
 
       ModelOptions.timestep = $("#newrun-timestep").val();
 
-
-
-//return;
       // [TODO] We skip input validation at the moment!
       Models.runModel( ScenarioOptions, ModelOptions, function(ret)
       {
@@ -108,8 +105,6 @@ UI.registerHandlers = function()
       });
   });
 };
-
-
 
 
 
