@@ -3,3 +3,351 @@ $icon-font-path: '../fonts/';
 // bower:scss
 @import "bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
 // endbower
+
+// Color variables, we use automatic colors for hover based upon these
+$cell-padding: 6px;
+$row-height: 32px;
+$row-color-finished: #e5ffca;
+$row-color-warning: #fffbca;
+$row-color-error: #ffcaca;
+$row-color-even: #efefef;
+$row-color-odd: #ffffff;
+
+
+// Make object shadowed.
+@mixin shadowed()
+{
+	-webkit-box-shadow: 0px 0px 32px 0px rgba(50, 50, 50, 0.75);
+	-moz-box-shadow:    0px 0px 32px 0px rgba(50, 50, 50, 0.75);
+	box-shadow:         0px 0px 32px 0px rgba(50, 50, 50, 0.75);
+}
+
+// Do disable round borders on an element
+@mixin rectangle-corners()
+{
+	border-radius: 0px;
+}
+
+@mixin status-colors()
+{
+	&.completed
+	{
+		
+
+		background-color: $row-color-finished;
+
+		&:hover
+		{
+			background-color: mix($row-color-finished,#ffffff, 50%);		
+		}			
+	}
+
+	&.warning
+	{
+		background-color: $row-color-warning;
+
+		&:hover
+		{
+			background-color: mix($row-color-warning,#ffffff, 50%);		
+		}				
+	}	
+
+	&.error
+	{
+		background-color: $row-color-error;
+
+		&:hover
+		{
+			background-color: mix($row-color-error,#ffffff, 50%);			
+		}
+	}			
+}
+
+.alert
+{
+	@include rectangle-corners();
+}
+
+
+.panel 
+{
+	border-radius: 0px;
+
+	@include shadowed();
+}
+
+// Override rounded corners, default bootstrap style
+.input-group-addon
+{
+	@include rectangle-corners();
+}
+
+
+
+.heading-bar
+{
+	background-color: #e1e1e1;
+	color: #5d5d5d;
+
+	padding: 10px 0px 10px 32px;
+
+	h2
+	{
+		margin: 0px;
+	}
+	//background-color: #c0c8d0;
+	//color: #ffffff;
+
+	.site-title
+	{
+		font-size: 32px;
+		//text-shadow: 0px 0px 8px rgba(50, 50, 50, 0.78);
+		//text-shadow: 0px 0px 8px rgba(150, 150, 150, 0.78);
+
+		img
+		{
+			margin-right: 32px;
+		}
+	}
+
+}
+
+
+body
+{
+	background-color: #6b6d73;
+	padding-top: 32px
+}
+
+
+.btn-default
+{
+	background-color: #B5CFE7;
+}
+
+.panel-primary {
+    border-color: #ffffff;
+}
+
+
+.table-default
+{
+
+	width: 100%;
+	margin-bottom: 32px;
+
+	td
+	{
+		border: 1px solid #c2c3c6;
+		height: $row-height;
+	}
+
+	thead
+	{
+		td
+		{
+			font-size: 12px;
+			font-weight: bold;
+			background-color: #d9d9d9;
+			text-align: center;
+			border: 1px solid #cecece;
+			text-transform: uppercase;
+		}
+
+	}
+
+	tbody
+	{
+
+		td
+		{
+			padding-left: $cell-padding;
+		}
+
+
+		tr:nth-child(odd)
+		{
+			background-color: $row-color-even;
+
+			&:hover
+			{
+				background-color: mix($row-color-even,#ffffff, 50%);		
+			}				
+
+			@include status-colors();
+
+		}
+
+		tr:nth-child(even) 
+		{
+			background-color: $row-color-odd;
+
+			&:hover
+			{
+				background-color: mix($row-color-odd,#ffffff, 50%);		
+			}	
+			
+			@include status-colors();
+		}
+
+
+
+
+	}
+}
+
+.btn
+{
+	@include rectangle-corners();
+}
+
+.btn-border
+{
+	border: 1px solid #cecece;
+	margin: 2px;
+}
+
+.input-group-addon-info
+{
+	background-color: #efefef;
+}
+
+.input-group
+{
+	margin-bottom: 16px;
+}
+
+.column-actions
+{
+	width: 10%;
+	text-align: center;	
+}
+
+
+.item-group-title
+{
+	font-weight: bold;
+	min-width: 160px;
+}
+
+.default-hidden
+{
+	display: none;
+}
+
+
+
+/*
+For the older demo pages, remove later
+
+#table-active-runs
+{
+
+	border-collapse: collapse;
+	border: 1px solid #aeaeae;
+	margin-bottom: 16px;
+
+	thead td
+	{
+		text-align: center;
+	}
+
+	td
+	{
+		padding: 8px;
+		border: 1px solid #aeaeae;
+
+		a
+		{
+			font-weight: bold;
+		}
+	}
+
+
+}
+
+ .table-standard
+ {
+	border-collapse: collapse;
+	border: 1px solid #aeaeae;
+	margin-bottom: 16px;
+	
+	td
+	{
+		padding: 8px;
+		border: 1px solid #aeaeae;
+ 	}
+}
+
+.field-group
+{
+	margin-bottom: 16px;
+}
+
+
+
+
+.panel-tabs {
+    position: relative;
+    bottom: 30px;
+    clear:both;
+    border-bottom: 1px solid transparent;
+    margin-bottom: -30px;
+}
+
+.panel-tabs > li {
+    float: left;
+    margin-bottom: -1px;
+}
+
+.panel-tabs > li > a {
+    margin-right: 2px;
+    margin-top: 4px;
+    line-height: .85;
+    border: 1px solid transparent;
+    border-radius: 4px 4px 0 0;
+    color: #ffffff;
+}
+
+.panel-tabs > li > a:hover {
+    border-color: transparent;
+    color: #ffffff;
+    background-color: transparent;
+}
+
+.panel-tabs > li.active > a,
+.panel-tabs > li.active > a:hover,
+.panel-tabs > li.active > a:focus {
+    color: #fff;
+    cursor: default;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    background-color: rgba(255,255,255, .23);
+    border-bottom-color: transparent;
+}
+/
+
+.progress-bar {
+	text-align: left;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	background-color: #aeaeae;
+	width: 100%;
+	box-shadow: none;
+	transition: none;
+
+	.bar
+	{
+		background-color: #4f6eb4;
+		padding: 2px ;
+		transition: width 0.6s ease 0s;
+	}
+
+
+}
+
+
+*/
+

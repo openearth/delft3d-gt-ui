@@ -1,0 +1,41 @@
+{
+  "type": "modelruns",
+  "models": [
+    {
+      "dbid": 1,
+      "runid": "run 1",
+      "status": "calculating",
+      "progress": "30",
+      "timeleft": "2 day 10 min",
+      "references": {
+        "thredds": "thredsserver/run1",
+        "svn": "svn/run1"
+      }
+    },
+    
+    {
+      "dbid": 2,
+      "runid": "run 2",
+      "status": "finished",
+      "progress": "100",
+      "timeleft": "",
+      "references": {
+        "thredds": "thredsserver/run2",
+        "svn": "svn/run2"
+      }
+    },
+
+ {
+      "dbid": 3,
+      "runid": "run 3",
+      "status": "error",
+      "progress": "40",
+      "timeleft": "",
+      "references": {
+        "thredds": "thredsserver/run2",
+        "svn": "svn/run2"
+      }
+    }    
+
+  ]
+}

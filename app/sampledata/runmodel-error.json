@@ -1,0 +1,7 @@
+{
+  "type": "result",
+  "status": {
+    "code": "error",  
+    "reason": "Something went wrong!"
+  }
+}
