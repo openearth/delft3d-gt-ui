@@ -87,7 +87,7 @@
     var me = this;
 
     // Submit button has been pressed
-    $("#newrun_submit").click( function()
+    $("#newrun-submit").click( function()
       {
 
         var ScenarioOptions = {};
@@ -99,7 +99,7 @@
         ModelOptions.timestep = $("#newrun-timestep").val();
 
         // [TODO] We skip input validation at the moment!
-         me.models.runModel( ScenarioOptions, ModelOptions, function(ret)
+         me.models.prepareModel( ScenarioOptions, ModelOptions, function(ret)
         {
 
           if (ret !== undefined)
@@ -120,6 +120,10 @@
                 $("#newrun-alert .alert").html("Model is starting...");
                 $("#newrun-alert .alert").removeClass("alert-warning").addClass("alert-success");
                 $("#newrun-alert").show();
+
+                // Immediatly start the model
+                // [temporary code]
+                me.models.runModel(ret.uuid);
               }
 
               // Do a hard refresh right now:

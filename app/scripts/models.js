@@ -1,4 +1,4 @@
-/*global validator */
+/*global  */
 	"use strict";
 
 	var Models = function()
@@ -76,10 +76,12 @@ console.log(this);
 
 
 	// Run a model, with given options. Optional callback for return.
-	Models.prototype.runModel = function(ScenarioOptions, ModelOptions, callback)
+	Models.prototype.prepareModel = function(ScenarioOptions, ModelOptions, callback)
 	{
+
 		var me = this;
 
+/*
 		// Validate input of run model.
 		// Depends on validator class
 		function validateRunModel(so, mo)
@@ -98,8 +100,9 @@ console.log(this);
 
 			return false;
 		}
+*/
 
-
+console.log("test");
 		// [TODO] Validate parameters before sending. (is everything included?)
 
 		// Prepare options for our format.
@@ -113,12 +116,45 @@ console.log(this);
 		//serveroptions.parameters = {};
 		//serveroptions.scenario = ScenarioOptions;
 		//serveroptions.model = ModelOptions;
-
+console.log(me);
 		$.ajax(
 		{
 			url: me.BaseURL + "/createrun/",
 			//url: "sampledata/runmodel-ok.json",
 			data: serveroptions,
+			method: "GET" // Should be a POST later
+		}).done(function(data) { //moved here for Mocha.
+
+				if (callback !== undefined)
+				{
+					callback(data);
+				}
+			});
+
+		return true;
+
+	};
+
+
+	// Run the model, with the given uuid.
+	Models.prototype.runModel = function(uuid, callback)
+	{
+		var me = this;
+
+		if (uuid === undefined)
+		{
+			return;
+		}
+
+		var params = {
+			uuid: uuid
+		};
+
+		$.ajax(
+		{
+			url: me.BaseURL + "/dorun/",
+			//url: "sampledata/runmodel-ok.json",
+			data: params,
 			method: "GET", // Should be a POST later
 			done: function(data) { //moved here for Mocha.
 
@@ -129,8 +165,6 @@ console.log(this);
 			}
 
 		});
-
-		return true;
 
 	};
 
