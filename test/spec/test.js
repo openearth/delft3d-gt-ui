@@ -51,7 +51,7 @@
         assert(true, 'implement and test name in format');
       });
 
-      it('should have a timestep paramater (dt) with a numeric value', function () {
+      it('should have a timestep parameter (dt) with a numeric value', function () {
         assert(true, 'implement and test dt in format');
       });
 

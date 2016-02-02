@@ -1,117 +1,136 @@
-var UI = {};
-
-//var dependency = dependency || require('./dependency');
-(function()
-{
-  "use strict";
   /*global Models*/
+  "use strict";
+  
 
-
-// Refresh GUI with new server data.
-// Should be done with templates later.
-UI.UpdateModelList = function(data)
-{
-  // Check if data is present
-  if (!(data !== undefined && $.isArray(data) === true))
+  var UI = function(models)
   {
-    console.log("not an array");
-    return;
+    if (models === undefined)
+    {
+      console.error("No models argument for UI");
+    }
+
+    // Store a reference to the models var.
+    this.models = models;
+
+
+  };
+
+  UI.prototype.getModels = function()
+  {
+   
+    return this.models;
   }
 
-  // Our target table
-  var tbody = $("#list-model-status tbody");
-  tbody.empty();
-
-  // Create new content:
-  var str = "";
-  var i = 0;
-
-  $.each( data, function( key, value )
+  // Refresh GUI with new server data.
+  // Should be done with templates later.
+  UI.prototype.UpdateModelList = function(data)
   {
-    var model = value.fields;
+
+    var _self = this;
 
 
-    str += "<tr id='model-" + model.uuid + "' class='" + model.status + "'>";
-    str += "<td>" + model.name + "</td>";
-    str += "<td>" + model.status + " " + model.progress + "%</td>";
-    str += "<td>" + model.timeleft + "</td>";
-    str += "<td class='column-actions'><button class='btn btn-border btn-small btn-model-delete' data-uuid='" + model.uuid + "'><span class='glyphicon glyphicon-remove' ></span></button></td>";
+    // Check if data is present
+    if (!(data !== undefined && $.isArray(data) === true))
+    {
+      console.log("not an array");
+      return;
+    }
 
-    str += "</tr>";
+    // Our target table
+    var tbody = $("#list-model-status tbody");
+   
+    // Create new content:
+    var str = "";
+    var i = 0;
 
-    i++;
-  });
+    $.each( data, function( key, value )
+    {
+      var model = value.fields;
 
-  tbody.html(str);
 
-  // Add event handlers for these items.
-  tbody.find(".btn-model-delete").click( function()
+      str += "<tr id='model-" + model.uuid + "' class='" + model.status + "'>";
+      str += "<td>" + model.name + "</td>";
+      str += "<td>" + model.status + " " + model.progress + "%</td>";
+      str += "<td>" + model.timeleft + "</td>";
+      str += "<td class='column-actions'><button class='btn btn-border btn-small btn-model-delete' data-uuid='" + model.uuid + "'><span class='glyphicon glyphicon-remove' ></span></button></td>";
+
+      str += "</tr>";
+
+      i++;
+    });
+
+    tbody.empty();
+    tbody.html(str);
+
+    // Add event handlers for these items.
+    tbody.find(".btn-model-delete").click( function()
+    {
+      
+      // Remove this item.
+      var uuid = $(this).data("uuid");
+
+      _self.getModels().deleteModel( { "uuid": uuid }, function () {
+      
+        $("#model-" + uuid).remove();
+      } );
+    });
+
+  };
+
+  // Register event handler for the current GUI.
+  // For model start test primarily.
+  UI.prototype.registerHandlers = function()
   {
-    // Remove this item.
-    var uuid = $(this).data("uuid");
-    Models.deleteModel( { "uuid": uuid }, function () {
-      $("#model-" + uuid).remove();
-    } );
-  });
+    var _self = this;
 
-};
+    // Submit button has been pressed
+    $("#newrun_submit").click( function()
+      { 
+        var models = new Models();
+        var ScenarioOptions = {};
+        var ModelOptions = {};
 
-// Register event handler for the current GUI.
-// For model start test primarily.
-UI.registerHandlers = function()
-{
+        ScenarioOptions.runid = $("#newrun-name").val();
+        ScenarioOptions.author = "placeholder";
 
-  // Submit button has been pressed
-  $("#newrun_submit").click( function()
-  {
-      var ScenarioOptions = {};
-      var ModelOptions = {};
+        ModelOptions.timestep = $("#newrun-timestep").val();
 
-      ScenarioOptions.runid = $("#newrun-name").val();
-      ScenarioOptions.author = "placeholder";
-
-      ModelOptions.timestep = $("#newrun-timestep").val();
-
-      // [TODO] We skip input validation at the moment!
-      Models.runModel( ScenarioOptions, ModelOptions, function(ret)
-      {
-
-        if (ret !== undefined)
+        // [TODO] We skip input validation at the moment!
+         _self.models.runModel( ScenarioOptions, ModelOptions, function(ret)
         {
-          if (ret.status !== undefined)
+
+          if (ret !== undefined)
           {
-            // Some alert things. Turn this into a nice class...
-            if (ret.status.code === "error")
+            if (ret.status !== undefined)
             {
-              $("#newrun-alert .alert").html("An error occured! Reason:" + ret.status.reason);
-              $("#newrun-alert .alert").removeClass("alert-success").addClass("alert-warning");
-              $("#newrun-alert").show();
+              // Some alert things. Turn this into a nice class...
+              if (ret.status.code === "error")
+              {
+                $("#newrun-alert .alert").html("An error occured! Reason:" + ret.status.reason);
+                $("#newrun-alert .alert").removeClass("alert-success").addClass("alert-warning");
+                $("#newrun-alert").show();
+
+              }
+
+              if (ret.status.code === "success")
+              {
+                $("#newrun-alert .alert").html("Model is starting...");
+                $("#newrun-alert .alert").removeClass("alert-warning").addClass("alert-success");
+                $("#newrun-alert").show();
+              }
+
+              // Do a hard refresh right now:
+               _self.models.getModels( $.proxy(_self.UpdateModelList, _self) );
 
             }
-
-            if (ret.status.code === "success")
-            {
-              $("#newrun-alert .alert").html("Model is starting...");
-              $("#newrun-alert .alert").removeClass("alert-warning").addClass("alert-success");
-              $("#newrun-alert").show();
-            }
-
-            // Do a hard refresh right now:
-            Models.getModels( UI.UpdateModelList );
 
           }
+        });
+    });
+  };
 
-        }
-      });
-  });
-};
-
-
-
-// export the namespace object
-if (typeof module !== "undefined" && module.exports)
-{
-  module.exports = UI;
-}
-
-})();
+  // export the namespace object
+  if (typeof module !== "undefined" && module.exports)
+  {
+    module.exports = UI;
+  }
