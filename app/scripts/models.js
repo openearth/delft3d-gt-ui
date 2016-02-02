@@ -22,7 +22,7 @@ console.log(this);
 	// Enable autorefresh or disable it (interval = 0)
 	Models.prototype.toggleAutoUIRefresh = function(callback, interval)
 	{
-		var _self = this;
+		var me = this;
 
 
 		if (interval > 0)
@@ -30,7 +30,7 @@ console.log(this);
 			// Clear existing timer if present.
 			clearTimer();
 			console.log("Start timer");
-			_self.refreshTimerId = setInterval(function() { _self.getModels(callback) }, interval);
+			me.refreshTimerId = setInterval(function() { me.getModels(callback); }, interval);
 		}
 		else
 		{
@@ -41,23 +41,23 @@ console.log(this);
 		// Clear an existing timer.
 		function clearTimer()
 		{
-			if (_self.refreshTimerId !== -1)
+			if (me.refreshTimerId !== -1)
 			{
-				clearInterval(_self.refreshTimerId);
-				_self.refreshTimerId = -1;
-			}			
+				clearInterval(me.refreshTimerId);
+				me.refreshTimerId = -1;
+			}
 		}
 	};
 
 	// Get models from URL, call callback upon completion.
 	Models.prototype.getModels = function(callback)
 	{
-		var _self = this;
-		
+		var me = this;
+
 
 		$.ajax(
 		{
-			url: _self.BaseURL + "/runs/"
+			url: me.BaseURL + "/runs/"
 		}).done(function(data)
 		{
 			$("#alert-connectionfailed").hide();
@@ -78,7 +78,7 @@ console.log(this);
 	// Run a model, with given options. Optional callback for return.
 	Models.prototype.runModel = function(ScenarioOptions, ModelOptions, callback)
 	{
-		var _self = this;
+		var me = this;
 
 		// Validate input of run model.
 		// Depends on validator class
@@ -116,7 +116,7 @@ console.log(this);
 
 		$.ajax(
 		{
-			url: _self.BaseURL + "/createrun/",
+			url: me.BaseURL + "/createrun/",
 			//url: "sampledata/runmodel-ok.json",
 			data: serveroptions,
 			method: "GET", // Should be a POST later
@@ -138,7 +138,7 @@ console.log(this);
 	// Expects  a UUID in deleteoptions.
 	Models.prototype.deleteModel = function(DeleteOptions, callback)
 	{
-		var _self = this;
+		var me = this;
 
 		// No options defined:
 		if (DeleteOptions === undefined)
@@ -164,7 +164,7 @@ console.log(this);
 
 		$.ajax(
 		{
-			url: _self.BaseURL + "/deleterun/",
+			url: me.BaseURL + "/deleterun/",
 			data: deleteoptions,
 			method: "GET" // Should be a POST later
 

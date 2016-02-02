@@ -80,6 +80,8 @@ $row-color-odd: #ffffff;
 .input-group-addon
 {
 	@include rectangle-corners();
+
+
 }
 
 
@@ -123,7 +125,11 @@ body
 .btn-default
 {
 	background-color: #B5CFE7;
+
+
 }
+
+
 
 .panel-primary {
     border-color: #ffffff;
@@ -199,6 +205,12 @@ body
 .btn
 {
 	@include rectangle-corners();
+
+	&:disabled
+	{
+		background-color: mix(#2E6DA4, #cecece,80%);	
+	}
+
 }
 
 .btn-border
@@ -215,6 +227,24 @@ body
 .input-group
 {
 	margin-bottom: 16px;
+	
+
+	// Color when a field is not valid.
+	&.error
+	{
+
+	
+		span
+		{
+			background-color: $row-color-error;
+		}
+
+		input
+		{
+			background-color: mix($row-color-error,#ffffff, 50%);
+		}
+	}
+
 }
 
 .column-actions

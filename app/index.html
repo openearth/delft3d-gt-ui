@@ -87,14 +87,14 @@ This is a placeholder layout
                     <div class="input-group">
 
                       <span class="input-group-addon item-group-title" id="newrun-name-label">Run id</span>
-                      <input type="text" class="form-control"  id="newrun-name"  aria-describedby="newrun-name-label">
+                      <input type="text" class="form-control"  value="Model 1" id="newrun-name" maxlength="32" aria-describedby="newrun-name-label" autocomplete="off">
                       <span class="input-group-addon input-group-addon-info item-group-width">Name</span>
                     </div>
 
-                    <div class="input-group">
+                    <div class="input-group error">
                       <span class="input-group-addon"><input type="checkbox" disabled="disabled" checked="checked" /></span>
                       <span class="input-group-addon  item-group-title" id="newrun-timestep-label"> Time step</span>
-                      <input type="number" pattern="[0-9]*" class="form-control"  id="newrun-timestep" maxlength="5" min="1" max="50" aria-describedby="newrun-timestep-label" autocomplete="off">
+                      <input type="number" pattern="[0-9]*" class="form-control"  value="20"  id="newrun-timestep"  min="1" max="50" aria-describedby="newrun-timestep-label" autocomplete="off">
                       <span class="input-group-addon input-group-addon-info item-group-width">Time step [s] (min. 1)</span>
                     </div>
 
@@ -109,7 +109,7 @@ This is a placeholder layout
                   <div class="col-lg-2">
 
                     <div class="btn-group">
-                         <button class="form-control btn btn-primary"  id="newrun_submit" value="">Create</button>
+                         <button class="form-control btn btn-primary"  id="newrun-submit" value="">Create</button>
                     </div>
                   </div>
 
@@ -149,8 +149,9 @@ This is a placeholder layout
     <!-- endbuild -->
 
     <!-- build:js scripts/main.js -->
-    <script src="scripts/app.ui.js"></script>
-    <script src="scripts/app.models.js"></script>
+    <script src="scripts/ui.js"></script>
+    <script src="scripts/models.js"></script>
+    <script src="scripts/inputvalidation.js"></script>
 
     <script src="scripts/main.js"></script>
     <!-- endbuild -->

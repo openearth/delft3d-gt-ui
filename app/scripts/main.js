@@ -22,7 +22,7 @@
 	models.getModels( ui.UpdateModelList );
 
   // Enable auto refresh.
-  models.toggleAutoUIRefresh( $.proxy(ui.UpdateModelList, ui), 2000);
+  models.toggleAutoUIRefresh( $.proxy(ui.UpdateModelList, ui), 20000);
 
 
 }());

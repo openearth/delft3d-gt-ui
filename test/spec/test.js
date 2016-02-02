@@ -7,8 +7,9 @@
   global.$ = { };
 	
 	// Include our files (this was needed for mocha, not sure for Chai?)
-	include_file(__dirname + "/../../app/scripts/app.models.js");
-	include_file(__dirname + "/../../app/scripts/app.ui.js");
+	include_file(__dirname + "/../../app/scripts/models.js");
+	include_file(__dirname + "/../../app/scripts/ui.js");
+	include_file(__dirname + "/../../app/scripts/inputvalidation.js");
 	include_file(__dirname + "/../../bower_components/validator-js/validator.js");
 
 	
@@ -84,13 +85,14 @@
 	{
 	  it('Check success response', function(done) 
 	  {
+		var models = new Models();
 
 	  	var config =
 			{
 				"BaseURL": "http://136.231.174.53:8000"
 			};
 			
-	 		Models.setConfiguration(config);
+	 		models.setConfiguration(config);
 
 	  	// Expected input:
 			var ScenarioOptions = {};
@@ -141,14 +143,15 @@
 
 
 	    	// Check if the run model returns false or true. False is if the input was not acceptable.
-	     var result = Models.runModel(ScenarioOptions, ModelOptions, fetchCallback);
+	     var result = models.runModel(ScenarioOptions, ModelOptions, fetchCallback);
 	     assert.equal(result, true);
 	  });
 
 	 it('Check response when missing data', function(done) 
 	  {
 
-
+		var models = new Models();
+		
 	  	// Expected input:
 			var ScenarioOptions = {};
 			var ModelOptions = {};
@@ -192,7 +195,7 @@
 	    };
 
 	    	
-			var result = Models.runModel(ScenarioOptions, ModelOptions, fetchCallback);
+			var result = models.runModel(ScenarioOptions, ModelOptions, fetchCallback);
 	     
 			// We expect a false here - as we miss a parameter.
 			assert.equal(result, false); 
