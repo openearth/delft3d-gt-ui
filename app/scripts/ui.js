@@ -54,7 +54,7 @@
       str += "<tr id='model-" + model.uuid + "' class='" + model.status + "'>";
       str += "<td>" + model.name + "</td>";
       str += "<td>" + model.status + " " + model.progress + "%</td>";
-      str += "<td>" + model.timeleft + "</td>";
+    // Temporary hidden.  str += "<td>" + model.timeleft + "</td>";
       str += "<td class='column-actions'><button class='btn btn-border btn-small btn-model-delete' data-uuid='" + model.uuid + "'><span class='glyphicon glyphicon-remove' ></span></button></td>";
 
       str += "</tr>";
