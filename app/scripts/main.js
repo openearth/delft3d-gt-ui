@@ -19,7 +19,7 @@
   ui.registerHandlers();
 
   // Get list of models:
-	models.getModels( $.proxy(ui.UpdateModelList, ui) );
+  models.getModels( $.proxy(ui.UpdateModelList, ui));
 
   // Enable auto refresh.
   models.toggleAutoUIRefresh( $.proxy(ui.UpdateModelList, ui), 20000);
