@@ -51,7 +51,7 @@
       var model = value.fields;
 
       // Parse string to JSON.
-      model.info = model.info.replace(/'/g, '"');
+      model.info = model.info.replace(/'/g, "\"");
       var info = jQuery.parseJSON(model.info);
 
       str += "<tr id='model-" + model.uuid + "' class='" + model.status + "'>";
