@@ -51,12 +51,12 @@
       var model = value.fields;
 
       // Parse string to JSON.
-      
+
       var info = jQuery.parseJSON(model.info);
 
       str += "<tr id='model-" + model.uuid + "' class='" + model.status + "'>";
       str += "<td>" + model.name + "</td>";
-      str += "<td>" + model.status + " " + info.percent_completed +"</td>";
+      str += "<td>" + model.status + " " + info.percent_completed + "</td>";
       str += "<td>" + info.time_to_finish + "</td>";
       str += "<td class='column-actions'><button class='btn btn-border btn-small btn-model-delete' data-uuid='" + model.uuid + "'><span class='glyphicon glyphicon-remove' ></span></button></td>";
 
