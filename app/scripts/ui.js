@@ -66,6 +66,7 @@
       str += "<td>" + model.name + "</td>";
       str += "<td>" + model.status + " " + info.percent_completed + "</td>";
       str += "<td>" + info.time_to_finish + "</td>";
+      str += "<td><a href='" + model.fileurl + "' target='_blank'>Browse directory</a></td>";
 
       // This html/data stuff is asking for problems, but we will work on this next sprint!
       str += "<td class='column-actions'><button class='btn btn-border btn-small btn-model-delete' data-modelname='" + model.name + "' data-uuid='" + model.uuid + "'><span class='glyphicon glyphicon-remove' ></span></button></td>";
