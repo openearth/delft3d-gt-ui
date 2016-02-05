@@ -53,18 +53,18 @@
       // Parse string to JSON.
 
       // Default an empty object:
-      var info = { percent_completed: "", time_to_finish: "" };
+      var info = { "percent_completed": "", "time_to_finish": "" };
 
       // Replace info if available.
       if (model.info !== null)
       {
-        model.info = model.info.replace(/'/g, "\"");        
+        model.info = model.info.replace(/'/g, "\"");
         info = jQuery.parseJSON(model.info);
       }
 
       str += "<tr id='model-" + model.uuid + "' class='" + model.status + "'>";
       str += "<td>" + model.name + "</td>";
-      str += "<td>" + model.status + " " + info.percent_completed +"</td>";
+      str += "<td>" + model.status + " " + info.percent_completed + "</td>";
       str += "<td>" + info.time_to_finish + "</td>";
 
       // This html/data stuff is asking for problems, but we will work on this next sprint!
@@ -89,7 +89,7 @@
       $("#dialog-remove-name").html(modelname);
 
       // User accepts deletion:
-      $('#dialog-remove-response-accept').on("click", function()
+      $("#dialog-remove-response-accept").on("click", function()
       {
 
         me.getModels().deleteModel( { "uuid": uuid }, function () {
@@ -97,13 +97,13 @@
           $("#model-" + uuid).remove();
 
           // hide dialog.
-           $('#dialog-confirm-delete').modal('hide');
+           $("#dialog-confirm-delete").modal("hide");
         });
       });
 
 
       // Show the dialog:
-      $('#dialog-confirm-delete').modal({ });
+      $("#dialog-confirm-delete").modal({ });
 
 
     });

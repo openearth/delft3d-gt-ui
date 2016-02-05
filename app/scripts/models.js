@@ -55,7 +55,7 @@
 		var me = this;
 
 		var url = me.BaseURL + "/runs/";
-		
+
 		$.ajax(
 		{
 			url: url
