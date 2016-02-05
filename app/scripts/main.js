@@ -4,8 +4,10 @@
 
   // Main javascript code, initialize components, there shouldn't be much here.
 
+  //http://dl-ng004.xtr.deltares.nl/
   var config =
   {
+
     "BaseURL": "http://136.231.174.53:8001"
   };
 

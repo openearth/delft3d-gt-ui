@@ -3,7 +3,7 @@
 
 	var Models = function()
 	{
-console.log(this);
+
 	};
 
 	// Set some configuration options such as model server location.
@@ -54,10 +54,11 @@ console.log(this);
 	{
 		var me = this;
 
-
+		var url = me.BaseURL + "/runs/";
+		
 		$.ajax(
 		{
-			url: me.BaseURL + "/runs/"
+			url: url
 		}).done(function(data)
 		{
 			$("#alert-connectionfailed").hide();
@@ -102,7 +103,7 @@ console.log(this);
 		}
 */
 
-console.log("test");
+
 		// [TODO] Validate parameters before sending. (is everything included?)
 
 		// Prepare options for our format.
@@ -116,7 +117,7 @@ console.log("test");
 		//serveroptions.parameters = {};
 		//serveroptions.scenario = ScenarioOptions;
 		//serveroptions.model = ModelOptions;
-console.log(me);
+
 		$.ajax(
 		{
 			url: me.BaseURL + "/createrun/",

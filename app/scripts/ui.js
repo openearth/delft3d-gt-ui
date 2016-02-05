@@ -51,14 +51,24 @@
       var model = value.fields;
 
       // Parse string to JSON.
-      model.info = model.info.replace(/'/g, "\"");
-      var info = jQuery.parseJSON(model.info);
+
+      // Default an empty object:
+      var info = { percent_completed: "", time_to_finish: "" };
+
+      // Replace info if available.
+      if (model.info !== null)
+      {
+        model.info = model.info.replace(/'/g, "\"");        
+        info = jQuery.parseJSON(model.info);
+      }
 
       str += "<tr id='model-" + model.uuid + "' class='" + model.status + "'>";
       str += "<td>" + model.name + "</td>";
       str += "<td>" + model.status + " " + info.percent_completed +"</td>";
       str += "<td>" + info.time_to_finish + "</td>";
-      str += "<td class='column-actions'><button class='btn btn-border btn-small btn-model-delete' data-uuid='" + model.uuid + "'><span class='glyphicon glyphicon-remove' ></span></button></td>";
+
+      // This html/data stuff is asking for problems, but we will work on this next sprint!
+      str += "<td class='column-actions'><button class='btn btn-border btn-small btn-model-delete' data-modelname='" + model.name + "' data-uuid='" + model.uuid + "'><span class='glyphicon glyphicon-remove' ></span></button></td>";
 
       str += "</tr>";
 
@@ -74,11 +84,28 @@
 
       // Remove this item.
       var uuid = $(this).data("uuid");
+      var modelname = $(this).data("modelname");
 
-      me.getModels().deleteModel( { "uuid": uuid }, function () {
+      $("#dialog-remove-name").html(modelname);
 
-        $("#model-" + uuid).remove();
-      } );
+      // User accepts deletion:
+      $('#dialog-remove-response-accept').on("click", function()
+      {
+
+        me.getModels().deleteModel( { "uuid": uuid }, function () {
+
+          $("#model-" + uuid).remove();
+
+          // hide dialog.
+           $('#dialog-confirm-delete').modal('hide');
+        });
+      });
+
+
+      // Show the dialog:
+      $('#dialog-confirm-delete').modal({ });
+
+
     });
 
   };
