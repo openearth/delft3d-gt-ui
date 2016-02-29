@@ -1,18 +1,17 @@
-
 /* global chai */
 (function () {
   'use strict';
-  
+
 	// To simulate JQuery namespace
   global.$ = { };
-	
+
 	// Include our files (this was needed for mocha, not sure for Chai?)
-	include_file(__dirname + "/../../app/scripts/models.js");
-	include_file(__dirname + "/../../app/scripts/ui.js");
-	include_file(__dirname + "/../../app/scripts/inputvalidation.js");
+	include_file(__dirname + "/../../app/static/scripts/models.js");
+	include_file(__dirname + "/../../app/static/scripts/ui.js");
+	include_file(__dirname + "/../../app/static/scripts/inputvalidation.js");
 	include_file(__dirname + "/../../bower_components/validator-js/validator.js");
 
-	
+
 	// http://stackoverflow.com/questions/21421701/javascript-test-mocha-with-import-js-file
 	function include_file(path)
 	{
@@ -42,7 +41,7 @@
     fetch = window.fetch;
   }
   describe('If we are on the create run page', function () {
-    describe('And we press the create button ', function () 
+    describe('And we press the create button ', function ()
     {
       it('should send a json message to the server ', function () {
         assert(true, 'implement json message format');
@@ -81,15 +80,15 @@
 	});
 
 
-	describe('runModel', function() 
+	describe('runModel', function()
 	{
-	  it('Check success response', function(done) 
+	  it('Check success response', function(done)
 	  {
 	  		console.log("Temporarily disabled")
 			// Temporarily disabled, looking for a fix for the done() call;
 			done();
 			return;
-			
+
 
 		var models = new Models();
 
@@ -97,7 +96,7 @@
 			{
 				"BaseURL": "http://136.231.174.53:8000"
 			};
-			
+
 	 		models.setConfiguration(config);
 
 	  	// Expected input:
@@ -111,19 +110,19 @@
 
 
 	  	// Expected output:
-	    var simulatedAjaxResponse = 
+	    var simulatedAjaxResponse =
 			{
 					"type": "createresult",
-					"status": 
+					"status":
 					{
 						"reason": "",
 					 	"code": "success"
-					}, 
+					},
 					"id": "141ca2fc-f08a-4dcf-9444-bd1e02efb629"
 			}
 
 			// Ajax simulate code. Does not perform actual requests.
-			$.ajax = function(ajaxOpts) 
+			$.ajax = function(ajaxOpts)
 			{
 				checkAjaxOptions(ajaxOpts);
 
@@ -138,7 +137,7 @@
 	      	assert.equal(ajaxOpts.data.dt, ModelOptions.timestep);
 			}
 
-	    function fetchCallback(response) 
+	    function fetchCallback(response)
 	    {
 	      assert.equal(response.type, "createresult");
 	      assert.equal(response.status.code, "success");
@@ -153,7 +152,7 @@
 	     assert.equal(result, true);
 	  });
 
-	 it('Check response when missing data', function(done) 
+	 it('Check response when missing data', function(done)
 	  {
 			console.log("Temporarily disabled")
 			// Temporarily disabled, looking for a fix for the done() call;
@@ -174,19 +173,19 @@
 
 
 	  	// Expected output:
-	    var simulatedAjaxResponse = 
+	    var simulatedAjaxResponse =
 			{
 					"type": "createresult",
-					"status": 
+					"status":
 					{
 						"reason": "",
 					 	"code": "success"
-					}, 
+					},
 					"id": "141ca2fc-f08a-4dcf-9444-bd1e02efb629"
 			}
 
 			// Ajax simulate code. Does not perform actual requests.
-			$.ajax = function(ajaxOpts) 
+			$.ajax = function(ajaxOpts)
 			{
 				checkAjaxOptions(ajaxOpts);
 
@@ -201,15 +200,15 @@
 	      	assert.equal(ajaxOpts.data.dt, ModelOptions.timestep);
 			}
 
-	    function fetchCallback(response) 
+	    function fetchCallback(response)
 	    {
 	    };
 
-	    	
+
 			var result = models.prepareModel(ScenarioOptions, ModelOptions, fetchCallback);
-	     
+
 			// We expect a false here - as we miss a parameter.
-			assert.equal(result, false); 
+			assert.equal(result, false);
 
 			done();
 	  });
