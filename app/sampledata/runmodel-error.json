@@ -1,7 +1,1 @@
-{
-  "type": "result",
-  "status": {
-    "code": "error",  
-    "reason": "Something went wrong!"
-  }
-}
+{"status": {"reason": "Something went wrong", "code": "error"}, "type": "createresult"}

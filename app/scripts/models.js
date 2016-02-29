@@ -1,69 +1,87 @@
-/*global validator */
+/*global  */
+	"use strict";
 
-var Models = {};
-
-
-(function()
-{
-  "use strict";
+	var Models = function()
+	{
+console.log(this);
+	};
 
 	// Set some configuration options such as model server location.
-	Models.setConfiguration = function(Config)
+	Models.prototype.setConfiguration = function(Config)
 	{
 		this.BaseURL = Config.BaseURL;
 	};
 
 	// Test function to see if Mocha works.
-	Models.MochaTest = function(val1, val2)
+	Models.prototype.MochaTest = function(val1, val2)
 	{
 		return val1 + val2;
 	};
 
 
 	// Enable autorefresh or disable it (interval = 0)
-	Models.toggleAutoUIRefresh = function(callback, interval)
+	Models.prototype.toggleAutoUIRefresh = function(callback, interval)
 	{
-		var self = this;
+		var me = this;
 
 
 		if (interval > 0)
 		{
-
-			self.refreshTimerId = setInterval(Models.getModels(callback), interval);
+			// Clear existing timer if present.
+			clearTimer();
+			console.log("Start timer");
+			me.refreshTimerId = setInterval(function() { me.getModels(callback); }, interval);
 		}
 		else
 		{
-			if (self.refreshTimerId !== -1)
+			// Stop timer.
+			clearTimer();
+		}
+
+		// Clear an existing timer.
+		function clearTimer()
+		{
+			if (me.refreshTimerId !== -1)
 			{
-				clearInterval(self.refreshTimerId);
-				self.refreshTimerId = -1;
+				clearInterval(me.refreshTimerId);
+				me.refreshTimerId = -1;
 			}
 		}
 	};
 
 	// Get models from URL, call callback upon completion.
-	Models.getModels = function(callback)
+	Models.prototype.getModels = function(callback)
 	{
-		var self = this;
+		var me = this;
+
+
 		$.ajax(
 		{
-			url: self.BaseURL + "/runs/"
+			url: me.BaseURL + "/runs/"
 		}).done(function(data)
 		{
+			$("#alert-connectionfailed").hide();
+
 			if (callback !== undefined)
 			{
 				callback(data);
 			}
+
+		}).error(function()
+		{
+			$("#alert-connectionfailed").show();
 		});
 
 	};
 
 
 	// Run a model, with given options. Optional callback for return.
-	Models.runModel = function(ScenarioOptions, ModelOptions, callback)
+	Models.prototype.prepareModel = function(ScenarioOptions, ModelOptions, callback)
 	{
-		var self = this;
 
+		var me = this;
+
+/*
 		// Validate input of run model.
 		// Depends on validator class
 		function validateRunModel(so, mo)
@@ -82,8 +100,9 @@ var Models = {};
 
 			return false;
 		}
+*/
 
-
+console.log("test");
 		// [TODO] Validate parameters before sending. (is everything included?)
 
 		// Prepare options for our format.
@@ -97,14 +116,47 @@ var Models = {};
 		//serveroptions.parameters = {};
 		//serveroptions.scenario = ScenarioOptions;
 		//serveroptions.model = ModelOptions;
+console.log(me);
+		$.ajax(
+		{
+			url: me.BaseURL + "/createrun/",
+			//url: "sampledata/runmodel-ok.json",
+			data: serveroptions,
+			method: "GET" // Should be a POST later
+		}).done(function(data) { //moved here for Mocha.
+
+				if (callback !== undefined)
+				{
+					callback(data);
+				}
+			});
+
+		return true;
+
+	};
+
+
+	// Run the model, with the given uuid.
+	Models.prototype.runModel = function(uuid, callback)
+	{
+		var me = this;
+
+		if (uuid === undefined)
+		{
+			return;
+		}
+
+		var params = {
+			uuid: uuid
+		};
 
 		$.ajax(
 		{
-			url: self.BaseURL + "/createrun/",
+			url: me.BaseURL + "/dorun/",
 			//url: "sampledata/runmodel-ok.json",
-			data: serveroptions,
+			data: params,
 			method: "GET", // Should be a POST later
-			"done": function(data) { //moved here for Mocha.
+			done: function(data) { //moved here for Mocha.
 
 				if (callback !== undefined)
 				{
@@ -114,15 +166,13 @@ var Models = {};
 
 		});
 
-		return true;
-
 	};
 
 	// Run a model, with given options. Optional callback for return.
 	// Expects  a UUID in deleteoptions.
-	Models.deleteModel = function(DeleteOptions, callback)
+	Models.prototype.deleteModel = function(DeleteOptions, callback)
 	{
-		var self = this;
+		var me = this;
 
 		// No options defined:
 		if (DeleteOptions === undefined)
@@ -148,7 +198,7 @@ var Models = {};
 
 		$.ajax(
 		{
-			url: self.BaseURL + "/deleterun/",
+			url: me.BaseURL + "/deleterun/",
 			data: deleteoptions,
 			method: "GET" // Should be a POST later
 
@@ -170,5 +220,3 @@ var Models = {};
 	{
 		module.exports = Models;
 	}
-
-})();
