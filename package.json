@@ -37,7 +37,6 @@
     "test": "gulp test"
   },
   "eslintConfig": {
-    "extends": "eslint:recomended",
     "env": {
       "es6": true,
       "node": true,
@@ -49,7 +48,6 @@
         2,
         "double"
       ],
-
       "brace-style": 1,
       "camelcase": 1,
       "comma-spacing": 1,
@@ -74,8 +72,6 @@
       "space-before-blocks": 1,
       "space-in-parens": 1,
       "space-infix-ops": 1
-
-
     }
   },
   "dependencies": {
