@@ -65,8 +65,8 @@ This is a placeholder layout
                         <tr>
                           <td>Run #</td>
                           <td>Status</td>
-                          <!--<td >Est. time left</td>-->
-                          <td class="column-actions">&nbsp;</td>
+                          <td>Est. time left</td>
+                          <td class="column-actions" colspan="2">&nbsp;</td>
                         </tr>
                       </thead>
 
@@ -126,17 +126,26 @@ This is a placeholder layout
         </div>
 
 
-        <div class="dialog default-hidden">
-
-            <h3>Remove model '<span id="dialog-remove-name"></span>' </h3>
-
+    <div class="modal default-hidden" id="dialog-confirm-delete" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Remove model '<span id="dialog-remove-name"></span>'?</h4>
+          </div>
+          <div class="modal-body">
             <p>
               Are you sure you want to remove this model?
             </p>
-
-            <button class="btn btn-warning">OK</button>
-
-        </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-warning" id="dialog-remove-response-accept" >Delete</button>
+            <button type="button" class="btn btn-primary" id="dialog-remove-response-cancel" data-dismiss="modal">Cancel</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    
 
     <!-- build:js scripts/vendor.js -->
     <!-- bower:js -->

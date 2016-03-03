@@ -6,7 +6,7 @@
   // Main javascript code, initialize components, there shouldn't be much here.
   //http://dl-ng004.xtr.deltares.nl/
   var config = {
-    "BaseURL": "http://136.231.174.53:8001"
+    "BaseURL": "http://136.231.10.175:8888"
   };
 
   // Move these files to an app class later.
