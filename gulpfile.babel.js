@@ -1,4 +1,5 @@
 // generated on 2016-01-18 using generator-gulp-webapp 1.1.1
+
 import gulp from 'gulp';
 import gulpLoadPlugins from 'gulp-load-plugins';
 import browserSync from 'browser-sync';
@@ -57,11 +58,11 @@ gulp.task('lint:scss', function() {
     .pipe(scsslint());
 });
 
-gulp.task('test', ['scripts', 'lint'], () => {
+gulp.task('test', ['scripts', 'lint', 'lint:test', 'lint:scss'], () => {
   return gulp.src('test/spec/**/*.js')
     .pipe(mocha({}));
 });
-gulp.task('teamcity', ['scripts', 'lint'], () => {
+gulp.task('teamcity', ['scripts', 'lint', 'lint:test', 'lint:scss'], () => {
   return gulp.src('test/spec/**/*.js')
     .pipe(mocha({reporter: 'mocha-teamcity-reporter'}));
 });
@@ -76,7 +77,7 @@ gulp.task('html', ['styles', 'scripts'], () => {
 });
 
 gulp.task('images', () => {
-  return gulp.src('app/static/images/**/*')
+  return gulp.src('app/images/**/*')
     .pipe($.if($.if.isFile, $.cache($.imagemin({
       progressive: true,
       interlaced: true,
@@ -93,7 +94,7 @@ gulp.task('images', () => {
 
 gulp.task('fonts', () => {
   return gulp.src(require('main-bower-files')('**/*.{eot,svg,ttf,woff,woff2}', function (err) {})
-    .concat('app/static/fonts/**/*'))
+    .concat('app/fonts/**/*'))
     .pipe(gulp.dest('.tmp/fonts'))
     .pipe(gulp.dest('dist/fonts'));
 });
@@ -187,7 +188,7 @@ gulp.task('wiredep', () => {
 
 });
 
-gulp.task('build', ['lint', 'html', 'images', 'fonts', 'extras'], () => {
+gulp.task('build', ['lint', 'lint:scss', 'html', 'images', 'fonts', 'extras'], () => {
   return gulp.src('dist/**/*').pipe($.size({title: 'build', gzip: true}));
 });
 

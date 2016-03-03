@@ -1,11 +1,15 @@
-  /*global InputValidation */
+/* global InputValidation */
+
+// exports
+
+var UI;
+
+var exports = (function () {
   "use strict";
 
 
-  var UI = function(models)
-  {
-    if (models === undefined)
-    {
+  UI = function(models) {
+    if (models === undefined) {
       console.error("No models argument for UI");
     }
 
@@ -18,23 +22,20 @@
 
   };
 
-  UI.prototype.getModels = function()
-  {
+  UI.prototype.getModels = function() {
 
     return this.models;
   };
 
   // Refresh GUI with new server data.
   // Should be done with templates later.
-  UI.prototype.UpdateModelList = function(data)
-  {
+  UI.prototype.UpdateModelList = function(data) {
 
-    var me = this;
+    var that = this;
 
 
     // Check if data is present
-    if (!(data !== undefined && $.isArray(data) === true))
-    {
+    if (!(data !== undefined && $.isArray(data) === true)) {
       console.log("not an array");
       return;
     }
@@ -46,8 +47,7 @@
     var str = "";
     var i = 0;
 
-    $.each( data, function( key, value )
-    {
+    $.each(data, function (key, value) {
       var model = value.fields;
 
       // Parse string to JSON.
@@ -56,8 +56,7 @@
       var info = { "percent_completed": "", "time_to_finish": "" };
 
       // Replace info if available.
-      if (model.info !== null)
-      {
+      if (model.info !== null) {
         model.info = model.info.replace(/'/g, "\"");
         info = jQuery.parseJSON(model.info);
       }
@@ -80,8 +79,7 @@
     tbody.html(str);
 
     // Add event handlers for these items.
-    tbody.find(".btn-model-delete").click( function()
-    {
+    tbody.find(".btn-model-delete").click(function() {
 
       // Remove this item.
       var uuid = $(this).data("uuid");
@@ -90,15 +88,14 @@
       $("#dialog-remove-name").html(modelname);
 
       // User accepts deletion:
-      $("#dialog-remove-response-accept").on("click", function()
-      {
+      $("#dialog-remove-response-accept").on("click", function() {
 
-        me.getModels().deleteModel( { "uuid": uuid }, function () {
+        that.getModels().deleteModel({ "uuid": uuid }, function () {
 
           $("#model-" + uuid).remove();
 
           // hide dialog.
-           $("#dialog-confirm-delete").modal("hide");
+          $("#dialog-confirm-delete").modal("hide");
         });
       });
 
@@ -113,83 +110,73 @@
 
   // Register event handler for the current GUI.
   // For model start test primarily.
-  UI.prototype.registerHandlers = function()
-  {
-    var me = this;
+  UI.prototype.registerHandlers = function() {
+    var that = this;
 
     // Submit button has been pressed
-    $("#newrun-submit").click( function()
-      {
+    $("#newrun-submit").click(function() {
+      var ScenarioOptions = {};
+      var ModelOptions = {};
 
-        var ScenarioOptions = {};
-        var ModelOptions = {};
+      ScenarioOptions.runid = $("#newrun-name").val();
+      ScenarioOptions.author = "placeholder";
 
-        ScenarioOptions.runid = $("#newrun-name").val();
-        ScenarioOptions.author = "placeholder";
+      ModelOptions.timestep = $("#newrun-timestep").val();
 
-        ModelOptions.timestep = $("#newrun-timestep").val();
+      // [TODO] We skip input validation at the moment!
+      that.models.prepareModel(ScenarioOptions, ModelOptions, function(ret) {
 
-        // [TODO] We skip input validation at the moment!
-         me.models.prepareModel( ScenarioOptions, ModelOptions, function(ret)
-        {
-
-          if (ret !== undefined)
-          {
-            if (ret.status !== undefined)
-            {
-              // Some alert things. Turn this into a nice class...
-              if (ret.status.code === "error")
-              {
-                $("#newrun-alert .alert").html("An error occured! Reason:" + ret.status.reason);
-                $("#newrun-alert .alert").removeClass("alert-success").addClass("alert-warning");
-                $("#newrun-alert").show();
-
-              }
-
-              if (ret.status.code === "success")
-              {
-                $("#newrun-alert .alert").html("Model is starting...");
-                $("#newrun-alert .alert").removeClass("alert-warning").addClass("alert-success");
-                $("#newrun-alert").show();
-
-                // Immediatly start the model
-                // [temporary code]
-                me.models.runModel(ret.uuid);
-              }
-
-              // Do a hard refresh right now:
-               me.models.getModels( $.proxy(me.UpdateModelList, me) );
+        if (ret !== undefined) {
+          if (ret.status !== undefined) {
+            // Some alert things. Turn this into a nice class...
+            if (ret.status.code === "error") {
+              $("#newrun-alert .alert").html("An error occured! Reason:" + ret.status.reason);
+              $("#newrun-alert .alert").removeClass("alert-success").addClass("alert-warning");
+              $("#newrun-alert").show();
 
             }
 
+            if (ret.status.code === "success") {
+              $("#newrun-alert .alert").html("Model is starting...");
+              $("#newrun-alert .alert").removeClass("alert-warning").addClass("alert-success");
+              $("#newrun-alert").show();
+
+              // Immediatly start the model
+              // [temporary code]
+              that.models.runModel(ret.uuid);
+            }
+
+            // Do a hard refresh right now:
+            that.models.getModels($.proxy(that.UpdateModelList, that));
+
           }
-        });
+
+        }
+      });
     });
 
 
     // temp:
-/*
-    $("#newrun-timestep").on("change keyup", function()
-    {
-      validate_timestep( $(this) );
-    });
+    /*
+     $("#newrun-timestep").on("change keyup", function()
+     {
+     validate_timestep( $(this) );
+     });
 
-    $("#newrun-name").on("change keyup", function()
-    {
-      validate_name( $(this) );
-    });
-*/
+     $("#newrun-name").on("change keyup", function()
+     {
+     validate_name( $(this) );
+     });
+     */
     // We watch all events in the form input.
-    $("#run-model-input-properties input").on("change keyup", function()
-    {
-      me.validateForm();
-
-      //validate_name( $(this) );
-    });
+    $("#run-model-input-properties input")
+      .on("change keyup", function() {
+        that.validateForm();
+        //validate_name( $(this) );
+      });
   };
 
-  UI.prototype.validateForm = function()
-  {
+  UI.prototype.validateForm = function() {
 
     var validation = new InputValidation();
 
@@ -202,11 +189,8 @@
     // We assume all is well.
     var isvalid = true;
 
-
-
     // Loop through all desired input checks:
-    for(var i = 0; i < inputchecks.length; i++)
-    {
+    for(var i = 0; i < inputchecks.length; i++) {
       var check = inputchecks[i];
 
       // Element to check:
@@ -217,13 +201,13 @@
 
       // Something was not valid, so we remember this.
       // We keep validating though, just to make clear what is wrong to the user.
-      if (result === false)
-      {
+      if (result === false) {
         isvalid = false;
       }
 
       // Change color of input depending on the state:
       var group = target.closest(".input-group");
+
       group.toggleClass("error", !result);
 
       // Toggle state of submit button.
@@ -234,12 +218,10 @@
 
 
 
-    function toggleSubmit(state)
-    {
+    function toggleSubmit(state) {
       var element = $("#newrun-submit");
 
-      if (state === true)
-      {
+      if (state === true) {
         /// Everything was OK. Enable the button.
         element.removeAttr("disabled");
 
@@ -251,19 +233,14 @@
     }
 
   };
+  return {
+    UI: UI
+  };
 
+}());
 
-
-
-
-
-
-
-
-
-
-  // export the namespace object
-  if (typeof module !== "undefined" && module.exports)
-  {
-    module.exports = UI;
-  }
+// export the namespace object
+if (typeof module !== "undefined" && module.exports) {
+  // if we have modules
+  module.exports = exports;
+}
