@@ -1,9 +1,9 @@
 # delft3d-gt-ui
 
 
-[![Build Master](https://travis-ci.org/openearth/delft3d-gt-ui.svg?branch=master)](https://travis-ci.org/openearth/delft3d-gt-ui)
+[![Build Master](https://travis-ci.org/openearth/delft3d-gt-ui.svg?branch=master)](https://travis-ci.org/openearth/delft3d-gt-ui)  master build status
 
-[![Build Develop](https://travis-ci.org/openearth/delft3d-gt-ui.svg?branch=develop)](https://travis-ci.org/openearth/delft3d-gt-ui)
+[![Build Develop](https://travis-ci.org/openearth/delft3d-gt-ui.svg?branch=develop)](https://travis-ci.org/openearth/delft3d-gt-ui) develop build status
 
 
 Frontend for the Delft3D GT web-based user interface
