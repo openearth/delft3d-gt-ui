@@ -137,7 +137,7 @@ var exports = (function () {
             }
 
             if (ret.status.code === "success") {
-              $("#newrun-alert .alert").html("Model is starting...");
+              $("#newrun-alert .alert").html("Model is queued...");
               $("#newrun-alert .alert").removeClass("alert-warning").addClass("alert-success");
               $("#newrun-alert").show();
 
@@ -145,6 +145,9 @@ var exports = (function () {
               // [temporary code]
               that.models.runModel(ret.uuid);
             }
+
+            // Delay and hide after a moment
+            $("#newrun-alert").delay(4000).fadeOut(500);
 
             // Do a hard refresh right now:
             that.models.getModels($.proxy(that.UpdateModelList, that));
