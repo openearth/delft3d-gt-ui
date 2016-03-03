@@ -1,11 +1,13 @@
 # delft3d-gt-ui
 
-    
-[![Build Status](https://travis-ci.org/openearth/delft3d-gt-ui.svg?branch=master)](https://travis-ci.org/openearth/delft3d-gt-ui)    
+
+[![Build Master](https://travis-ci.org/openearth/delft3d-gt-ui.svg?branch=master)](https://travis-ci.org/openearth/delft3d-gt-ui)
+
+[![Build Develop](https://travis-ci.org/openearth/delft3d-gt-ui.svg?branch=develop)](https://travis-ci.org/openearth/delft3d-gt-ui)
 
 
 Frontend for the Delft3D GT web-based user interface
-    
+
 # Getting Started
 
 #### Install gulp, bower and the latest version of npm and a few test scripts globally:
@@ -41,6 +43,16 @@ Build a static website:
 $ gulp
 ```
 
+Run the tests
+```sh
+$ gulp test
+```
+
+Run the ui tests
+```sh
+$ gulp serve:test
+```
+
 Inject dependencies in the html pages:
 ```sh
 $ gulp wiredep
@@ -62,4 +74,4 @@ $ gulp lint:test
 ```
 
 
-
+For development the [gitflow](http://nvie.com/posts/a-successful-git-branching-model) branching model is used.
