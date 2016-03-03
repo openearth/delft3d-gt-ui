@@ -1,6 +1,12 @@
 language: node_js
 node_js:
   - "node"
+
+before_install:
+  - rvm install 2.0.0
+  - rvm use 2.0.0
+  - gem install scss-lint
+
 before_script:
   - npm install -g bower
   - bower install
