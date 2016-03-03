@@ -1,4 +1,5 @@
 // generated on 2016-01-18 using generator-gulp-webapp 1.1.1
+
 import gulp from 'gulp';
 import gulpLoadPlugins from 'gulp-load-plugins';
 import browserSync from 'browser-sync';
@@ -57,11 +58,11 @@ gulp.task('lint:scss', function() {
     .pipe(scsslint());
 });
 
-gulp.task('test', ['scripts', 'lint'], () => {
+gulp.task('test', ['scripts', 'lint', 'lint:test', 'lint:scss'], () => {
   return gulp.src('test/spec/**/*.js')
     .pipe(mocha({}));
 });
-gulp.task('teamcity', ['scripts', 'lint'], () => {
+gulp.task('teamcity', ['scripts', 'lint', 'lint:test', 'lint:scss'], () => {
   return gulp.src('test/spec/**/*.js')
     .pipe(mocha({reporter: 'mocha-teamcity-reporter'}));
 });
@@ -187,7 +188,7 @@ gulp.task('wiredep', () => {
 
 });
 
-gulp.task('build', ['lint', 'html', 'images', 'fonts', 'extras'], () => {
+gulp.task('build', ['lint', 'lint:scss', 'html', 'images', 'fonts', 'extras'], () => {
   return gulp.src('dist/**/*').pipe($.size({title: 'build', gzip: true}));
 });
 
