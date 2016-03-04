@@ -43,11 +43,29 @@ var exports = (function () {
     // Our target table
     var tbody = $("#list-model-status tbody");
 
-    // Create new content:
-    var str = "";
-    var i = 0;
+    // Fix null values if they exist in the fields field.
+    $.each(data, function (key, value) 
+    {
+      var model = value.fields;
+      var info = { "percent_completed": "", "time_to_finish": "" };
 
-    $.each(data, function (key, value) {
+      // Replace info if available.
+      if (model.info !== null) {
+        model.info = model.info.replace(/'/g, "\"");
+        info = jQuery.parseJSON(model.info);
+      }
+
+      // Replace:
+     value.fields.info = info;
+
+    });
+    // Store in the vue controller:
+ 
+    window.vuevm.models.gridData = data;
+    window.vuevm.message = new Date();
+
+/*
+    
       var model = value.fields;
 
       // Parse string to JSON.
@@ -77,7 +95,7 @@ var exports = (function () {
 
     tbody.empty();
     tbody.html(str);
-
+*/
     // Add event handlers for these items.
     tbody.find(".btn-model-delete").click(function() {
 

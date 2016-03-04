@@ -1,0 +1,119 @@
+
+<script type="text/x-template" id="template-model-list" inline-template>
+  <div>
+    <table id="list-model-status" class="table-default">
+      <thead>
+        <tr>
+          <th v-for="key in columns"
+            @click="sortBy(key)"
+            :class="{active: sortKey == key}">
+            {{key | capitalize}}
+            <span class="arrow"   :class="sortOrders[key] > 0 ? 'asc' : 'dsc'"></span>
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr v-for="entry in data
+        | filterBy filterKey
+        | orderBy sortKey sortOrders[sortKey]
+        ">
+          <td>{{entry.fields.name}}<input type="hidden" value="{{entry.fields.uuid}}" v-model="entry.fields.uuid" /></td>
+          <td>{{entry.fields.status}} {{entry.fields.info.percent_completed}}</td>
+          <td>{{entry.fields.info.time_to_finish}}</td>
+          <td><button v-on:click="removeModel($index)">Remove</button> <button v-on:click="detailModel($index)">Details</button> iets</td>                              
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</script>
+
+
+
+
+
+<script type="text/x-template" id="template-home">
+  <div>
+    <div class="panel-body">
+
+      <div class="col-lg-12">
+
+        <div class="header-bar">
+          <h2>Running models</h2>
+        </div>
+
+        <model-list :filter-key="searchQuery"></model-list>  
+
+        <div class="alert alert-warning default-hidden" role="alert" id="alert-connectionfailed">
+          Cannot reach model server.
+        </div>
+
+     
+    </div>
+
+
+    <div class="col-lg-12" id="run-model-input-properties">
+
+      <h2>Start new run</h2>
+
+      <h3>Run properties</h3>
+
+      <div class="input-group">
+
+        <span class="input-group-addon item-group-title" id="newrun-name-label">Run id</span>
+        <input type="text" class="form-control"  value="Model 1" id="newrun-name" maxlength="32" aria-describedby="newrun-name-label" autocomplete="off">
+        <span class="input-group-addon input-group-addon-info item-group-width">Name</span>
+      </div>
+
+      <div class="input-group error">
+        <span class="input-group-addon"><input type="checkbox" disabled="disabled" checked="checked" /></span>
+        <span class="input-group-addon  item-group-title" id="newrun-timestep-label"> Time step</span>
+        <input type="number" pattern="[0-9]*" class="form-control"  value="20"  id="newrun-timestep"  min="1" max="50" aria-describedby="newrun-timestep-label" autocomplete="off">
+        <span class="input-group-addon input-group-addon-info item-group-width">Time step [minutes] (min. 1)</span>
+      </div>
+
+    </div>
+
+
+
+    <div class="col-lg-12 default-hidden"  id="newrun-alert">
+      <div class="alert" role="alert">
+      </div>
+    </div>
+
+    <div class="col-lg-2">
+
+      <div class="btn-group">
+       <button class="form-control btn btn-primary"  id="newrun-submit" value="">Create</button>
+     </div>
+   </div>
+
+   <div class="col-lg-10">
+   </div>
+
+ </div>
+</div>
+</div>
+</script>
+
+
+
+<script type="text/x-template" id="template-modeldetails">
+  <div>
+      <div class="panel-body">  
+        <div class="col-lg-12">
+
+          <div class="header-bar">
+              <h2>Details for model {{selectedModel}}</h2>
+          </div>
+
+          <input type="button" value="Close details" v-on:click="closeDetails()" />
+
+          <img src="sampledata/example_channel_network.png" />
+          <img src="sampledata/example_delta_fringe.png" />
+          
+        </div>          
+      </div>
+  </div>
+</script>
+
