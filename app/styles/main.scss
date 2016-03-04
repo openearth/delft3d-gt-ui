@@ -1,392 +1,222 @@
 $icon-font-path: '../fonts/';
 
+// From: huisstijl.deltares.nl
+
+$deltares-blauw: #008fc5;
+$deltares-metallic: #92b6c7;
+$deltares-zand: #a09e8d;
+$deltares-cyaan: #00c4d6;
+$deltares-oranje: #ff7200;
+$deltares-groen: #b4d300;
+$deltares-cyclaam: #eb0073;
+$white: #fff;
+$black: #000;
+
+
+$brand-primary: $deltares-blauw;
+$brand-info: $deltares-metallic;
+$brand-success: $deltares-groen;
+$brand-warning: $deltares-oranje;
+$brand-danger: $deltares-cyclaam;
+$body-bg: lighten($black, 33.5%);
+
+/* This part is wiredepped
 // bower:scss
 @import "bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
-// endbower
+// endbower:scss
+*/
+
+// it's better to include the main package
+@import 'bower_components/bootstrap-sass/assets/stylesheets/bootstrap';
+
 
 // Color variables, we use automatic colors for hover based upon these
+
 $cell-padding: 6px;
 $row-height: 32px;
 $row-color-finished: #e5ffca;
 $row-color-warning: #fffbca;
 $row-color-error: #ffcaca;
 $row-color-even: #efefef;
-$row-color-odd: #ffffff;
+$row-color-odd: $white;
 
 
 // Make object shadowed.
-@mixin shadowed()
-{
-	-webkit-box-shadow: 0px 0px 32px 0px rgba(50, 50, 50, 0.75);
-	-moz-box-shadow:    0px 0px 32px 0px rgba(50, 50, 50, 0.75);
-	box-shadow:         0px 0px 32px 0px rgba(50, 50, 50, 0.75);
+@mixin shadowed() {
+  box-shadow: 0 0 32px 0 $gray-dark;
+
 }
 
 // Do disable round borders on an element
-@mixin rectangle-corners()
-{
-	border-radius: 0px;
+@mixin rectangle-corners() {
+  border-radius: 0;
 }
 
-@mixin status-colors()
-{
-	&.completed
-	{
-		
+@mixin status-colors() {
+  &.completed {
 
-		background-color: $row-color-finished;
 
-		&:hover
-		{
-			background-color: mix($row-color-finished,#ffffff, 50%);		
-		}			
-	}
+    background-color: $row-color-finished;
 
-	&.warning
-	{
-		background-color: $row-color-warning;
+    &:hover {
+      background-color: mix($row-color-finished, $white, 50%);
+    }
+  }
 
-		&:hover
-		{
-			background-color: mix($row-color-warning,#ffffff, 50%);		
-		}				
-	}	
+  &.warning {
+    background-color: $row-color-warning;
 
-	&.error
-	{
-		background-color: $row-color-error;
+    &:hover {
+      background-color: mix($row-color-warning, $white, 50%);
+    }
+  }
 
-		&:hover
-		{
-			background-color: mix($row-color-error,#ffffff, 50%);			
-		}
-	}			
+  &.error {
+    background-color: $row-color-error;
+
+    &:hover {
+      background-color: mix($row-color-error, $white, 50%);
+    }
+  }
 }
 
-.alert
-{
-	@include rectangle-corners();
+.container {
+  // we don't have a header menu so we use the margin-top of the container to give it a bit of space on the top
+  margin-top: 32px;
 }
 
+.alert {
+  @include rectangle-corners();
+}
 
-.panel 
-{
-	border-radius: 0px;
+.btn {
+  @include rectangle-corners();
+}
 
-	@include shadowed();
+.panel {
+  @include rectangle-corners();
+  @include shadowed();
 }
 
 // Override rounded corners, default bootstrap style
-.input-group-addon
-{
-	@include rectangle-corners();
+.input-group-addon {
+  @include rectangle-corners();
+}
 
+.footer {
+  margin: 8px 0 0;
+}
+
+.btn-logout {
+  padding-right: 16px;
+  vertical-align: top;
+}
+
+.heading-bar {
+  background-color: #e1e1e1;
+  color: #5d5d5d;
+
+  padding: 10px 0 10px 32px;
+
+  h2 {
+    margin: 0;
+  }
+
+  .site-title {
+    font-size: 32px;
+
+    img {
+      margin-right: 32px;
+    }
+  }
 
 }
 
-.footer
-{
-	margin: 8px 0px 0px 0px;
+.table-default {
+  margin-bottom: 32px;
+  width: 100%;
+
+  td  {
+    border: 1px solid #c2c3c6;
+    height: $row-height;
+  }
+
+  thead {
+    td {
+      background-color: #d9d9d9;
+      border: 1px solid #cecece;
+      font-size: 12px;
+      font-weight: bold;
+      text-align: center;
+      text-transform: uppercase;
+    }
+  }
+
+  tbody {
+
+    td {
+      padding-left: $cell-padding;
+    }
+
+
+    tr:nth-child(odd) {
+      background-color: $row-color-even;
+
+      &:hover {
+        background-color: mix($row-color-even,$white, 50%);
+      }
+
+      @include status-colors();
+
+    }
+
+    tr:nth-child(even) {
+      background-color: $row-color-odd;
+
+      &:hover {
+        background-color: mix($row-color-odd, $white, 50%);
+      }
+
+      @include status-colors();
+    }
+
+
+
+
+  }
 }
 
-.btn-logout
-{
-	padding-right: 16px;
-	vertical-align: top;
+.input-group-addon-info {
+  background-color: #efefef;
 }
 
-.heading-bar
-{
-	background-color: #e1e1e1;
-	color: #5d5d5d;
+.input-group {
+  margin-bottom: 16px;
 
-	padding: 10px 0px 10px 32px;
+  // Color when a field is not valid.
+  &.error {
+    span {
+      background-color: $row-color-error;
+    }
 
-	h2
-	{
-		margin: 0px;
-	}
-	//background-color: #c0c8d0;
-	//color: #ffffff;
-
-	.site-title
-	{
-		font-size: 32px;
-		//text-shadow: 0px 0px 8px rgba(50, 50, 50, 0.78);
-		//text-shadow: 0px 0px 8px rgba(150, 150, 150, 0.78);
-
-		img
-		{
-			margin-right: 32px;
-		}
-	}
-
-}
-
-
-body
-{
-	background-color: #6b6d73;
-	padding-top: 32px
-}
-
-
-.btn-default
-{
-	background-color: #B5CFE7;
-
-
-}
-
-
-
-.panel-primary {
-    border-color: #ffffff;
-}
-
-
-.table-default
-{
-
-	width: 100%;
-	margin-bottom: 32px;
-
-	td
-	{
-		border: 1px solid #c2c3c6;
-		height: $row-height;
-	}
-
-	thead
-	{
-		td
-		{
-			font-size: 12px;
-			font-weight: bold;
-			background-color: #d9d9d9;
-			text-align: center;
-			border: 1px solid #cecece;
-			text-transform: uppercase;
-		}
-
-	}
-
-	tbody
-	{
-
-		td
-		{
-			padding-left: $cell-padding;
-		}
-
-
-		tr:nth-child(odd)
-		{
-			background-color: $row-color-even;
-
-			&:hover
-			{
-				background-color: mix($row-color-even,#ffffff, 50%);		
-			}				
-
-			@include status-colors();
-
-		}
-
-		tr:nth-child(even) 
-		{
-			background-color: $row-color-odd;
-
-			&:hover
-			{
-				background-color: mix($row-color-odd,#ffffff, 50%);		
-			}	
-			
-			@include status-colors();
-		}
-
-
-
-
-	}
-}
-
-.btn
-{
-	@include rectangle-corners();
-
-	&:disabled
-	{
-		background-color: mix(#2E6DA4, #cecece,80%);	
-	}
+    input {
+      background-color: mix($row-color-error, $white, 50%);
+    }
+  }
 
 }
 
-.btn-border
-{
-	border: 1px solid #cecece;
-	margin: 2px;
-}
-
-.input-group-addon-info
-{
-	background-color: #efefef;
-}
-
-.input-group
-{
-	margin-bottom: 16px;
-	
-
-	// Color when a field is not valid.
-	&.error
-	{
-
-	
-		span
-		{
-			background-color: $row-color-error;
-		}
-
-		input
-		{
-			background-color: mix($row-color-error,#ffffff, 50%);
-		}
-	}
-
-}
-
-.column-actions
-{
-	width: 10%;
-	text-align: center;	
+.column-actions {
+  width: 10%;
+  text-align: center;
 }
 
 
-.item-group-title
-{
-	font-weight: bold;
-	min-width: 160px;
+.item-group-title {
+  font-weight: bold;
+  min-width: 160px;
 }
 
-.default-hidden
-{
-	display: none;
+.default-hidden {
+  display: none;
 }
-
-
-
-/*
-For the older demo pages, remove later
-
-#table-active-runs
-{
-
-	border-collapse: collapse;
-	border: 1px solid #aeaeae;
-	margin-bottom: 16px;
-
-	thead td
-	{
-		text-align: center;
-	}
-
-	td
-	{
-		padding: 8px;
-		border: 1px solid #aeaeae;
-
-		a
-		{
-			font-weight: bold;
-		}
-	}
-
-
-}
-
- .table-standard
- {
-	border-collapse: collapse;
-	border: 1px solid #aeaeae;
-	margin-bottom: 16px;
-	
-	td
-	{
-		padding: 8px;
-		border: 1px solid #aeaeae;
- 	}
-}
-
-.field-group
-{
-	margin-bottom: 16px;
-}
-
-
-
-
-.panel-tabs {
-    position: relative;
-    bottom: 30px;
-    clear:both;
-    border-bottom: 1px solid transparent;
-    margin-bottom: -30px;
-}
-
-.panel-tabs > li {
-    float: left;
-    margin-bottom: -1px;
-}
-
-.panel-tabs > li > a {
-    margin-right: 2px;
-    margin-top: 4px;
-    line-height: .85;
-    border: 1px solid transparent;
-    border-radius: 4px 4px 0 0;
-    color: #ffffff;
-}
-
-.panel-tabs > li > a:hover {
-    border-color: transparent;
-    color: #ffffff;
-    background-color: transparent;
-}
-
-.panel-tabs > li.active > a,
-.panel-tabs > li.active > a:hover,
-.panel-tabs > li.active > a:focus {
-    color: #fff;
-    cursor: default;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    border-radius: 2px;
-    background-color: rgba(255,255,255, .23);
-    border-bottom-color: transparent;
-}
-/
-
-.progress-bar {
-	text-align: left;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	background-color: #aeaeae;
-	width: 100%;
-	box-shadow: none;
-	transition: none;
-
-	.bar
-	{
-		background-color: #4f6eb4;
-		padding: 2px ;
-		transition: width 0.6s ease 0s;
-	}
-
-
-}
-
-
-*/
-
