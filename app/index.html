@@ -5,7 +5,7 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Delft3D-GT Dashboard</title>
-
+    
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <!-- Place favicon.ico in the root directory -->
 
@@ -24,16 +24,15 @@
     <script src="/bower_components/validator-js/validator.js"></script>
     <!-- endbuild -->
 
+
   </head>
   <body>
     <!--[if lt IE 10]>
       <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
+<div id="app">
 
-<!--
-This is a placeholder layout
--->
 
 
    <div class="container">
@@ -44,87 +43,22 @@ This is a placeholder layout
               <div class="col-lg-12 heading-bar">
                 <h2 class="site-title"><img src="images/logo/app-icon.png" alt="Delft3D-GT Dashboard" />Delft3D-GT Dashboard</h2>
               </div>
+<!--
+               <model-list 
+                :data="models.gridData"
+                :columns="models.gridColumns"
+                :filter-key="models.searchQuery"
+                >
+                </model-list>  
+-->
 
+              <component :is="currentView"> </component>
 
-              <div class="panel-body">
-
-                <div class="col-lg-12">
-
-                  <div class="header-bar">
-                    <h2>Running models</h2>
-                  </div>
-
-                    <div class="alert alert-warning default-hidden" role="alert" id="alert-connectionfailed">
-                      Cannot reach model server.
-                    </div>
-
-
-                      <table id="list-model-status" class="table-default">
-
-                      <thead>
-                        <tr>
-                          <td>Run #</td>
-                          <td>Status</td>
-                          <td>Est. time left</td>
-                          <td class="column-actions" colspan="2">&nbsp;</td>
-                        </tr>
-                      </thead>
-
-                      <tbody>
-
-                      </tbody>
-                    </table>
-
-                  </div>
-
-
-                  <div class="col-lg-12" id="run-model-input-properties">
-
-                  <h2>Start new run</h2>
-
-                    <h3>Run properties</h3>
-
-                    <div class="input-group">
-
-                      <span class="input-group-addon item-group-title" id="newrun-name-label">Run id</span>
-                      <input type="text" class="form-control"  value="Model 1" id="newrun-name" maxlength="32" aria-describedby="newrun-name-label" autocomplete="off">
-                      <span class="input-group-addon input-group-addon-info item-group-width">Name</span>
-                    </div>
-
-                    <div class="input-group error">
-                      <span class="input-group-addon"><input type="checkbox" disabled="disabled" checked="checked" /></span>
-                      <span class="input-group-addon  item-group-title" id="newrun-timestep-label"> Time step</span>
-                      <input type="number" pattern="[0-9]*" class="form-control"  value="20"  id="newrun-timestep"  min="1" max="50" aria-describedby="newrun-timestep-label" autocomplete="off">
-                      <span class="input-group-addon input-group-addon-info item-group-width">Time step [minutes] (min. 1)</span>
-                    </div>
-
-                  </div>
-
-
-                  <div class="col-lg-12 default-hidden"  id="newrun-alert">
-                    <div class="alert" role="alert">
-                    </div>
-                  </div>
-
-                  <div class="col-lg-2">
-
-                    <div class="btn-group">
-                         <button class="form-control btn btn-primary"  id="newrun-submit" value="">Create</button>
-                    </div>
-                  </div>
-
-                   <div class="col-lg-10">
-
-
-                  </div>
-
-                </div>
-              </div>
+               
 
             </div>
           </div>
         </div>
-
 
     <div class="modal default-hidden" id="dialog-confirm-delete" tabindex="-1" role="dialog">
       <div class="modal-dialog">
@@ -145,13 +79,19 @@ This is a placeholder layout
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    
+</div>
+
+
+
+    <div id="template-container"></div>
+
 
     <!-- build:js scripts/vendor.js -->
     <!-- bower:js -->
     <script src="/bower_components/jquery/dist/jquery.js"></script>
     <script src="/bower_components/lodash/lodash.js"></script>
     <script src="/bower_components/fetch/fetch.js"></script>
+    <script src="/bower_components/vue/dist/vue.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -174,8 +114,10 @@ This is a placeholder layout
     <script src="scripts/ui.js"></script>
     <script src="scripts/models.js"></script>
     <script src="scripts/inputvalidation.js"></script>
-
+    
     <script src="scripts/main.js"></script>
+
+
     <!-- endbuild -->
   </body>
 </html>

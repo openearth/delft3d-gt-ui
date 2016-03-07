@@ -26,8 +26,8 @@ var exports = (function () {
       max = 0;
     }
 
-    if (max <= min) {
-      console.error("Max is <= min");
+    if (max < min) {
+      console.error("Max is < min");
     }
 
     // We want atleast a maximum value to make a range.

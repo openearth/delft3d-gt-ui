@@ -43,11 +43,40 @@ var exports = (function () {
     // Our target table
     var tbody = $("#list-model-status tbody");
 
-    // Create new content:
-    var str = "";
-    var i = 0;
+    // Fix null values if they exist in the fields field.
+    $.each(data, function (key, value)
+    {
+      var model = value.fields;
+      var info = { "percent_completed": "", "time_to_finish": "" };
 
-    $.each(data, function (key, value) {
+      // Replace info if available.
+      if (model.info !== null)
+      {
+        model.info = model.info.replace(/"/g, "\"");
+
+        try
+        {
+          info = jQuery.parseJSON(model.info);
+        }
+        catch(err)
+        {
+          // Not valid json, inform us of that.
+          console.log("Invalid JSON received from server");
+        }
+      }
+
+      // Replace:
+      value.fields.info = info;
+
+    });
+    // Store in the vue controller:
+    if (window.vuevm !== undefined)
+    {
+      window.vuevm.models.gridData = data;
+    }
+
+/*
+
       var model = value.fields;
 
       // Parse string to JSON.
@@ -57,18 +86,18 @@ var exports = (function () {
 
       // Replace info if available.
       if (model.info !== null) {
-        model.info = model.info.replace(/'/g, "\"");
+        model.info = model.info.replace(/"/g, "\"");
         info = jQuery.parseJSON(model.info);
       }
 
-      str += "<tr id='model-" + model.uuid + "' class='" + model.status + "'>";
+      str += "<tr id="model-" + model.uuid + "" class="" + model.status + "">";
       str += "<td>" + model.name + "</td>";
       str += "<td>" + model.status + " " + info.percent_completed + "</td>";
       str += "<td>" + info.time_to_finish + "</td>";
-      str += "<td><a href='" + model.fileurl + "' target='_blank'>Browse directory</a></td>";
+      str += "<td><a href="" + model.fileurl + "" target="_blank">Browse directory</a></td>";
 
       // This html/data stuff is asking for problems, but we will work on this next sprint!
-      str += "<td class='column-actions'><button class='btn btn-border btn-small btn-model-delete' data-modelname='" + model.name + "' data-uuid='" + model.uuid + "'><span class='glyphicon glyphicon-remove' ></span></button></td>";
+      str += "<td class="column-actions"><button class="btn btn-border btn-small btn-model-delete" data-modelname="" + model.name + "" data-uuid="" + model.uuid + ""><span class="glyphicon glyphicon-remove" ></span></button></td>";
 
       str += "</tr>";
 
@@ -77,7 +106,7 @@ var exports = (function () {
 
     tbody.empty();
     tbody.html(str);
-
+*/
     // Add event handlers for these items.
     tbody.find(".btn-model-delete").click(function() {
 
@@ -114,49 +143,7 @@ var exports = (function () {
     var that = this;
 
     // Submit button has been pressed
-    $("#newrun-submit").click(function() {
-      var ScenarioOptions = {};
-      var ModelOptions = {};
 
-      ScenarioOptions.runid = $("#newrun-name").val();
-      ScenarioOptions.author = "placeholder";
-
-      ModelOptions.timestep = $("#newrun-timestep").val();
-
-      // [TODO] We skip input validation at the moment!
-      that.models.prepareModel(ScenarioOptions, ModelOptions, function(ret) {
-
-        if (ret !== undefined) {
-          if (ret.status !== undefined) {
-            // Some alert things. Turn this into a nice class...
-            if (ret.status.code === "error") {
-              $("#newrun-alert .alert").html("An error occured! Reason:" + ret.status.reason);
-              $("#newrun-alert .alert").removeClass("alert-success").addClass("alert-warning");
-              $("#newrun-alert").show();
-
-            }
-
-            if (ret.status.code === "success") {
-              $("#newrun-alert .alert").html("Model is queued...");
-              $("#newrun-alert .alert").removeClass("alert-warning").addClass("alert-success");
-              $("#newrun-alert").show();
-
-              // Immediatly start the model
-              // [temporary code]
-              that.models.runModel(ret.uuid);
-            }
-
-            // Delay and hide after a moment
-            $("#newrun-alert").delay(4000).fadeOut(500);
-
-            // Do a hard refresh right now:
-            that.models.getModels($.proxy(that.UpdateModelList, that));
-
-          }
-
-        }
-      });
-    });
 
 
     // temp:
@@ -177,6 +164,53 @@ var exports = (function () {
         that.validateForm();
         //validate_name( $(this) );
       });
+  };
+
+  UI.prototype.submitModel = function()
+  {
+    var that = this;
+
+    var ScenarioOptions = {};
+    var ModelOptions = {};
+
+    ScenarioOptions.runid = $("#newrun-name").val();
+    ScenarioOptions.author = "placeholder";
+
+    ModelOptions.timestep = $("#newrun-timestep").val();
+
+    // [TODO] We skip input validation at the moment!
+    that.models.prepareModel(ScenarioOptions, ModelOptions, function(ret) {
+
+      if (ret !== undefined) {
+        if (ret.status !== undefined) {
+          // Some alert things. Turn this into a nice class...
+          if (ret.status.code === "error") {
+            $("#newrun-alert .alert").html("An error occured! Reason:" + ret.status.reason);
+            $("#newrun-alert .alert").removeClass("alert-success").addClass("alert-warning");
+            $("#newrun-alert").show();
+
+          }
+
+          if (ret.status.code === "success") {
+            $("#newrun-alert .alert").html("Model is queued...");
+            $("#newrun-alert .alert").removeClass("alert-warning").addClass("alert-success");
+            $("#newrun-alert").show();
+
+            // Immediatly start the model
+            // [temporary code]
+            that.models.runModel(ret.uuid);
+          }
+
+          // Delay and hide after a moment
+          $("#newrun-alert").delay(4000).fadeOut(500);
+
+          // Do a hard refresh right now:
+          that.models.getModels($.proxy(that.UpdateModelList, that));
+
+        }
+
+      }
+    });
   };
 
   UI.prototype.validateForm = function() {
