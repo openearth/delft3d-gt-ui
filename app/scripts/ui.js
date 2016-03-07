@@ -50,19 +50,30 @@ var exports = (function () {
       var info = { "percent_completed": "", "time_to_finish": "" };
 
       // Replace info if available.
-      if (model.info !== null) {
+      if (model.info !== null) 
+      {
         model.info = model.info.replace(/'/g, "\"");
-        info = jQuery.parseJSON(model.info);
-      }
 
+        try
+        {
+          info = jQuery.parseJSON(model.info);
+        }
+        catch(err)
+        {
+          // Not valid json, inform us of that.
+          console.log("Invalid JSON received from server")
+        }    
+      }       
+     
       // Replace:
-     value.fields.info = info;
+      value.fields.info = info;
 
     });
     // Store in the vue controller:
- 
-    window.vuevm.models.gridData = data;
-    window.vuevm.message = new Date();
+    if (window.vuevm !== undefined)
+    {
+      window.vuevm.models.gridData = data;
+    }
 
 /*
     
@@ -132,7 +143,38 @@ var exports = (function () {
     var that = this;
 
     // Submit button has been pressed
-    $("#newrun-submit").click(function() {
+    
+
+
+    // temp:
+    /*
+     $("#newrun-timestep").on("change keyup", function()
+     {
+     validate_timestep( $(this) );
+     });
+
+     $("#newrun-name").on("change keyup", function()
+     {
+     validate_name( $(this) );
+     });
+     */
+    // We watch all events in the form input.
+    var inputs = $("#run-model-input-properties"); // input");
+
+var il = inputs.find("input");
+var x = 0;
+console.log(il);
+    $("#run-model-input-properties input")
+      .on("change keyup", function() {
+        that.validateForm();
+        //validate_name( $(this) );
+      });
+  };
+
+  UI.prototype.submitModel = function()
+  {
+      var that = this;
+
       var ScenarioOptions = {};
       var ModelOptions = {};
 
@@ -174,28 +216,8 @@ var exports = (function () {
 
         }
       });
-    });
 
-
-    // temp:
-    /*
-     $("#newrun-timestep").on("change keyup", function()
-     {
-     validate_timestep( $(this) );
-     });
-
-     $("#newrun-name").on("change keyup", function()
-     {
-     validate_name( $(this) );
-     });
-     */
-    // We watch all events in the form input.
-    $("#run-model-input-properties input")
-      .on("change keyup", function() {
-        that.validateForm();
-        //validate_name( $(this) );
-      });
-  };
+  }
 
   UI.prototype.validateForm = function() {
 

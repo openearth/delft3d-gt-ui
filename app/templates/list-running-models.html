@@ -1,6 +1,8 @@
 
 <script type="text/x-template" id="template-model-list" inline-template>
   <div>
+    <div v-show="hasNoModels" class="message-no-models">There are no models right now</div>
+
     <table id="list-model-status" class="table-default">
       <thead>
         <tr>
@@ -32,7 +34,7 @@
 
 
 
-<script type="text/x-template" id="template-home">
+<script type="text/x-template" id="template-home" keep-alive>
   <div>
     <div class="panel-body">
 
@@ -65,7 +67,7 @@
         <span class="input-group-addon input-group-addon-info item-group-width">Name</span>
       </div>
 
-      <div class="input-group error">
+      <div class="input-group">
         <span class="input-group-addon"><input type="checkbox" disabled="disabled" checked="checked" /></span>
         <span class="input-group-addon  item-group-title" id="newrun-timestep-label"> Time step</span>
         <input type="number" pattern="[0-9]*" class="form-control"  value="20"  id="newrun-timestep"  min="1" max="50" aria-describedby="newrun-timestep-label" autocomplete="off">
@@ -84,7 +86,7 @@
     <div class="col-lg-2">
 
       <div class="btn-group">
-       <button class="form-control btn btn-primary"  id="newrun-submit" value="">Create</button>
+       <button class="form-control btn btn-primary"  id="newrun-submit" value="" v-on:click="submitModel()">Create</button>
      </div>
    </div>
 

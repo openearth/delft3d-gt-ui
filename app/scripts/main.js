@@ -57,6 +57,14 @@
           get: function () {
             return  data.models.gridData;
           }
+        },
+
+        // Returns true if we have no items in the grid array
+        hasNoModels:
+        {
+          get: function() {
+            return (data.models.gridData.length == 0);
+          }
         }
       
       },
@@ -107,6 +115,30 @@
     // Our homepage component
     Vue.component('home', { 
      template: "#template-home",
+     ready: function () {
+      
+      console.log("activate home");
+      
+      // Register event handlers:
+      //setTimeout(function(){
+      
+      ui.registerHandlers();
+      //}, 1000);
+
+     },
+
+     methods: {
+
+      // Submit model:
+      submitModel: function()
+      {
+          console.log("submit model");
+          //var _ui = UI;
+
+          ui.submitModel();
+      }
+
+     }
     });
 
     // The model details page.
@@ -139,20 +171,21 @@
     // Register some event handlers.
     var ui = new UI(models);
 
-    ui.registerHandlers();
+
 
     // Get list of models:
     models.getModels($.proxy(ui.UpdateModelList, ui));
 
     // Enable auto refresh.
     models.toggleAutoUIRefresh($.proxy(ui.UpdateModelList, ui), 5000);
-  
+
+
+ 
     var vm = new Vue({
       el: "#app",
       data: data
     });
-
-    window.vuevm = vm;
+    window.vuevm = vm;    
 
 });
 
