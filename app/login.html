@@ -16,9 +16,8 @@
 
     <!-- build:css styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/website.css">
     <!-- endbuild -->
-    
+
 
     <!-- build:js scripts/vendor/modernizr.js -->
     <script src="/bower_components/modernizr/modernizr.js"></script>
@@ -26,53 +25,35 @@
   </head>
   <body>
     <!--[if lt IE 10]>
-      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
-   
-  <div class="container" style="margin-top:30px">
-    <div class="col-xs-6 col-xs-offset-3">
-      <div class="panel panel-default">
-      
-        <div class="panel-heading">
-          <h3 class="panel-title"><strong>Delft3D-GT - Sign In </strong></h3>
-        </div>
-      
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
 
-        <div class="panel-body">
-          <p>
-          Please login using your credentials to continue.
-          </p>
-
-          <form role="form">
-            <div class="form-group">
-              <label for="login-id">Username or e-mail</label>
-              <input class="form-control" id="login-id" placeholder="Username or e-mail">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-6 col-xs-offset-3">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Sign in to Delft3D GT</h3>
             </div>
-          
-            <div class="form-group">
-              <label for="login-password">Password</label>
-              <input type="password" class="form-control" id="login-password" placeholder="Password">
+            <div class="panel-body">
+              <form role="form" method="POST" action="/login">
+                <div class="form-group">
+                  <label for="username">Username or e-mail address</label>
+                  <input class="form-control" id="username" placeholder="Username or e-mail address">
+                </div>
+                <div class="form-group">
+                  <label for="password">Password</label>
+                  <div class="pull-right"><a href="/forgot">Forgot password?</a></div>
+                  <input type="password" class="form-control" id="password" placeholder="Password">
+                </div>
+                <button type="submit" class="btn btn-success">Sign in</button>
+              </form>
             </div>
-            
-            <button type="submit" class="btn btn-sm btn-success">Sign in</button>
-          </form>
-        </div>
 
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-
-
-    
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-    <script>
-      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-      e.src='https://www.google-analytics.com/analytics.js';
-      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-      ga('create','UA-XXXXX-X');ga('send','pageview');
-    </script>
 
     <!-- build:js scripts/vendor.js -->
     <!-- bower:js -->
@@ -82,7 +63,7 @@
     <script src="/bower_components/validator-js/validator.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
-    
+
     <!-- build:js scripts/plugins.js -->
     <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/affix.js"></script>
     <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/alert.js"></script>
@@ -97,9 +78,9 @@
     <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js"></script>
     <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tab.js"></script>
     <!-- endbuild -->
-    
+
     <!-- build:js scripts/main.js -->
-    <script src="scripts/main.js"></script>
+    <script src="scripts/login.js"></script>
     <!-- endbuild -->
   </body>
 </html>
