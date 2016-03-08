@@ -22,14 +22,11 @@
   var ui = new UI(models);
 
   // Load templates first:
-  $("#template-container").load("templates/list-running-models.html", function()
-  {
+  $("#template-container").load("templates/templates.html", function() {
     // Vue.config.debug = true;
 
-    var data =
-    {
-      models:
-      {
+    var data = {
+      models: {
         gridColumns: ["run #", "Status", "Est. time left", ""],
 
         searchQuery: "",
@@ -151,7 +148,7 @@
 
   // The model details page.
   Vue.component("model-details", {
-    template: "#template-modeldetails",
+    template: "#template-model-details",
     ready: function()
     {
 
