@@ -59,6 +59,11 @@ function lint(files, options) {
 }
 // some extra options for tests
 const testLintOptions = {
+  env: {
+    mocha: true
+  }
+};
+const es6LintOptions = {
   extends: "eslint:recommended",
   baseConfig: {
     parser: "babel-eslint"
@@ -67,7 +72,6 @@ const testLintOptions = {
     "modules": true
   },
   env: {
-    mocha: true,
     es6: true
   }
 };
@@ -76,9 +80,13 @@ gulp.task("lint", lint("app/scripts/**/*.js"));
 
 gulp.task("lint:test",
           lint([
-            "test/spec/**/*.js",
-            "gulpfile.babel.js"
+            "test/spec/**/*.js"
           ], testLintOptions)
+         );
+gulp.task("lint:babel",
+          lint([
+            "gulpfile.babel.js"
+          ], es6LintOptions)
          );
 
 
