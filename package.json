@@ -4,8 +4,8 @@
     "node": ">=0.12.0"
   },
   "devDependencies": {
-    "node-fetch": "^1.3.3",
     "babel-core": "^6.4.0",
+    "babel-eslint": "^5.0.0",
     "babel-preset-es2015": "^6.3.13",
     "browser-sync": "^2.2.1",
     "chai": "^3.4.1",
@@ -28,25 +28,33 @@
     "gulp-sourcemaps": "^1.5.0",
     "gulp-uglify": "^1.1.0",
     "gulp-useref": "^3.0.0",
+    "http-proxy-middleware": "^0.11.0",
+    "lodash": "^4.6.1",
     "main-bower-files": "^2.5.0",
     "mocha-teamcity-reporter": "^1.0.0",
     "nock": "^6.0.1",
+    "node-fetch": "^1.3.3",
     "wiredep": "^2.2.2"
   },
   "scripts": {
     "test": "gulp test"
   },
   "eslintConfig": {
+    "ecmaFeatures": {},
     "env": {
       "es6": true,
       "node": true,
       "browser": true,
-      "jquery":true
+      "jquery": true
     },
     "rules": {
       "quotes": [
         2,
         "double"
+      ],
+      "strict": [
+        2,
+        "function"
       ],
       "brace-style": 1,
       "camelcase": 1,
@@ -54,7 +62,10 @@
       "comma-style": 1,
       "consistent-this": 1,
       "no-mixed-spaces-and-tabs": 1,
-      "indent": [1, 2],
+      "indent": [
+        1,
+        2
+      ],
       "comma-dangle": 1,
       "eol-last": 1,
       "key-spacing": 1,
@@ -67,7 +78,5 @@
       "space-infix-ops": 1
     }
   },
-  "dependencies": {
-
-  }
+  "dependencies": {}
 }
