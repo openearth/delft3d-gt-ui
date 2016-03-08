@@ -40,9 +40,7 @@
     "test": "gulp test"
   },
   "eslintConfig": {
-    "ecmaFeatures": {},
     "env": {
-      "es6": true,
       "node": true,
       "browser": true,
       "jquery": true
