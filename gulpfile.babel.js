@@ -7,7 +7,7 @@ import del from 'del';
 import {stream as wiredep} from 'wiredep';
 import mocha from 'gulp-mocha';
 import scsslint from 'gulp-scss-lint';
-
+import concat from 'gulp-concat';
 
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
@@ -56,14 +56,14 @@ gulp.task('lint', lint('app/scripts/**/*.js'));
 gulp.task('lint:test', lint('test/spec/**/*.js', testLintOptions));
 gulp.task('lint:scss', function() {
   return gulp.src('app/styles/*.scss')
-  // Removed right now otherwise we cannot continue under Windows.
-  //  .pipe(scsslint());
+        .pipe(scsslint());
 });
 
-gulp.task('test', ['scripts', 'lint', 'lint:test', 'lint:scss'], () => {
+gulp.task('test', ['scripts', 'lint', 'lint:test'], () => {
   return gulp.src('test/spec/**/*.js')
     .pipe(mocha({}));
 });
+
 gulp.task('teamcity', ['scripts', 'lint', 'lint:test', 'lint:scss'], () => {
   return gulp.src('test/spec/**/*.js')
     .pipe(mocha({reporter: 'mocha-teamcity-reporter'}));
@@ -77,6 +77,16 @@ gulp.task('html', ['styles', 'scripts'], () => {
     .pipe($.if('*.html', $.htmlmin({collapseWhitespace: true})))
     .pipe(gulp.dest('dist'));
 });
+
+gulp.task('templates', [], () => {
+  return gulp.src('app/templates/*.html')
+    .pipe($.htmlmin({collapseWhitespace: true}))
+    .pipe(concat('templates.html'))
+  // this is used in serve and in build
+    .pipe(gulp.dest('.tmp/templates'))
+    .pipe(gulp.dest('dist/templates'));
+});
+
 
 gulp.task('images', () => {
   return gulp.src('app/images/**/*')
@@ -112,7 +122,7 @@ gulp.task('extras', () => {
 
 gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 
-gulp.task('serve', ['styles', 'scripts', 'fonts', "images"], () => {
+gulp.task('serve', ['styles', 'scripts', 'fonts', "images", "templates"], () => {
   browserSync({
     notify: false,
     port: 9000,
@@ -126,6 +136,7 @@ gulp.task('serve', ['styles', 'scripts', 'fonts', "images"], () => {
 
   gulp.watch([
     'app/*.html',
+    'app/templates/*.html',
     '.tmp/scripts/**/*.js',
     'app/images/**/*',
     '.tmp/fonts/**/*'
@@ -147,7 +158,7 @@ gulp.task('serve:dist', () => {
   });
 });
 
-gulp.task('serve:test', ['scripts'], () => {
+gulp.task('serve:test', ['scripts', 'templates'], () => {
   browserSync({
     notify: false,
     port: 9000,
@@ -161,6 +172,7 @@ gulp.task('serve:test', ['scripts'], () => {
     }
   });
 
+  gulp.watch('app/templates/**/*.html', ['templates']);
   gulp.watch('app/images/**/*', ['images']);
   gulp.watch('app/scripts/**/*.js', ['scripts']);
   gulp.watch('test/spec/**/*.js').on('change', reload);
@@ -190,7 +202,7 @@ gulp.task('wiredep', () => {
 
 });
 
-gulp.task('build', ['lint', 'lint:scss', 'html', 'images', 'fonts', 'extras'], () => {
+gulp.task('build', ['lint', 'html', 'images', 'fonts', 'extras', 'templates'], () => {
   return gulp.src('dist/**/*').pipe($.size({title: 'build', gzip: true}));
 });
 

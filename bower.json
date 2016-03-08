@@ -7,7 +7,8 @@
     "lodash": "~4.0.0",
     "fetch": "~0.11.0",
     "validator-js": "~4.5.2",
-    "clipboard": "~1.5.9"
+    "clipboard": "~1.5.9",
+    "vue": "^1.0.17"
   },
   "overrides": {
     "bootstrap-sass": {
