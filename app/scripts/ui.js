@@ -1,4 +1,4 @@
-/* global InputValidation */
+/* global InputValidation  */
 
 // exports
 
@@ -7,7 +7,7 @@ var UI;
 var exports = (function () {
   "use strict";
 
-
+  // Constructor of our UI class
   UI = function(models) {
     if (models === undefined) {
       console.error("No models argument for UI");
@@ -16,12 +16,11 @@ var exports = (function () {
     // Store a reference to the models var.
     this.models = models;
 
-
+    // Immediatly validate form at start.
     this.validateForm();
-
-
   };
 
+  // Return the list of models.
   UI.prototype.getModels = function() {
 
     return this.models;
@@ -31,17 +30,11 @@ var exports = (function () {
   // Should be done with templates later.
   UI.prototype.UpdateModelList = function(data) {
 
-    var that = this;
-
-
     // Check if data is present
     if (!(data !== undefined && $.isArray(data) === true)) {
       console.log("not an array");
       return;
     }
-
-    // Our target table
-    var tbody = $("#list-model-status tbody");
 
     // Fix null values if they exist in the fields field.
     $.each(data, function (key, value)
@@ -52,7 +45,8 @@ var exports = (function () {
       // Replace info if available.
       if (model.info !== null)
       {
-        model.info = model.info.replace(/"/g, "\"");
+
+        model.info = model.info.replace(/'/g, "\"");
 
         try
         {
@@ -68,73 +62,13 @@ var exports = (function () {
       // Replace:
       value.fields.info = info;
 
+
     });
     // Store in the vue controller:
     if (window.vuevm !== undefined)
     {
       window.vuevm.models.gridData = data;
     }
-
-/*
-
-      var model = value.fields;
-
-      // Parse string to JSON.
-
-      // Default an empty object:
-      var info = { "percent_completed": "", "time_to_finish": "" };
-
-      // Replace info if available.
-      if (model.info !== null) {
-        model.info = model.info.replace(/"/g, "\"");
-        info = jQuery.parseJSON(model.info);
-      }
-
-      str += "<tr id="model-" + model.uuid + "" class="" + model.status + "">";
-      str += "<td>" + model.name + "</td>";
-      str += "<td>" + model.status + " " + info.percent_completed + "</td>";
-      str += "<td>" + info.time_to_finish + "</td>";
-      str += "<td><a href="" + model.fileurl + "" target="_blank">Browse directory</a></td>";
-
-      // This html/data stuff is asking for problems, but we will work on this next sprint!
-      str += "<td class="column-actions"><button class="btn btn-border btn-small btn-model-delete" data-modelname="" + model.name + "" data-uuid="" + model.uuid + ""><span class="glyphicon glyphicon-remove" ></span></button></td>";
-
-      str += "</tr>";
-
-      i++;
-    });
-
-    tbody.empty();
-    tbody.html(str);
-*/
-    // Add event handlers for these items.
-    tbody.find(".btn-model-delete").click(function() {
-
-      // Remove this item.
-      var uuid = $(this).data("uuid");
-      var modelname = $(this).data("modelname");
-
-      $("#dialog-remove-name").html(modelname);
-
-      // User accepts deletion:
-      $("#dialog-remove-response-accept").on("click", function() {
-
-        that.getModels().deleteModel({ "uuid": uuid }, function () {
-
-          $("#model-" + uuid).remove();
-
-          // hide dialog.
-          $("#dialog-confirm-delete").modal("hide");
-        });
-      });
-
-
-      // Show the dialog:
-      $("#dialog-confirm-delete").modal({ });
-
-
-    });
-
   };
 
   // Register event handler for the current GUI.
@@ -143,26 +77,10 @@ var exports = (function () {
     var that = this;
 
     // Submit button has been pressed
-
-
-
-    // temp:
-    /*
-     $("#newrun-timestep").on("change keyup", function()
-     {
-     validate_timestep( $(this) );
-     });
-
-     $("#newrun-name").on("change keyup", function()
-     {
-     validate_name( $(this) );
-     });
-     */
     // We watch all events in the form input.
     $("#run-model-input-properties input")
       .on("change keyup", function() {
         that.validateForm();
-        //validate_name( $(this) );
       });
   };
 
@@ -251,10 +169,7 @@ var exports = (function () {
       toggleSubmit(isvalid);
     }
 
-
-
-
-
+    // Toggle submit button state based upon boolean argument
     function toggleSubmit(state) {
       var element = $("#newrun-submit");
 

@@ -41,7 +41,7 @@
           <div class="panel panel-primary">
 
               <div class="col-lg-12 heading-bar">
-                <h2 class="site-title"><img src="images/logo/app-icon.png" alt="Delft3D-GT Dashboard" />Delft3D-GT Dashboard</h2>
+                <h2 class="site-title"><a href="/"><img src="images/logo/app-icon.png" alt="Delft3D-GT Dashboard" />Delft3D-GT Dashboard</a></h2>
               </div>
 <!--
                <model-list 
@@ -52,7 +52,7 @@
                 </model-list>  
 -->
 
-              <component :is="currentView"> </component>
+              <component :is="currentView" > </component>
 
                
 
@@ -60,25 +60,7 @@
           </div>
         </div>
 
-    <div class="modal default-hidden" id="dialog-confirm-delete" tabindex="-1" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">Remove model '<span id="dialog-remove-name"></span>'?</h4>
-          </div>
-          <div class="modal-body">
-            <p>
-              Are you sure you want to remove this model?
-            </p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-warning" id="dialog-remove-response-accept" >Delete</button>
-            <button type="button" class="btn btn-primary" id="dialog-remove-response-cancel" data-dismiss="modal">Cancel</button>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+    
 </div>
 
 
@@ -92,7 +74,7 @@
     <script src="/bower_components/lodash/lodash.js"></script>
     <script src="/bower_components/fetch/fetch.js"></script>
     <script src="/bower_components/vue/dist/vue.js"></script>
-
+    <script src="/bower_components/clipboard/dist/clipboard.min.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 

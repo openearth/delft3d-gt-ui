@@ -6,7 +6,8 @@
     "modernizr": "~2.8.1",
     "lodash": "~4.0.0",
     "fetch": "~0.11.0",
-    "validator-js": "~4.5.2"
+    "validator-js": "~4.5.2",
+    "clipboard": "~1.5.9"
   },
   "overrides": {
     "bootstrap-sass": {
