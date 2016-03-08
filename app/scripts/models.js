@@ -155,6 +155,22 @@ var exports = (function () {
 
   };
 
+  // Fetch a logfile from the server using an AJAX request.
+  Models.prototype.fetchLogFile = function(uuid, callback)
+  {
+    $.ajax({
+      //url: that.BaseURL + "/deleterun/",
+      url: "sampledata/logfile.f34",
+      method: "GET" // Should be a POST later
+    })
+    .done(function(data) {
+      if (callback !== undefined) {
+        callback(data);
+      }
+    });
+  };
+
+
   // Run a model, with given options. Optional callback for return.
   // Expects  a UUID in deleteoptions.
   Models.prototype.deleteModel = function(DeleteOptions, callback) {
@@ -185,11 +201,11 @@ var exports = (function () {
       data: deleteoptions,
       method: "GET" // Should be a POST later
     })
-      .done(function(data) {
-        if (callback !== undefined) {
-          callback(data);
-        }
-      });
+    .done(function(data) {
+      if (callback !== undefined) {
+        callback(data);
+      }
+    });
   };
 
   return {

@@ -38,7 +38,7 @@ $row-color-finished: #e5ffca;
 $row-color-warning: #fffbca;
 $row-color-error: #ffcaca;
 $row-color-even: #efefef;
-$row-color-odd: $white;
+$row-color-odd: #f7f7f7;
 
 
 // Make object shadowed.
@@ -80,6 +80,12 @@ $row-color-odd: $white;
   }
 }
 
+
+// Force a scrollbar so we do not have center changes when it shows up because of content changes.
+html {
+  overflow-y: scroll;
+}
+
 .container {
   // we don't have a header menu so we use the margin-top of the container to give it a bit of space on the top
   margin-top: 32px;
@@ -91,6 +97,12 @@ $row-color-odd: $white;
 
 .btn {
   @include rectangle-corners();
+
+  // Give a bit of space when inside a row.
+  &.inside-cell
+  {
+    margin : 3px;
+  }
 }
 
 .panel {
@@ -128,6 +140,12 @@ $row-color-odd: $white;
     img {
       margin-right: 32px;
     }
+
+    // The title bar is also a link to home
+    a {
+      text-decoration: none;
+      color: #5d5d5d;
+    }
   }
 
 }
@@ -139,10 +157,17 @@ $row-color-odd: $white;
   td  {
     border: 1px solid #c2c3c6;
     height: $row-height;
+
+    &.centered
+    {
+      text-align: center;
+    }
+          
   }
 
   thead {
-    td {
+    th {
+      height: $row-height;
       background-color: #d9d9d9;
       border: 1px solid #cecece;
       font-size: 12px;
@@ -156,9 +181,16 @@ $row-color-odd: $white;
 
     td {
       padding-left: $cell-padding;
+
+
     }
 
-
+    tr {
+      &.clickable
+      {
+        cursor:pointer;
+      }
+    }
     tr:nth-child(odd) {
       background-color: $row-color-even;
 
@@ -167,7 +199,6 @@ $row-color-odd: $white;
       }
 
       @include status-colors();
-
     }
 
     tr:nth-child(even) {
@@ -180,9 +211,12 @@ $row-color-odd: $white;
       @include status-colors();
     }
 
-
-
-
+    // Progressbars in cell are a bit different than Bootstrap ones:
+    .progress-incell
+    {
+      margin: 4px;
+       @include rectangle-corners();
+    }
   }
 }
 
@@ -206,6 +240,45 @@ $row-color-odd: $white;
 
 }
 
+
+.model-information
+{
+  padding: 4px 0px 0px 32px;
+  
+
+  h2
+  {
+    margin-top: 0px;
+  }
+}
+
+
+#model-log-output-container
+{
+ 
+  
+  padding: 4px;
+  
+ 
+  #model-log-output-wrap
+  {
+    border: 1px solid  #e5e5e5;
+    overflow: scroll;
+    padding: 8px;
+  }
+
+  #model-log-output
+  {
+
+    background-color: transparent;
+    color: $gray-dark;
+    white-space: pre-line;
+    word-break: normal;
+    word-wrap: normal;
+  }
+}
+
+
 .column-actions {
   width: 10%;
   text-align: center;
@@ -220,3 +293,141 @@ $row-color-odd: $white;
 .default-hidden {
   display: none;
 }
+
+// Fix for bootstrap issue
+// http://stackoverflow.com/questions/19960162/bootstrap-3-modal-fires-and-causes-page-to-shift-to-the-left-momentarily-brows
+.modal-open[style]
+{
+  padding-right: 0px !important;
+}
+
+/* Left nav */
+
+  
+  nav.sidebar, .main
+  {
+    margin-top: 12px;
+
+    @include rectangle-corners();
+    -webkit-transition: margin 200ms ease-out;
+      -moz-transition: margin 200ms ease-out;
+      -o-transition: margin 200ms ease-out;
+      transition: margin 200ms ease-out;
+  }
+
+  .main{
+    padding: 10px 10px 0 10px;
+  }
+
+ @media (min-width: 765px) {
+
+    .main{
+      position: absolute;
+      width: calc(100% - 40px); 
+      margin-left: 40px;
+      float: right;
+    }
+
+    nav.sidebar:hover + .main{
+      margin-left: 200px;
+    }
+
+    nav.sidebar.navbar.sidebar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {
+      margin-left: 0px;
+    }
+
+    nav.sidebar .navbar-brand, nav.sidebar .navbar-header{
+      text-align: center;
+      width: 100%;
+      margin-left: 0px;
+    }
+    
+    nav.sidebar a{
+      padding-right: 13px;
+    }
+
+
+
+    nav.sidebar .navbar-nav > li{
+      border-bottom: 1px #e5e5e5 solid;
+    }
+
+    // No bottom for last item.
+    nav.sidebar .navbar-nav > li:last-child{
+      border-bottom:0px;
+    }
+
+
+    nav.sidebar .navbar-nav .open .dropdown-menu {
+      position: static;
+      float: none;
+      width: auto;
+      margin-top: 0;
+      background-color: transparent;
+      border: 0;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+    }
+
+
+
+    nav.sidebar .navbar-collapse, nav.sidebar .container-fluid{
+      padding: 0 0px 0 0px;
+    }
+
+    .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
+      color: #777;
+    }
+
+    nav.sidebar{
+      width: 200px;
+      height: 100%;
+      margin-left: -160px;
+      float: left;
+      margin-bottom: 0px;
+    }
+
+    nav.sidebar li {
+      width: 100%;
+    }
+
+    nav.sidebar:hover{
+      margin-left: 0px;
+    }
+
+    .forAnimate{
+      opacity: 0;
+    }
+  }
+   
+  @media (min-width: 1330px) {
+
+    .main{
+      width: calc(100% - 200px);
+      margin-left: 200px;
+    }
+
+    nav.sidebar{
+      margin-left: 0px;
+      float: left;
+    }
+
+    nav.sidebar .forAnimate{
+      opacity: 1;
+    }
+  }
+
+  nav.sidebar .navbar-nav .open .dropdown-menu>li>a:hover, nav.sidebar .navbar-nav .open .dropdown-menu>li>a:focus {
+    color: #CCC;
+    background-color: transparent;
+  }
+
+  nav:hover .forAnimate{
+    opacity: 1;
+  }
+  section{
+    padding-left: 15px;
+  }
+  
+ 
+ /* End left nav */

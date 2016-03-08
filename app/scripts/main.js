@@ -1,4 +1,4 @@
-/* global UI, Models, Vue */
+/* global UI, Models, Vue, Clipboard */
 //import modelList from "templates/list-running-models.vue";
 
 (function () {
@@ -28,16 +28,18 @@
 
     var data =
     {
-        models:
-        {
-          gridColumns: ["run #", "Status", "Est. time left", ""],
+      models:
+      {
+        gridColumns: ["run #", "Status", "Est. time left", ""],
 
-          searchQuery: "",
-          gridData: []
-        },
+        searchQuery: "",
+        gridData: []
 
-        currentView: "home",
-        selectedModel: "none"
+      },
+      logoutput: "",
+      currentView: "home",
+      selectedModel: "none",
+      selectedModelUuid: 0
     };
 
 
@@ -58,6 +60,14 @@
           cache: false,
           get: function () {
             return data.models.gridData;
+          }
+        },
+
+        columns:
+        {
+          cache: false,
+          get: function () {
+            return data.models.gridColumns;
           }
         },
 
@@ -97,19 +107,17 @@
           this.sortOrders[key] = this.sortOrders[key] * -1;
         },
 
-        removeModel: function (rowindex) {
 
-          // now we have access to the native event
-          var uuid = this.data[rowindex].fields.uuid;
-
-          models.deleteModel({uuid: uuid}, function() { });
-        },
 
         detailModel: function (rowindex) {
           // now we have access to the native event
           var uuid = this.data[rowindex].fields.uuid;
 
-          data.selectedModel = uuid;
+          data.selectedModel = this.data[rowindex];
+
+          //Test:
+          data.selectedModelUuid = uuid;
+
           data.currentView = "model-details";
         }
 
@@ -125,11 +133,7 @@
       console.log("activate home");
 
       // Register event handlers:
-      //setTimeout(function(){
-
       ui.registerHandlers();
-      //}, 1000);
-
     },
 
     methods:
@@ -148,22 +152,135 @@
   // The model details page.
   Vue.component("model-details", {
     template: "#template-modeldetails",
+    ready: function()
+    {
+
+      console.log("details");
+      var clipboard = new Clipboard("#btn-copy-log-output");
+
+      clipboard.on("success", function(e) {
+        e.clearSelection();
+      });
+
+      /*
+      clipboard.on("error", function(e) {
+      });
+      */
+
+      // Maybe use https://github.com/vuejs/vue-async-data later?
+      models.fetchLogFile(data.selectedModelUuid, function(logdata)
+      {
+        console.log("received logdata");
+        window.vuevm.$data.logoutput = logdata;
+
+        //window.vuevm.$set('logoutput',logdata);
+        return logdata;
+      });
+
+      // for modifying the navigation interaction if desired.
+      /*
+      $(".active").on("hide.bs.dropdown", function(e) {
+        //  e.preventDefault();
+        //  return false;
+      });
+      */
+
+    },
+
     computed: {
 
       // Update whenever selectedModel changes.
+      logoutput: {
+        cache: false,
+        get: function ()
+        {
+          return window.vuevm.$data.logoutput;
+        }
+      },
       selectedModel: {
         cache: false,
-        get: function () {
-          return data.selectedModel;
+        get: function ()
+        {
+          console.log("compute selectedmodel");
+          // Try to find selected model and return live data:
+          var selectedData = window.vuevm.$data;
+
+          if (selectedData.selectedModelUuid !== 0)
+          {
+            //debugger;
+
+            for (var i = 0; i < selectedData.models.gridData.length; i++)
+            {
+              if (selectedData.models.gridData[i].fields.uuid === selectedData.selectedModelUuid)
+              {
+                return selectedData.models.gridData[i];
+              }
+            }
+          }
+
+          return null;
+
         }
       }
+
+
     },
 
-    methods: {
+    methods:
+    {
       closeDetails: function()
       {
         // Back to the main screen view
         data.currentView = "home";
+      },
+
+
+
+      changeMenuItem: function(event)
+      {
+
+        var el = $(event.target);
+
+        // Hide all panels except for the target.
+        $(".collapse").hide();
+
+        // Get target:
+        var targetSelector = $(el).attr("data-target");
+        var target = $(targetSelector);
+
+        target.show();
+
+        event.stopPropagation();
+      },
+
+      // Remove item, based on incoming modelinfo.
+      removeModel: function (modelinfo)
+      {
+
+        var that = this;
+        var uuid = modelinfo.fields.uuid; //$(this).data("uuid");
+        var modelname = modelinfo.fields.name;
+
+        $("#dialog-remove-name").html(modelname);
+
+        // User accepts deletion:
+        $("#dialog-remove-response-accept").on("click", function()
+        {
+
+          models.deleteModel({uuid: uuid}, function() { });
+
+          // Hide dialog:
+          // hide dialog.
+          $("#dialog-confirm-delete").modal("hide");
+
+          // Go back home:
+          that.closeDetails();
+
+
+        });
+
+        // Show the dialog:
+        $("#dialog-confirm-delete").modal({ });
       }
 
     }
