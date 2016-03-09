@@ -1,12 +1,13 @@
 /* global  */
-
-// Exported globals
 var Models;
 
 var exports = (function () {
   "use strict";
 
-  Models = function() {};
+  Models = function(App, Config) {
+    this.BaseURL = Config.BaseURL;
+    this.app = App;
+  };
 
   // Set some configuration options such as model server location.
   Models.prototype.setConfiguration = function(Config) {
@@ -20,17 +21,27 @@ var exports = (function () {
 
 
   // Enable autorefresh or disable it (interval = 0)
-  Models.prototype.toggleAutoUIRefresh = function(callback, interval) {
+  Models.prototype.toggleAutoUIRefresh = function(callback, interval, forceDirectUpdate) {
     var that = this;
 
+    // If forceDirectUpdate is true we actually execute an update immedialty
+    if (forceDirectUpdate === true)
+    {
+      that.getModels(callback);
+    }
+
     if (interval > 0) {
+
       // Clear existing timer if present.
       clearTimer();
-      console.log("Start timer");
+
+      // Set timer id.
       that.refreshTimerId = setInterval(function() {
         that.getModels(callback);
       }, interval);
+
     } else {
+
       // Stop timer.
       clearTimer();
     }
@@ -170,6 +181,24 @@ var exports = (function () {
     });
   };
 
+  // Find a model using a UUID
+  Models.prototype.findModelByUUID = function(uuid)
+  {
+
+    var templateData = this.app.getTemplateData();
+
+    for (var i = 0; i < templateData.models.gridData.length; i++)
+    {
+      if (templateData.models.gridData[i].fields.uuid === uuid)
+      {
+        return templateData.models.gridData[i];
+      }
+    }
+
+    return null;
+
+  };
+
 
   // Run a model, with given options. Optional callback for return.
   // Expects  a UUID in deleteoptions.
@@ -213,6 +242,7 @@ var exports = (function () {
   };
 
 }());
+
 
 // If we're in node export to models
 if (typeof module !== "undefined" && module.exports) {
