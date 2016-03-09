@@ -20,7 +20,7 @@ const reload = browserSync.reload;
 
 // Server used for serving remote url's
 // "http://136.231.10.175:8888";
-var apiServer = "http://localhost:8000";
+var apiServer = "";
 
 gulp.task("styles", () => {
   return gulp.src("app/styles/*.scss")
