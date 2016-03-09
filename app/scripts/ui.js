@@ -1,17 +1,21 @@
 /* global InputValidation  */
-
-// exports
-
 var UI;
 
 var exports = (function () {
   "use strict";
 
   // Constructor of our UI class
-  UI = function(models) {
+  UI = function(app, models) {
+    if (app === undefined) {
+      console.error("No app argument for UI");
+    }
+
     if (models === undefined) {
       console.error("No models argument for UI");
     }
+
+    // Store a reference to the app var.
+    this.app = app;
 
     // Store a reference to the models var.
     this.models = models;
@@ -59,10 +63,12 @@ var exports = (function () {
 
 
     });
+
     // Store in the vue controller:
-    if (window.vuevm !== undefined) {
-      window.vuevm.models.gridData = data;
-    }
+    var templateData = this.app.getTemplateData();
+
+    templateData.models.gridData = data;
+
   };
 
   // Register event handler for the current GUI.

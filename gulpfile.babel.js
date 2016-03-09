@@ -175,7 +175,7 @@ gulp.task("clean", del.bind(null, [".tmp", "dist"]));
 
 gulp.task("serve", ["styles", "scripts", "fonts", "images", "templates"], () => {
 
-  var paths = ["runs", "createruns", "deleteruns", "dorun"];
+  var paths = ["runs", "createrun", "deleterun", "dorun"];
 
   var proxies = _.map(paths, function(path) {
     "use strict";

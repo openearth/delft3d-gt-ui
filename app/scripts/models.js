@@ -1,12 +1,13 @@
 /* global  */
-
-// Exported globals
 var Models;
 
 var exports = (function () {
   "use strict";
 
-  Models = function() {};
+  Models = function(App, Config) {
+    this.BaseURL = Config.BaseURL;
+    this.app = App;
+  };
 
   // Set some configuration options such as model server location.
   Models.prototype.setConfiguration = function(Config) {
@@ -20,9 +21,13 @@ var exports = (function () {
 
 
   // Enable autorefresh or disable it (interval = 0)
-  Models.prototype.toggleAutoUIRefresh = function(callback, interval) {
+  Models.prototype.toggleAutoUIRefresh = function(callback, interval, forceDirectUpdate) {
     var that = this;
 
+    // If forceDirectUpdate is true we actually execute an update immediately
+    if (forceDirectUpdate === true) {
+      that.getModels(callback);
+    }
     // Clear an existing timer.
     function clearTimer() {
       if (that.refreshTimerId !== -1) {
@@ -32,13 +37,17 @@ var exports = (function () {
     }
 
     if (interval > 0) {
+
       // Clear existing timer if present.
       clearTimer();
-      console.log("Start timer");
+
+      // Set timer id.
       that.refreshTimerId = setInterval(function() {
         that.getModels(callback);
       }, interval);
+
     } else {
+
       // Stop timer.
       clearTimer();
     }
@@ -170,20 +179,35 @@ var exports = (function () {
     });
   };
 
+  // Find a model using a UUID
+  Models.prototype.findModelByUUID = function(uuid) {
+
+    var templateData = this.app.getTemplateData();
+
+    for (var i = 0; i < templateData.models.gridData.length; i++) {
+      if (templateData.models.gridData[i].fields.uuid === uuid) {
+        return templateData.models.gridData[i];
+      }
+    }
+
+    return null;
+
+  };
+
 
   // Run a model, with given options. Optional callback for return.
   // Expects  a UUID in deleteoptions.
-  Models.prototype.deleteModel = function(DeleteOptions, callback) {
+  Models.prototype.deleteModel = function(deleteOptions, callback) {
     var that = this;
 
     // No options defined:
-    if (DeleteOptions === undefined) {
+    if (deleteOptions === undefined) {
       return false;
     }
 
 
     // [TODO] Validate parameters before sending. (is everything included?)
-    if (DeleteOptions.uuid === undefined || DeleteOptions.uuid.length === 0) {
+    if (deleteOptions.uuid === undefined || deleteOptions.uuid.length === 0) {
       return false;
     }
 
@@ -193,7 +217,7 @@ var exports = (function () {
     };
 
     deleteoptions.parameters = {};
-    deleteoptions.uuid = DeleteOptions.uuid;
+    deleteoptions.uuid = deleteOptions.uuid;
 
 
     $.ajax({
@@ -206,6 +230,7 @@ var exports = (function () {
         callback(data);
       }
     });
+    return true;
   };
 
   return {
@@ -213,6 +238,7 @@ var exports = (function () {
   };
 
 }());
+
 
 // If we're in node export to models
 if (typeof module !== "undefined" && module.exports) {
