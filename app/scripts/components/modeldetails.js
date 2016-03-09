@@ -6,8 +6,7 @@ var exports = (function () {
   "use strict";
 
   // Constructor of our component
-  ModelDetails = function(app, models)
-  {
+  ModelDetails = function(app, models) {
     // Store reference to our app
     this.app = app;
     this.models = models;
@@ -17,8 +16,7 @@ var exports = (function () {
     // The model details page.
     Vue.component("model-details", {
       template: "#template-model-details",
-      ready: function()
-      {
+      ready: function() {
 
         console.log("details");
         var clipboard = new Clipboard("#btn-copy-log-output");
@@ -36,8 +34,7 @@ var exports = (function () {
 
         var selectedData = that.app.getTemplateData();
 
-        models.fetchLogFile(selectedData.selectedModelUuid, function(logdata)
-        {
+        models.fetchLogFile(selectedData.selectedModelUuid, function(logdata) {
           console.log("received logdata");
           var templateData = that.app.getTemplateData();
 
@@ -47,13 +44,6 @@ var exports = (function () {
           return logdata;
         });
 
-        // for modifying the navigation interaction if desired.
-        /*
-        $(".active").on("hide.bs.dropdown", function(e) {
-          //  e.preventDefault();
-          //  return false;
-        });
-        */
 
       },
 
@@ -62,21 +52,18 @@ var exports = (function () {
         // Update whenever selectedModel changes.
         logoutput: {
           cache: false,
-          get: function ()
-          {
+          get: function () {
             return that.app.getTemplateData().logoutput;
           }
         },
         selectedModel: {
           cache: true,
-          get: function ()
-          {
+          get: function () {
             console.log("compute selectedmodel");
             // Try to find selected model and return live data:
             var selectedData = that.app.getTemplateData();
 
-            if (selectedData.selectedModelUuid !== 0)
-            {
+            if (selectedData.selectedModelUuid !== 0) {
               var modelinfo = that.models.findModelByUUID(selectedData.selectedModelUuid);
 
               return modelinfo;
@@ -94,16 +81,14 @@ var exports = (function () {
 
       methods:
       {
-        closeDetails: function()
-        {
+        closeDetails: function() {
           // Back to the main screen view
           that.app.getTemplateData().currentView = "home";
         },
 
 
 
-        changeMenuItem: function(event)
-        {
+        changeMenuItem: function(event) {
 
           var el = $(event.target);
 
@@ -120,11 +105,7 @@ var exports = (function () {
         },
 
         // Remove item, based on incoming modelinfo.
-        removeModel: function (modelinfo)
-        {
-
-          // Store ref to component
-          var thisComponent = this;
+        removeModel: function (modelinfo) {
 
           var uuid = modelinfo.fields.uuid; //$(this).data("uuid");
           var modelname = modelinfo.fields.name;
@@ -132,17 +113,16 @@ var exports = (function () {
           $("#dialog-remove-name").html(modelname);
 
           // User accepts deletion:
-          $("#dialog-remove-response-accept").on("click", function()
-          {
+          $("#dialog-remove-response-accept").on("click", function() {
 
-            that.models.deleteModel({uuid: uuid}, function() { });
+            this.models.deleteModel({uuid: uuid}, function() { });
 
             // Hide dialog:
             // hide dialog.
             $("#dialog-confirm-delete").modal("hide");
 
             // Go back home:
-            thisComponent.closeDetails();
+            this.closeDetails();
 
 
           });
@@ -151,7 +131,7 @@ var exports = (function () {
         }
 
       }
-   });
+    });
 
   };
 

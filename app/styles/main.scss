@@ -1,3 +1,5 @@
+// scss-lint:disable Comment, NestingDepth, IdSelector, QualifyingElement, SelectorDepth
+
 $icon-font-path: '../fonts/';
 
 // From: huisstijl.deltares.nl
@@ -20,6 +22,17 @@ $brand-warning: $deltares-oranje;
 $brand-danger: $deltares-cyclaam;
 $body-bg: lighten($black, 33.5%);
 
+// These are in the variables.scss in bootstrap, you can reuse or overwrite them
+// $gray-base:              #000 !default;
+// $gray-darker:            lighten($gray-base, 13.5%) !default; // #222
+// $gray-dark:              lighten($gray-base, 20%) !default;   // #333
+// $gray:                   lighten($gray-base, 33.5%) !default; // #555
+// $gray-light:             lighten($gray-base, 46.7%) !default; // #777
+// $gray-lighter:           lighten($gray-base, 93.5%) !default; // #eee
+
+// We're using a lighter gray-light here than default
+$gray-light: #ccc;
+
 /* This part is wiredepped
 // bower:scss
 @import "bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
@@ -34,12 +47,14 @@ $body-bg: lighten($black, 33.5%);
 
 $cell-padding: 6px;
 $row-height: 32px;
+// TODO: base on gray and brand colors:
 $row-color-finished: #e5ffca;
 $row-color-warning: #fffbca;
 $row-color-error: #ffcaca;
 $row-color-even: #efefef;
 $row-color-odd: #f7f7f7;
-
+// was #c2c3c6; is now consistent with forms
+$row-border-color: $gray-light;
 
 // Make object shadowed.
 @mixin shadowed() {
@@ -99,9 +114,8 @@ html {
   @include rectangle-corners();
 
   // Give a bit of space when inside a row.
-  &.inside-cell
-  {
-    margin : 3px;
+  &.inside-cell {
+    margin: 3px;
   }
 }
 
@@ -125,8 +139,8 @@ html {
 }
 
 .heading-bar {
-  background-color: #e1e1e1;
-  color: #5d5d5d;
+  background-color: $gray-lighter;
+  color: $gray;
 
   padding: 10px 0 10px 32px;
 
@@ -143,8 +157,8 @@ html {
 
     // The title bar is also a link to home
     a {
+      color: $gray;
       text-decoration: none;
-      color: #5d5d5d;
     }
   }
 
@@ -154,24 +168,23 @@ html {
   margin-bottom: 32px;
   width: 100%;
 
-  td  {
-    border: 1px solid #c2c3c6;
+  td {
+    border: 1px solid $row-border-color;
     height: $row-height;
 
-    &.centered
-    {
+    &.centered {
       text-align: center;
     }
-          
+
   }
 
   thead {
     th {
-      height: $row-height;
-      background-color: #d9d9d9;
-      border: 1px solid #cecece;
+      background-color: $gray-lighter;
+      border: 1px solid $gray-light;
       font-size: 12px;
       font-weight: bold;
+      height: $row-height;
       text-align: center;
       text-transform: uppercase;
     }
@@ -181,47 +194,42 @@ html {
 
     td {
       padding-left: $cell-padding;
-
-
     }
 
     tr {
-      &.clickable
-      {
-        cursor:pointer;
+      &.clickable {
+        cursor: pointer;
       }
     }
+
     tr:nth-child(odd) {
+      @include status-colors();
       background-color: $row-color-even;
 
       &:hover {
-        background-color: mix($row-color-even,$white, 50%);
+        background-color: mix($row-color-even, $white, 50%);
       }
-
-      @include status-colors();
     }
 
     tr:nth-child(even) {
+      @include status-colors();
       background-color: $row-color-odd;
 
       &:hover {
         background-color: mix($row-color-odd, $white, 50%);
       }
-
-      @include status-colors();
     }
 
     // Progressbars in cell are a bit different than Bootstrap ones:
-    .progress-incell
-    {
+    .progress-incell {
+      @include rectangle-corners();
       margin: 4px;
-       @include rectangle-corners();
     }
   }
 }
 
 .input-group-addon-info {
-  background-color: #efefef;
+  background-color: $gray-lighter;
 }
 
 .input-group {
@@ -241,34 +249,26 @@ html {
 }
 
 
-.model-information
-{
-  padding: 4px 0px 0px 32px;
-  
+.model-information {
+  padding: 4px 0 0 32px;
 
-  h2
-  {
-    margin-top: 0px;
+
+  h2 {
+    margin-top: 0;
   }
 }
 
 
-#model-log-output-container
-{
- 
-  
+#model-log-output-container {
   padding: 4px;
-  
- 
-  #model-log-output-wrap
-  {
-    border: 1px solid  #e5e5e5;
+
+  #model-log-output-wrap {
+    border: 1px solid  $gray-lighter;
     overflow: scroll;
     padding: 8px;
   }
 
-  #model-log-output
-  {
+  #model-log-output {
 
     background-color: transparent;
     color: $gray-dark;
@@ -280,8 +280,8 @@ html {
 
 
 .column-actions {
-  width: 10%;
   text-align: center;
+  width: 10%;
 }
 
 
@@ -296,138 +296,138 @@ html {
 
 // Fix for bootstrap issue
 // http://stackoverflow.com/questions/19960162/bootstrap-3-modal-fires-and-causes-page-to-shift-to-the-left-momentarily-brows
-.modal-open[style]
-{
-  padding-right: 0px !important;
+.modal {
+  overflow-y: auto;
+}
+
+.modal-open {
+  overflow: auto;
 }
 
 /* Left nav */
 
-  
-  nav.sidebar, .main
-  {
-    margin-top: 12px;
 
-    @include rectangle-corners();
-    -webkit-transition: margin 200ms ease-out;
-      -moz-transition: margin 200ms ease-out;
-      -o-transition: margin 200ms ease-out;
-      transition: margin 200ms ease-out;
+nav.sidebar,
+.main {
+  @include rectangle-corners();
+  margin-top: 12px;
+  transition: margin 200ms ease-out;
+}
+
+.main {
+  padding: 10px 10px 0;
+}
+
+@media (min-width: 765px) {
+  .main {
+    float: right;
+    margin-left: 40px;
+    position: absolute;
+    width: calc(100% - 40px);
   }
 
-  .main{
-    padding: 10px 10px 0 10px;
+  nav.sidebar:hover + .main {
+    margin-left: 200px;
   }
 
- @media (min-width: 765px) {
+  nav.sidebar.navbar.sidebar>.container .navbar-brand,
+  .navbar>.container-fluid .navbar-brand {
+    margin-left: 0;
+  }
 
-    .main{
-      position: absolute;
-      width: calc(100% - 40px); 
-      margin-left: 40px;
-      float: right;
-    }
+  nav.sidebar .navbar-brand,
+  nav.sidebar .navbar-header {
+    margin-left: 0;
+    text-align: center;
+    width: 100%;
+  }
 
-    nav.sidebar:hover + .main{
-      margin-left: 200px;
-    }
+  nav.sidebar a {
+    padding-right: 13px;
+  }
 
-    nav.sidebar.navbar.sidebar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {
-      margin-left: 0px;
-    }
-
-    nav.sidebar .navbar-brand, nav.sidebar .navbar-header{
-      text-align: center;
-      width: 100%;
-      margin-left: 0px;
-    }
-    
-    nav.sidebar a{
-      padding-right: 13px;
-    }
-
-
-
-    nav.sidebar .navbar-nav > li{
-      border-bottom: 1px #e5e5e5 solid;
-    }
+  nav.sidebar .navbar-nav > li {
+    border-bottom: 1px $gray-lighter solid;
+  }
 
     // No bottom for last item.
-    nav.sidebar .navbar-nav > li:last-child{
-      border-bottom:0px;
-    }
-
-
-    nav.sidebar .navbar-nav .open .dropdown-menu {
-      position: static;
-      float: none;
-      width: auto;
-      margin-top: 0;
-      background-color: transparent;
-      border: 0;
-      -webkit-box-shadow: none;
-      box-shadow: none;
-    }
-
-
-
-    nav.sidebar .navbar-collapse, nav.sidebar .container-fluid{
-      padding: 0 0px 0 0px;
-    }
-
-    .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
-      color: #777;
-    }
-
-    nav.sidebar{
-      width: 200px;
-      height: 100%;
-      margin-left: -160px;
-      float: left;
-      margin-bottom: 0px;
-    }
-
-    nav.sidebar li {
-      width: 100%;
-    }
-
-    nav.sidebar:hover{
-      margin-left: 0px;
-    }
-
-    .forAnimate{
-      opacity: 0;
-    }
-  }
-   
-  @media (min-width: 1330px) {
-
-    .main{
-      width: calc(100% - 200px);
-      margin-left: 200px;
-    }
-
-    nav.sidebar{
-      margin-left: 0px;
-      float: left;
-    }
-
-    nav.sidebar .forAnimate{
-      opacity: 1;
-    }
+  nav.sidebar .navbar-nav > li:last-child {
+    border-bottom: 0;
   }
 
-  nav.sidebar .navbar-nav .open .dropdown-menu>li>a:hover, nav.sidebar .navbar-nav .open .dropdown-menu>li>a:focus {
-    color: #CCC;
+
+  nav.sidebar .navbar-nav .open .dropdown-menu {
     background-color: transparent;
+    border: 0;
+    box-shadow: none;
+    float: none;
+    margin-top: 0;
+    position: static;
+    width: auto;
   }
 
-  nav:hover .forAnimate{
+
+
+  nav.sidebar .navbar-collapse,
+  nav.sidebar .container-fluid {
+    padding: 0;
+  }
+
+  .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
+    color: $gray-light;
+  }
+
+  nav.sidebar {
+    float: left;
+    height: 100%;
+    margin-bottom: 0;
+    margin-left: -160px;
+    width: 200px;
+  }
+
+  nav.sidebar li {
+    width: 100%;
+  }
+
+  nav.sidebar:hover {
+    margin-left: 0;
+  }
+
+  .for-animate {
+    opacity: 0;
+  }
+}
+
+@media (min-width: 1330px) {
+
+  .main {
+    margin-left: 200px;
+    width: calc(100% - 200px);
+  }
+
+  nav.sidebar {
+    float: left;
+    margin-left: 0;
+  }
+
+  nav.sidebar .for-animate {
     opacity: 1;
   }
-  section{
-    padding-left: 15px;
-  }
-  
- 
+}
+
+nav.sidebar .navbar-nav .open .dropdown-menu>li>a:hover,
+nav.sidebar .navbar-nav .open .dropdown-menu>li>a:focus {
+  background-color: transparent;
+  color: $gray-light;
+}
+
+nav:hover .for-animate {
+  opacity: 1;
+}
+
+section {
+  padding-left: 15px;
+}
+
+
  /* End left nav */

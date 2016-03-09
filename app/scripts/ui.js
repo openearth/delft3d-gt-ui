@@ -41,23 +41,18 @@ var exports = (function () {
     }
 
     // Fix null values if they exist in the fields field.
-    $.each(data, function (key, value)
-    {
+    $.each(data, function (key, value) {
       var model = value.fields;
       var info = { "percent_completed": "", "time_to_finish": "" };
 
       // Replace info if available.
-      if (model.info !== null)
-      {
+      if (model.info !== null) {
 
         model.info = model.info.replace(/'/g, "\"");
 
-        try
-        {
+        try {
           info = jQuery.parseJSON(model.info);
-        }
-        catch(err)
-        {
+        } catch(err) {
           // Not valid json, inform us of that.
           console.log("Invalid JSON received from server");
         }
@@ -89,8 +84,7 @@ var exports = (function () {
       });
   };
 
-  UI.prototype.submitModel = function()
-  {
+  UI.prototype.submitModel = function() {
     var that = this;
 
     var ScenarioOptions = {};
@@ -149,6 +143,21 @@ var exports = (function () {
     // We assume all is well.
     var isvalid = true;
 
+    // Toggle submit button state based upon boolean argument
+    function toggleSubmit(state) {
+      var element = $("#newrun-submit");
+
+      if (state === true) {
+        /// Everything was OK. Enable the button.
+        element.removeAttr("disabled");
+
+      } else {
+
+        // There is an error somewhere, disable the submit button.
+        element.attr("disabled", "disabled");
+      }
+    }
+
     // Loop through all desired input checks:
     for(var i = 0; i < inputchecks.length; i++) {
       var check = inputchecks[i];
@@ -174,20 +183,6 @@ var exports = (function () {
       toggleSubmit(isvalid);
     }
 
-    // Toggle submit button state based upon boolean argument
-    function toggleSubmit(state) {
-      var element = $("#newrun-submit");
-
-      if (state === true) {
-        /// Everything was OK. Enable the button.
-        element.removeAttr("disabled");
-
-      } else {
-
-        // There is an error somewhere, disable the submit button.
-        element.attr("disabled", "disabled");
-      }
-    }
 
   };
   return {

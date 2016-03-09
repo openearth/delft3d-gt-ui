@@ -3,11 +3,8 @@
 var exports = (function () {
   "use strict";
 
-  /*eslint-disable no-unused-vars*/
-
   var app = new App();
 
-  /*eslint-enable no-unused-vars*/
   app.loadMainTemplate();
 
 
@@ -17,4 +14,3 @@ var exports = (function () {
 if (typeof module !== "undefined" && module.exports) {
   module.exports = exports;
 }
-

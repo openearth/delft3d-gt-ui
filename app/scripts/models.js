@@ -24,10 +24,16 @@ var exports = (function () {
   Models.prototype.toggleAutoUIRefresh = function(callback, interval, forceDirectUpdate) {
     var that = this;
 
-    // If forceDirectUpdate is true we actually execute an update immedialty
-    if (forceDirectUpdate === true)
-    {
+    // If forceDirectUpdate is true we actually execute an update immediately
+    if (forceDirectUpdate === true) {
       that.getModels(callback);
+    }
+    // Clear an existing timer.
+    function clearTimer() {
+      if (that.refreshTimerId !== -1) {
+        clearInterval(that.refreshTimerId);
+        that.refreshTimerId = -1;
+      }
     }
 
     if (interval > 0) {
@@ -46,13 +52,6 @@ var exports = (function () {
       clearTimer();
     }
 
-    // Clear an existing timer.
-    function clearTimer() {
-      if (that.refreshTimerId !== -1) {
-        clearInterval(that.refreshTimerId);
-        that.refreshTimerId = -1;
-      }
-    }
   };
 
   // Get models from URL, call callback upon completion.
@@ -167,8 +166,7 @@ var exports = (function () {
   };
 
   // Fetch a logfile from the server using an AJAX request.
-  Models.prototype.fetchLogFile = function(uuid, callback)
-  {
+  Models.prototype.fetchLogFile = function(uuid, callback) {
     $.ajax({
       //url: that.BaseURL + "/deleterun/",
       url: "sampledata/logfile.f34",
@@ -182,15 +180,12 @@ var exports = (function () {
   };
 
   // Find a model using a UUID
-  Models.prototype.findModelByUUID = function(uuid)
-  {
+  Models.prototype.findModelByUUID = function(uuid) {
 
     var templateData = this.app.getTemplateData();
 
-    for (var i = 0; i < templateData.models.gridData.length; i++)
-    {
-      if (templateData.models.gridData[i].fields.uuid === uuid)
-      {
+    for (var i = 0; i < templateData.models.gridData.length; i++) {
+      if (templateData.models.gridData[i].fields.uuid === uuid) {
         return templateData.models.gridData[i];
       }
     }
@@ -202,17 +197,17 @@ var exports = (function () {
 
   // Run a model, with given options. Optional callback for return.
   // Expects  a UUID in deleteoptions.
-  Models.prototype.deleteModel = function(DeleteOptions, callback) {
+  Models.prototype.deleteModel = function(deleteOptions, callback) {
     var that = this;
 
     // No options defined:
-    if (DeleteOptions === undefined) {
+    if (deleteOptions === undefined) {
       return false;
     }
 
 
     // [TODO] Validate parameters before sending. (is everything included?)
-    if (DeleteOptions.uuid === undefined || DeleteOptions.uuid.length === 0) {
+    if (deleteOptions.uuid === undefined || deleteOptions.uuid.length === 0) {
       return false;
     }
 
@@ -222,7 +217,7 @@ var exports = (function () {
     };
 
     deleteoptions.parameters = {};
-    deleteoptions.uuid = DeleteOptions.uuid;
+    deleteoptions.uuid = deleteOptions.uuid;
 
 
     $.ajax({
@@ -235,6 +230,7 @@ var exports = (function () {
         callback(data);
       }
     });
+    return true;
   };
 
   return {

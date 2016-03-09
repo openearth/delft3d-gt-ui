@@ -8,8 +8,7 @@ var exports = (function () {
 
 
   // Constructor of our UI class
-  App = function()
-  {
+  App = function() {
 
 
     // Main javascript code, initialize components, there shouldn"t be much here.
@@ -38,13 +37,11 @@ var exports = (function () {
   };
 
   // We call this separate so our tests do not use JQuery.
-  App.prototype.loadMainTemplate = function()
-  {
+  App.prototype.loadMainTemplate = function() {
     var that = this;
-    
+
     // We load the template file and then start running the actual site.
-    this.loadTemplate(function() 
-    {
+    this.loadTemplate(function() {
 
       // Move these files to an app class later.
       that.models = new Models(that, that.config);
@@ -69,19 +66,16 @@ var exports = (function () {
   };
 
   // Returns a reference to our template data.
-  App.prototype.getTemplateData = function()
-  {
+  App.prototype.getTemplateData = function() {
     return this.TemplateData;
   };
 
   // Returns a reference to the UI component
-  App.prototype.getUI = function()
-  {
+  App.prototype.getUI = function() {
     return this.ui;
   };
 
-  App.prototype.getModels = function()
-  {
+  App.prototype.getModels = function() {
     return this.models;
   };
 
@@ -92,8 +86,7 @@ var exports = (function () {
     $("#template-container").load("templates/templates.html", callback);
   };
 
-  App.prototype.loadComponents = function()
-  {
+  App.prototype.loadComponents = function() {
     // Not the only one who has issues with this: http://forum.vuejs.org/topic/344/how-do-you-handle-eslint-no-unused-vars-warning/8
     /*eslint-disable no-unused-vars */
 

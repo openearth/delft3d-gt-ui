@@ -7,8 +7,7 @@ var exports = (function () {
   "use strict";
 
   // Constructor of our component
-  ComponentModelList = function(app)
-  {
+  ComponentModelList = function(app) {
     // Store reference to our app
     this.app = app;
 
@@ -52,15 +51,13 @@ var exports = (function () {
 
       },
 
-      data: function ()
-      {
+      data: function () {
         var templateData = that.app.getTemplateData();
 
         this.columns = templateData.models.gridColumns;
         this.data = templateData.models.gridData;
 
-        if (this.columns !== undefined)
-        {
+        if (this.columns !== undefined) {
           var sortOrders = {};
 
           this.columns.forEach(function (key) {
@@ -86,8 +83,7 @@ var exports = (function () {
 
           var templateData = that.app.getTemplateData();
 
-          if (templateData.models.gridData[rowindex] !== undefined)
-          {
+          if (templateData.models.gridData[rowindex] !== undefined) {
             // now we have access to the native event
             var uuid = templateData.models.gridData[rowindex].fields.uuid;
 

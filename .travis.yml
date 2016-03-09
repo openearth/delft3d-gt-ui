@@ -11,5 +11,6 @@ before_script:
   - npm install -g bower
   - bower install
   - npm install -g gulp
-
-script: gulp test
+# including lint:babel is buggy (use strict errors)
+# lint:scss is not part of the test suite
+script: gulp test && gulp lint:scss && gulp lint:babel

@@ -6,8 +6,7 @@ var exports = (function () {
   "use strict";
 
   // Constructor of our component
-  ComponentHome = function(app)
-  {
+  ComponentHome = function(app) {
     // Store reference to our app
     this.app = app;
 
@@ -16,8 +15,7 @@ var exports = (function () {
     // Our homepage component
     Vue.component("home", {
       template: "#template-home",
-      ready: function ()
-      {
+      ready: function () {
 
         console.log("activate home");
 
@@ -25,15 +23,13 @@ var exports = (function () {
         that.app.getUI().registerHandlers();
       },
 
-      methods:
-      {
+      methods: {
         // Submit model:
-        submitModel: function()
-        {
+        submitModel: function() {
           console.log("submit model");
           that.app.getUI().submitModel();
         }
-     }
+      }
     });
   };
 
@@ -49,5 +45,3 @@ var exports = (function () {
 if (typeof module !== "undefined" && module.exports) {
   module.exports = exports;
 }
-
-
