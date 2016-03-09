@@ -109,20 +109,23 @@ var exports = (function () {
 
           var uuid = modelinfo.fields.uuid; //$(this).data("uuid");
           var modelname = modelinfo.fields.name;
+          
+          // This is here momentarily, it will be removed later. But this is needed to get closeDetails to work.
+          var thisComponent = this;
 
           $("#dialog-remove-name").html(modelname);
 
           // User accepts deletion:
           $("#dialog-remove-response-accept").on("click", function() {
 
-            this.models.deleteModel({uuid: uuid}, function() { });
+            that.models.deleteModel({uuid: uuid}, function() { });
 
             // Hide dialog:
             // hide dialog.
             $("#dialog-confirm-delete").modal("hide");
 
             // Go back home:
-            this.closeDetails();
+            thisComponent.closeDetails();
 
 
           });
