@@ -78,13 +78,11 @@
 
       },
 
-      data: function ()
-      {
+      data: function () {
         this.columns = data.models.gridColumns;
         this.data = data.models.gridData;
 
-        if (this.columns !== undefined)
-        {
+        if (this.columns !== undefined) {
           var sortOrders = {};
 
           this.columns.forEach(function (key) {
@@ -121,184 +119,169 @@
       }
     });
 
-  // Our homepage component
-  Vue.component("home", {
-    template: "#template-home",
-    ready: function ()
-    {
+    // Our homepage component
+    Vue.component("home", {
+      template: "#template-home",
+      ready: function () {
+        console.log("activate home");
 
-      console.log("activate home");
-
-      // Register event handlers:
-      ui.registerHandlers();
-    },
-
-    methods:
-    {
-      // Submit model:
-      submitModel: function()
-      {
-        console.log("submit model");
-        //var _ui = UI;
-
-        ui.submitModel();
-      }
-   }
-  });
-
-  // The model details page.
-  Vue.component("model-details", {
-    template: "#template-model-details",
-    ready: function()
-    {
-
-      console.log("details");
-      var clipboard = new Clipboard("#btn-copy-log-output");
-
-      clipboard.on("success", function(e) {
-        e.clearSelection();
-      });
-
-      /*
-      clipboard.on("error", function(e) {
-      });
-      */
-
-      // Maybe use https://github.com/vuejs/vue-async-data later?
-      models.fetchLogFile(data.selectedModelUuid, function(logdata)
-      {
-        console.log("received logdata");
-        window.vuevm.$data.logoutput = logdata;
-
-        //window.vuevm.$set('logoutput',logdata);
-        return logdata;
-      });
-
-      // for modifying the navigation interaction if desired.
-      /*
-      $(".active").on("hide.bs.dropdown", function(e) {
-        //  e.preventDefault();
-        //  return false;
-      });
-      */
-
-    },
-
-    computed: {
-
-      // Update whenever selectedModel changes.
-      logoutput: {
-        cache: false,
-        get: function ()
-        {
-          return window.vuevm.$data.logoutput;
-        }
+        // Register event handlers:
+        ui.registerHandlers();
       },
-      selectedModel: {
-        cache: false,
-        get: function ()
-        {
-          console.log("compute selectedmodel");
-          // Try to find selected model and return live data:
-          var selectedData = window.vuevm.$data;
 
-          if (selectedData.selectedModelUuid !== 0)
-          {
-            //debugger;
+      methods: {
+        // Submit model:
+        submitModel: function() {
+          console.log("submit model");
+          //var _ui = UI;
 
-            for (var i = 0; i < selectedData.models.gridData.length; i++)
-            {
-              if (selectedData.models.gridData[i].fields.uuid === selectedData.selectedModelUuid)
-              {
-                return selectedData.models.gridData[i];
-              }
-            }
-          }
-
-          return null;
-
+          ui.submitModel();
         }
       }
+    });
 
+    // The model details page.
+    Vue.component("model-details", {
+      template: "#template-model-details",
+      ready: function() {
 
-    },
+        console.log("details");
+        var clipboard = new Clipboard("#btn-copy-log-output");
 
-    methods:
-    {
-      closeDetails: function()
-      {
-        // Back to the main screen view
-        data.currentView = "home";
-      },
-
-
-
-      changeMenuItem: function(event)
-      {
-
-        var el = $(event.target);
-
-        // Hide all panels except for the target.
-        $(".collapse").hide();
-
-        // Get target:
-        var targetSelector = $(el).attr("data-target");
-        var target = $(targetSelector);
-
-        target.show();
-
-        event.stopPropagation();
-      },
-
-      // Remove item, based on incoming modelinfo.
-      removeModel: function (modelinfo)
-      {
-
-        var that = this;
-        var uuid = modelinfo.fields.uuid; //$(this).data("uuid");
-        var modelname = modelinfo.fields.name;
-
-        $("#dialog-remove-name").html(modelname);
-
-        // User accepts deletion:
-        $("#dialog-remove-response-accept").on("click", function()
-        {
-
-          models.deleteModel({uuid: uuid}, function() { });
-
-          // Hide dialog:
-          // hide dialog.
-          $("#dialog-confirm-delete").modal("hide");
-
-          // Go back home:
-          that.closeDetails();
-
-
+        clipboard.on("success", function(e) {
+          e.clearSelection();
         });
 
-        // Show the dialog:
-        $("#dialog-confirm-delete").modal({ });
+        /*
+         clipboard.on("error", function(e) {
+         });
+         */
+
+        // Maybe use https://github.com/vuejs/vue-async-data later?
+        models.fetchLogFile(data.selectedModelUuid, function(logdata) {
+          console.log("received logdata");
+          window.vuevm.$data.logoutput = logdata;
+
+          //window.vuevm.$set('logoutput',logdata);
+          return logdata;
+        });
+
+        // for modifying the navigation interaction if desired.
+        /*
+         $(".active").on("hide.bs.dropdown", function(e) {
+         //  e.preventDefault();
+         //  return false;
+         });
+         */
+
+      },
+
+      computed: {
+
+        // Update whenever selectedModel changes.
+        logoutput: {
+          cache: false,
+          get: function () {
+            return window.vuevm.$data.logoutput;
+          }
+        },
+        selectedModel: {
+          cache: false,
+          get: function () {
+            console.log("compute selectedmodel");
+            // Try to find selected model and return live data:
+            var selectedData = window.vuevm.$data;
+
+            if (selectedData.selectedModelUuid !== 0) {
+              //debugger;
+
+              for (var i = 0; i < selectedData.models.gridData.length; i++) {
+                if (selectedData.models.gridData[i].fields.uuid === selectedData.selectedModelUuid) {
+                  return selectedData.models.gridData[i];
+                }
+              }
+            }
+
+            return null;
+
+          }
+        }
+
+
+      },
+
+      methods:
+      {
+        closeDetails: function() {
+          // Back to the main screen view
+          data.currentView = "home";
+        },
+
+
+
+        changeMenuItem: function(event) {
+
+          var el = $(event.target);
+
+          // Hide all panels except for the target.
+          $(".collapse").hide();
+
+          // Get target:
+          var targetSelector = $(el).attr("data-target");
+          var target = $(targetSelector);
+
+          target.show();
+
+          event.stopPropagation();
+        },
+
+        // Remove item, based on incoming modelinfo.
+        removeModel: function (modelinfo) {
+
+          var that = this;
+          var uuid = modelinfo.fields.uuid; //$(this).data("uuid");
+          var modelname = modelinfo.fields.name;
+
+          $("#dialog-remove-name").html(modelname);
+
+          // User accepts deletion:
+          $("#dialog-remove-response-accept").on("click", function() {
+
+            models.deleteModel({uuid: uuid}, function() { });
+
+            // Hide dialog:
+            // hide dialog.
+            $("#dialog-confirm-delete").modal("hide");
+
+            // Go back home:
+            that.closeDetails();
+
+
+          });
+
+          // Show the dialog:
+          $("#dialog-confirm-delete").modal({ });
+        }
+
       }
+    });
 
-    }
+
+
+    // Get list of models:
+    models.getModels($.proxy(ui.UpdateModelList, ui));
+
+    // Enable auto refresh.
+    models.toggleAutoUIRefresh($.proxy(ui.UpdateModelList, ui), 5000);
+
+    var vm = new Vue({
+      el: "#app",
+      data: data
+    });
+
+    window.vuevm = vm;
+
   });
-
-
-
-  // Get list of models:
-  models.getModels($.proxy(ui.UpdateModelList, ui));
-
-  // Enable auto refresh.
-  models.toggleAutoUIRefresh($.proxy(ui.UpdateModelList, ui), 5000);
-
-  var vm = new Vue({
-    el: "#app",
-    data: data
-  });
-
-  window.vuevm = vm;
-
-});
 
 
 

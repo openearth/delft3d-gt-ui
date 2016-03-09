@@ -157,8 +157,7 @@ var exports = (function () {
   };
 
   // Fetch a logfile from the server using an AJAX request.
-  Models.prototype.fetchLogFile = function(uuid, callback)
-  {
+  Models.prototype.fetchLogFile = function(uuid, callback) {
     $.ajax({
       //url: that.BaseURL + "/deleterun/",
       url: "sampledata/logfile.f34",

@@ -37,23 +37,18 @@ var exports = (function () {
     }
 
     // Fix null values if they exist in the fields field.
-    $.each(data, function (key, value)
-    {
+    $.each(data, function (key, value) {
       var model = value.fields;
       var info = { "percent_completed": "", "time_to_finish": "" };
 
       // Replace info if available.
-      if (model.info !== null)
-      {
+      if (model.info !== null) {
 
         model.info = model.info.replace(/'/g, "\"");
 
-        try
-        {
+        try {
           info = jQuery.parseJSON(model.info);
-        }
-        catch(err)
-        {
+        } catch(err) {
           // Not valid json, inform us of that.
           console.log("Invalid JSON received from server");
         }
@@ -65,8 +60,7 @@ var exports = (function () {
 
     });
     // Store in the vue controller:
-    if (window.vuevm !== undefined)
-    {
+    if (window.vuevm !== undefined) {
       window.vuevm.models.gridData = data;
     }
   };
@@ -84,8 +78,7 @@ var exports = (function () {
       });
   };
 
-  UI.prototype.submitModel = function()
-  {
+  UI.prototype.submitModel = function() {
     var that = this;
 
     var ScenarioOptions = {};
