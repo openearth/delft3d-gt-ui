@@ -144,6 +144,21 @@ var exports = (function () {
     // We assume all is well.
     var isvalid = true;
 
+    // Toggle submit button state based upon boolean argument
+    function toggleSubmit(state) {
+      var element = $("#newrun-submit");
+
+      if (state === true) {
+        /// Everything was OK. Enable the button.
+        element.removeAttr("disabled");
+
+      } else {
+
+        // There is an error somewhere, disable the submit button.
+        element.attr("disabled", "disabled");
+      }
+    }
+
     // Loop through all desired input checks:
     for(var i = 0; i < inputchecks.length; i++) {
       var check = inputchecks[i];
@@ -169,20 +184,6 @@ var exports = (function () {
       toggleSubmit(isvalid);
     }
 
-    // Toggle submit button state based upon boolean argument
-    function toggleSubmit(state) {
-      var element = $("#newrun-submit");
-
-      if (state === true) {
-        /// Everything was OK. Enable the button.
-        element.removeAttr("disabled");
-
-      } else {
-
-        // There is an error somewhere, disable the submit button.
-        element.attr("disabled", "disabled");
-      }
-    }
 
   };
   return {

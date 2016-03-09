@@ -23,6 +23,14 @@ var exports = (function () {
   Models.prototype.toggleAutoUIRefresh = function(callback, interval) {
     var that = this;
 
+    // Clear an existing timer.
+    function clearTimer() {
+      if (that.refreshTimerId !== -1) {
+        clearInterval(that.refreshTimerId);
+        that.refreshTimerId = -1;
+      }
+    }
+
     if (interval > 0) {
       // Clear existing timer if present.
       clearTimer();
@@ -35,13 +43,6 @@ var exports = (function () {
       clearTimer();
     }
 
-    // Clear an existing timer.
-    function clearTimer() {
-      if (that.refreshTimerId !== -1) {
-        clearInterval(that.refreshTimerId);
-        that.refreshTimerId = -1;
-      }
-    }
   };
 
   // Get models from URL, call callback upon completion.
