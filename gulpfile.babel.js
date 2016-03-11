@@ -8,8 +8,9 @@ import mocha from "gulp-mocha";
 import scsslint from "gulp-scss-lint";
 import concat from "gulp-concat";
 import gulpLoadPlugins from "gulp-load-plugins";
-import istanbul from 'gulp-istanbul';
+import istanbul from "gulp-istanbul";
 
+import mainBowerFiles from "gulp-main-bower-files";
 
 // other stuff
 import {stream as wiredep} from "wiredep";
@@ -20,7 +21,7 @@ import _ from "lodash";
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
-// Server used for serving remote url's
+// Server used for serving remote url"s
 // "http://136.231.10.175:8888";
 var apiServer = "http://localhost:8000";
 
@@ -103,14 +104,14 @@ gulp.task("test", ["scripts", "lint", "lint:test"], () => {
     .pipe(mocha({}));
 });
 
-gulp.task('pre-coverage', function () {
-  return gulp.src(['app/**/*.js'])
+gulp.task("pre-coverage", () => {
+  return gulp.src(["app/**/*.js"])
     .pipe(istanbul())
     .pipe(istanbul.hookRequire());
 });
 
-gulp.task('coverage', ['pre-coverage'], function () {
-  return gulp.src(['test/**/*.js'])
+gulp.task("coverage", ["pre-coverage"], () => {
+  return gulp.src(["test/**/*.js"])
     .pipe(mocha({reporter: "mocha-teamcity-reporter"}))
   // Creating the reports after tests ran
     .pipe(istanbul.writeReports())
@@ -164,17 +165,9 @@ gulp.task("images", () => {
 });
 
 gulp.task("fonts", () => {
-  return gulp.src(
-    // load from bower files
-    require("main-bower-files")(
-      "**/*.{eot,svg,ttf,woff,woff2}",
-      function (err) {
-        "use strict";
-        // just log and continue
-        console.error(err);
-      }
-    )
-    .concat("app/fonts/**/*"))
+  return gulp.src("./bower.json")
+    .pipe(mainBowerFiles())
+    .pipe(concat("app/fonts/**/*"))
     .pipe(gulp.dest(".tmp/fonts"))
     .pipe(gulp.dest("dist/fonts"));
 });
