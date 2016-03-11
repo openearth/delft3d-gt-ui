@@ -23,7 +23,7 @@ const reload = browserSync.reload;
 
 // Server used for serving remote url"s
 // "http://136.231.10.175:8888";
-var apiServer = "http://localhost:8000";
+var apiServer = "";
 
 gulp.task("styles", () => {
   return gulp.src("app/styles/*.scss")
@@ -185,7 +185,7 @@ gulp.task("clean", del.bind(null, [".tmp", "dist"]));
 
 gulp.task("serve", ["styles", "scripts", "fonts", "images", "templates"], () => {
 
-  var paths = ["runs", "createruns", "deleteruns", "dorun"];
+  var paths = ["runs", "createrun", "deleterun", "dorun"];
 
   var proxies = _.map(paths, function(path) {
     "use strict";

@@ -22,9 +22,12 @@
   }
 
   var Models = require("../../app/scripts/models.js").Models;
+  var App = require("../../app/scripts/app.js").App;
+
 
   // Include our files (this was needed for mocha, not sure for Chai?)
   // includeFile(path.join(__dirname, "/../../app/scripts/models.js"));
+
   includeFile(path.join(__dirname, "/../../app/scripts/ui.js"));
   includeFile(path.join(__dirname, "/../../app/scripts/inputvalidation.js"));
   includeFile(path.join(__dirname, "/../../bower_components/validator-js/validator.js"));
@@ -93,13 +96,16 @@
 
       console.log("Models", Models);
 
-      var models = new Models();
+
 
       var config = {
         "BaseURL": "http://136.231.174.53:8000"
       };
 
-      models.setConfiguration(config);
+      /* eslint-disable no-unused-vars */
+      var app = new App();
+      var models = new Models(app, config);
+      /* eslint-enable no-unused-vars */
 
       // Expected input:
       var ScenarioOptions = {};
@@ -159,8 +165,13 @@
 
     it("Check response when missing data", function(done) {
 
+      var config = {
+        "BaseURL": "http://136.231.174.53:8000"
+      };
+
       /* eslint-disable no-unused-vars */
-      var models = new Models();
+      var app = new App();
+      var models = new Models(app, config);
       /* eslint-enable no-unused-vars */
 
       // Expected input:
