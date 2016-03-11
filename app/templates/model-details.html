@@ -4,7 +4,7 @@
       <div class="col-lg-12">
 
         <div class="header-bar">
-          <h2>Details for &ldquo;<strong>{{selectedModel.fields.name}}</strong>&rdquo;
+          <h2>Details for &ldquo;<strong>{{selModel.name}}</strong>&rdquo;
             <!-- <button class="btn btn-primary pull-right" type="button" v-on:click="closeDetails()" >
                  CLOSE
                  </button> -->
@@ -51,7 +51,7 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Actions <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-cog"></span></a>
                 <ul class="dropdown-menu forAnimate" role="menu">
-                  <li><a href="#" v-on:click="removeModel(selectedModel)">Abort simulation</a></li>
+                  <li><a href="#" v-on:click="removeModel(selModel)">Abort simulation</a></li>
                   <li><a href="#" v-on:click="changeMenuItem" data-target="#results-download">Download files</a></li>
                 </ul>
               </li>
@@ -77,27 +77,27 @@
               <tbody>
                 <tr>
                   <td>Name</td>
-                  <td>{{selectedModel.fields.name}}</td>
+                  <td>{{selModel.name}}</td>
                 </tr>
 
                 <tr>
                   <td>Model files</td>
-                  <td>View <a href="{{selectedModel.fields.workingdir}}">working directory</a></td>
+                  <td>View <a href="{{selModel.workingdir}}">working directory</a></td>
                 </tr>
 
                 <tr>
                   <td>Status</td>
-                  <td><span class="label label-default">{{selectedModel.fields.status | capitalize }}</span></td>
+                  <td><span class="label label-default">{{selModel.status | capitalize }}</span></td>
                 </tr>
 
                 <tr>
                   <td>Time to finish</td>
-                  <td>{{selectedModel.fields.info.time_to_finish}}</td>
+                  <td>...</td>
                 </tr>
 
                 <tr>
                   <td>% Complete</td>
-                  <td>{{selectedModel.fields.info.percent_completed}}</td>
+                  <td>...</td>
                 </tr>
 
                 <tr>
@@ -105,7 +105,7 @@
                   <td>
                     <div class="progress progress-incell">
                       <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
-                        {{selectedModel.fields.info.percent_completed}}
+                        <!--{{selModel.fields.info.percent_completed}}-->
                       </div>
                     </div>
                   </td>
@@ -125,7 +125,7 @@
           <div class="panel-body">
             <h2>Channel network</h2>
 
-            <img src="sampledata/example_channel_network.png" />
+            <img v-bind:src="selModel.processingtask.state_meta.channel_network_image" />
 
             <h4>Background information</h4>
 
@@ -139,7 +139,7 @@
               <div class="panel-body">
                 <h2>Delta plain fringe</h2>
 
-                <img src="sampledata/example_delta_fringe.png" />
+                <img v-bind:src="selModel.processingtask.state_meta.delta_fringe_image" />
 
                 <h4>Background information</4>
 

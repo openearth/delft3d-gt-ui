@@ -1,4 +1,4 @@
-/* global  */
+/* global  MessageSceneList MessageSceneDelete MessageSceneCreate MessageSceneChangeState */
 var Models;
 
 var exports = (function () {
@@ -56,32 +56,29 @@ var exports = (function () {
 
   // Get models from URL, call callback upon completion.
   Models.prototype.getModels = function(callback) {
-    var that = this;
 
-    var url = that.BaseURL + "/runs/";
+    var m = new MessageSceneList();
 
-    $.ajax({
-      url: url
-    })
-      .done(function(data) {
-        $("#alert-connectionfailed").hide();
+    m.onCompleteCallback(function() {
+      $("#alert-connectionfailed").hide();
+    });
 
-        if (callback !== undefined) {
-          callback(data);
-        }
+    m.onErrorCallback(function() {
+      $("#alert-connectionfailed").show();
+    });
 
-      })
-      .error(function() {
-        $("#alert-connectionfailed").show();
-      });
-
+    // Execute AJAX call to remote server to get list of models.
+    m.executeRequest(function(items)
+    {
+      callback(items);
+    });
   };
 
 
   // Run a model, with given options. Optional callback for return.
   Models.prototype.prepareModel = function(ScenarioOptions, ModelOptions, callback) {
 
-    var that = this;
+//    var that = this;
 
     /*
      // Validate input of run model.
@@ -104,33 +101,33 @@ var exports = (function () {
      }
      */
 
-
-    // [TODO] Validate parameters before sending. (is everything included?)
-
-    // Prepare options for our format.
-    // Temporary format.
+  // Temporary format.
     var serveroptions = {
-      "type": "startrun",
       "name": ScenarioOptions.runid,
       "dt": ModelOptions.timestep
     };
 
-    //serveroptions.parameters = {};
-    //serveroptions.scenario = ScenarioOptions;
-    //serveroptions.model = ModelOptions;
 
-    $.ajax({
-      url: that.BaseURL + "/createrun/",
-      //url: "sampledata/runmodel-ok.json",
-      data: serveroptions,
-      method: "GET" // Should be a POST later
-    })
-      .done(function(data) { //moved here for Mocha.
+    var msg = new MessageSceneCreate(serveroptions);
 
-        if (callback !== undefined) {
-          callback(data);
-        }
-      });
+    msg.onCompleteCallback(function() {
+      // Handle on complete.
+    });
+
+    msg.onErrorCallback(function() {
+      // Handle errors
+      console.log("Error starting model");
+    });
+
+    // Execute AJAX call to remote server to get list of models.
+    msg.executeRequest(function(data)
+    {
+      // We get returned data here.
+      if (callback !== undefined)
+      {
+        callback(data);
+      }
+    });
 
     return true;
 
@@ -138,30 +135,25 @@ var exports = (function () {
 
 
   // Run the model, with the given uuid.
-  Models.prototype.runModel = function(uuid, callback) {
-    var that = this;
+  Models.prototype.runModel = function(modelid, callback) {
 
-    if (uuid === undefined) {
-      return;
+    if (modelid === undefined)
+    {
+
+      return false;
     }
+    // Start model.
+    var msg = new MessageSceneChangeState(modelid);
 
-    var params = {
-      uuid: uuid
-    };
-
-    $.ajax({
-      url: that.BaseURL + "/dorun/",
-      //url: "sampledata/runmodel-ok.json",
-      data: params,
-      method: "GET", // Should be a POST later
-      done: function(data) { //moved here for Mocha.
-
-        if (callback !== undefined) {
-          callback(data);
-        }
+    msg.executeRequest(function(data)
+    {
+      // We get returned data here.
+      if (callback !== undefined)
+      {
+        callback(data);
       }
-
     });
+
 
   };
 
@@ -180,12 +172,14 @@ var exports = (function () {
   };
 
   // Find a model using a UUID
-  Models.prototype.findModelByUUID = function(uuid) {
+  Models.prototype.findModelByID = function(id) {
 
     var templateData = this.app.getTemplateData();
 
-    for (var i = 0; i < templateData.models.gridData.length; i++) {
-      if (templateData.models.gridData[i].fields.uuid === uuid) {
+    // For whatever strange reason, ".id" becomes an string. This might happen somewhere in the vue logic.
+    for (var i = 0; i < templateData.models.gridData.length; i++)
+    {
+      if (parseInt(templateData.models.gridData[i].id) === id) {
         return templateData.models.gridData[i];
       }
     }
@@ -196,40 +190,38 @@ var exports = (function () {
 
 
   // Run a model, with given options. Optional callback for return.
-  // Expects  a UUID in deleteoptions.
-  Models.prototype.deleteModel = function(deleteOptions, callback) {
-    var that = this;
-
-    // No options defined:
-    if (deleteOptions === undefined) {
-      return false;
-    }
-
+  // Expects  a id in deleteoptions.
+  Models.prototype.deleteModel = function(modelid, options, callback) {
 
     // [TODO] Validate parameters before sending. (is everything included?)
-    if (deleteOptions.uuid === undefined || deleteOptions.uuid.length === 0) {
+    if (modelid === undefined) {
       return false;
     }
 
-    // Prepare options for our format.
-    var deleteoptions = {
-      "type": "deleterun"
-    };
+    if (options !== undefined) {
+      // For the future, we support additional options.
+    }
 
-    deleteoptions.parameters = {};
-    deleteoptions.uuid = deleteOptions.uuid;
+    var msg = new MessageSceneDelete(modelid);
 
+    msg.onCompleteCallback(function() {
+      // Handle on complete.
+    });
 
-    $.ajax({
-      url: that.BaseURL + "/deleterun/",
-      data: deleteoptions,
-      method: "GET" // Should be a POST later
-    })
-    .done(function(data) {
-      if (callback !== undefined) {
+    msg.onErrorCallback(function() {
+      // Handle errors
+    });
+
+    // Execute AJAX call to remote server to get list of models.
+    msg.executeRequest(function(data)
+    {
+      // We get returned data here.
+      if (callback !== undefined)
+      {
         callback(data);
       }
     });
+
     return true;
   };
 

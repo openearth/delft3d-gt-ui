@@ -30,8 +30,8 @@ var exports = (function () {
       },
       logoutput: "",
       currentView: "home",
-      selectedModel: "none",
-      selectedModelUuid: 0
+      selectedModel: null,
+      selectedModelID: 0
     };
 
   };

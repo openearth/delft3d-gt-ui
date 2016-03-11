@@ -19,8 +19,8 @@ const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
 // Server used for serving remote url's
-// "http://136.231.10.175:8888";
-var apiServer = "";
+var apiServer = "http://136.231.195.35:8888";
+//var apiServer = "http://localhost:8000";
 
 gulp.task("styles", () => {
   return gulp.src("app/styles/*.scss")
@@ -175,7 +175,8 @@ gulp.task("clean", del.bind(null, [".tmp", "dist"]));
 
 gulp.task("serve", ["styles", "scripts", "fonts", "images", "templates"], () => {
 
-  var paths = ["runs", "createrun", "deleterun", "dorun"];
+  // Proxy paths which we map to a different source, for testing locally or running the actual build.
+  var paths = ["runs", "createrun", "deleterun", "dorun", "scene"];
 
   var proxies = _.map(paths, function(path) {
     "use strict";

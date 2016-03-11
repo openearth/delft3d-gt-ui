@@ -51,7 +51,8 @@ var exports = (function () {
 
       },
 
-      data: function () {
+      data: function ()
+      {
         var templateData = that.app.getTemplateData();
 
         this.columns = templateData.models.gridColumns;
@@ -77,20 +78,17 @@ var exports = (function () {
           this.sortOrders[key] = this.sortOrders[key] * -1;
         },
 
-
-
         detailModel: function (rowindex) {
 
           var templateData = that.app.getTemplateData();
 
           if (templateData.models.gridData[rowindex] !== undefined) {
             // now we have access to the native event
-            var uuid = templateData.models.gridData[rowindex].fields.uuid;
+            var id = parseInt(templateData.models.gridData[rowindex].id);
 
-            templateData.selectedModel = templateData.models.gridData[rowindex];
-
+            that.app.TemplateData.selectedModel = that.app.models.findModelByID(id);
             //Test:
-            templateData.selectedModelUuid = uuid;
+            templateData.selectedModelID = (id);
 
             templateData.currentView = "model-details";
           }

@@ -35,17 +35,18 @@ var exports = (function () {
   UI.prototype.UpdateModelList = function(data) {
 
     // Check if data is present
-    if (!(data !== undefined && $.isArray(data) === true)) {
-      console.log("not an array");
+    if (data === undefined) {
+      console.log("No data");
       return;
     }
 
     // Fix null values if they exist in the fields field.
-    $.each(data, function (key, value) {
-      var model = value.fields;
-      var info = { "percent_completed": "", "time_to_finish": "" };
+   // $.each(data.scenes, function (key, scene) {
+     // var model = value.fields;
+     // var info = { "percent_completed": "", "time_to_finish": "" };
 
       // Replace info if available.
+     /*
       if (model.info !== null) {
 
         model.info = model.info.replace(/'/g, "\"");
@@ -60,14 +61,14 @@ var exports = (function () {
 
       // Replace:
       value.fields.info = info;
+    */
 
-
-    });
+    //});
 
     // Store in the vue controller:
     var templateData = this.app.getTemplateData();
 
-    templateData.models.gridData = data;
+    templateData.models.gridData = data.scenes;
 
   };
 
@@ -98,35 +99,39 @@ var exports = (function () {
     // [TODO] We skip input validation at the moment!
     that.models.prepareModel(ScenarioOptions, ModelOptions, function(ret) {
 
-      if (ret !== undefined) {
-        if (ret.status !== undefined) {
+      //if (ret !== undefined) {
+        //if (ret.status !== undefined) {
           // Some alert things. Turn this into a nice class...
-          if (ret.status.code === "error") {
-            $("#newrun-alert .alert").html("An error occured! Reason:" + ret.status.reason);
+        /*
+               $("#newrun-alert .alert").html("An error occured! Reason:" + ret.status.reason);
             $("#newrun-alert .alert").removeClass("alert-success").addClass("alert-warning");
             $("#newrun-alert").show();
 
           }
+        */
 
-          if (ret.status.code === "success") {
-            $("#newrun-alert .alert").html("Model is queued...");
-            $("#newrun-alert .alert").removeClass("alert-warning").addClass("alert-success");
-            $("#newrun-alert").show();
 
-            // Immediatly start the model
-            // [temporary code]
-            that.models.runModel(ret.uuid);
-          }
 
-          // Delay and hide after a moment
-          $("#newrun-alert").delay(4000).fadeOut(500);
+      if (ret.scene !== undefined) {
 
-          // Do a hard refresh right now:
-          that.models.getModels($.proxy(that.UpdateModelList, that));
+        $("#newrun-alert .alert").html("Model is queued...");
+        $("#newrun-alert .alert").removeClass("alert-warning").addClass("alert-success");
+        $("#newrun-alert").show();
 
-        }
-
+        // Immediatly start the model
+        // [temporary code]
+        that.models.runModel(ret.scene.id);
       }
+
+      // Delay and hide after a moment
+      $("#newrun-alert").delay(4000).fadeOut(500);
+
+      // Do a hard refresh right now:
+      that.models.getModels($.proxy(that.UpdateModelList, that));
+
+       // }
+
+     // }
     });
   };
 
