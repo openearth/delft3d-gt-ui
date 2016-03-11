@@ -8,6 +8,8 @@ import mocha from "gulp-mocha";
 import scsslint from "gulp-scss-lint";
 import concat from "gulp-concat";
 import gulpLoadPlugins from "gulp-load-plugins";
+import istanbul from 'gulp-istanbul';
+
 
 // other stuff
 import {stream as wiredep} from "wiredep";
@@ -101,7 +103,22 @@ gulp.task("test", ["scripts", "lint", "lint:test"], () => {
     .pipe(mocha({}));
 });
 
-gulp.task("teamcity", ["scripts", "lint", "lint:test", "lint:scss"], () => {
+gulp.task('pre-coverage', function () {
+  return gulp.src(['app/**/*.js'])
+    .pipe(istanbul())
+    .pipe(istanbul.hookRequire());
+});
+
+gulp.task('coverage', ['pre-coverage'], function () {
+  return gulp.src(['test/**/*.js'])
+    .pipe(mocha({reporter: "mocha-teamcity-reporter"}))
+  // Creating the reports after tests ran
+    .pipe(istanbul.writeReports())
+  // Enforce a coverage of at least 90%
+    .pipe(istanbul.enforceThresholds({ thresholds: { global: 90 } }));
+});
+
+gulp.task("teamcity", ["scripts", "lint", "lint:test", "lint:scss", "coverage"], () => {
   return gulp.src("test/spec/**/*.js")
     .pipe(mocha({reporter: "mocha-teamcity-reporter"}));
 });
