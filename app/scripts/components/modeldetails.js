@@ -13,9 +13,28 @@ var exports = (function () {
 
     var that = this;
 
+    //var currentAnimationIndex;
+
     // The model details page.
     Vue.component("model-details", {
       template: "#template-model-details",
+      data: function () {
+          return {
+            // Current animation frame:
+            currentAnimationIndex: 0,
+
+            // timer id for animation.
+            timerAnimation: -1,
+
+            // Which imagelist are we currently watching?
+            currentAnimationKey: "",
+
+            isAnimating: false
+          };
+        },
+      beforeCompile: function() {
+        console.log("before compile");
+      },
       ready: function() {
 
         console.log("details");
@@ -30,6 +49,8 @@ var exports = (function () {
         });
         */
 
+        //this.currentAnimationIndex = 0;
+        //this.$data.currentAnimationIndex = 0;
         // Maybe use https://github.com/vuejs/vue-async-data later?
 
         var selectedData = that.app.getTemplateData();
@@ -68,32 +89,39 @@ var exports = (function () {
 
             return m;
           }
-        }
+        },
 
-        /*
-        selectedModel: {
+        animationIndex:
+        {
           cache: false,
-          get: function () {
-            console.log("compute selectedmodel "  );
-            // Try to find selected model and return live data:
-            var selectedData = that.app.getTemplateData();
+          get: function()
+          {
+            return this.currentAnimationIndex;
+          }
+        },
 
-            if (selectedData.selectedModelID !== 0) {
-              var modelinfo = that.models.findModelByID(selectedData.selectedModelID);
+        animationFrame:
+        {
+          cache: false,
+          get: function()
+          {
+            var animationKey = this.currentAnimationKey;
+            var imgs = that.app.getTemplateData().selectedModel.processingtask.state_meta[animationKey];
 
-console.log(modelinfo.name);
+            return imgs.location + imgs.images[this.currentAnimationIndex];
+          }
+        },
 
-              return modelinfo;
 
-            }
-            console.log("no data");
+        isAnimating:
+        {
+          cache: false,
+          get: function()
+          {
 
-            return null;
-
+            return this.timerAnimation > 0;
           }
         }
-    */
-
       },
 
       methods:
@@ -117,6 +145,22 @@ console.log(modelinfo.name);
           var target = $(targetSelector);
 
           target.show();
+
+
+          // If there is an animation property, we set this:
+          var targetAnimation = $(el).attr("data-animation");
+
+          if (targetAnimation.length > 0)
+          {
+            this.currentAnimationKey = targetAnimation;
+            this.currentAnimationIndex = 0;
+            this.stopImageFrame();
+
+          } else {
+            this.currentAnimationKey = "";
+          }
+
+
 
           event.stopPropagation();
         },
@@ -148,7 +192,91 @@ console.log(modelinfo.name);
           });
           // Show the dialog:
           $("#dialog-confirm-delete").modal({ });
+        },
+
+        // For animations:
+        previousImageFrame: function()
+        {
+          // Check if an animation key has been set. If not, we bail out.
+          if (this.currentAnimationKey.length === 0)
+          {
+            return;
+          }
+
+          this.currentAnimationIndex--;
+
+          var imgs = that.app.getTemplateData().selectedModel.processingtask.state_meta[this.currentAnimationKey];
+
+          // Probably wrap with active key.
+          if (this.currentAnimationIndex < 0)
+          {
+            this.currentAnimationIndex = imgs.images.length - 1;
+          }
+        },
+
+        stopImageFrame: function()
+        {
+          // Check if an animation key has been set. If not, we bail out.
+          if (this.currentAnimationKey.length === 0)
+          {
+            return;
+          }
+
+
+          // Clear interval
+          if (this.timerAnimation !== -1)
+          {
+          //  this.isAnimating =  false;
+            clearInterval(this.timerAnimation);
+
+            this.timerAnimation = -1;
+          }
+
+        },
+
+        playImageFrame: function()
+        {
+          // Check if an animation key has been set. If not, we bail out.
+          if (this.currentAnimationKey.length === 0)
+          {
+            return;
+          }
+
+          // Stop and start. (We do not want multiiple setintervals)
+          this.stopImageFrame();
+          this.timerAnimation = setInterval(this.nextImageFrame, 1000);
+
+        },
+
+        nextImageFrame: function()
+        {
+          // Check if an animation key has been set. If not, we bail out.
+          if (this.currentAnimationKey.length === 0)
+          {
+            return;
+          }
+
+          console.log("next: " + this.currentAnimationKey);
+
+          this.currentAnimationIndex++;
+
+          var imgs = that.app.getTemplateData().selectedModel.processingtask.state_meta[this.currentAnimationKey];
+
+          if (imgs !== undefined)
+          {
+            // Probably wrap.
+            if (this.currentAnimationIndex >= imgs.images.length)
+            {
+              this.currentAnimationIndex = 0;
+            }
+          }
         }
+
+
+
+
+
+
 
       }
     });

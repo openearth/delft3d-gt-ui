@@ -43,8 +43,8 @@
               <li class="dropdown" >
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Graphs <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-signal"></span></a>
                 <ul class="dropdown-menu for-animate" role="menu">
-                  <li ><a href="#" v-on:click="changeMenuItem" data-target="#results-channel-network" >Channel network</a></li>
-                  <li><a href="#" v-on:click="changeMenuItem" data-target="#results-delta-fringe">Delta plain fringe</a></li>
+                  <li ><a href="#" v-on:click="changeMenuItem" data-target="#results-channel-network" data-animation="channel_network_images">Channel network</a></li>
+                  <li><a href="#" v-on:click="changeMenuItem" data-target="#results-delta-fringe" data-animation="delta_fringe_images">Delta plain fringe</a></li>
                 </ul>
               </li>
 
@@ -125,7 +125,13 @@
           <div class="panel-body">
             <h2>Channel network</h2>
 
-            <img v-bind:src="selModel.processingtask.state_meta.channel_network_image" />
+            <img v-bind:src="animationFrame" />
+            <div class="btn-group">
+                <button class="btn btn-primary" v-on:click="previousImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-backward"></span></button>
+                <button class="btn btn-primary" v-show="isAnimating" v-on:click="stopImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-stop" ></span></button>
+                <button class="btn btn-primary" v-show="isAnimating == false" v-on:click="playImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-play" ></span></button>
+                <button class="btn btn-primary" v-on:click="nextImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-forward"></span></button>
+            </div>
 
             <h4>Background information</h4>
 
@@ -139,7 +145,23 @@
               <div class="panel-body">
                 <h2>Delta plain fringe</h2>
 
-                <img v-bind:src="selModel.processingtask.state_meta.delta_fringe_image" />
+                <div>
+
+                  <div class="text-center">
+                    <img v-bind:src="animationFrame" />
+
+                    <div >
+                      <div class="btn-group">
+                          <button class="btn btn-primary" v-on:click="previousImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-backward"></span></button>
+                          <button class="btn btn-primary" v-show="isAnimating" v-on:click="stopImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-stop" ></span></button>
+                          <button class="btn btn-primary" v-show="isAnimating == false" v-on:click="playImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-play" ></span></button>
+                          <button class="btn btn-primary" v-on:click="nextImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-forward"></span></button>
+                      </div>
+                    </div>                    
+                  </div>
+
+                  
+                </div>
 
                 <h4>Background information</4>
 
