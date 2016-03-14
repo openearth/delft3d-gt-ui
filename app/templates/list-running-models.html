@@ -26,10 +26,10 @@
         | filterBy filterKey
         | orderBy sortKey sortOrders[sortKey]
         " v-on:click="detailModel($index)" class="clickable">
-          <td>{{entry.fields.name}}<input type="hidden" value="{{entry.fields.uuid}}" v-model="entry.fields.uuid" /></td>
-          <td>{{entry.fields.status}} {{entry.fields.info.percent_completed}}</td>
+          <td>{{entry.name}}<input type="hidden" value="{{entry.id}}" v-model="entry.id" /></td>
+          <td>{{entry.state}}</td>
           <td>
-            {{entry.fields.info.time_to_finish}}
+          
           </td>
           <td class="centered">
             <button class="btn btn-primary inside-cell" v-on:click="detailModel($index)">Details</button>

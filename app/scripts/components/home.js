@@ -17,10 +17,19 @@ var exports = (function () {
       template: "#template-home",
       ready: function () {
 
-        console.log("activate home");
-
         // Register event handlers:
         that.app.getUI().registerHandlers();
+      },
+
+      computed: {
+
+        // Update whenever selectedModel changes.
+        test: {
+          cache: false,
+          get: function () {
+            return that.app.getTemplateData().selectedModel.name;
+          }
+        }
       },
 
       methods: {

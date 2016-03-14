@@ -34,15 +34,18 @@ var exports = (function () {
 
         var selectedData = that.app.getTemplateData();
 
-        models.fetchLogFile(selectedData.selectedModelUuid, function(logdata) {
-          console.log("received logdata");
-          var templateData = that.app.getTemplateData();
+        if (selectedData != null)
+        {
+          models.fetchLogFile(selectedData.selectedModelID, function(logdata) {
+            console.log("received logdata");
+            var templateData = that.app.getTemplateData();
 
-          templateData.logoutput = logdata;
+            templateData.logoutput = logdata;
 
 
-          return logdata;
-        });
+            return logdata;
+          });
+        }
 
 
       },
@@ -56,15 +59,29 @@ var exports = (function () {
             return that.app.getTemplateData().logoutput;
           }
         },
+        selModel:
+        {
+          cache: false,
+          get: function()
+          {
+            var m = that.app.getTemplateData().selectedModel;
+
+            return m;
+          }
+        }
+
+        /*
         selectedModel: {
-          cache: true,
+          cache: false,
           get: function () {
-            console.log("compute selectedmodel");
+            console.log("compute selectedmodel "  );
             // Try to find selected model and return live data:
             var selectedData = that.app.getTemplateData();
 
-            if (selectedData.selectedModelUuid !== 0) {
-              var modelinfo = that.models.findModelByUUID(selectedData.selectedModelUuid);
+            if (selectedData.selectedModelID !== 0) {
+              var modelinfo = that.models.findModelByID(selectedData.selectedModelID);
+
+console.log(modelinfo.name);
 
               return modelinfo;
 
@@ -75,7 +92,7 @@ var exports = (function () {
 
           }
         }
-
+    */
 
       },
 
@@ -107,9 +124,9 @@ var exports = (function () {
         // Remove item, based on incoming modelinfo.
         removeModel: function (modelinfo) {
 
-          var uuid = modelinfo.fields.uuid; //$(this).data("uuid");
-          var modelname = modelinfo.fields.name;
-          
+          var id = modelinfo.id; //$(this).data("uuid");
+          var modelname = modelinfo.name;
+
           // This is here momentarily, it will be removed later. But this is needed to get closeDetails to work.
           var thisComponent = this;
 
@@ -118,7 +135,7 @@ var exports = (function () {
           // User accepts deletion:
           $("#dialog-remove-response-accept").on("click", function() {
 
-            that.models.deleteModel({uuid: uuid}, function() { });
+            that.models.deleteModel(id);
 
             // Hide dialog:
             // hide dialog.
