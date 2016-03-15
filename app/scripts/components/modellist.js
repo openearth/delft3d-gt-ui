@@ -3,7 +3,7 @@
 // Exported globals
 var ComponentModelList;
 
-var exports = (function () {
+var exports = (function() {
   "use strict";
 
   // Constructor of our component
@@ -23,27 +23,23 @@ var exports = (function () {
         filterKey: String
       },
 
-      computed:
-      {
-        data:
-        {
+      computed: {
+        data: {
           cache: false,
-          get: function () {
+          get: function() {
             return that.app.getTemplateData().models.gridData;
           }
         },
 
-        columns:
-        {
+        columns: {
           cache: false,
-          get: function () {
+          get: function() {
             return that.app.getTemplateData().models.gridColumns;
           }
         },
 
         // Returns true if we have no items in the grid array
-        hasNoModels:
-        {
+        hasNoModels: {
           get: function() {
             return (that.app.getTemplateData().models.gridData.length === 0);
           }
@@ -51,8 +47,7 @@ var exports = (function () {
 
       },
 
-      data: function ()
-      {
+      data: function() {
         var templateData = that.app.getTemplateData();
 
         this.columns = templateData.models.gridColumns;
@@ -61,7 +56,7 @@ var exports = (function () {
         if (this.columns !== undefined) {
           var sortOrders = {};
 
-          this.columns.forEach(function (key) {
+          this.columns.forEach(function(key) {
             sortOrders[key] = 1;
           });
         }
@@ -73,12 +68,12 @@ var exports = (function () {
       },
 
       methods: {
-        sortBy: function (key) {
+        sortBy: function(key) {
           this.sortKey = key;
           this.sortOrders[key] = this.sortOrders[key] * -1;
         },
 
-        detailModel: function (rowindex) {
+        detailModel: function(rowindex) {
 
           var templateData = that.app.getTemplateData();
 

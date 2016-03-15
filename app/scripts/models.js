@@ -1,7 +1,7 @@
 /* global  MessageSceneList MessageSceneDelete MessageSceneCreate MessageSceneChangeState */
 var Models;
 
-var exports = (function () {
+var exports = (function() {
   "use strict";
 
   Models = function(App, Config) {
@@ -68,8 +68,7 @@ var exports = (function () {
     });
 
     // Execute AJAX call to remote server to get list of models.
-    m.executeRequest(function(items)
-    {
+    m.executeRequest(function(items) {
       callback(items);
     });
   };
@@ -78,7 +77,7 @@ var exports = (function () {
   // Run a model, with given options. Optional callback for return.
   Models.prototype.prepareModel = function(ScenarioOptions, ModelOptions, callback) {
 
-//    var that = this;
+    //    var that = this;
 
     /*
      // Validate input of run model.
@@ -101,7 +100,7 @@ var exports = (function () {
      }
      */
 
-  // Temporary format.
+    // Temporary format.
     var serveroptions = {
       "name": ScenarioOptions.runid,
       "dt": ModelOptions.timestep
@@ -120,11 +119,9 @@ var exports = (function () {
     });
 
     // Execute AJAX call to remote server to get list of models.
-    msg.executeRequest(function(data)
-    {
+    msg.executeRequest(function(data) {
       // We get returned data here.
-      if (callback !== undefined)
-      {
+      if (callback !== undefined) {
         callback(data);
       }
     });
@@ -137,19 +134,16 @@ var exports = (function () {
   // Run the model, with the given uuid.
   Models.prototype.runModel = function(modelid, callback) {
 
-    if (modelid === undefined)
-    {
+    if (modelid === undefined) {
 
       return false;
     }
     // Start model.
     var msg = new MessageSceneChangeState(modelid);
 
-    msg.executeRequest(function(data)
-    {
+    msg.executeRequest(function(data) {
       // We get returned data here.
-      if (callback !== undefined)
-      {
+      if (callback !== undefined) {
         callback(data);
       }
     });
@@ -160,15 +154,15 @@ var exports = (function () {
   // Fetch a logfile from the server using an AJAX request.
   Models.prototype.fetchLogFile = function(uuid, callback) {
     $.ajax({
-      //url: that.BaseURL + "/deleterun/",
-      url: "sampledata/logfile.f34",
-      method: "GET" // Should be a POST later
-    })
-    .done(function(data) {
-      if (callback !== undefined) {
-        callback(data);
-      }
-    });
+        //url: that.BaseURL + "/deleterun/",
+        url: "sampledata/logfile.f34",
+        method: "GET" // Should be a POST later
+      })
+      .done(function(data) {
+        if (callback !== undefined) {
+          callback(data);
+        }
+      });
   };
 
   // Find a model using a UUID
@@ -177,8 +171,7 @@ var exports = (function () {
     var templateData = this.app.getTemplateData();
 
     // For whatever strange reason, ".id" becomes an string. This might happen somewhere in the vue logic.
-    for (var i = 0; i < templateData.models.gridData.length; i++)
-    {
+    for (var i = 0; i < templateData.models.gridData.length; i++) {
       if (parseInt(templateData.models.gridData[i].id) === id) {
         return templateData.models.gridData[i];
       }
@@ -213,11 +206,9 @@ var exports = (function () {
     });
 
     // Execute AJAX call to remote server to get list of models.
-    msg.executeRequest(function(data)
-    {
+    msg.executeRequest(function(data) {
       // We get returned data here.
-      if (callback !== undefined)
-      {
+      if (callback !== undefined) {
         callback(data);
       }
     });

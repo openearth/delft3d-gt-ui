@@ -2,7 +2,7 @@
 
 var ModelDetails;
 
-var exports = (function () {
+var exports = (function() {
   "use strict";
 
   // Constructor of our component
@@ -18,20 +18,20 @@ var exports = (function () {
     // The model details page.
     Vue.component("model-details", {
       template: "#template-model-details",
-      data: function () {
-          return {
-            // Current animation frame:
-            currentAnimationIndex: 0,
+      data: function() {
+        return {
+          // Current animation frame:
+          currentAnimationIndex: 0,
 
-            // timer id for animation.
-            timerAnimation: -1,
+          // timer id for animation.
+          timerAnimation: -1,
 
-            // Which imagelist are we currently watching?
-            currentAnimationKey: "",
+          // Which imagelist are we currently watching?
+          currentAnimationKey: "",
 
-            isAnimating: false
-          };
-        },
+          isAnimating: false
+        };
+      },
       beforeCompile: function() {
         console.log("before compile");
       },
@@ -55,8 +55,7 @@ var exports = (function () {
 
         var selectedData = that.app.getTemplateData();
 
-        if (selectedData != null)
-        {
+        if (selectedData != null) {
           models.fetchLogFile(selectedData.selectedModelID, function(logdata) {
             console.log("received logdata");
             var templateData = that.app.getTemplateData();
@@ -76,35 +75,29 @@ var exports = (function () {
         // Update whenever selectedModel changes.
         logoutput: {
           cache: false,
-          get: function () {
+          get: function() {
             return that.app.getTemplateData().logoutput;
           }
         },
-        selModel:
-        {
+        selModel: {
           cache: false,
-          get: function()
-          {
+          get: function() {
             var m = that.app.getTemplateData().selectedModel;
 
             return m;
           }
         },
 
-        animationIndex:
-        {
+        animationIndex: {
           cache: false,
-          get: function()
-          {
+          get: function() {
             return this.currentAnimationIndex;
           }
         },
 
-        animationFrame:
-        {
+        animationFrame: {
           cache: false,
-          get: function()
-          {
+          get: function() {
             var animationKey = this.currentAnimationKey;
             var imgs = that.app.getTemplateData().selectedModel.processingtask.state_meta[animationKey];
 
@@ -113,19 +106,16 @@ var exports = (function () {
         },
 
 
-        isAnimating:
-        {
+        isAnimating: {
           cache: false,
-          get: function()
-          {
+          get: function() {
 
             return this.timerAnimation > 0;
           }
         }
       },
 
-      methods:
-      {
+      methods: {
         closeDetails: function() {
           // Back to the main screen view
           that.app.getTemplateData().currentView = "home";
@@ -150,8 +140,7 @@ var exports = (function () {
           // If there is an animation property, we set this:
           var targetAnimation = $(el).attr("data-animation");
 
-          if (targetAnimation.length > 0)
-          {
+          if (targetAnimation.length > 0) {
             this.currentAnimationKey = targetAnimation;
             this.currentAnimationIndex = 0;
             this.stopImageFrame();
@@ -166,7 +155,7 @@ var exports = (function () {
         },
 
         // Remove item, based on incoming modelinfo.
-        removeModel: function (modelinfo) {
+        removeModel: function(modelinfo) {
 
           var id = modelinfo.id; //$(this).data("uuid");
           var modelname = modelinfo.name;
@@ -191,15 +180,13 @@ var exports = (function () {
 
           });
           // Show the dialog:
-          $("#dialog-confirm-delete").modal({ });
+          $("#dialog-confirm-delete").modal({});
         },
 
         // For animations:
-        previousImageFrame: function()
-        {
+        previousImageFrame: function() {
           // Check if an animation key has been set. If not, we bail out.
-          if (this.currentAnimationKey.length === 0)
-          {
+          if (this.currentAnimationKey.length === 0) {
             return;
           }
 
@@ -208,25 +195,21 @@ var exports = (function () {
           var imgs = that.app.getTemplateData().selectedModel.processingtask.state_meta[this.currentAnimationKey];
 
           // Probably wrap with active key.
-          if (this.currentAnimationIndex < 0)
-          {
+          if (this.currentAnimationIndex < 0) {
             this.currentAnimationIndex = imgs.images.length - 1;
           }
         },
 
-        stopImageFrame: function()
-        {
+        stopImageFrame: function() {
           // Check if an animation key has been set. If not, we bail out.
-          if (this.currentAnimationKey.length === 0)
-          {
+          if (this.currentAnimationKey.length === 0) {
             return;
           }
 
 
           // Clear interval
-          if (this.timerAnimation !== -1)
-          {
-          //  this.isAnimating =  false;
+          if (this.timerAnimation !== -1) {
+            //  this.isAnimating =  false;
             clearInterval(this.timerAnimation);
 
             this.timerAnimation = -1;
@@ -234,11 +217,9 @@ var exports = (function () {
 
         },
 
-        playImageFrame: function()
-        {
+        playImageFrame: function() {
           // Check if an animation key has been set. If not, we bail out.
-          if (this.currentAnimationKey.length === 0)
-          {
+          if (this.currentAnimationKey.length === 0) {
             return;
           }
 
@@ -248,11 +229,9 @@ var exports = (function () {
 
         },
 
-        nextImageFrame: function()
-        {
+        nextImageFrame: function() {
           // Check if an animation key has been set. If not, we bail out.
-          if (this.currentAnimationKey.length === 0)
-          {
+          if (this.currentAnimationKey.length === 0) {
             return;
           }
 
@@ -262,11 +241,9 @@ var exports = (function () {
 
           var imgs = that.app.getTemplateData().selectedModel.processingtask.state_meta[this.currentAnimationKey];
 
-          if (imgs !== undefined)
-          {
+          if (imgs !== undefined) {
             // Probably wrap.
-            if (this.currentAnimationIndex >= imgs.images.length)
-            {
+            if (this.currentAnimationIndex >= imgs.images.length) {
               this.currentAnimationIndex = 0;
             }
           }
