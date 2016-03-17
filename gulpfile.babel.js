@@ -24,7 +24,24 @@ const reload = browserSync.reload;
 // Server used for serving remote url"s
 // "http://136.231.10.175:8888";
 var apiServer = "";
-//apiServer = "http://136.231.10.175:8888";
+// apiServer = "http://136.231.10.175:8888";
+// apiServer = "http://136.231.175.21:8888";
+
+// Proxy paths which we map to a different source, for testing locally or
+// running the actual build.
+var paths = ["runs", "createrun", "deleterun", "dorun", "scene"];
+
+var proxies = _.map(paths, function(path) {
+  "use strict";
+  var proxyItem = null;
+
+  if (apiServer) {
+    proxyItem = proxyMiddleware("/" + path, {target: apiServer});
+  }
+
+  return proxyItem;
+});
+
 
 gulp.task("styles", () => {
   return gulp.src("app/styles/*.scss")
@@ -193,22 +210,6 @@ gulp.task("extras", () => {
 gulp.task("clean", del.bind(null, [".tmp", "dist"]));
 
 gulp.task("serve", ["styles", "scripts", "fonts", "images", "templates"], () => {
-
-  // Proxy paths which we map to a different source, for testing locally or running the actual build.
-  var paths = ["runs", "createrun", "deleterun", "dorun", "scene"];
-
-  var proxies = _.map(paths, function(path) {
-    "use strict";
-    var proxyItem = null;
-
-    if (apiServer.length != 0)
-    {
-      proxyItem = proxyMiddleware("/" + path, {target: apiServer});
-    }
-
-    return proxyItem;
-  });
-
   var options = {
     notify: false,
     port: 9000,
@@ -216,17 +217,16 @@ gulp.task("serve", ["styles", "scripts", "fonts", "images", "templates"], () => 
       baseDir: [".tmp", "app"],
       routes: {
         "/bower_components": "bower_components"
-      },
+      }
 
     }
+  };
+
+  // apiServer cannot be zero length, then the "target" parameter is not valid.
+  // so we only add the proxy if the length is not zero
+  if (apiServer) {
+    options.middleware = proxies;
   }
-
-    // apiServer cannot be zero length, then the "target" parameter is not valid.
-    // so we only add the proxy if the length is not zero
-    if (apiServer.length != 0)
-    {
-      options.middleware = proxies;
-    }
 
   browserSync(options);
 
@@ -245,13 +245,21 @@ gulp.task("serve", ["styles", "scripts", "fonts", "images", "templates"], () => 
 });
 
 gulp.task("serve:dist", () => {
-  browserSync({
+  var options = {
     notify: false,
     port: 9000,
     server: {
       baseDir: ["dist"]
     }
-  });
+  };
+
+  // apiServer cannot be zero length, then the "target" parameter is not valid.
+  // so we only add the proxy if the length is not zero
+  if (apiServer)  {
+    options.middleware = proxies;
+  }
+
+  browserSync(options);
 });
 
 gulp.task("serve:test", ["scripts", "templates"], () => {
