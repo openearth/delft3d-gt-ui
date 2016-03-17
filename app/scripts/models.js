@@ -4,14 +4,8 @@ var Models;
 var exports = (function() {
   "use strict";
 
-  Models = function(App, Config) {
-    this.BaseURL = Config.BaseURL;
+  Models = function(App) {
     this.app = App;
-  };
-
-  // Set some configuration options such as model server location.
-  Models.prototype.setConfiguration = function(Config) {
-    this.BaseURL = Config.BaseURL;
   };
 
   // Enable autorefresh or disable it (interval = 0)
@@ -149,11 +143,18 @@ var exports = (function() {
   };
 
   // Fetch a logfile from the server using an AJAX request.
-  Models.prototype.fetchLogFile = function(uuid, callback) {
+  Models.prototype.fetchLogFile = function(selectedModelData, callback) {
+
+
+    // No selected data, then we bail.
+    if (selectedModelData === undefined) {
+      return null;
+    }
+
+    // Working dir is at: modeldata.workingdir + delft3d.log
     $.ajax({
-        //url: that.BaseURL + "/deleterun/",
-        url: "sampledata/logfile.f34",
-        method: "GET" // Should be a POST later
+        url: selectedModelData.workingdir + "delft3d.log",
+        method: "GET"
       })
       .done(function(data) {
         if (callback !== undefined) {

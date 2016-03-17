@@ -40,31 +40,6 @@ var exports = (function () {
       return;
     }
 
-    // Fix null values if they exist in the fields field.
-   // $.each(data.scenes, function (key, scene) {
-     // var model = value.fields;
-     // var info = { "percent_completed": "", "time_to_finish": "" };
-
-      // Replace info if available.
-     /*
-      if (model.info !== null) {
-
-        model.info = model.info.replace(/'/g, "\"");
-
-        try {
-          info = jQuery.parseJSON(model.info);
-        } catch(err) {
-          // Not valid json, inform us of that.
-          console.log("Invalid JSON received from server");
-        }
-      }
-
-      // Replace:
-      value.fields.info = info;
-    */
-
-    //});
-
     // Store in the vue controller:
     var templateData = this.app.getTemplateData();
 
