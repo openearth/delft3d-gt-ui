@@ -177,6 +177,8 @@ return gulp.src(
       }
     )
     .concat("app/fonts/**/*"))
+    .pipe(gulp.dest('.tmp/fonts'))
+    .pipe(gulp.dest('dist/fonts'));
 });
 
 gulp.task("extras", () => {
