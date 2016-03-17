@@ -24,7 +24,7 @@ const reload = browserSync.reload;
 // Server used for serving remote url"s
 // "http://136.231.10.175:8888";
 var apiServer = "";
-apiServer = "http://136.231.10.175:8888";
+//apiServer = "http://136.231.10.175:8888";
 
 gulp.task("styles", () => {
   return gulp.src("app/styles/*.scss")
@@ -200,7 +200,7 @@ gulp.task("serve", ["styles", "scripts", "fonts", "images", "templates"], () => 
     var proxyItem = null;
 
     if (apiServer.length != 0)
-    {    
+    {
       proxyItem = proxyMiddleware("/" + path, {target: apiServer});
     }
 
@@ -215,7 +215,7 @@ gulp.task("serve", ["styles", "scripts", "fonts", "images", "templates"], () => 
       routes: {
         "/bower_components": "bower_components"
       },
-     
+
     }
   }
 
