@@ -78,5 +78,7 @@
       "space-infix-ops": 1
     }
   },
-  "dependencies": {}
+  "dependencies": {
+    "jsdom": "^8.1.0"
+  }
 }

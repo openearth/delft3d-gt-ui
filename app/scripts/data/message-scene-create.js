@@ -4,16 +4,15 @@
 // Reference to format used: https://publicwiki.deltares.nl/display/Delft3DGT/Django_app
 var MessageSceneCreate;
 
-var exports = (function () {
+var exports = (function() {
   "use strict";
 
 
   // Constructor of the MessageSceneCreate class.
   // The callback is used when data is returned after receiving and validation are complete.
-  MessageSceneCreate = function(options)
-  {
-    if (options === undefined)
-    {
+  MessageSceneCreate = function(options) {
+
+    if (options === undefined) {
       console.error("[MessageSceneCreate] No options specified for create.");
       return null;
     }
@@ -32,13 +31,11 @@ var exports = (function () {
 
 
   // This function prepares options for the create request.
-  MessageSceneCreate.prototype.prepareOptions = function(inoptions)
-  {
-    var options = { };
+  MessageSceneCreate.prototype.prepareOptions = function(inoptions) {
+    var options = {};
 
     // Name is mandatory.
-    if (inoptions.name === undefined)
-    {
+    if (inoptions.name === undefined) {
       return null;
     }
 
@@ -46,13 +43,11 @@ var exports = (function () {
 
     // [Todo]: with a loop of known properties.
 
-    if (inoptions.state !== undefined)
-    {
+    if (inoptions.state !== undefined) {
       options.state = inoptions.state;
     }
 
-    if (inoptions.info !== undefined)
-    {
+    if (inoptions.info !== undefined) {
       options.info = inoptions.info;
     }
 
@@ -62,93 +57,87 @@ var exports = (function () {
 
 
   /// Perform actual request
-  MessageSceneCreate.prototype.executeRequest = function(callback)
-  {
+  MessageSceneCreate.prototype.executeRequest = function(callback) {
     var that = this;
 
-    if (callback === undefined)
-    {
+    if (callback === undefined) {
       console.error("[MessageSceneCreate] No callback in executeRequest");
 
       return;
     }
 
-    this.request(function(data)
-    {
+    this.request(function(data) {
       that.receivedData(data, callback);
 
     });
   };
 
   // We have received data, process and return.
-  MessageSceneCreate.prototype.receivedData = function(data, callback)
-  {
+  MessageSceneCreate.prototype.receivedData = function(data, callback) {
+
     // Process data
     callback(data);
 
   };
 
   /// Callback called when things went okay, connection wise (does not have anything to do with received data)
-  MessageSceneCreate.prototype.onCompleteCallback = function(callback)
-  {
+  MessageSceneCreate.prototype.onCompleteCallback = function(callback) {
     this.onComplete = callback;
   };
 
   /// Callback called when things went wrong, connection wise (does not have anything to do with received data)
-  MessageSceneCreate.prototype.onErrorCallback = function(callback)
-  {
+  MessageSceneCreate.prototype.onErrorCallback = function(callback) {
     this.onError = callback;
   };
 
   // Code that performs the actual request.
-  MessageSceneCreate.prototype.request = function(callback)
-  {
+  MessageSceneCreate.prototype.request = function(callback) {
 
     var url = this.targetURL;
     var that = this;
 
     // If options is null, then it was not valid.
-    if (this.options == null)
-    {
+    if (this.options == null) {
 
       console.error("[MessageSceneCreate] No options specified");
 
-      if (that.onError !== undefined && that.onError !== null)
-      {
+      if (that.onError !== undefined && that.onError !== null) {
         that.onError();
+
       }
+
+      return false;
     }
 
-
-
     $.ajax({
-      url: url,
-      data: this.options,
-      method: "POST"
-    })
-    .done(function(data) {
+        url: url,
+        data: this.options,
+        method: "POST"
+      })
+      .done(function(data) {
 
-      // Always call comlete callback (connection related)
-      if (that.onComplete !== undefined && that.onComplete !== null)
-      {
-        that.onComplete();
-      }
+        // Always call comlete callback (connection related)
+        if (that.onComplete !== undefined && that.onComplete !== null) {
+          that.onComplete();
+        }
 
 
-      if (callback !== undefined) {
-        callback(data);
-      }
+        if (callback !== undefined) {
+          callback(data);
+        }
 
-    })
-    .error(function() {
+      })
+      .error(function(xhr, status, error) {
 
-      // Call error callback, let application know something went wrong.
-      if (that.onError !== undefined && that.onError !== null)
-      {
-        that.onError();
-      }
+        // Call error callback, let application know something went wrong.
+        if (that.onError !== undefined && that.onError !== null) {
 
-    });
+          that.onError({
+            status: status,
+            error: error
+          });
+        }
+      });
 
   };
 

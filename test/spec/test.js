@@ -1,14 +1,15 @@
-/* global chai */
+/* global chai  MessageSceneCreate MessageSceneChangeState MessageSceneDelete MessageSceneList */
 
-(function () {
+(function() {
   "use strict";
 
   // imports
   var path = require("path");
 
-  // To simulate JQuery namespace
-  global.$ = { };
-
+  // We use a setInterval mock function, otherwise setIntervals will cause Mocha to never stop!
+  global.setInterval = function(callback, time) {
+    console.log("setInterval override " + callback + " time " + time);
+  };
 
 
   // http://stackoverflow.com/questions/21421701/javascript-test-mocha-with-import-js-file
@@ -21,211 +22,424 @@
     vm.runInThisContext(code);
   }
 
-  var Models = require("../../app/scripts/models.js").Models;
+  // var Models = require("../../app/scripts/models.js").Models;
   var App = require("../../app/scripts/app.js").App;
 
 
   // Include our files (this was needed for mocha, not sure for Chai?)
   // includeFile(path.join(__dirname, "/../../app/scripts/models.js"));
 
+
+  includeFile(path.join(__dirname, "/../../app/scripts/models.js"));
   includeFile(path.join(__dirname, "/../../app/scripts/ui.js"));
   includeFile(path.join(__dirname, "/../../app/scripts/inputvalidation.js"));
   includeFile(path.join(__dirname, "/../../bower_components/validator-js/validator.js"));
+  includeFile(path.join(__dirname, "/../../bower_components/vue/dist/vue.min.js"));
+
+  // Views:
+  includeFile(path.join(__dirname, "/../../app/scripts/components/home.js"));
+  includeFile(path.join(__dirname, "/../../app/scripts/components/modeldetails.js"));
+  includeFile(path.join(__dirname, "/../../app/scripts/components/modellist.js"));
+
+  includeFile(path.join(__dirname, "/../../app/scripts/inputvalidation.js"));
+
+
+
+  includeFile(path.join(__dirname, "/../../app/scripts/data/message-scene-create.js"));
+  includeFile(path.join(__dirname, "/../../app/scripts/data/message-scene-changestate.js"));
+  includeFile(path.join(__dirname, "/../../app/scripts/data/message-scene-delete.js"));
+  includeFile(path.join(__dirname, "/../../app/scripts/data/message-scene-list.js"));
+
+  // This does not work in the tests, we cannot create the objects...
+  //var MessageSceneCreate = require("../../app/scripts/data/message-scene-create.js").MessageSceneCreate;
+  //var MessageSceneChangeState = require("../../app/scripts/data/message-scene-changestate.js").MessageSceneChangeState;
+  //var MessageSceneDelete = require("../../app/scripts/data/message-scene-delete.js").MessageSceneDelete;
+  //var MessageSceneList = require("../../app/scripts/data/message-scene-list.js").MessageSceneList;
+
+  // Required for JQuery:
+  var jsdom = require("jsdom");
+
+
+
+  global.document = jsdom.jsdom("<!doctype html><html><body><div id='app'></div><div id='template-container'></div></body></html>");
+  global.window = document.defaultView;
+  global.navigator = {
+    userAgent: "node.js"
+  };
+  global.window.$ = global.window.jQuery = require(path.join(__dirname, "/../../bower_components/jquery/dist/jquery.js"));
+  global.$ = global.window.jQuery;
+
+  // In testing we override the URL domain name. Otherwise nock cannot work. Nock does NOT support relative paths.
+  // Using this, we can use http://0.0.0.0 in the nock.
+  global.$.ajaxPrefilter(function(options) {
+    options.url = "http://0.0.0.0" + (options.url);
+  });
+
 
   if (typeof require !== "undefined") {
 
     // stuff to test without a browser
     var assert = require("chai").assert;
 
+
+    //console.log(jsdom);
+
     var nock = require("nock");
 
-    var fetch = require("node-fetch");
-
-    nock("https://delft3d-gt")
-      .post("/runs")
-      .reply(200, {
-        uuid: "XXXX-XXXX"
-      });
 
   } else {
     assert = chai.assert;
-    fetch = window.fetch;
+    //fetch = window.fetch;
   }
-  describe("If we are on the create run page", function () {
-    describe("And we press the create button ", function () {
-      it("should send a json message to the server ", function () {
-        assert(true, "implement json message format");
+
+  describe("Testing message handlers", function() {
+    describe("MessageSceneCreate", function() {
+
+
+      // Create a MessageSceneCreate without options, we should have an empty options object (nulll)
+      it("Test scene creation - without name", function() {
+
+        var msc = new MessageSceneCreate({});
+
+        assert(msc.options == null, "MessageSceneCreate should be null");
       });
 
-      it("should contain a name in the message", function () {
-        assert(true, "implement and test name in format");
+
+
+      // Create a MessageSceneCreate without options, we should have an empty options object (nulll)
+      it("Test scene creation - with name", function() {
+        var options = {
+          name: "Model to create"
+        };
+
+        var msc = new MessageSceneCreate(options);
+
+        assert(msc.options.name === options.name, "MessageSceneCreate name is set");
       });
 
-      it("should have a timestep parameter (dt) with a numeric value", function () {
-        assert(true, "implement and test dt in format");
-      });
 
-      it("should be posted to the server, resulting in a  uuid", function(done) {
-        fetch("https://delft3d-gt/runs", {
-          method: "POST",
-          body: JSON.stringify({
-            "name": "f34"
+      it("Test scene creation - check create request - ok", function(done) {
+        var options = {
+          name: "Model to create"
+        };
+
+        nock("http://0.0.0.0")
+          .defaultReplyHeaders({
+            "Content-Type": "application/json"
           })
-        })
-          .then(function(response) {
-            return response.json();
+          .post("/scene/create", {
+            // We have to match these post fields:
+            // If it does not, we get an error in the report (which is what we want then?)
+            name: options.name
           })
-          .catch(function(error) {
-            done(error);
+          .reply(200, {
+            scene: {
+              "info": "",
+              "name": options.name,
+              "simulationtask": null,
+              "workingdir": "",
+              "postprocessingtask": null,
+              "state": "",
+              "processingtask": null,
+              "fileurl": "",
+              "id": 30
+            }
           })
-          .then(function(data) {
-            assert.ok(data.uuid, "got some data with a uuid");
-            done();
-          })
-          .catch(function(error) {
-            done(error);
+          // Otherwise we return an 500. The name did not match.
+          .post("/scene/create")
+          .reply(500, {
+            status: "error"
           });
+
+
+        var msc = new MessageSceneCreate(options);
+
+        msc.onErrorCallback(function(errorInfo) {
+          // Somehow we need a try catch blog for asserts?
+          try {
+            console.log(errorInfo.status);
+            assert(errorInfo.status !== "error", "Model status is: error - Name does not match?");
+          } catch (x) {
+            done(x);
+          }
+        });
+
+        // Execute AJAX call to remote server to get list of models.
+        msc.executeRequest(function(data) {
+          assert(data.scene.name === options.name, "model name is ok");
+          done();
+        });
+      });
+    });
+
+
+    // Testing MessageSceneChangeState messages
+    describe("MessageSceneChangeState", function() {
+
+
+      // Create a MessageSceneCreate without options, we should have an empty options object (nulll)
+      it("MessageSceneChangeState - Create instance without options", function() {
+
+        var mscs = new MessageSceneChangeState();
+
+        assert(mscs.modelid == null, "MessageSceneChangeState modelid should be null");
+      });
+
+      // Create a MessageSceneCreate without options, we should have an empty options object (nulll)
+      it("MessageSceneChangeState - Create instance with string parameter", function() {
+
+        var mscs = new MessageSceneChangeState("notallowed");
+
+        assert(mscs.modelid == null, "MessageSceneChangeState modelid should be null");
+      });
+
+
+      it("MessageSceneChangeState - Check sceneid being sent", function(done) {
+
+        // Id of the scene we will start:
+        var startid = 1;
+        var mscs = new MessageSceneChangeState(startid);
+
+        nock("http://0.0.0.0")
+
+        .defaultReplyHeaders({
+            "Content-Type": "application/json"
+          })
+          .post("/scene/start", {
+            // We have to match these post fields:
+            // If it does not, we get an error in the report (which is what we want then?)
+            id: "" + startid
+          })
+          .reply(200, {
+            "status": "started"
+          })
+          // Otherwise we return an 500. The postdata did not match.
+          .post("/scene/start")
+          .reply(500, {
+            status: "error"
+          });
+
+        mscs.onErrorCallback(function(errorInfo) {
+          // Somehow we need a try catch blog for asserts?
+          try {
+            assert(errorInfo.status !== "error", "MessageSceneChangeState did not make correct AJAX call.");
+          } catch (x) {
+            done(x);
+          }
+        });
+
+        // Execute AJAX call to remote server to get list of models.
+        mscs.executeRequest(function(data) {
+          assert(data.status === "started", "MessageSceneChangeState status = started ok");
+          done();
+        });
+      });
+    });
+
+  });
+
+  // Testing MessageSceneChangeState messages
+  describe("MessageSceneDelete", function() {
+
+
+    // Create a MessageSceneCreate without options, we should have an empty options object (nulll)
+    it("MessageSceneDelete - Create instance without options", function() {
+
+      var msd = new MessageSceneDelete();
+
+      assert(msd.modelid == null, "MessageSceneDelete modelid should be null");
+    });
+
+    // Create a MessageSceneCreate without options, we should have an empty options object (nulll)
+    it("MessageSceneDelete - Create instance with string parameter", function() {
+
+      var msd = new MessageSceneDelete("notallowed");
+
+      assert(msd.modelid == null, "MessageSceneDelete modelid should be null");
+    });
+
+
+    it("MessageSceneDelete - Check sceneid being sent", function(done) {
+
+      // Id of the scene we will start:
+      var deleteid = 1;
+      var msd = new MessageSceneDelete(deleteid);
+
+      nock("http://0.0.0.0")
+
+      .defaultReplyHeaders({
+          "Content-Type": "application/json"
+        })
+        .post("/scene/delete", {
+          // We have to match these post fields:
+          // If it does not, we get an error in the report (which is what we want then?)
+          id: "" + deleteid
+        })
+        .reply(200, {
+          "status": "deleted"
+        })
+        // Otherwise we return an 500. The postdata did not match.
+        .post("/scene/delete")
+        .reply(500, {
+          status: "error"
+        });
+
+
+      msd.onErrorCallback(function(errorInfo) {
+        // Somehow we need a try catch blog for asserts?
+        try {
+          assert(errorInfo.status !== "error", "MessageSceneDelete did not make correct AJAX call.");
+        } catch (x) {
+          done(x);
+        }
+      });
+
+      // Execute AJAX call to remote server to get list of models.
+      msd.executeRequest(function(data) {
+        assert(data.status === "deleted", "MessageSceneDelete status = started ok");
+        done();
       });
     });
   });
 
 
-  describe("runModel", function() {
-    it("Check success response", function(done) {
-      console.log("Temporarily disabled");
-
-      console.log("Models", Models);
+  // Testing MessageSceneList messages
+  describe("MessageSceneList", function() {
 
 
+    it("MessageSceneList - Check if request is sent correctly", function(done) {
 
-      var config = {
-        "BaseURL": "http://136.231.174.53:8000"
-      };
+      var msl = new MessageSceneList();
 
-      /* eslint-disable no-unused-vars */
-      var app = new App();
-      var models = new Models(app, config);
-      /* eslint-enable no-unused-vars */
+      nock("http://0.0.0.0")
 
-      // Expected input:
-      var ScenarioOptions = {};
-      var ModelOptions = {};
-
-      // This is also what we check again, to see if this is what went to the ajax call.
-      ScenarioOptions.runid = "test";
-      ScenarioOptions.author = "placeholder";
-      ModelOptions.timestep = 20;
+      .defaultReplyHeaders({
+          "Content-Type": "application/json"
+        })
+        .get("/scene/list")
+        .reply(200, {});
 
 
-      // Expected output:
-      var simulatedAjaxResponse = {
-        "type": "createresult",
-        "status":
-        {
-          "reason": "",
-          "code": "success"
-        },
-        "id": "141ca2fc-f08a-4dcf-9444-bd1e02efb629"
-      };
 
-      function checkAjaxOptions(ajaxOpts) {
-        assert.equal(ajaxOpts.data.type, "startrun");
-        assert.equal(ajaxOpts.data.name, ScenarioOptions.runid);
-        assert.equal(ajaxOpts.data.dt, ModelOptions.timestep);
-      }
+      msl.onErrorCallback(function() {
+        // Somehow we need a try catch blog for asserts?
+        try {
+          assert(false, "MessageSceneList did not make correct AJAX call.");
+        } catch (x) {
+          done(x);
+        }
+      });
 
-      // Ajax simulate code. Does not perform actual requests.
-      $.ajax = function(ajaxOpts) {
-        checkAjaxOptions(ajaxOpts);
+      // Execute AJAX call to remote server to get list of models.
+      msl.executeRequest(function() {
+        //assert(data.status === "deleted", "MessageSceneList status = started ok");
+        done();
+      });
+    });
 
-        var doneCallback = ajaxOpts.done;
+    // This one is todo!
+    it("MessageSceneList - Check if we get valid scenes", function(done) {
 
-        doneCallback(simulatedAjaxResponse);
-      };
+      var msl = new MessageSceneList();
 
-      // disable rule until test is fixed
-      /*eslint-disable no-unused-vars*/
-      function fetchCallback(response) {
-        assert.equal(response.type, "createresult");
-        assert.equal(response.status.code, "success");
-        assert(response.id !== undefined && response.id.length > 0);
+      nock("http://0.0.0.0")
+
+      .defaultReplyHeaders({
+          "Content-Type": "application/json"
+        })
+        .get("/scene/list")
+        .reply(200, {
+          "paginator": null,
+          "scene_list": [{
+            "info": "",
+            "name": "My Scene #1",
+            "simulationtask": {
+              "state": "PENDING",
+              "state_meta": {},
+              "uuid": "2a0bca03-47c2-4f3f-9901-4164261134ff"
+            },
+            "workingdir": "",
+            "postprocessingtask": null,
+            "state": "",
+            "processingtask": {
+              "state": "PENDING",
+              "state_meta": {},
+              "uuid": "af15e2d8-6033-4c09-bfb1-2fc7cb825b80"
+            },
+            "fileurl": "",
+            "id": 29
+          }],
+          "page_obj": null,
+          "is_paginated": false
+        });
+
+
+
+      msl.onErrorCallback(function() {
+        // Somehow we need a try catch blog for asserts?
+        try {
+          assert(false, "MessageSceneList did not make correct AJAX call.");
+        } catch (x) {
+          done(x);
+        }
+      });
+
+      // Execute AJAX call to remote server to get list of models.
+      msl.executeRequest(function(data) {
+        //console.log(data);
+        assert(data.scenes.length === 1, "Scenes has 1 item. OK");
+        assert(data.scenes[0].name === "My Scene #1", "Scene has correct name item. OK");
+        assert(data.scenes[0].id === 29, "Scene has correct id. OK");
 
         done();
-      }
-      /*eslint-enable no-unused-vars*/
-
-      // Check if the run model returns false or true. False is if the input was not acceptable.
-
-      // TODO: Fix this by using a working mockup server
-      // var result = models.prepareModel(ScenarioOptions, ModelOptions, fetchCallback);
-
-      // assert.equal(result, true);
-      done();
+      });
     });
 
-    it("Check response when missing data", function(done) {
+  });
 
-      var config = {
-        "BaseURL": "http://136.231.174.53:8000"
-      };
 
-      /* eslint-disable no-unused-vars */
+
+  // Testing App
+  describe("App", function() {
+
+
+    it("App - Can it be initialized", function(done) {
+
       var app = new App();
-      var models = new Models(app, config);
-      /* eslint-enable no-unused-vars */
 
-      // Expected input:
-      var ScenarioOptions = {};
-      var ModelOptions = {};
-
-      // This is also what we check again, to see if this is what went to the ajax call.
-      ScenarioOptions.runid = ""; //"run1";
-      ScenarioOptions.author = "placeholder";
-      ModelOptions.timestep = 20;
-
-
-      // Expected output:
-      var simulatedAjaxResponse = {
-        "type": "createresult",
-        "status":
-        {
-          "reason": "",
-          "code": "success"
-        },
-        "id": "141ca2fc-f08a-4dcf-9444-bd1e02efb629"
-      };
-
-      function checkAjaxOptions(ajaxOpts) {
-        assert.equal(ajaxOpts.data.type, "startrun");
-        assert.equal(ajaxOpts.data.name, ScenarioOptions.runid);
-        assert.equal(ajaxOpts.data.dt, ModelOptions.timestep);
-      }
-
-      // Ajax simulate code. Does not perform actual requests.
-      $.ajax = function(ajaxOpts) {
-        checkAjaxOptions(ajaxOpts);
-
-        var doneCallback = ajaxOpts.done;
-
-        doneCallback(simulatedAjaxResponse);
-      };
-
-      // disable until test is fixed
-      /* eslint-disable no-unused-vars */
-      function fetchCallback(response) {
-        console.log(response);
-      }
-      /* eslint-enable no-unused-vars */
-
-
-      // TODO: fix this test by using a working mock server...
-      // var result = models.prepareModel(ScenarioOptions, ModelOptions, fetchCallback);
-
-      // We expect a false here - as we miss a parameter.
-      // assert.equal(result, false);
-
+      assert(app !== undefined, "App instantiated");
       done();
     });
+
+    it("App - LoadTemplate - Check if mock template is added to DOM", function(mydone) {
+
+      nock("http://0.0.0.0")
+        .get("templates/templates.html")
+        .reply(200, "<div>template-ok</div>");
+
+      // Todo: add other case when url is not correct.
+
+      var app = new App();
+
+      // Load main template and check if we get proper data.
+      app.loadMainTemplate(function() {
+
+
+        var html = global.$("body").html();
+        var check = "<div id=\"template-container\"></div>";
+
+        // This works better than the assert:
+        if (html === check) {
+          mydone();
+        } else {
+          mydone(new Error("HTML template does not match"));
+        }
+      });
+
+    });
+
+
+
   });
 
 
