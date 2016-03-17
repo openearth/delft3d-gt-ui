@@ -40,18 +40,20 @@ var exports = (function() {
     }
 
     options.name = inoptions.name;
-    options.dt = inoptions.dt;
+    options.info = {
+      dt: inoptions.dt
+    };
 
     // [Todo]: with a loop of known properties.
-/*
-    if (inoptions.state !== undefined) {
-      options.state = inoptions.state;
-    }
+    /*
+        if (inoptions.state !== undefined) {
+          options.state = inoptions.state;
+        }
 
-    if (inoptions.info !== undefined) {
-      options.info = inoptions.info;
-    }
-*/
+        if (inoptions.info !== undefined) {
+          options.info = inoptions.info;
+        }
+    */
     return options;
 
   };
