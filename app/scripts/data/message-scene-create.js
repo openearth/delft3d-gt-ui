@@ -39,9 +39,9 @@ var exports = (function() {
       return null;
     }
 
-    options.name = inoptions.name;
-    options.info = {
-      dt: inoptions.dt
+    options = {
+      name: inoptions.name,
+      info: JSON.stringify({dt: inoptions.dt})
     };
 
     // [Todo]: with a loop of known properties.
