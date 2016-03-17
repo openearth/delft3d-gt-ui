@@ -11,14 +11,20 @@ var exports = (function() {
   // Constructor of the MessageSceneDelete class.
   // The callback is used when data is returned after receiving and validation are complete.
   MessageSceneDelete = function(id) {
-    if (id === undefined) {
-      console.error("[MessageSceneDelete] No id specified to remove.");
-      return null;
+
+    this.modelid = null;
+
+    if (id !== undefined) {
+
+      // Store reference to the id we want to save.
+      if (isNaN(id) === false) {
+        this.modelid = id;
+      }
+
+    } else {
+
+      console.error("[MessageSceneDelete] No id specified to delete.");
     }
-
-
-    // Store reference to the id we want to save.
-    this.modelid = id;
 
     // The location where this message will request to.
     this.targetURL = "/scene/delete";
@@ -48,8 +54,9 @@ var exports = (function() {
 
   // We have received data, process and return.
   MessageSceneDelete.prototype.receivedData = function(data, callback) {
+
     // Process data
-    callback();
+    callback(data);
 
   };
 
@@ -89,11 +96,13 @@ var exports = (function() {
         }
 
       })
-      .error(function() {
-
+      .error(function(xhr, status, error) {
         // Call error callback, let application know something went wrong.
         if (that.onError !== undefined && that.onError !== null) {
-          that.onError();
+          that.onError({
+            status: status,
+            error: error
+          });
         }
 
       });

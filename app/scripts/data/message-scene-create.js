@@ -11,6 +11,7 @@ var exports = (function() {
   // Constructor of the MessageSceneCreate class.
   // The callback is used when data is returned after receiving and validation are complete.
   MessageSceneCreate = function(options) {
+
     if (options === undefined) {
       console.error("[MessageSceneCreate] No options specified for create.");
       return null;
@@ -73,6 +74,7 @@ var exports = (function() {
 
   // We have received data, process and return.
   MessageSceneCreate.prototype.receivedData = function(data, callback) {
+
     // Process data
     callback(data);
 
@@ -101,10 +103,11 @@ var exports = (function() {
 
       if (that.onError !== undefined && that.onError !== null) {
         that.onError();
+
       }
+
+      return false;
     }
-
-
 
     $.ajax({
         url: url,
@@ -124,13 +127,16 @@ var exports = (function() {
         }
 
       })
-      .error(function() {
+      .error(function(xhr, status, error) {
 
         // Call error callback, let application know something went wrong.
         if (that.onError !== undefined && that.onError !== null) {
-          that.onError();
-        }
 
+          that.onError({
+            status: status,
+            error: error
+          });
+        }
       });
 
   };

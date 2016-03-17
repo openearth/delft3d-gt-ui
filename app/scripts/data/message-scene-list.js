@@ -49,7 +49,7 @@ var exports = (function() {
     // We process the data to generate a uniform array with data we recognize.
     if (data.scene_list === undefined) {
       console.warn("[MessageSceneList] There is no scene list in the received data");
-      return;
+      callback(returnList);
     }
 
     // Loop through the scene list rows.
@@ -194,11 +194,14 @@ var exports = (function() {
         }
 
       })
-      .error(function() {
-
+      .error(function(xhr, status, error) {
+        console.log(error);
         // Call error callback, let application know something went wrong.
         if (that.onError !== undefined && that.onError !== null) {
-          that.onError();
+          that.onError({
+            status: status,
+            error: error
+          });
         }
 
       });

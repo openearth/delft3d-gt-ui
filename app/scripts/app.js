@@ -3,7 +3,7 @@
 
 var App;
 
-var exports = (function () {
+var exports = (function() {
   "use strict";
 
 
@@ -37,7 +37,7 @@ var exports = (function () {
   };
 
   // We call this separate so our tests do not use JQuery.
-  App.prototype.loadMainTemplate = function() {
+  App.prototype.loadMainTemplate = function(callback) {
     var that = this;
 
     // We load the template file and then start running the actual site.
@@ -61,6 +61,12 @@ var exports = (function () {
 
       // Store reference to VM:
       that.vm = vm;
+
+      // Call parent callback if ready
+
+      if (callback !== undefined) {
+        callback();
+      }
     });
 
   };

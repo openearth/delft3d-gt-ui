@@ -55,7 +55,7 @@ var exports = (function() {
 
         var selectedData = that.app.getTemplateData();
 
-        if (selectedData != null) {
+        if (selectedData !== null) {
           models.fetchLogFile(selectedData.selectedModelID, function(logdata) {
             console.log("received logdata");
             var templateData = that.app.getTemplateData();
@@ -234,8 +234,6 @@ var exports = (function() {
           if (this.currentAnimationKey.length === 0) {
             return;
           }
-
-          console.log("next: " + this.currentAnimationKey);
 
           this.currentAnimationIndex++;
 

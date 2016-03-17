@@ -13,14 +13,20 @@ var exports = (function() {
   // Constructor of the MessageSceneChangeState class.
   // The callback is used when data is returned after receiving and validation are complete.
   MessageSceneChangeState = function(id) {
-    if (id === undefined) {
+
+    this.modelid = null;
+
+    if (id !== undefined) {
+
+      // Store reference to the id we want to save.
+      if (isNaN(id) === false) {
+        this.modelid = id;
+      }
+
+    } else {
+
       console.error("[MessageSceneChangeState] No id specified to start.");
-      return null;
     }
-
-
-    // Store reference to the id we want to save.
-    this.modelid = id;
 
     // The location where this message will request to.
     this.targetURL = "/scene/start";
@@ -43,6 +49,7 @@ var exports = (function() {
     }
 
     this.request(function(data) {
+
       that.receivedData(data, callback);
 
     });
@@ -50,8 +57,9 @@ var exports = (function() {
 
   // We have received data, process and return.
   MessageSceneChangeState.prototype.receivedData = function(data, callback) {
+
     // Process data
-    callback();
+    callback(data);
 
   };
 
@@ -69,6 +77,12 @@ var exports = (function() {
   MessageSceneChangeState.prototype.request = function(callback) {
     var url = this.targetURL;
     var that = this;
+
+    // Does not have a valid modelid, return false.
+    if (this.modelid === null) {
+      return false;
+    }
+
     var postdata = {
       id: this.modelid
     };
@@ -85,17 +99,19 @@ var exports = (function() {
           that.onComplete();
         }
 
-
         if (callback !== undefined) {
+
           callback(data);
         }
 
       })
-      .error(function() {
-
+      .error(function(xhr, status, error) {
         // Call error callback, let application know something went wrong.
         if (that.onError !== undefined && that.onError !== null) {
-          that.onError();
+          that.onError({
+            status: status,
+            error: error
+          });
         }
 
       });

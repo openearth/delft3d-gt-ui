@@ -14,20 +14,17 @@ var exports = (function() {
     this.BaseURL = Config.BaseURL;
   };
 
-  // Test function to see if Mocha works.
-  Models.prototype.MochaTest = function(val1, val2) {
-    return val1 + val2;
-  };
-
-
   // Enable autorefresh or disable it (interval = 0)
   Models.prototype.toggleAutoUIRefresh = function(callback, interval, forceDirectUpdate) {
     var that = this;
+
 
     // If forceDirectUpdate is true we actually execute an update immediately
     if (forceDirectUpdate === true) {
       that.getModels(callback);
     }
+
+
     // Clear an existing timer.
     function clearTimer() {
       if (that.refreshTimerId !== -1) {
