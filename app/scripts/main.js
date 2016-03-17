@@ -3,6 +3,7 @@
 var exports = (function () {
   "use strict";
 
+  // Instantiate app class and start loading the main template:
   var app = new App();
 
   app.loadMainTemplate();

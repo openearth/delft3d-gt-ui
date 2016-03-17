@@ -12,12 +12,6 @@ var exports = (function() {
 
 
     // Main javascript code, initialize components, there shouldn"t be much here.
-    //http://dl-ng004.xtr.deltares.nl/
-    // http://136.231.10.175:8888
-    this.config = {
-      "BaseURL": ""
-    };
-
 
     // Our shared template data:
     this.TemplateData = {
@@ -44,7 +38,7 @@ var exports = (function() {
     this.loadTemplate(function() {
 
       // Move these files to an app class later.
-      that.models = new Models(that, that.config);
+      that.models = new Models(that);
 
       // Register some event handlers.
       that.ui = new UI(that, that.models);

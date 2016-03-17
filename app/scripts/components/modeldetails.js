@@ -10,6 +10,7 @@ var exports = (function() {
     // Store reference to our app
     this.app = app;
     this.models = models;
+    this.selectedModelData = app.getTemplateData().selectedModel;
 
     var that = this;
 
@@ -37,7 +38,7 @@ var exports = (function() {
       },
       ready: function() {
 
-        console.log("details");
+
         var clipboard = new Clipboard("#btn-copy-log-output");
 
         clipboard.on("success", function(e) {
@@ -53,11 +54,14 @@ var exports = (function() {
         //this.$data.currentAnimationIndex = 0;
         // Maybe use https://github.com/vuejs/vue-async-data later?
 
-        var selectedData = that.app.getTemplateData();
+        var selectedData = that.app.getTemplateData().selectedModel; // that.selectedModelData; // that.app.getTemplateData();
+
+        // We change this to: that.selectedModelData later. But now we cannot test this, so it's not very safe to make changes on guess work.
 
         if (selectedData !== null) {
-          models.fetchLogFile(selectedData.selectedModelID, function(logdata) {
-            console.log("received logdata");
+
+          models.fetchLogFile(selectedData, function(logdata) {
+
             var templateData = that.app.getTemplateData();
 
             templateData.logoutput = logdata;
@@ -140,13 +144,14 @@ var exports = (function() {
           // If there is an animation property, we set this:
           var targetAnimation = $(el).attr("data-animation");
 
-          if (targetAnimation.length > 0) {
+          if (targetAnimation !== undefined && targetAnimation.length > 0) {
             this.currentAnimationKey = targetAnimation;
             this.currentAnimationIndex = 0;
             this.stopImageFrame();
 
           } else {
             this.currentAnimationKey = "";
+            this.currentAnimationIndex = 0;
           }
 
 
