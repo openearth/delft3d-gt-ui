@@ -35,7 +35,7 @@ var exports = (function () {
       methods: {
         // Submit model:
         submitModel: function() {
-          console.log("submit model");
+
           that.app.getUI().submitModel();
         }
       }

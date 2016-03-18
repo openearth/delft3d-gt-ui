@@ -151,9 +151,9 @@ var exports = (function() {
       return null;
     }
 
-    // Working dir is at: modeldata.workingdir + delft3d.log
+    // Working dir is at: modeldata.fileurl + delft3d.log
     $.ajax({
-        url: selectedModelData.workingdir + "delft3d.log",
+        url: selectedModelData.fileurl + "delft3d.log",
         method: "GET"
       })
       .done(function(data) {
