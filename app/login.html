@@ -38,14 +38,19 @@
             <div class="panel-body">
               <form role="form" method="POST" action="{% url 'django.contrib.auth.views.login' %}">
                 {% csrf_token %}
+                {% if form.errors %}
                 <div class="form-group">
-                  <label for="username">Username or e-mail address</label>
-                  <input class="form-control" id="username" placeholder="Username or e-mail address">
+                  <p>Your username and password didn't match. Please try again.</p>
+                </div>
+                {% endif %}
+                <div class="form-group">
+                  <label for="id_username">Username or e-mail address</label>
+                  <input class="form-control" id="id_username" name="username" placeholder="Username or e-mail address">
                 </div>
                 <div class="form-group">
-                  <label for="password">Password</label>
+                  <label for="id_password">Password</label>
                   <div class="pull-right"><a href="/forgot">Forgot password?</a></div>
-                  <input type="password" class="form-control" id="password" placeholder="Password">
+                  <input type="password" class="form-control" id="id_password" name="password" placeholder="Password">
                 </div>
                 <button type="submit" class="btn btn-success">Sign in</button>
               </form>
