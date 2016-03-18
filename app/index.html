@@ -5,7 +5,7 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Delft3D-GT Dashboard</title>
-    
+
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <!-- Place favicon.ico in the root directory -->
 
@@ -43,24 +43,23 @@
               <div class="col-lg-12 heading-bar">
                 <h2 class="site-title"><a href="/"><img src="images/logo/app-icon.png" alt="Delft3D-GT Dashboard" />Delft3D-GT Dashboard</a></h2>
               </div>
-<!--
-               <model-list 
-                :data="models.gridData"
-                :columns="models.gridColumns"
-                :filter-key="models.searchQuery"
-                >
-                </model-list>  
--->
+
+              <div>
+                <p class="pull-right">
+                  <a class="btn btn-primary btn-logout" href="/logout">Logout</a>
+                </p>
+              </div>
+
 
               <component :is="currentView" > </component>
 
-               
+
 
             </div>
           </div>
         </div>
 
-    
+
 </div>
 
 
@@ -94,19 +93,19 @@
     <!-- endbuild -->
 
     <!-- build:js scripts/main.js -->
-    <script src="scripts/app.js"></script>    
-    <script src="scripts/components/home.js"></script>    
-    <script src="scripts/components/modellist.js"></script>    
-    <script src="scripts/components/modeldetails.js"></script>    
-    
+    <script src="scripts/app.js"></script>
+    <script src="scripts/components/home.js"></script>
+    <script src="scripts/components/modellist.js"></script>
+    <script src="scripts/components/modeldetails.js"></script>
+
     <script src="scripts/ui.js"></script>
     <script src="scripts/models.js"></script>
     <script src="scripts/inputvalidation.js"></script>
 
     <script src="scripts/data/message-scene-list.js"></script>
-    <script src="scripts/data/message-scene-delete.js"></script>    
-    <script src="scripts/data/message-scene-create.js"></script>    
-    <script src="scripts/data/message-scene-changestate.js"></script>        
+    <script src="scripts/data/message-scene-delete.js"></script>
+    <script src="scripts/data/message-scene-create.js"></script>
+    <script src="scripts/data/message-scene-changestate.js"></script>
 
     <script src="scripts/main.js"></script>
 
