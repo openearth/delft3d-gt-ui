@@ -103,9 +103,10 @@ var exports = (function() {
           cache: false,
           get: function() {
             var animationKey = this.currentAnimationKey;
-            var imgs = that.app.getTemplateData().selectedModel.processingtask.state_meta[animationKey];
+            var selModel = that.app.getTemplateData().selectedModel;
+            var imgs = selModel.processingtask.state_meta[animationKey];
 
-            return imgs.location + imgs.images[this.currentAnimationIndex];
+            return selModel.fileurl + imgs.location + imgs.images[this.currentAnimationIndex];
           }
         },
 

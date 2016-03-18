@@ -32,10 +32,10 @@ var exports = (function () {
 
     // We want atleast a maximum value to make a range.
     if (max !== 0) {
-      range = { min: 0, max: max};
+      range = { min: parseInt(min), max: parseInt(max)};
     }
 
-    return validator.isInt(val, range);
+    return validator.isInt(parseInt(val), range);
   };
 
   InputValidation.prototype.ValidateAsciiString = function(target, val) {

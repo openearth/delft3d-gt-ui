@@ -226,6 +226,8 @@ html {
       margin: 4px;
     }
   }
+
+
 }
 
 .input-group-addon-info {
@@ -381,7 +383,6 @@ nav.sidebar,
     float: left;
     height: 100%;
     margin-bottom: 0;
-    margin-left: -160px;
     width: 200px;
   }
 
@@ -393,9 +394,6 @@ nav.sidebar,
     margin-left: 0;
   }
 
-  .for-animate {
-    opacity: 0;
-  }
 }
 
 @media (min-width: 1330px) {

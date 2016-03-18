@@ -1,6 +1,5 @@
 <template id="template-model-list" inline-template>
   <div>
-    <div v-show="hasNoModels" class="message-no-models">There are no models right now</div>
 
     <table id="list-model-status" class="table-default">
       <thead>
@@ -29,13 +28,21 @@
           <td>{{entry.name}}<input type="hidden" value="{{entry.id}}" v-model="entry.id" /></td>
           <td>{{entry.state}}</td>
           <td>
-          
+
           </td>
           <td class="centered">
             <button class="btn btn-primary inside-cell" v-on:click="detailModel($index)">Details</button>
           </td>
         </tr>
       </tbody>
+
+      <tfoot v-show="hasNoModels">
+        <tr>
+          <td colspan="4" class="centered">
+            There are no models right now.</div>
+          </td>
+        </tr>
+      </tfoot>
     </table>
   </div>
 </template>
