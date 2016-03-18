@@ -117,7 +117,23 @@ var exports = (function() {
 
             return this.timerAnimation > 0;
           }
+        },
+
+        hasFrames: {
+          cache: false,
+          get: function() {
+
+            return true;
+            /*
+            var animationKey = this.currentAnimationKey;
+            var selModel = that.app.getTemplateData().selectedModel;
+            var imgs = selModel.processingtask.state_meta[animationKey];
+
+            return imgs.images.length > 0;
+            */
+          }
         }
+
       },
 
       methods: {

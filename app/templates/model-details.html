@@ -1,11 +1,11 @@
-<template id="template-model-details" >
+<template id="template-model-details">
   <div>
     <div class="panel-body">
       <div class="col-lg-12">
 
         <div class="header-bar">
           <h2>Details for &ldquo;<strong>{{selModel.name}}</strong>&rdquo;
-            <!-- <button class="btn btn-primary pull-right" type="button" v-on:click="closeDetails()" >
+            <!-- <button class="btn btn-primary pull-right" type="button" v-on:click="closeDetails()">
                  CLOSE
                  </button> -->
           </h2>
@@ -25,7 +25,7 @@
               </p>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-warning" id="dialog-remove-response-accept" >Delete</button>
+              <button type="button" class="btn btn-warning" id="dialog-remove-response-accept">Delete</button>
               <button type="button" class="btn btn-primary" id="dialog-remove-response-cancel" data-dismiss="modal">Cancel</button>
             </div>
           </div><!-- /.modal-content -->
@@ -36,14 +36,14 @@
         <div class="container-fluid">
 
             <ul class="nav navbar-nav">
-              <li ><a href="#" v-on:click="closeDetails(); return false"><strong>Return to model list</strong> <span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-menu-left"></span></a></li>
+              <li><a href="#" v-on:click="closeDetails(); return false"><strong>Return to model list</strong> <span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-menu-left"></span></a></li>
 
-              <li class="active" ><a href="#" v-on:click="changeMenuItem" data-target="#results-summary">Summary<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-info-sign"></span></a></li>
+              <li class="active"><a href="#" v-on:click="changeMenuItem" data-target="#results-summary">Summary<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-info-sign"></span></a></li>
 
-              <li class="dropdown" >
+              <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Graphs <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-signal"></span></a>
                 <ul class="dropdown-menu for-animate" role="menu">
-                  <li ><a href="#" v-on:click="changeMenuItem" data-target="#results-channel-network" data-animation="channel_network_images">Channel network</a></li>
+                  <li><a href="#" v-on:click="changeMenuItem" data-target="#results-channel-network" data-animation="channel_network_images">Channel network</a></li>
                   <li><a href="#" v-on:click="changeMenuItem" data-target="#results-delta-fringe" data-animation="delta_fringe_images">Delta plain fringe</a></li>
                 </ul>
               </li>
@@ -56,9 +56,9 @@
                 </ul>
               </li>
 
-              <li ><a href="#"  v-on:click="changeMenuItem" data-parent="#container-model-information" data-target="#model-log-output-container">View log file<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-th-list"></span></a></li>
+              <li><a href="#"  v-on:click="changeMenuItem" data-parent="#container-model-information" data-target="#model-log-output-container">View log file<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-th-list"></span></a></li>
               <!--
-                  <li ><a href="#">Meta information<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-tags"></span></a></li>
+                  <li><a href="#">Meta information<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-tags"></span></a></li>
                   -->
 
             </ul>
@@ -66,7 +66,7 @@
       </nav>
 
       <!-- content for menu -->
-      <div class="pull-left model-information col-lg-9" id="accordion" >
+      <div class="pull-left model-information col-lg-9" id="accordion">
 
         <div class="panel-collapse collapse in" id="results-summary">
           <div class="panel-body">
@@ -124,18 +124,24 @@
           <div class="panel-body">
             <h2>Channel network</h2>
 
-            <img v-bind:src="animationFrame" />
-            <div class="btn-group">
-                <button class="btn btn-primary" v-on:click="previousImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-backward"></span></button>
-                <button class="btn btn-primary" v-show="isAnimating" v-on:click="stopImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-stop" ></span></button>
-                <button class="btn btn-primary" v-show="isAnimating == false" v-on:click="playImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-play" ></span></button>
-                <button class="btn btn-primary" v-on:click="nextImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-forward"></span></button>
+            <div class="text-center"  v-show="hasFrames">
+
+              <img v-bind:src="animationFrame" />
+
+              <div>
+                <div class="btn-group">
+                    <button class="btn btn-primary" v-on:click="previousImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-backward"></span></button>
+                    <button class="btn btn-primary" v-show="isAnimating" v-on:click="stopImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-stop"></span></button>
+                    <button class="btn btn-primary" v-show="isAnimating == false" v-on:click="playImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-play"></span></button>
+                    <button class="btn btn-primary" v-on:click="nextImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-forward"></span></button>
+                </div>
+              </div>
             </div>
 
             <h4>Background information</h4>
 
             <p>
-              Changed - This graph shows the network of the channel ... ...
+              This graph shows the network of the channel [ ... ]
             </p>
             </div>
             </div>
@@ -146,14 +152,14 @@
 
                 <div>
 
-                  <div class="text-center">
+                  <div class="text-center" v-show="hasFrames">
                     <img v-bind:src="animationFrame" />
 
-                    <div >
+                    <div>
                       <div class="btn-group">
                           <button class="btn btn-primary" v-on:click="previousImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-backward"></span></button>
-                          <button class="btn btn-primary" v-show="isAnimating" v-on:click="stopImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-stop" ></span></button>
-                          <button class="btn btn-primary" v-show="isAnimating == false" v-on:click="playImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-play" ></span></button>
+                          <button class="btn btn-primary" v-show="isAnimating" v-on:click="stopImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-stop"></span></button>
+                          <button class="btn btn-primary" v-show="isAnimating == false" v-on:click="playImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-play"></span></button>
                           <button class="btn btn-primary" v-on:click="nextImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-forward"></span></button>
                       </div>
                     </div>
@@ -164,10 +170,10 @@
 
                 <h4>Background information</h4>
 
-            <p>
-              Delta plain fringe information [ ... ]
-            </p>
-            </div>
+                <p>
+                  Delta plain fringe information [ ... ]
+                </p>
+              </div>
             </div>
 
             <div class="panel-collapse collapse" id="results-download">
@@ -184,7 +190,7 @@
 
 
 
-<div class="panel-collapse collapse" id="model-log-output-container" >
+<div class="panel-collapse collapse" id="model-log-output-container">
   <div class="panel-body">
     <h2>Log output</h2>
 
