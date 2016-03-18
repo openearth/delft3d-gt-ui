@@ -14,7 +14,7 @@
           -->
           <th>RUN #</th>
           <th>STATUS</th>
-          <th>EST. TIME LEFT</th>
+          <!-- <th>EST. TIME LEFT</th> -->
           <th style="width: 10%">&nbsp;</th>
 
         </tr>
@@ -27,9 +27,7 @@
         " v-on:click="detailModel($index)" class="clickable">
           <td>{{entry.name}}<input type="hidden" value="{{entry.id}}" v-model="entry.id" /></td>
           <td>{{entry.state}}</td>
-          <td>
 
-          </td>
           <td class="centered">
             <button class="btn btn-primary inside-cell" v-on:click="detailModel($index)">Details</button>
           </td>
