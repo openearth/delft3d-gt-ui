@@ -18,6 +18,7 @@ $ npm install --global bower
 $ npm install --global gulp
 $ npm install --global eslint
 $ npm install --global mocha
+$ npm install --global istanbul
 ```
 
 You can also install scss_lint if you want to check the stylesheets

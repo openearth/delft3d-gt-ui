@@ -1,39 +1,23 @@
-/* global  */
-
-// Exported globals
+/* global  MessageSceneList MessageSceneDelete MessageSceneCreate MessageSceneChangeState */
 var Models;
 
-var exports = (function () {
+var exports = (function() {
   "use strict";
 
-  Models = function() {};
-
-  // Set some configuration options such as model server location.
-  Models.prototype.setConfiguration = function(Config) {
-    this.BaseURL = Config.BaseURL;
+  Models = function(App) {
+    this.app = App;
   };
-
-  // Test function to see if Mocha works.
-  Models.prototype.MochaTest = function(val1, val2) {
-    return val1 + val2;
-  };
-
 
   // Enable autorefresh or disable it (interval = 0)
-  Models.prototype.toggleAutoUIRefresh = function(callback, interval) {
+  Models.prototype.toggleAutoUIRefresh = function(callback, interval, forceDirectUpdate) {
     var that = this;
 
-    if (interval > 0) {
-      // Clear existing timer if present.
-      clearTimer();
-      console.log("Start timer");
-      that.refreshTimerId = setInterval(function() {
-        that.getModels(callback);
-      }, interval);
-    } else {
-      // Stop timer.
-      clearTimer();
+
+    // If forceDirectUpdate is true we actually execute an update immediately
+    if (forceDirectUpdate === true) {
+      that.getModels(callback);
     }
+
 
     // Clear an existing timer.
     function clearTimer() {
@@ -42,36 +26,49 @@ var exports = (function () {
         that.refreshTimerId = -1;
       }
     }
+
+    if (interval > 0) {
+
+      // Clear existing timer if present.
+      clearTimer();
+
+      // Set timer id.
+      that.refreshTimerId = setInterval(function() {
+        that.getModels(callback);
+      }, interval);
+
+    } else {
+
+      // Stop timer.
+      clearTimer();
+    }
+
   };
 
   // Get models from URL, call callback upon completion.
   Models.prototype.getModels = function(callback) {
-    var that = this;
 
-    var url = that.BaseURL + "/runs/";
+    var m = new MessageSceneList();
 
-    $.ajax({
-      url: url
-    })
-      .done(function(data) {
-        $("#alert-connectionfailed").hide();
+    m.onCompleteCallback(function() {
+      $("#alert-connectionfailed").hide();
+    });
 
-        if (callback !== undefined) {
-          callback(data);
-        }
+    m.onErrorCallback(function() {
+      $("#alert-connectionfailed").show();
+    });
 
-      })
-      .error(function() {
-        $("#alert-connectionfailed").show();
-      });
-
+    // Execute AJAX call to remote server to get list of models.
+    m.executeRequest(function(items) {
+      callback(items);
+    });
   };
 
 
   // Run a model, with given options. Optional callback for return.
   Models.prototype.prepareModel = function(ScenarioOptions, ModelOptions, callback) {
 
-    var that = this;
+    //    var that = this;
 
     /*
      // Validate input of run model.
@@ -94,33 +91,31 @@ var exports = (function () {
      }
      */
 
-
-    // [TODO] Validate parameters before sending. (is everything included?)
-
-    // Prepare options for our format.
     // Temporary format.
     var serveroptions = {
-      "type": "startrun",
       "name": ScenarioOptions.runid,
       "dt": ModelOptions.timestep
     };
 
-    //serveroptions.parameters = {};
-    //serveroptions.scenario = ScenarioOptions;
-    //serveroptions.model = ModelOptions;
 
-    $.ajax({
-      url: that.BaseURL + "/createrun/",
-      //url: "sampledata/runmodel-ok.json",
-      data: serveroptions,
-      method: "GET" // Should be a POST later
-    })
-      .done(function(data) { //moved here for Mocha.
+    var msg = new MessageSceneCreate(serveroptions);
 
-        if (callback !== undefined) {
-          callback(data);
-        }
-      });
+    msg.onCompleteCallback(function() {
+      // Handle on complete.
+    });
+
+    msg.onErrorCallback(function() {
+      // Handle errors
+      console.log("Error starting model");
+    });
+
+    // Execute AJAX call to remote server to get list of models.
+    msg.executeRequest(function(data) {
+      // We get returned data here.
+      if (callback !== undefined) {
+        callback(data);
+      }
+    });
 
     return true;
 
@@ -128,63 +123,39 @@ var exports = (function () {
 
 
   // Run the model, with the given uuid.
-  Models.prototype.runModel = function(uuid, callback) {
-    var that = this;
+  Models.prototype.runModel = function(modelid, callback) {
 
-    if (uuid === undefined) {
-      return;
+    if (modelid === undefined) {
+
+      return false;
     }
+    // Start model.
+    var msg = new MessageSceneChangeState(modelid);
 
-    var params = {
-      uuid: uuid
-    };
-
-    $.ajax({
-      url: that.BaseURL + "/dorun/",
-      //url: "sampledata/runmodel-ok.json",
-      data: params,
-      method: "GET", // Should be a POST later
-      done: function(data) { //moved here for Mocha.
-
-        if (callback !== undefined) {
-          callback(data);
-        }
+    msg.executeRequest(function(data) {
+      // We get returned data here.
+      if (callback !== undefined) {
+        callback(data);
       }
-
     });
+
 
   };
 
-  // Run a model, with given options. Optional callback for return.
-  // Expects  a UUID in deleteoptions.
-  Models.prototype.deleteModel = function(DeleteOptions, callback) {
-    var that = this;
+  // Fetch a logfile from the server using an AJAX request.
+  Models.prototype.fetchLogFile = function(selectedModelData, callback) {
 
-    // No options defined:
-    if (DeleteOptions === undefined) {
-      return false;
+
+    // No selected data, then we bail.
+    if (selectedModelData === undefined) {
+      return null;
     }
 
-
-    // [TODO] Validate parameters before sending. (is everything included?)
-    if (DeleteOptions.uuid === undefined || DeleteOptions.uuid.length === 0) {
-      return false;
-    }
-
-    // Prepare options for our format.
-    var deleteoptions = {
-      "type": "deleterun"
-    };
-
-    deleteoptions.parameters = {};
-    deleteoptions.uuid = DeleteOptions.uuid;
-
-
+    // Working dir is at: modeldata.fileurl + delf3d + delft3d.log
     $.ajax({
-      url: that.BaseURL + "/deleterun/",
-      data: deleteoptions,
-      method: "GET" // Should be a POST later
-    })
+        url: selectedModelData.fileurl + "delft3d/delft3d.log",
+        method: "GET"
+      })
       .done(function(data) {
         if (callback !== undefined) {
           callback(data);
@@ -192,11 +163,63 @@ var exports = (function () {
       });
   };
 
+  // Find a model using a UUID
+  Models.prototype.findModelByID = function(id) {
+
+    var templateData = this.app.getTemplateData();
+
+    // For whatever strange reason, ".id" becomes an string. This might happen somewhere in the vue logic.
+    for (var i = 0; i < templateData.models.gridData.length; i++) {
+      if (parseInt(templateData.models.gridData[i].id) === id) {
+        return templateData.models.gridData[i];
+      }
+    }
+
+    return null;
+
+  };
+
+
+  // Run a model, with given options. Optional callback for return.
+  // Expects  a id in deleteoptions.
+  Models.prototype.deleteModel = function(modelid, options, callback) {
+
+    // [TODO] Validate parameters before sending. (is everything included?)
+    if (modelid === undefined) {
+      return false;
+    }
+
+    if (options !== undefined) {
+      // For the future, we support additional options.
+    }
+
+    var msg = new MessageSceneDelete(modelid);
+
+    msg.onCompleteCallback(function() {
+      // Handle on complete.
+    });
+
+    msg.onErrorCallback(function() {
+      // Handle errors
+    });
+
+    // Execute AJAX call to remote server to get list of models.
+    msg.executeRequest(function(data) {
+      // We get returned data here.
+      if (callback !== undefined) {
+        callback(data);
+      }
+    });
+
+    return true;
+  };
+
   return {
     Models: Models
   };
 
 }());
+
 
 // If we're in node export to models
 if (typeof module !== "undefined" && module.exports) {
