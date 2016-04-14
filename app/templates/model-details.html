@@ -52,7 +52,7 @@
             <!-- /.modal -->
             <nav class="navbar navbar-default sidebar" role="navigation">
                 <div class="container-fluid">
-                    <ul class="nav navbar-nav">
+                    <ul class="nav navbar-nav" id="dropdown-menu">
                         <li>
                             <a href="#" v-on:click="closeDetails(); return false">
                                 <strong>
@@ -271,17 +271,16 @@
                         <p>
                             Please check what you would like to download. Your download will be a ZIP file which contains the requested files.
                         </p>
-                        <div class="input-group">
-                            <span class="input-group-addon">
-                                <input checked="checked" type="checkbox"/>
-                            </span>
-                            <span class="input-group-addon item-group-title" id="newrun-timestep-label">
-                                Graphs
-                            </span>
-                            <span class="input-group-addon item-group-title" id="download-generated-images-label">
-                                Download all generated graph images
-                            </span>
+
+                        <p>
+                          Currently you can only dowload the generated output images.
+                        </p>
+
+                        <div class="form-group input-group">
+                          <span class="input-group-addon"><input type="checkbox" class="downloadoption" checked="checked" v-on:change="downloadOptionsChange()"></span>
+                          <span class="form-control">Download generated output images</span>
                         </div>
+
                         <div class="btn-group">
                             <button class="form-control btn btn-primary" id="download-submit" v-on:click="downloadFiles()" value="">
                                 Download
