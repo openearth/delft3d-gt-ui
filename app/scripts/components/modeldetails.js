@@ -267,6 +267,19 @@ var exports = (function() {
               this.currentAnimationIndex = 0;
             }
           }
+        },
+
+        downloadFiles: function()
+        {
+
+          var selectedData = that.app.getTemplateData().selectedModel;
+
+          // Open download window
+          var id = selectedData.id;
+          var type = "images";
+debugger;
+          window.open("/export/" + id + "/" + type);
+
         }
 
 
