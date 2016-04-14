@@ -277,7 +277,7 @@ var exports = (function() {
           var id = selectedData.id;
           var type = "images";
 
-          window.open("/export/" + id + "/" + type);
+          window.open("/scene/export?id=" + id );
         },
 
         downloadOptionsChange: function() {

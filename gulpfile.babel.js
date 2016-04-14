@@ -24,8 +24,6 @@ const reload = browserSync.reload;
 // Server used for serving remote url"s
 // "http://136.231.10.175:8888";
 var apiServer = "";
-//apiServer = "http://136.231.10.175:8888";
- apiServer = "http://136.231.9.167:8888";
 
 // Proxy paths which we map to a different source, for testing locally or
 // running the actual build.
