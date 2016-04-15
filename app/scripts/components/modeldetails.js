@@ -306,7 +306,6 @@ var exports = (function() {
 
           // Open download window
           var id = selectedData.id;
-          var type = "images";
 
           window.open("/scene/export?id=" + id );
         },
