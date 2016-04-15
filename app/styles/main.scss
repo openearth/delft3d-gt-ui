@@ -164,6 +164,13 @@ html {
 
 }
 
+// Generic disabled element
+.inputdisabled {
+    pointer-events:none;
+    color: $gray-light;
+    background: $gray-lighter;
+}
+
 .table-default {
   margin-bottom: 32px;
   width: 100%;
