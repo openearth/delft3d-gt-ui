@@ -138,8 +138,6 @@ var exports = (function() {
         callback(data);
       }
     });
-
-
   };
 
   // Fetch a logfile from the server using an AJAX request.
@@ -189,11 +187,16 @@ var exports = (function() {
       return false;
     }
 
+    var validatedOptions = { };
+
     if (options !== undefined) {
+
       // For the future, we support additional options.
+      // Right now we do not do any validation here yet.
+      validatedOptions = options;
     }
 
-    var msg = new MessageSceneDelete(modelid);
+    var msg = new MessageSceneDelete(modelid, validatedOptions);
 
     msg.onCompleteCallback(function() {
       // Handle on complete.

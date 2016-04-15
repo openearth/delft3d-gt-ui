@@ -110,6 +110,16 @@ var exports = (function() {
           }
         },
 
+        // Returns true if the model is running. We might have to depend on some other variables
+        // But for now we say that "processing" means running.
+        isModelRunning: {
+          cache: false,
+          get: function() {
+            var selModel = that.app.getTemplateData().selectedModel;
+
+            return selModel.state === "PROCESSING";
+          }
+        },
 
         isAnimating: {
           cache: false,
@@ -179,7 +189,7 @@ var exports = (function() {
         // Remove item, based on incoming modelinfo.
         removeModel: function(modelinfo) {
 
-          var id = modelinfo.id; //$(this).data("uuid");
+          var id = modelinfo.id;
           var modelname = modelinfo.name;
 
           // This is here momentarily, it will be removed later. But this is needed to get closeDetails to work.
@@ -187,13 +197,21 @@ var exports = (function() {
 
           $("#dialog-remove-name").html(modelname);
 
+          // Do we also remove all the additional files? This is based on the checkmark.
+          // if deletefiles is true, we will tell the server that we want to remove these files.
+          var deletefiles = $("#simulation-control-check-delete-files").is(":checked");
+
+
+          var options = {
+            "deletefiles": deletefiles
+          };
+
           // User accepts deletion:
           $("#dialog-remove-response-accept").on("click", function() {
 
-            that.models.deleteModel(id);
+            that.models.deleteModel(id, options);
 
-            // Hide dialog:
-            // hide dialog.
+            // Hide dialog when user presses this accept.:
             $("#dialog-confirm-delete").modal("hide");
 
             // Go back home:
@@ -201,8 +219,21 @@ var exports = (function() {
 
 
           });
+
+          // We also show an extra warning in the dialog, if user chooses to remove additional files.
+          $("#dialog-confirm-delete .msg-delete-extra").toggle(deletefiles);
+
           // Show the dialog:
           $("#dialog-confirm-delete").modal({});
+        },
+
+        // User wants to start a model. We just do not do anything now, as this needs to be implemented.
+        startModel: function(modelinfo) {
+
+          var id = modelinfo.id;
+
+          // We use the runmodel for this.
+          that.models.runModel(id);
         },
 
         // For animations:
