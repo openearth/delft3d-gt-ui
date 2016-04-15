@@ -267,13 +267,27 @@ var exports = (function() {
               this.currentAnimationIndex = 0;
             }
           }
+        },
+
+        downloadFiles: function() {
+
+          var selectedData = that.app.getTemplateData().selectedModel;
+
+          // Open download window
+          var id = selectedData.id;
+          var type = "images";
+
+          window.open("/scene/export?id=" + id );
+        },
+
+        downloadOptionsChange: function() {
+
+          //Determine if there is any download option enabled, if not, disable button
+          var selectedOptions = $(".downloadoption:checked").length;
+
+          $("#download-submit").prop("disabled", selectedOptions === 0);
+
         }
-
-
-
-
-
-
 
       }
     });
