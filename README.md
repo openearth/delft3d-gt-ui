@@ -1,4 +1,4 @@
-# delft3d-gt-ui
+# delft3d geological tool (user interface)
 
 
 [![Build Master](https://travis-ci.org/openearth/delft3d-gt-ui.svg?branch=master)](https://travis-ci.org/openearth/delft3d-gt-ui)  master build status
