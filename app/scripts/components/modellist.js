@@ -1,5 +1,5 @@
 (function () {
-
+  "use strict";
   /* global Vue */
 
   // register the grid component
