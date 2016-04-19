@@ -58,7 +58,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Actions <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-cog"></span></a>
                 <ul class="dropdown-menu forAnimate" role="menu">
                   <li><a href="#" v-on:click="changeMenuItem" data-target="#model-simulation-control">Simulation controls</a></li>
-                  <!-- <li><a href="#" v-on:click="changeMenuItem" data-target="#results-download">Download files</a></li> -->
+                  <li><a href="#" v-on:click="changeMenuItem" data-target="#results-download">Download files</a></li>
                 </ul>
               </li>
 
@@ -184,15 +184,29 @@
             </div>
 
             <div class="panel-collapse collapse" id="results-download">
-              <div class="panel-body">
-                <h2>Download files</h2>
+                <div class="panel-body">
+                    <h2>
+                        Download files
+                    </h2>
+                    <p>
+                        Please check what you would like to download. Your download will be a ZIP file which contains the requested files.
+                    </p>
 
-                <ul>
-                  <li>Download model files</li>
-                  <li>Download all images</li>
-                  <li> ... </li>
-                </ul>
-              </div>
+                    <p>
+                      Currently you can only dowload the generated output images.
+                    </p>
+
+                    <div class="form-group input-group">
+                      <span class="input-group-addon"><input type="checkbox" class="downloadoption" checked="checked" v-on:change="downloadOptionsChange()"></span>
+                      <span class="form-control">Download generated output images</span>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="form-control btn btn-primary" id="download-submit" v-on:click="downloadFiles()" value="">
+                            Download
+                        </button>
+                    </div>
+                </div>
             </div>
 
 
