@@ -118,7 +118,7 @@
       });
 
 
-      it("Test scene creation - check create request - ok", function(done) {
+      xit("Test scene creation - check create request - ok", function(done) {
         var options = {
           name: "Model to create"
         };
@@ -194,7 +194,7 @@
       });
 
 
-      it("MessageSceneChangeState - Check sceneid being sent", function(done) {
+      xit("MessageSceneChangeState - Check sceneid being sent", function(done) {
 
         // Id of the scene we will start:
         var startid = 1;
@@ -259,7 +259,7 @@
     });
 
 
-    it("MessageSceneDelete - Check sceneid being sent", function(done) {
+    xit("MessageSceneDelete - Check sceneid being sent", function(done) {
 
       // Id of the scene we will start:
       var deleteid = 1;
@@ -307,7 +307,7 @@
   describe("MessageSceneList", function() {
 
 
-    it("MessageSceneList - Check if request is sent correctly", function(done) {
+    xit("MessageSceneList - Check if request is sent correctly", function(done) {
 
       var msl = new MessageSceneList();
 
@@ -338,7 +338,7 @@
     });
 
     // This one is todo!
-    it("MessageSceneList - Check if we get valid scenes", function(done) {
+    xit("MessageSceneList - Check if we get valid scenes", function(done) {
 
       var msl = new MessageSceneList();
 
@@ -411,7 +411,7 @@
       done();
     });
 
-    it("App - LoadTemplate - Check if mock template is added to DOM", function(mydone) {
+    xit("App - LoadTemplate - Check if mock template is added to DOM", function(mydone) {
 
       nock("http://0.0.0.0")
         .get("templates/templates.html")
