@@ -10,6 +10,8 @@ Frontend for the Delft3D GT web-based user interface
 
 # Getting Started
 
+Make sure you have [node.js](https://nodejs.org/en/) (>=4.0) installed, preferably through your package manager or using nvm.
+
 #### Install gulp, bower and the latest version of npm and a few test scripts globally:
 
 ```sh
