@@ -106,8 +106,7 @@ var exports = (function() {
             var selModel = that.app.getTemplateData().selectedModel;
             var imgs = selModel.processingtask.state_meta[animationKey];
 
-            if (imgs !== undefined)
-            {
+            if (imgs !== undefined) {
               return selModel.fileurl + imgs.location + imgs.images[this.currentAnimationIndex];
             }
 
@@ -143,12 +142,11 @@ var exports = (function() {
             var selModel = that.app.getTemplateData().selectedModel;
             var imgs = selModel.processingtask.state_meta[animationKey];
 
-            if (imgs !== undefined)
-            {
+            if (imgs !== undefined) {
               return imgs.images.length > 0;
             }
 
-            return 0
+            return 0;
 
             /*
             var animationKey = this.currentAnimationKey;
@@ -322,7 +320,7 @@ var exports = (function() {
           // Open download window
           var id = selectedData.id;
 
-          window.open("/scene/export?id=" + id );
+          window.open("/scene/export?id=" + id);
         },
 
         downloadOptionsChange: function() {

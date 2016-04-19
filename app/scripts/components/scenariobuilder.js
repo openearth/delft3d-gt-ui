@@ -103,7 +103,7 @@ var exports = (function() {
         submitScenario: function() {
 
 
-           var postdata = {
+          var postdata = {
             templateid: this.availabletemplates.templateid, // Temp!
             scenariosettings: this.scenarioconfig
           };
@@ -162,7 +162,7 @@ var exports = (function() {
                 valid = valid && validation.validateNumberInRange(configuredvar.maxstep, min, max);
 
                 // Step interval should always be >= 0.
-                valid = valid && (interval > 0 );
+                valid = valid && (interval > 0);
 
               } else {
 
@@ -190,7 +190,7 @@ var exports = (function() {
 
               break;
 
-            // Text types:
+              // Text types:
             case "text":
 
               // Min / max are used for the length:
@@ -344,7 +344,7 @@ var exports = (function() {
 
           });
 
-        //  console.log(JSON.stringify(config));
+          //  console.log(JSON.stringify(config));
 
           return config;
         }
