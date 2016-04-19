@@ -37,6 +37,10 @@ var exports = (function () {
         submitModel: function() {
 
           that.app.getUI().submitModel();
+        },
+
+        gotoPage: function(pagename) {
+          that.app.getTemplateData().currentView = pagename;
         }
       }
     });

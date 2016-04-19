@@ -34,7 +34,7 @@ var exports = (function() {
         };
       },
       beforeCompile: function() {
-        console.log("before compile");
+
       },
       ready: function() {
 
@@ -216,7 +216,6 @@ var exports = (function() {
 
             // Go back home:
             thisComponent.closeDetails();
-
 
           });
 
