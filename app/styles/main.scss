@@ -89,8 +89,9 @@ $row-border-color: $gray-light;
   &.error {
     background-color: $row-color-error;
 
+    // No highlight for errors. (so same color)
     &:hover {
-      background-color: mix($row-color-error, $white, 50%);
+      background-color: $row-color-error;
     }
   }
 }
@@ -128,6 +129,11 @@ html {
 .input-group-addon {
   @include rectangle-corners();
 }
+
+.form-control {
+  @include rectangle-corners();
+}
+
 
 .footer {
   margin: 8px 0 0;
@@ -175,12 +181,22 @@ html {
   margin-bottom: 32px;
   width: 100%;
 
+  .error
+  {
+      background-color: $row-color-error;
+  }
+
   td {
     border: 1px solid $row-border-color;
     height: $row-height;
 
     &.centered {
       text-align: center;
+    }
+
+    &.cell-zero-padding
+    {
+      padding: 0px;
     }
 
   }
@@ -326,6 +342,30 @@ nav.sidebar,
 .main {
   padding: 10px 10px 0;
 }
+
+// Some helper functions:
+
+.no-padding
+{
+  padding: 0px;
+}
+
+.no-margin
+{
+  margin: 0px;
+}
+
+.centered
+{
+   margin: 0 auto;
+}
+
+.max-width
+{
+  width:100%;
+}
+
+
 
 @media (min-width: 765px) {
   .main {

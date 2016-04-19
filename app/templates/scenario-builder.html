@@ -1,0 +1,136 @@
+<template id="template-scenario-builder">
+    <div>
+        <div class="panel-body">
+            <div class="col-lg-12">
+                <div class="header-bar">
+                    <h2>
+                        Scenario builder
+                    </h3>
+                </div>
+                <template v-if="availabletemplates !== null">
+                    <h3>
+                        Template: {{availabletemplates.templatename}} <span class="label label-default">version {{availabletemplates.version}}</span>
+                    </h3>
+
+                    <!-- categories -->
+                    <div id="scenariobuilder-input">
+                      <div v-for="item in availabletemplates.variables">
+                          <h3>
+                              {{item.label}}
+                          </h3>
+
+                          <table class="table-default">
+                              <tr v-for="(key, value) in item['variables']" v-bind:class="{ 'error': scenarioconfig[value.variableid].valid == false}">
+                                  <td>
+                                      <label for="{{value['variableid']}}">
+                                          {{value['label']}}
+                                      </label>
+                                  </td>
+                                  <td class="cell-zero-padding">
+                                      <!-- enable autostep? -->
+                                      <div class="input-group no-margin">
+                                        <template v-if="value.stepoptions.autostep == true">
+                                          <span class="input-group-addon">
+                                            <small>Vary</small>
+                                            <input type="checkbox" aria-label="autostep" v-model="scenarioconfig[value.variableid].useautostep" v-on:change="toggleAutoStep(value, $event)">
+                                          </span>
+                                        </template>
+
+                                        <!-- this input is disabled when autostep is enabled -->
+                                        <input v-model="scenarioconfig[value.variableid].value" v-bind:class="{ 'inputdisabled': scenarioconfig[value.variableid].useautostep == true}" class="input-group form-control" data-max="{{value.max}}" data-min="{{value.min}}" name="{{value['variableid']}}" type="text" v-on:keyup="validateField(value, $event)" v-on:change="validateField(value, $event)" />
+
+
+                                        <!-- Auto step options -->
+                                        <template v-if="scenarioconfig[value.variableid].useautostep == true">
+                                          <div class="centered">
+                                            <table class="centered max-width">
+                                              <tr>
+                                                <td class="no-padding">
+                                                   <span class="input-group-addon" >Min</span>
+                                                   <input type="text" class="form-control" name="step{{value['variableid']}}-min" v-model="scenarioconfig[value.variableid].minstep" v-on:keyup="validateField(value, $event)" v-on:change="validateField(value, $event)" />
+                                                </td>
+
+                                                <td class="no-padding">
+                                                  <span class="input-group-addon">Max</span>
+                                                  <input type="text" class="form-control"  name="step{{value['variableid']}}-max"  v-model="scenarioconfig[value.variableid].maxstep" v-on:keyup="validateField(value, $event)" v-on:change="validateField(value, $event)" />
+                                                </td>
+
+                                                <td class="no-padding">
+                                                  <span class="input-group-addon">
+                                                    Step interval
+                                                  </span>
+                                                  <input type="text" class="form-control" name="step{{value['variableid']}}-interval" v-model="scenarioconfig[value.variableid].stepinterval" v-on:keyup="validateField(value, $event)" v-on:change="validateField(value, $event)" />
+                                                </td>
+                                              </tr>
+                                            </table>
+                                          </div>
+                                        </template>
+
+                                        <!-- End auto step -->
+                                      </div>
+
+
+
+                                  </td>
+
+                                  <!-- only show units if type is numeric -->
+                                  <template v-if="value.type == 'numeric'">
+                                    <td>
+
+                                        {{value.units}}&nbsp;
+
+                                        <!-- Show range if either min and max are not 0 -->
+                                        <template v-if="value.min !== 0 || value.max !== 0">
+                                           [{{value.min}}
+                                            -
+                                            <template v-if="value.max !== 0">
+                                              &nbsp;{{value.max}}
+                                            </template>
+                                            <template v-else>
+                                              &nbsp;...
+                                            </template>
+                                          ]
+                                        </template>
+
+
+                                    </td>
+                                  </template>
+
+                                  <td>
+                                      {{value.description}}
+
+                                      <div v-if="scenarioconfig[value.variableid].useautostep == true && value.stepoptions.multipleof != 0">
+                                        <small>Step interval needs to be a multiple of {{value.stepoptions.multipleof}}</small>
+                                      </div>
+
+                                  </td>
+                              </tr>
+                          </table>
+                      </div>
+
+
+                      <!-- expected runs indicator. It becomes a different color if the totalruns exceed 50 -->
+                      <div class="row" >
+                          <div class="col-lg-12">
+                            <div class="alert alert-info" v-bind:class="{ 'alert-warning': totalruns >= 50}" role="alert">
+                              <p class="lead">Expected runs: <strong>~{{totalruns}}</strong></p>
+                            </div>
+                          </div>
+                      </div>
+
+                      <div class="col-lg-2">
+                          <div class="btn-group">
+                              <button class="form-control btn btn-primary" id="scenario-submit" v-on:click="submitScenario" value="" v-bind:class="{ 'inputdisabled': formIsValid == false}" >
+                                  Create
+                              </button>
+                          </div>
+                      </div>
+                    </div>
+                </template>
+                <template v-else="">
+                    no data yet.
+                </template>
+            </div>
+        </div>
+    </div>
+</template>

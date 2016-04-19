@@ -1,4 +1,4 @@
-/* global UI, Models, Vue, ModelDetails,ComponentHome,ComponentModelList*/
+/* global UI, Models, Vue, ModelDetails,ComponentHome,ComponentModelList, ScenarioBuilder */
 //import modelList from "templates/list-running-models.vue";
 
 var App;
@@ -12,6 +12,7 @@ var exports = (function() {
 
 
     // Main javascript code, initialize components, there shouldn"t be much here.
+    Vue.config.debug = true;
 
     // Our shared template data:
     this.TemplateData = {
@@ -93,9 +94,9 @@ var exports = (function() {
     var modeldetails = new ModelDetails(this, this.models);
     var componenthome = new ComponentHome(this);
     var componentmodellist = new ComponentModelList(this);
+    var scenariobuilder = new ScenarioBuilder(this);
 
     /*eslint-enable no-unused-vars */
-
   };
 
   return {
