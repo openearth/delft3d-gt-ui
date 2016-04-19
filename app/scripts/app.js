@@ -1,10 +1,9 @@
 /* global UI, Models, Vue, ModelDetails,ComponentHome,ComponentModelList*/
 //import modelList from "templates/list-running-models.vue";
+var vm;
 
 (function() {
   "use strict";
-
-  var vm;
 
   $(document).ready(function() {
     console.log("document loaded");
@@ -14,18 +13,32 @@
       function() {
 
         console.log("templates loaded, starting vue application");
-        vm = new Vue({
-          el: "#app",
-          data: function() {
-            return {
-              currentView: "home-view",
-              selectedModel: null
-            };
+
+        var App = Vue.extend({});
+
+        var router = new VueRouter();
+
+        router.map({
+          "/details/:id": {
+            component: ModelDetails
+          },
+          "/": {
+            component: HomeView
           }
         });
+        router.start(App, "#app");
+
+        // TODO: move to ModelDetails component
+        $("#model-details-navigation .nav a").click(function (e) {
+          e.preventDefault();
+          $(this).tab("show");
+        });
+
       }
     );
 
-  })
+
+
+  });
 
 })();

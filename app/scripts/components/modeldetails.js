@@ -1,43 +1,73 @@
+var ModelCreate;
+var ModelDetails;
 (function () {
   "use strict";
   /* global Vue, Clipboard */
 
-  Vue.component("model-create", {
+  ModelCreate = Vue.component("model-create", {
     template: "#template-model-create",
     // Show the details of one model
     // Doesn't have a model yet....
     data: function() {
       return {
         name: "Model name",
-        timestep: 13.0
+        id: 0,
+        params: {
+          timestep: 13.0
+        },
+        state: "PENDING",
+        log: ""
       };
     },
     methods: {
       submit: function() {
         console.log("validating", this.$data);
-        console.log("submitting", this);
+        console.log("submitting", JSON.stringify(this.$data));
       }
     }
 
   });
 
-  Vue.component("model-details", {
+  ModelDetails = Vue.component("model-details", {
     template: "#template-model-details",
     // Show the details of one model
     data: function() {
+      var id = this.$route.params.id;
+
       return {
-        model: null,
+        model: {
+          id: id
+        },
         log: ""
       };
     },
+    activate: function() {
+      console.log("activating model details");
+    },
 
+    route: {
+      data: function(transition) {
+        // get model (from a service or parent)
+        transition.next({
+          model: {
+            name: "fetched model info",
+            id: transition.to.params.id,
+            log: "",
+            state: "PENDING",
+            params: {
+              timestep: 13.0
+            }
+          }
+        });
+      }
+    },
     methods: {
       downloadFiles: function() {
 
         // Open download window
         var id = this.data.model.id;
 
-        window.open("/scene/export?id=" + id );
+        window.open("/scene/export?id=" + id);
       },
       fetchLog: function() {
         // Working dir is at: modeldata.fileurl + delf3d + delft3d.log
@@ -45,7 +75,7 @@
           url: this.model.id + "/delft3d/delft3d.log",
           method: "GET"
         })
-          .done(function(resp){
+          .done(function(resp) {
             this.data.log = resp;
           });
       }

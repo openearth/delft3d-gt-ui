@@ -3,8 +3,8 @@
     <div class="panel-body">
       <div class="col-lg-12">
         <div class="header-bar">
-          <h2>Details for &ldquo;<strong>{{model.name}}</strong>&rdquo;
-          </h2>
+          <h2 v-if="model">Details for &ldquo;<strong>{{model.name}}</strong>&rdquo;</h2>
+          <h2 v-if="!model">No model loaded</h2>
         </div>
       </div>
 
@@ -34,42 +34,50 @@
         </div><!-- /.modal-dialog -->
       </div><!-- /.modal -->
 
-      <nav class="navbar navbar-default sidebar" role="navigation">
+      <nav class="navbar navbar-default sidebar" role="navigation" id="model-details-navigation">
         <div class="container-fluid">
 
           <ul class="nav navbar-nav">
-            <li><a href="#" v-on:click="closeDetails(); return false"><strong>Return to model list</strong>
-                <span class="pull-right hidden-xs showopacity glyphicon glyphicon-menu-left"></span></a></li>
+            <li><a href="#/"><strong>Return to model list</strong>
+                <span class="pull-right hidden-xs showopacity glyphicon glyphicon-menu-left"></span></a>
+            </li>
 
-            <li class="active"><a href="#" v-on:click="changeMenuItem" data-target="#results-summary">Summary<span class="pull-right hidden-xs showopacity glyphicon glyphicon-info-sign"></span></a></li>
+            <li class="active">
+              <a href="#model-summary" data-toggle="tab" >
+                Summary<span class="pull-right hidden-xs showopacity glyphicon glyphicon-info-sign"></span>
+              </a>
+            </li>
 
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Graphs <span class="caret"></span><span class="pull-right hidden-xs showopacity glyphicon glyphicon-signal"></span></a>
               <ul class="dropdown-menu for-animate" role="menu">
-                <li><a href="#" v-on:click="changeMenuItem" data-target="#results-channel-network" data-animation="channel_network_images">Channel network</a></li>
-                <li><a href="#" v-on:click="changeMenuItem" data-target="#results-delta-fringe" data-animation="delta_fringe_images">Delta plain fringe</a></li>
+                <li><a href="#model-channel-network" data-toggle="tab">Channel network</a></li>
+                <li><a href="#" data-target="#results-delta-fringe" data-animation="delta_fringe_images">Delta plain fringe</a></li>
               </ul>
             </li>
 
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Actions <span class="caret"></span><span class="pull-right hidden-xs showopacity glyphicon glyphicon-cog"></span></a>
               <ul class="dropdown-menu forAnimate" role="menu">
-                <li><a href="#" v-on:click="changeMenuItem" data-target="#model-simulation-control">Simulation controls</a></li>
-                <li><a href="#" v-on:click="changeMenuItem" data-target="#results-download">Download files</a></li>
+                <li><a href="#" data-target="#model-simulation-control">Simulation controls</a></li>
+                <li><a href="#" data-target="#results-download">Download files</a></li>
               </ul>
             </li>
 
-            <li><a href="#"  v-on:click="changeMenuItem" data-parent="#container-model-information" data-target="#model-log-output-container">View log file<span  class="pull-right hidden-xs showopacity glyphicon glyphicon-th-list"></span></a></li>
+            <li><a href="#model-log" data-toggle="tab" >
+                View log file<span  class="pull-right hidden-xs showopacity glyphicon glyphicon-th-list"></span></a>
+            </li>
 
           </ul>
         </div>
       </nav>
 
-      <!-- content for menu -->
-      <div class="pull-left model-information col-lg-9" id="accordion">
 
-        <div class="panel-collapse collapse in" id="results-summary">
-          <div class="panel-body">
+      <!--  -->
+      <!-- Tab panes -->
+      <div class="tab-content col-lg-9" >
+        <div role="tabpanel" class="tab-pane active fade in" id="model-summary">
+          <div class="panel-body" v-if="model">
             <h2>Summary</h2>
 
             <table class="table-default">
@@ -94,33 +102,43 @@
 
           </div>
         </div>
+        <div role="tabpanel" class="tab-pane fade" id="model-channel-network">
+          <div class="panel-collapse collapse" id="results-channel-network">
+            <div class="panel-body">
+              <h2>Channel network</h2>
 
+              <div class="text-center"  v-show="hasFrames">
 
-        <div class="panel-collapse collapse" id="results-channel-network">
-          <div class="panel-body">
-            <h2>Channel network</h2>
+                <img v-bind:src="animationFrame" />
 
-            <div class="text-center"  v-show="hasFrames">
-
-              <img v-bind:src="animationFrame" />
-
-              <div>
-                <div class="btn-group">
-                  <button class="btn btn-primary" v-on:click="previousImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-backward"></span></button>
-                  <button class="btn btn-primary" v-show="isAnimating" v-on:click="stopImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-stop"></span></button>
-                  <button class="btn btn-primary" v-show="isAnimating == false" v-on:click="playImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-play"></span></button>
-                  <button class="btn btn-primary" v-on:click="nextImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-forward"></span></button>
+                <div>
+                  <div class="btn-group">
+                    <button class="btn btn-primary" v-on:click="previousImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-backward"></span></button>
+                    <button class="btn btn-primary" v-show="isAnimating" v-on:click="stopImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-stop"></span></button>
+                    <button class="btn btn-primary" v-show="isAnimating == false" v-on:click="playImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-play"></span></button>
+                    <button class="btn btn-primary" v-on:click="nextImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-forward"></span></button>
+                  </div>
                 </div>
               </div>
+
+              <h4>Background information</h4>
+
+              <p>
+                This graph shows the network of the channel [ ... ]
+              </p>
             </div>
-
-            <h4>Background information</h4>
-
-            <p>
-              This graph shows the network of the channel [ ... ]
-            </p>
           </div>
         </div>
+        <div role="tabpanel" class="tab-pane fade" id="model-log">log</div>
+        <div role="tabpanel" class="tab-pane fade" id="model-log">log</div>
+      </div>
+      <!-- content for menu -->
+      <div class="pull-left model-information col-lg-9" id="accordion">
+
+
+
+
+
 
         <div class="panel-collapse collapse" id="results-delta-fringe">
           <div class="panel-body">

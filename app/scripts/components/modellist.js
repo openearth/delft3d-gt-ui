@@ -1,9 +1,10 @@
+var ModelList;
 (function () {
   "use strict";
   /* global Vue */
 
   // register the grid component
-  Vue.component("model-list", {
+  ModelList = Vue.component("model-list", {
     template: "#template-model-list",
 
     data: function() {

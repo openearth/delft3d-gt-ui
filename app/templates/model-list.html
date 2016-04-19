@@ -1,0 +1,40 @@
+<template id="template-model-list" inline-template>
+  <div>
+    <table id="list-model-status" class="table-default">
+      <thead>
+        <tr>
+          <th>Run #</th>
+          <th>Status</th>
+          <th>&nbsp;</th>
+
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr v-for="entry in data
+                   | filterBy filterKey
+                   | orderBy sortKey sortOrders[sortKey]
+                   " v-on:click="detailModel($index)" class="clickable">
+          <td>{{entry.name}}<input type="hidden" value="{{entry.id}}" v-model="entry.id" /></td>
+          <td>{{entry.state}}</td>
+
+          <td class="centered">
+            <button class="btn btn-primary inside-cell" v-on:click="selectModel">Details</button>
+          </td>
+        </tr>
+      </tbody>
+
+      <tfoot v-show="!models">
+        <tr>
+          <td colspan="4" class="centered">
+            There are no models right now.
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+    <div class="alert alert-warning default-hidden" role="alert" id="alert-connectionfailed">
+      Cannot reach model server.
+    </div>
+  </div>
+
+</template>

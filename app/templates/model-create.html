@@ -18,8 +18,10 @@
       <div class="input-group">
         <span class="input-group-addon"><input type="checkbox" disabled="disabled" checked="checked" /></span>
         <span class="input-group-addon  item-group-title" id="newrun-timestep-label"> Time step</span>
+        <!-- number attribute is used by vue to parse as number -->
         <input type="number" pattern="[0-9]*" class="form-control"
-               v-model="timestep"
+               v-model="params.timestep"
+               number
                id="newrun-timestep"  min="1" max="50"
                aria-describedby="newrun-timestep-label"
                autocomplete="off">
