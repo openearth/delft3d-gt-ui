@@ -106,7 +106,13 @@ var exports = (function() {
             var selModel = that.app.getTemplateData().selectedModel;
             var imgs = selModel.processingtask.state_meta[animationKey];
 
-            return selModel.fileurl + imgs.location + imgs.images[this.currentAnimationIndex];
+            if (imgs !== undefined)
+            {
+              return selModel.fileurl + imgs.location + imgs.images[this.currentAnimationIndex];
+            }
+
+            return "";
+
           }
         },
 
@@ -133,7 +139,17 @@ var exports = (function() {
           cache: false,
           get: function() {
 
-            return true;
+            var animationKey = this.currentAnimationKey;
+            var selModel = that.app.getTemplateData().selectedModel;
+            var imgs = selModel.processingtask.state_meta[animationKey];
+
+            if (imgs !== undefined)
+            {
+              return imgs.images.length > 0;
+            }
+
+            return 0
+
             /*
             var animationKey = this.currentAnimationKey;
             var selModel = that.app.getTemplateData().selectedModel;
