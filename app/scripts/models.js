@@ -68,29 +68,6 @@ var exports = (function() {
   // Run a model, with given options. Optional callback for return.
   Models.prototype.prepareModel = function(ScenarioOptions, ModelOptions, callback) {
 
-    //    var that = this;
-
-    /*
-     // Validate input of run model.
-     // Depends on validator class
-     function validateRunModel(so, mo)
-     {
-     console.log(so);
-
-     var CheckRunId = (validator.isAlphanumeric(so.runid) === true) && (validator.isLength(so.runid, {min: 0, max: 64 }) === true);
-     var CheckDt = (validator.isInt(mo.timestep, {min: 1, max: 3600}) === true);
-
-     return CheckRunId && CheckDt;
-     }
-
-
-     if (validateRunModel(ScenarioOptions, ModelOptions) === false)
-     {
-
-     return false;
-     }
-     */
-
     // Temporary format.
     var serveroptions = {
       "name": ScenarioOptions.runid,
@@ -100,9 +77,6 @@ var exports = (function() {
 
     var msg = new MessageSceneCreate(serveroptions);
 
-    msg.onCompleteCallback(function() {
-      // Handle on complete.
-    });
 
     msg.onErrorCallback(function() {
       // Handle errors

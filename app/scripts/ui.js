@@ -1,116 +1,50 @@
 /* global InputValidation  */
-var UI;
 
-var exports = (function () {
+(function () {
   "use strict";
 
-  // Constructor of our UI class
-  UI = function(app, models) {
-    if (app === undefined) {
-      console.error("No app argument for UI");
-    }
-
-    if (models === undefined) {
-      console.error("No models argument for UI");
-    }
-
-    // Store a reference to the app var.
-    this.app = app;
-
-    // Store a reference to the models var.
-    this.models = models;
-
-    // Immediatly validate form at start.
-    this.validateForm();
-  };
-
-  // Return the list of models.
-  UI.prototype.getModels = function() {
-
-    return this.models;
-  };
-
-  // Refresh GUI with new server data.
-  // Should be done with templates later.
-  UI.prototype.UpdateModelList = function(data) {
-
-    // Check if data is present
-    if (data === undefined) {
-      console.log("No data");
-      return;
-    }
-
-    // Store in the vue controller:
-    var templateData = this.app.getTemplateData();
-
-    templateData.models.gridData = data.scenes;
-
-  };
-
-  // Register event handler for the current GUI.
-  // For model start test primarily.
-  UI.prototype.registerHandlers = function() {
-    var that = this;
-
-    // Submit button has been pressed
-    // We watch all events in the form input.
-    $("#run-model-input-properties input")
-      .on("change keyup", function() {
-        that.validateForm();
-      });
-  };
-
-  UI.prototype.submitModel = function() {
-    var that = this;
-
-    var ScenarioOptions = {};
-    var ModelOptions = {};
-
-    ScenarioOptions.runid = $("#newrun-name").val();
-    ScenarioOptions.author = "placeholder";
-
-    ModelOptions.timestep = $("#newrun-timestep").val();
-
-    // [TODO] We skip input validation at the moment!
-    that.models.prepareModel(ScenarioOptions, ModelOptions, function(ret) {
-
-      //if (ret !== undefined) {
-        //if (ret.status !== undefined) {
-          // Some alert things. Turn this into a nice class...
-        /*
-               $("#newrun-alert .alert").html("An error occured! Reason:" + ret.status.reason);
-            $("#newrun-alert .alert").removeClass("alert-success").addClass("alert-warning");
-            $("#newrun-alert").show();
-
-          }
-        */
+  // Submit button has been pressed
+  // We watch all events in the form input.
+  $("#run-model-input-properties input")
+    .on("change keyup", function(el) {
+      var form = el.closest("form");
+      validateForm(form);
+    });
 
 
+  function submitModel(model) {
+    var scenarioOptions = {
+      runid: $("#newrun-name").val(),
+      author: "placeholder"
+    };
+    var modelOptions = {
+      timestep: $("#newrun-timestep").val()
+    };
 
-      if (ret.scene !== undefined) {
+    // TODO: We skip input validation at the moment!
+    prepareModel(scenarioOptions, modelOptions, function(ret) {
 
-        $("#newrun-alert .alert").html("Model is queued...");
-        $("#newrun-alert .alert").removeClass("alert-warning").addClass("alert-success");
-        $("#newrun-alert").show();
+      if (!ret.scene) {
+        console.log("can'it find a model")
+        return;
+      };
 
-        // Immediatly start the model
-        // [temporary code]
-        that.models.runModel(ret.scene.id);
-      }
+      // otherwise continue
+      $("#newrun-alert .alert").html("Model is queued...");
+      $("#newrun-alert .alert").removeClass("alert-warning").addClass("alert-success");
+      $("#newrun-alert").show();
+
+      var model = new Model(ret.scence.id);
+
+      model.run();
 
       // Delay and hide after a moment
       $("#newrun-alert").delay(4000).fadeOut(500);
 
-      // Do a hard refresh right now:
-      that.models.getModels($.proxy(that.UpdateModelList, that));
-
-       // }
-
-     // }
     });
   };
 
-  UI.prototype.validateForm = function() {
+  function validateForm(form) {
 
     var validation = new InputValidation();
 
@@ -165,14 +99,5 @@ var exports = (function () {
 
 
   };
-  return {
-    UI: UI
-  };
 
 }());
-
-// export the namespace object
-if (typeof module !== "undefined" && module.exports) {
-  // if we have modules
-  module.exports = exports;
-}

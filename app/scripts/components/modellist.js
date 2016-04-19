@@ -1,106 +1,52 @@
-/* global Vue */
+(function () {
 
-// Exported globals
-var ComponentModelList;
+  /* global Vue */
 
-var exports = (function() {
-  "use strict";
+  // register the grid component
+  Vue.component("model-list", {
+    template: "#template-model-list",
 
-  // Constructor of our component
-  ComponentModelList = function(app) {
-    // Store reference to our app
-    this.app = app;
+    data: function() {
+      return {
+        models: []
+      };
+    },
 
-    var that = this;
+    methods: {
+      // Remove item, based on incoming modelinfo.
+      removeModel: function(id) {
 
-    // register the grid component
-    Vue.component("model-list", {
-      template: "#template-model-list",
+        var model = _.pop(models, id);
 
-      props: {
-        data: Array,
-        columns: Array,
-        filterKey: String
-      },
+        $("#dialog-remove-name").html(model.name);
 
-      computed: {
-        data: {
-          cache: false,
-          get: function() {
-            return that.app.getTemplateData().models.gridData;
-          }
-        },
+        // Do we also remove all the additional files? This is based on the checkmark.
+        // if deletefiles is true, we will tell the server that we want to remove these files.
+        var deletefiles = $("#simulation-control-check-delete-files").is(":checked");
 
-        columns: {
-          cache: false,
-          get: function() {
-            return that.app.getTemplateData().models.gridColumns;
-          }
-        },
 
-        // Returns true if we have no items in the grid array
-        hasNoModels: {
-          get: function() {
-            return (that.app.getTemplateData().models.gridData.length === 0);
-          }
-        }
-
-      },
-
-      data: function() {
-        var templateData = that.app.getTemplateData();
-
-        this.columns = templateData.models.gridColumns;
-        this.data = templateData.models.gridData;
-
-        if (this.columns !== undefined) {
-          var sortOrders = {};
-
-          this.columns.forEach(function(key) {
-            sortOrders[key] = 1;
-          });
-        }
-
-        return {
-          sortKey: "",
-          sortOrders: sortOrders
+        var options = {
+          "deletefiles": deletefiles
         };
-      },
 
-      methods: {
-        sortBy: function(key) {
-          this.sortKey = key;
-          this.sortOrders[key] = this.sortOrders[key] * -1;
-        },
+        // User accepts deletion:
+        $("#dialog-remove-response-accept").on("click", function() {
 
-        detailModel: function(rowindex) {
+          that.models.deleteModel(id, options);
 
-          var templateData = that.app.getTemplateData();
+          // Hide dialog when user presses this accept.:
+          $("#dialog-confirm-delete").modal("hide");
 
-          if (templateData.models.gridData[rowindex] !== undefined) {
-            // now we have access to the native event
-            var id = parseInt(templateData.models.gridData[rowindex].id);
+        });
 
-            that.app.TemplateData.selectedModel = that.app.models.findModelByID(id);
-            //Test:
-            templateData.selectedModelID = (id);
+        // We also show an extra warning in the dialog, if user chooses to remove additional files.
+        $("#dialog-confirm-delete .msg-delete-extra").toggle(deletefiles);
 
-            templateData.currentView = "model-details";
-          }
-        }
-
+        // Show the dialog:
+        $("#dialog-confirm-delete").modal({});
       }
-    });
-  };
 
-  return {
-    ComponentModelList: ComponentModelList
-  };
+    }
+  });
 
 }());
-
-
-// If we're in node export to models
-if (typeof module !== "undefined" && module.exports) {
-  module.exports = exports;
-}
