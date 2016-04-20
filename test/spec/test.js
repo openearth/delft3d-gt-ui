@@ -40,6 +40,7 @@
   includeFile(path.join(__dirname, "/../../app/scripts/components/home.js"));
   includeFile(path.join(__dirname, "/../../app/scripts/components/modeldetails.js"));
   includeFile(path.join(__dirname, "/../../app/scripts/components/modellist.js"));
+  includeFile(path.join(__dirname, "/../../app/scripts/components/scenariobuilder.js"));
 
   includeFile(path.join(__dirname, "/../../app/scripts/inputvalidation.js"));
 
@@ -409,7 +410,7 @@
     });
 
     // This test doesn't work, since it gets stuck when loading the main template.
-    xit("App - LoadTemplate - Check if mock template is added to DOM", function(done) {
+    it("App - LoadTemplate - Check if mock template is added to DOM", function(done) {
 
       nock("http://0.0.0.0")
         .get("templates/templates.html")
