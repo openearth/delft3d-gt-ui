@@ -37,6 +37,22 @@ var ModelList;
         10000
       );
     },
+    route: {
+      data: function(transition) {
+        fetchModels()
+          .then(
+            function(json) {
+              // copy old data and set model
+              var data = this.$data;
+              data.models = json;
+              // transition to this new data;
+              transition.next(data);
+            }.bind(this)
+          );
+      }
+
+
+    },
     methods: {
       // Remove item, based on incoming modelinfo.
       removeModel: function(id) {
