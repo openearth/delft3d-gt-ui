@@ -136,8 +136,7 @@ gulp.task("coverage", ["pre-coverage"], () => {
 });
 
 gulp.task("teamcity", ["scripts", "lint", "lint:test", "lint:scss", "coverage"], () => {
-  return gulp.src("test/spec/**/*.js")
-    .pipe(mocha({reporter: "mocha-teamcity-reporter"}));
+  // Just run all the dependencies.
 });
 
 gulp.task("html", ["styles", "scripts"], () => {
