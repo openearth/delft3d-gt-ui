@@ -20,16 +20,19 @@ var exports = (function() {
 
       data: function() {
         return {
-          availabletemplates: null,
+          availableTemplates: null,
 
           // The scenario as configured by the user at the moment.
-          scenarioconfig: {},
+          scenarioConfig: null,
 
           // Calculated total runs.
-          totalruns: 1,
+          totalRuns: 1,
 
           // Is the form completely valid? (Used to automatically set class on submit button)
-          formIsValid: true
+          formIsValid: true,
+
+          selectedTemplate: null,
+          selectedId: -1
         };
       },
 
@@ -43,36 +46,69 @@ var exports = (function() {
 
         //Load test template data:
         $.ajax({
-            url: "sampledata/template.json",
+            //url: "sampledata/template.json",
+            url: "scenario/template/list",
             method: "GET"
           })
           .done(function(data) {
-            // Build the prepared variables which are linked to the model automatically through the v-model function of VUE
-            // This does not look so good. But I cannot find a different solution with Vue.
-            var c = that.prepareScenarioConfig(data);
 
-            that.scenarioconfig = c;
+            // If you want to see what is coming from the template request, uncomment this:
+            // console.log(JSON.stringify(config));
 
-            // Store available templates:
-            that.availabletemplates = data;
+            if (data.template_list !== undefined) {
 
-            done();
+              // Store available templates:
+              that.availableTemplates = data.template_list;
+              that.selectedTemplate = null;
+
+              done();
+            }
+
 
           });
       },
 
-      beforeCompile: function() {
 
+      beforeCompile: function() {
+        // Placeholder for events
       },
 
       attached: function() {
-
+        // Placeholder for events
       },
 
 
       ready: function() {
+
         // Perform validate at start:
         this.validateForm();
+
+      },
+
+      computed: {
+
+        selectedId: {
+
+          // setter
+          set: function(newValue) {
+
+            // A different model has been selected.
+            if (newValue >= 0) {
+
+              // First set data, then the template. Order is important!
+              this.scenarioConfig = this.prepareScenarioConfig(this.availableTemplates[newValue]);
+              this.selectedTemplate = this.availableTemplates[newValue];
+
+            } else {
+
+              // Order is important!
+              this.selectedTemplate = null;
+              this.scenarioConfig = null;
+
+            }
+          }
+
+        }
       },
 
       methods: {
@@ -84,9 +120,9 @@ var exports = (function() {
 
           // Loop through all fields and determine if we have a completely valid form.
           // Set form valid state:
-          $.each(this.scenarioconfig, function(varkey, varvalue) {
+          $.each(this.scenarioConfig, function(varKey, varValue) {
 
-            if (varvalue.valid === false) {
+            if (varValue.valid === false) {
 
               // The form is not valid. We vail out immediatly of this loop and updatye the form with the new value.
               valid = false;
@@ -104,8 +140,8 @@ var exports = (function() {
 
 
           var postdata = {
-            templateid: this.availabletemplates.templateid, // Temp!
-            scenariosettings: this.scenarioconfig
+            templateid: this.selectedTemplate.templateid, // Temp!
+            scenariosettings: this.scenarioConfig
           };
 
           $.ajax({
@@ -123,11 +159,11 @@ var exports = (function() {
         validateField: function(variable) {
 
           // The variable as configured in this scenario:
-          var configuredvar = this.scenarioconfig[variable.variableid];
+          var configuredVar = this.scenarioConfig[variable.variableid];
 
           // Current value of the element.
           //var val = ($(event.target).val());
-          var val = configuredvar.value;
+          var val = configuredVar.value;
           var valid = true;
 
           // Min max from template
@@ -147,9 +183,9 @@ var exports = (function() {
               val = parseFloat(val);
 
               // Are we auto stepping? And is there a multipler of? Then check the interval - it should match the multiple of.
-              if (configuredvar.useautostep === true) {
+              if (configuredVar.useautostep === true) {
 
-                var interval = parseFloat(configuredvar.stepinterval);
+                var interval = parseFloat(configuredVar.stepinterval);
 
                 if (variable.stepoptions.multipleof > 0) {
 
@@ -158,8 +194,8 @@ var exports = (function() {
                 }
 
                 // Check if the stepping values are still in range:
-                valid = valid && validation.validateNumberInRange(configuredvar.minstep, min, max);
-                valid = valid && validation.validateNumberInRange(configuredvar.maxstep, min, max);
+                valid = valid && validation.validateNumberInRange(configuredVar.minstep, min, max);
+                valid = valid && validation.validateNumberInRange(configuredVar.maxstep, min, max);
 
                 // Step interval should always be >= 0.
                 valid = valid && (interval > 0);
@@ -176,12 +212,12 @@ var exports = (function() {
               }
 
               // Check if we have a group.
-              if (configuredvar.group.length > 0) {
-                var groupSum = this.calculateGroupSum(configuredvar.group);
+              if (configuredVar.group.length > 0) {
+                var groupSum = this.calculateGroupSum(configuredVar.group);
 
                 // What is the target?
-                if (this.availabletemplates.groups[configuredvar.group] !== undefined) {
-                  var targetVal = parseFloat(this.availabletemplates.groups[configuredvar.group].targetvalue);
+                if (this.selectedTemplate.groups[configuredVar.group] !== undefined) {
+                  var targetVal = parseFloat(this.selectedTemplate.groups[configuredVar.group].targetvalue);
 
                   valid = valid && (targetVal === groupSum);
                 }
@@ -216,7 +252,7 @@ var exports = (function() {
           }
 
           // Calculate amount of runs that are expected.
-          this.calculateTotalRuns();
+          this.calculatetotalRuns();
 
           // Validate entire form
           this.validateForm();
@@ -226,44 +262,44 @@ var exports = (function() {
         // The sum is returned
         calculateGroupSum: function(groupname) {
 
-          var totalvalue = 0;
+          var totalValue = 0;
 
-          $.each(this.scenarioconfig, function(varkey, varvalue) {
+          $.each(this.scenarioConfig, function(varKey, varValue) {
 
-            if (varvalue.group === groupname) {
+            if (varValue.group === groupname) {
 
               // Assuming always numeric here.
-              totalvalue += parseFloat(varvalue.value);
+              totalValue += parseFloat(varValue.value);
             }
 
           });
 
-          return totalvalue;
+          return totalValue;
 
         },
 
 
         // Set validation state of group:
-        setGroupValidationState: function(groupname, state) {
+        setGroupValidationState: function(groupName, state) {
           // If it's an empty name, we just exit.
-          if (groupname.length === 0) {
+          if (groupName.length === 0) {
             return;
           }
 
           var that = this;
 
-          // We loop through all fields and rese
-          $.each(this.scenarioconfig, function(variableid, varvalue) {
+          // We loop through all fields and change the group validation state for all variables that match the group name.
+          $.each(this.scenarioConfig, function(variableId, varValue) {
 
-            if (varvalue.group === groupname) {
-              that.setVariableValidationState(variableid, state);
+            if (varValue.group === groupName) {
+              that.setVariableValidationState(variableId, state);
             }
 
           });
         },
 
-        setVariableValidationState: function(variableid, state) {
-          this.scenarioconfig[variableid].valid = state;
+        setVariableValidationState: function(variableId, state) {
+          this.scenarioConfig[variableId].valid = state;
         },
 
         /// User has clicked on an autostep toggle in the GUI. Process this event.
@@ -271,28 +307,28 @@ var exports = (function() {
 
           this.validateField(variable, event);
 
-          this.calculateTotalRuns();
+          this.calculatetotalRuns();
 
         },
 
         // Calculate total number of runs this scenario contains so far.
         // It's either 1. Or multiple, because of interval steps. We take a rough calculation here first.
-        calculateTotalRuns: function() {
+        calculatetotalRuns: function() {
 
-          var totalruns = 1;
+          var totalRuns = 1;
 
-          $.each(this.scenarioconfig, function(varkey, varvalue) {
+          $.each(this.scenarioConfig, function(varKey, varValue) {
 
             // This model uses autostepping, so we calculate how many there are in there.
-            if (varvalue.useautostep === true) {
+            if (varValue.useautostep === true) {
 
-              var stepinterval = varvalue.stepinterval;
+              var stepInterval = varValue.stepinterval;
 
-              if (stepinterval > 0) {
-                var diff = Math.abs(varvalue.maxstep - varvalue.minstep) / stepinterval;
+              if (stepInterval > 0) {
+                var diff = Math.abs(varValue.maxstep - varValue.minstep) / stepInterval;
 
                 // We multiply the number of runs with every interval.
-                totalruns *= diff;
+                totalRuns *= diff;
               }
 
             }
@@ -300,10 +336,10 @@ var exports = (function() {
 
 
 
-          console.log(totalruns);
+          console.log(totalRuns);
 
           // Store back in config.
-          this.totalruns = Math.ceil(totalruns);
+          this.totalRuns = Math.ceil(totalRuns);
 
         },
 
@@ -316,25 +352,25 @@ var exports = (function() {
           }
 
           // Loop through all variables and set the default value:
-          $.each(data.variables, function(categorykey, categoryvalue) {
+          $.each(data.variables, function(categorykey, categoryValue) {
 
             // Loop through all category vars
-            $.each(categoryvalue.variables, function(varkey, varvalue) {
+            $.each(categoryValue.variables, function(varKey, varValue) {
 
               var group = "";
 
-              if (varvalue.group !== undefined) {
-                group = varvalue.group;
+              if (varValue.group !== undefined) {
+                group = varValue.group;
               }
 
-              config[varvalue.variableid] = {
-                value: varvalue.default, // Default value
+              config[varValue.variableid] = {
+                value: varValue.default, // Default value
                 valid: true, // We assume everything is ok
 
                 useautostep: false, // Do not use autostep by default
-                minstep: varvalue.min, // Default step min is min value of this var
-                maxstep: varvalue.max, // Default step max is max value of this var
-                stepinterval: varvalue.stepoptions.defaultstep, // Default step from the template
+                minstep: varValue.min, // Default step min is min value of this var
+                maxstep: varValue.max, // Default step max is max value of this var
+                stepinterval: varValue.stepoptions.defaultstep, // Default step from the template
                 group: group // Group name, for shared variables.
               };
 
@@ -344,7 +380,7 @@ var exports = (function() {
 
           });
 
-          //  console.log(JSON.stringify(config));
+          //          console.log(JSON.stringify(config));
 
           return config;
         }

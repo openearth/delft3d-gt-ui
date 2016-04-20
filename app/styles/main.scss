@@ -140,7 +140,7 @@ html {
 }
 
 .btn-logout {
-  margin: 8px 8px 0px 0px;
+  margin: 8px 8px 0 0;
 
 }
 
@@ -172,18 +172,17 @@ html {
 
 // Generic disabled element
 .inputdisabled {
-    pointer-events:none;
-    color: $gray-light;
-    background: $gray-lighter;
+  background: $gray-lighter;
+  color: $gray-light;
+  pointer-events: none;
 }
 
 .table-default {
   margin-bottom: 32px;
   width: 100%;
 
-  .error
-  {
-      background-color: $row-color-error;
+  .error {
+    background-color: $row-color-error;
   }
 
   td {
@@ -194,9 +193,8 @@ html {
       text-align: center;
     }
 
-    &.cell-zero-padding
-    {
-      padding: 0px;
+    &.cell-zero-padding {
+      padding: 0;
     }
 
   }
@@ -345,26 +343,25 @@ nav.sidebar,
 
 // Some helper functions:
 
-.no-padding
-{
-  padding: 0px;
+.no-padding {
+  padding: 0;
 }
 
-.no-margin
-{
-  margin: 0px;
+.no-margin {
+  margin: 0;
 }
 
-.centered
-{
-   margin: 0 auto;
+.centered {
+  margin: 0 auto;
 }
 
-.max-width
-{
-  width:100%;
+.max-width {
+  width: 100%;
 }
 
+.row-top-margin {
+  margin-top: 32px;
+}
 
 
 @media (min-width: 765px) {
