@@ -53,13 +53,13 @@ var exports = (function() {
           })
           .done(function(data) {
 
+//          console.log(JSON.stringify(config));
 
             if (data.template_list !== undefined) {
 
               // Store available templates:
               that.availabletemplates = data.template_list;
               that.selectedtemplate = null;
-
 
               done();
             }
@@ -388,7 +388,7 @@ var exports = (function() {
 
           });
 
-         // console.log(JSON.stringify(config));
+//          console.log(JSON.stringify(config));
 
           return config;
         }
