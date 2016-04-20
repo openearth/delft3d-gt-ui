@@ -27,7 +27,7 @@ var apiServer = "";
 
 // Proxy paths which we map to a different source, for testing locally or
 // running the actual build.
-var paths = ["runs", "createrun", "deleterun", "dorun", "scene"];
+var paths = ["runs", "createrun", "deleterun", "dorun", "scene", "scenario/template"];
 
 var proxies = _.map(paths, function(path) {
   "use strict";

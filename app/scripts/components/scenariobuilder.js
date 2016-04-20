@@ -23,13 +23,16 @@ var exports = (function() {
           availabletemplates: null,
 
           // The scenario as configured by the user at the moment.
-          scenarioconfig: {},
+          scenarioconfig: null,
 
           // Calculated total runs.
           totalruns: 1,
 
           // Is the form completely valid? (Used to automatically set class on submit button)
-          formIsValid: true
+          formIsValid: true,
+
+          selectedtemplate: null,
+          selectedid: -1
         };
       },
 
@@ -43,23 +46,28 @@ var exports = (function() {
 
         //Load test template data:
         $.ajax({
-            url: "sampledata/template.json",
+            //url: "sampledata/template.json",
+            url: "scenario/template/list",
+
             method: "GET"
           })
           .done(function(data) {
-            // Build the prepared variables which are linked to the model automatically through the v-model function of VUE
-            // This does not look so good. But I cannot find a different solution with Vue.
-            var c = that.prepareScenarioConfig(data);
 
-            that.scenarioconfig = c;
 
-            // Store available templates:
-            that.availabletemplates = data;
+            if (data.template_list !== undefined) {
 
-            done();
+              // Store available templates:
+              that.availabletemplates = data.template_list;
+              that.selectedtemplate = null;
+
+
+              done();
+            }
+
 
           });
       },
+
 
       beforeCompile: function() {
 
@@ -71,11 +79,47 @@ var exports = (function() {
 
 
       ready: function() {
+        var that = this;
+
         // Perform validate at start:
         this.validateForm();
+
+        this.$watch("selectedid", function() {
+
+          // A different model has been selected.
+          if (that.selectedid >= 0) {
+
+            // First set data, then the template. Order is important!
+            that.scenarioconfig = that.prepareScenarioConfig(that.availabletemplates[that.selectedid]);
+            that.selectedtemplate = that.availabletemplates[that.selectedid];
+
+          } else {
+
+            // Order is important!
+            that.selectedtemplate = null;
+            that.scenarioconfig = null;
+
+          }
+
+        });
+
       },
 
       methods: {
+
+        // Triggered on template select:
+        selectScenario: function() {
+          //           if (this.selectedtemplate !== null)
+          //           {
+          //             // A scenario has been selected, get it:
+          // //            this.scenarioconfig = this.prepareScenarioConfig(this.selectedtemplate);
+
+          //           // Selectedid is directly updated from the select!
+          //           this.scenarioconfig = this.prepareScenarioConfig(that.availabletemplates[this.selectedid]);
+          //           that.selectedtemplate = that.availabletemplates[this.selectedid];
+
+          //           }
+        },
 
         validateForm: function() {
 
@@ -104,7 +148,7 @@ var exports = (function() {
 
 
           var postdata = {
-            templateid: this.availabletemplates.templateid, // Temp!
+            templateid: this.selectedtemplate.templateid, // Temp!
             scenariosettings: this.scenarioconfig
           };
 
@@ -180,8 +224,8 @@ var exports = (function() {
                 var groupSum = this.calculateGroupSum(configuredvar.group);
 
                 // What is the target?
-                if (this.availabletemplates.groups[configuredvar.group] !== undefined) {
-                  var targetVal = parseFloat(this.availabletemplates.groups[configuredvar.group].targetvalue);
+                if (this.selectedtemplate.groups[configuredvar.group] !== undefined) {
+                  var targetVal = parseFloat(this.selectedtemplate.groups[configuredvar.group].targetvalue);
 
                   valid = valid && (targetVal === groupSum);
                 }
@@ -344,7 +388,7 @@ var exports = (function() {
 
           });
 
-          //  console.log(JSON.stringify(config));
+         // console.log(JSON.stringify(config));
 
           return config;
         }
