@@ -197,6 +197,21 @@ var exports = (function() {
                 valid = valid && validation.validateNumberInRange(configuredVar.minstep, min, max);
                 valid = valid && validation.validateNumberInRange(configuredVar.maxstep, min, max);
 
+                var maxStepValue = max;
+
+                if (maxStepValue < min) {
+                  console.error("Max is < min");
+                  // If max is 0, then we assume an infinite limit was rather meant.
+                  if (maxStepValue === 0) {
+                    maxStepValue = Number.MAX_VALUE;
+                  }
+                }
+                // Min value should be lower than max:
+                valid = valid && (configuredVar.minstep < configuredVar.maxstep);
+
+                // Interval cannot be larger than max - min.
+                valid = valid && (interval < (maxStepValue - min));
+
                 // Step interval should always be >= 0.
                 valid = valid && (interval > 0);
 
@@ -325,7 +340,7 @@ var exports = (function() {
               var stepInterval = varValue.stepinterval;
 
               if (stepInterval > 0) {
-                var diff = Math.abs(varValue.maxstep - varValue.minstep) / stepInterval;
+                var diff = (Math.abs(varValue.maxstep - varValue.minstep) / stepInterval) + 1;
 
                 // We multiply the number of runs with every interval.
                 totalRuns *= diff;
