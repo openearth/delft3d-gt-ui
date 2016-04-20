@@ -10,13 +10,16 @@ var ModelDetails;
     // Doesn't have a model yet....
     data: function() {
       return {
-        name: "Model name",
-        id: 0,
-        params: {
-          timestep: 13.0
-        },
-        state: "PENDING",
-        log: ""
+        model: {
+          name: "Model name",
+          id: 0,
+          params: {
+            timestep: 13.0
+          },
+          results: [],
+          state: "PENDING",
+          log: ""
+        }
       };
     },
     methods: {
@@ -38,7 +41,11 @@ var ModelDetails;
         model: {
           id: id
         },
-        log: ""
+        log: "",
+        view: {
+          currentChannelNetworkFrame: 0
+        }
+
       };
     },
     activate: function() {
@@ -48,17 +55,22 @@ var ModelDetails;
     route: {
       data: function(transition) {
         // get model (from a service or parent)
-        transition.next({
-          model: {
-            name: "fetched model info",
-            id: transition.to.params.id,
-            log: "",
-            state: "PENDING",
-            params: {
-              timestep: 13.0
-            }
+        var data = this.$data;
+
+        data.model = {
+          name: "fetched model info",
+          id: transition.to.params.id,
+          log: "logging of model: " + transition.to.params.id,
+          state: "PENDING",
+          results: {
+            channelNetworkFrames: ["a.png"],
+            deltaFringeFrames: []
+          },
+          params: {
+            timestep: 13.0
           }
-        });
+        };
+        transition.next(data);
       }
     },
     methods: {

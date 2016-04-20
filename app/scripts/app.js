@@ -19,8 +19,11 @@ var vm;
         var router = new VueRouter();
 
         router.map({
-          "/details/:id": {
+          "/models/:id": {
             component: ModelDetails
+          },
+          "/models": {
+            component: ModelList
           },
           "/": {
             component: HomeView
