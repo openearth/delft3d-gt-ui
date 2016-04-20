@@ -11,15 +11,16 @@
       </thead>
 
       <tbody>
-        <tr v-for="entry in data
+        <tr v-for="entry in models
                    | filterBy filterKey
                    | orderBy sortKey sortOrders[sortKey]
-                   " v-on:click="detailModel($index)" class="clickable">
+                   "
+            >
           <td>{{entry.name}}<input type="hidden" value="{{entry.id}}" v-model="entry.id" /></td>
           <td>{{entry.state}}</td>
 
           <td class="centered">
-            <button class="btn btn-primary inside-cell" v-on:click="selectModel">Details</button>
+            <a href="#/models/{{ entry.id }}"><button class="btn btn-primary inside-cell">Details</button></a>
           </td>
         </tr>
       </tbody>

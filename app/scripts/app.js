@@ -4,7 +4,6 @@ var vm;
 
 (function() {
   "use strict";
-
   $(document).ready(function() {
     console.log("document loaded");
     // We load the file in the template container;
@@ -32,7 +31,7 @@ var vm;
         router.start(App, "#app");
 
         // TODO: move to ModelDetails component
-        $("#model-details-navigation .nav a").click(function (e) {
+        $("#model-details-navigation .nav a[data-toggle='tab']").click(function (e) {
           e.preventDefault();
           $(this).tab("show");
         });

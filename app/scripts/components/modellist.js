@@ -1,4 +1,6 @@
+// globals: fetchModels
 var ModelList;
+
 (function () {
   "use strict";
   /* global Vue */
@@ -12,7 +14,29 @@ var ModelList;
         models: []
       };
     },
+    ready: function() {
+      // store interval
+      setInterval(
+        // create a callback for every second
+        function () {
+          // fetch the models
+          fetchModels()
+            .then(
+              // pass this as the ready function to the promise
+              function(data) {
 
+                // after data is retrieved
+                // update instance data
+                this.models = data;
+                // again bind to this
+              }.bind(this)
+            );
+          // bind it to this
+        }.bind(this),
+        // every second
+        10000
+      );
+    },
     methods: {
       // Remove item, based on incoming modelinfo.
       removeModel: function(id) {

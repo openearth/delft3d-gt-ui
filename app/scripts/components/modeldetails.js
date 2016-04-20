@@ -1,5 +1,6 @@
 var ModelCreate;
 var ModelDetails;
+
 (function () {
   "use strict";
   /* global Vue, Clipboard */
@@ -11,10 +12,10 @@ var ModelDetails;
     data: function() {
       return {
         model: {
-          name: "Model name",
+          name: "",
           id: 0,
           params: {
-            timestep: 13.0
+
           },
           results: [],
           state: "PENDING",
@@ -55,22 +56,31 @@ var ModelDetails;
     route: {
       data: function(transition) {
         // get model (from a service or parent)
-        var data = this.$data;
 
-        data.model = {
-          name: "fetched model info",
-          id: transition.to.params.id,
-          log: "logging of model: " + transition.to.params.id,
-          state: "PENDING",
-          results: {
-            channelNetworkFrames: ["a.png"],
-            deltaFringeFrames: []
-          },
-          params: {
-            timestep: 13.0
-          }
-        };
-        transition.next(data);
+        fetchModel(transition.to.params.id)
+          .then(
+            function(json) {
+              // copy old data and set model
+              var data = this.$data;
+              data.model = json;
+              // transition to this new data;
+              transition.next(data);
+            }.bind(this)
+          );
+        // data.model = {
+        //   name: "fetched model info",
+        //   id: transition.to.params.id,
+        //   log: "logging of model: " + transition.to.params.id,
+        //   state: "PENDING",
+        //   results: {
+        //     channelNetworkFrames: ["a.png"],
+        //     deltaFringeFrames: []
+        //   },
+        //   params: {
+        //     timestep: 13.0
+        //   }
+        // };
+
       }
     },
     methods: {

@@ -1,7 +1,7 @@
 // Store items in this cache
 var itemsCache = {};
 
-(function () {
+var exports = (function () {
   "use strict";
 
   /**
@@ -12,20 +12,12 @@ var itemsCache = {};
    */
   function fetchModel(id) {
     return new Promise(function(resolve, reject) {
-      if (itemsCache[id]) {
-        resolve(itemsCache[id]);
-      } else {
-        fetch("/models/" + id, function() {}).
-          then(function(resp) {
-            return resp.json();
-          })
-          .then(function(json) {
-            itemsCache[id] = json;
-            resolve(json);
-          })
-          .catch(function(error) {
-            reject(error);
-          });
+      try {
+        var model = itemsCache[id];
+
+        resolve(model);
+      } catch (e) {
+        reject(e);
       };
     });
   };
@@ -37,21 +29,33 @@ var itemsCache = {};
    */
   function fetchModels() {
     return new Promise(function(resolve, reject) {
-      fetch("/models", function() {}).
-        then(function(resp) {
-          return resp.json();
-        })
-        .then(function(json) {
-          _.each(json, function(model) {
-            itemsCache[model.id] = json;
+      itemsCache = {};
+      $.ajax("/scene/list")
+        .done(function(json) {
+          console.log("json", json);
+          _.each(json.scene_list, function(model) {
+            itemsCache[model.id] = model;
           });
-          resolve(json);
+          resolve(json.scene_list);
         })
-        .catch(function(error) {
+        .fail(function(error) {
           reject(error);
         });
 
     });
   };
-
+  // exposed objects and functions
+  return {
+    fetchModels: fetchModels,
+    fetchModel: fetchModel
+  };
 }());
+
+// If we're in node export to models
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = exports;
+} else {
+  // make global
+  _.assign(window, exports);
+
+}
