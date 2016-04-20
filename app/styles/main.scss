@@ -172,9 +172,9 @@ html {
 
 // Generic disabled element
 .inputdisabled {
-  pointer-events:none;
-  color: $gray-light;
   background: $gray-lighter;
+  color: $gray-light;
+  pointer-events: none;
 }
 
 .table-default {
@@ -194,7 +194,7 @@ html {
     }
 
     &.cell-zero-padding {
-      padding:0;
+      padding: 0;
     }
 
   }
@@ -356,7 +356,7 @@ nav.sidebar,
 }
 
 .max-width {
-  width:100%;
+  width: 100%;
 }
 
 .row-top-margin {
