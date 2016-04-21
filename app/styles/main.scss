@@ -89,8 +89,9 @@ $row-border-color: $gray-light;
   &.error {
     background-color: $row-color-error;
 
+    // No highlight for errors. (so same color)
     &:hover {
-      background-color: mix($row-color-error, $white, 50%);
+      background-color: $row-color-error;
     }
   }
 }
@@ -129,12 +130,17 @@ html {
   @include rectangle-corners();
 }
 
+.form-control {
+  @include rectangle-corners();
+}
+
+
 .footer {
   margin: 8px 0 0;
 }
 
 .btn-logout {
-  margin: 8px 8px 0px 0px;
+  margin: 8px 8px 0 0;
 
 }
 
@@ -166,14 +172,18 @@ html {
 
 // Generic disabled element
 .inputdisabled {
-    pointer-events:none;
-    color: $gray-light;
-    background: $gray-lighter;
+  background: $gray-lighter;
+  color: $gray-light;
+  pointer-events: none;
 }
 
 .table-default {
   margin-bottom: 32px;
   width: 100%;
+
+  .error {
+    background-color: $row-color-error;
+  }
 
   td {
     border: 1px solid $row-border-color;
@@ -181,6 +191,10 @@ html {
 
     &.centered {
       text-align: center;
+    }
+
+    &.cell-zero-padding {
+      padding: 0;
     }
 
   }
@@ -326,6 +340,29 @@ nav.sidebar,
 .main {
   padding: 10px 10px 0;
 }
+
+// Some helper functions:
+
+.no-padding {
+  padding: 0;
+}
+
+.no-margin {
+  margin: 0;
+}
+
+.centered {
+  margin: 0 auto;
+}
+
+.max-width {
+  width: 100%;
+}
+
+.row-top-margin {
+  margin-top: 32px;
+}
+
 
 @media (min-width: 765px) {
   .main {

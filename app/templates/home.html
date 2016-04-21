@@ -1,18 +1,19 @@
 <template id="template-home" keep-alive>
   <div class="panel-body">
-    <div class="col-lg-12">
-
-      <div class="header-bar">
-        <h2>Running models</h2>
+    <!-- two rows, for two components -->
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="header-bar">
+          <h2>Running models</h2>
+        </div>
+        <model-list></model-list>
       </div>
-
-      <model-list></model-list>
-
-
     </div>
-
-    <div class="col-lg-12" >
-      <model-create></model-create>
+    <!-- the create view -->
+    <div class="row">
+      <div class="col-lg-12" >
+        <model-create></model-create>
+      </div>
     </div>
 
 

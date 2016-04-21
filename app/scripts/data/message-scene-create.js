@@ -124,13 +124,12 @@ var exports = (function() {
           that.onComplete();
         }
 
-
         if (callback !== undefined) {
           callback(data);
         }
 
       })
-      .error(function(xhr, status, error) {
+      .fail(function(xhr, status, error) {
 
         // Call error callback, let application know something went wrong.
         if (that.onError !== undefined && that.onError !== null) {

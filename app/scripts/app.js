@@ -1,18 +1,28 @@
-/* global UI, Models, Vue, ModelDetails,ComponentHome,ComponentModelList*/
+/* global UI, Models, Vue, ModelDetails,ComponentHome,ComponentModelList, ScenarioBuilder */
 //import modelList from "templates/list-running-models.vue";
 var vm;
 
 (function() {
   "use strict";
+  // wait for page to load
   $(document).ready(function() {
     console.log("document loaded");
+
+
+    // Main javascript code, initialize components, there shouldn"t be much here.
+
+    // some debugging, for now
+    Vue.config.debug = true;
+
     // We load the file in the template container;
+    // wait for it.....
     $("#template-container").load(
       "templates/templates.html",
       function() {
-
         console.log("templates loaded, starting vue application");
 
+        // Just an empty main application
+        // (selected model is done using routing)
         var App = Vue.extend({});
 
         var router = new VueRouter();
@@ -30,16 +40,8 @@ var vm;
         });
         router.start(App, "#app");
 
-        // TODO: move to ModelDetails component
-        $("#model-details-navigation .nav a[data-toggle='tab']").click(function (e) {
-          e.preventDefault();
-          $(this).tab("show");
-        });
-
       }
     );
-
-
 
   });
 

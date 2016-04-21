@@ -105,7 +105,7 @@ var exports = (function() {
         }
 
       })
-      .error(function(xhr, status, error) {
+      .fail(function(xhr, status, error) {
         // Call error callback, let application know something went wrong.
         if (that.onError !== undefined && that.onError !== null) {
           that.onError({

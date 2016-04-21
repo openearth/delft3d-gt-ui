@@ -40,6 +40,7 @@
   includeFile(path.join(__dirname, "/../../app/scripts/components/home.js"));
   includeFile(path.join(__dirname, "/../../app/scripts/components/modeldetails.js"));
   includeFile(path.join(__dirname, "/../../app/scripts/components/modellist.js"));
+  includeFile(path.join(__dirname, "/../../app/scripts/components/scenariobuilder.js"));
 
   includeFile(path.join(__dirname, "/../../app/scripts/inputvalidation.js"));
 
@@ -57,17 +58,23 @@
   //var MessageSceneList = require("../../app/scripts/data/message-scene-list.js").MessageSceneList;
 
   // Required for JQuery:
-  var jsdom = require("jsdom");
+  var jsdom = require("jsdom").jsdom;
 
-
-
-  global.document = jsdom.jsdom("<!doctype html><html><body><div id='app'></div><div id='template-container'></div></body></html>");
+  // You might want to do this per test....
+  // Create a document
+  global.document = jsdom("<!doctype html><html><body><div id='app'></div><div id='template-container'></div></body></html>", {});
+  // Get the corresponding window
   global.window = document.defaultView;
-  global.navigator = {
-    userAgent: "node.js"
-  };
-  global.window.$ = global.window.jQuery = require(path.join(__dirname, "/../../bower_components/jquery/dist/jquery.js"));
-  global.$ = global.window.jQuery;
+  // Load jquery with that window
+  global.$ = require("jquery")(window);
+
+  // global.document = jsdom.jsdom("<!doctype html><html><body><div id='app'></div><div id='template-container'></div></body></html>");
+  // global.window = document.defaultView;
+  // global.navigator = {
+  //   userAgent: "node.js"
+  // };
+  // global.window.$ = global.window.jQuery = require(path.join(__dirname, "/../../bower_components/jquery/dist/jquery.js"));
+  // global.$ = global.window.jQuery;
 
   // In testing we override the URL domain name. Otherwise nock cannot work. Nock does NOT support relative paths.
   // Using this, we can use http://0.0.0.0 in the nock.
@@ -96,7 +103,7 @@
     describe("MessageSceneCreate", function() {
 
 
-      // Create a MessageSceneCreate without options, we should have an empty options object (nulll)
+      // Create a MessageSceneCreate without options, we should have an empty options object (null)
       it("Test scene creation - without name", function() {
 
         var msc = new MessageSceneCreate({});
@@ -106,7 +113,7 @@
 
 
 
-      // Create a MessageSceneCreate without options, we should have an empty options object (nulll)
+      // Create a MessageSceneCreate without options, we should have an empty options object (null)
       it("Test scene creation - with name", function() {
         var options = {
           name: "Model to create"
@@ -118,14 +125,15 @@
       });
 
 
-      xit("Test scene creation - check create request - ok", function(done) {
+      it("Test scene creation - check create request - ok", function(done) {
         var options = {
           name: "Model to create"
         };
 
         nock("http://0.0.0.0")
           .defaultReplyHeaders({
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
           })
           .post("/scene/create", {
             // We have to match these post fields:
@@ -144,13 +152,7 @@
               "fileurl": "",
               "id": 30
             }
-          })
-          // Otherwise we return an 500. The name did not match.
-          .post("/scene/create")
-          .reply(500, {
-            status: "error"
           });
-
 
         var msc = new MessageSceneCreate(options);
 
@@ -194,16 +196,16 @@
       });
 
 
-      xit("MessageSceneChangeState - Check sceneid being sent", function(done) {
+      it("MessageSceneChangeState - Check sceneid being sent", function(done) {
 
         // Id of the scene we will start:
         var startid = 1;
         var mscs = new MessageSceneChangeState(startid);
 
         nock("http://0.0.0.0")
-
-        .defaultReplyHeaders({
-            "Content-Type": "application/json"
+          .defaultReplyHeaders({
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
           })
           .post("/scene/start", {
             // We have to match these post fields:
@@ -212,11 +214,6 @@
           })
           .reply(200, {
             "status": "started"
-          })
-          // Otherwise we return an 500. The postdata did not match.
-          .post("/scene/start")
-          .reply(500, {
-            status: "error"
           });
 
         mscs.onErrorCallback(function(errorInfo) {
@@ -242,7 +239,7 @@
   describe("MessageSceneDelete", function() {
 
 
-    // Create a MessageSceneCreate without options, we should have an empty options object (nulll)
+    // Create a MessageSceneCreate without options, we should have an empty options object (null)
     it("MessageSceneDelete - Create instance without options", function() {
 
       var msd = new MessageSceneDelete();
@@ -250,7 +247,7 @@
       assert(msd.modelid == null, "MessageSceneDelete modelid should be null");
     });
 
-    // Create a MessageSceneCreate without options, we should have an empty options object (nulll)
+    // Create a MessageSceneCreate without options, we should have an empty options object (null)
     it("MessageSceneDelete - Create instance with string parameter", function() {
 
       var msd = new MessageSceneDelete("notallowed");
@@ -259,16 +256,16 @@
     });
 
 
-    xit("MessageSceneDelete - Check sceneid being sent", function(done) {
+    it("MessageSceneDelete - Check sceneid being sent", function(done) {
 
       // Id of the scene we will start:
       var deleteid = 1;
       var msd = new MessageSceneDelete(deleteid);
 
       nock("http://0.0.0.0")
-
-      .defaultReplyHeaders({
-          "Content-Type": "application/json"
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
         })
         .post("/scene/delete", {
           // We have to match these post fields:
@@ -306,15 +303,15 @@
   // Testing MessageSceneList messages
   describe("MessageSceneList", function() {
 
-
-    xit("MessageSceneList - Check if request is sent correctly", function(done) {
+    it("MessageSceneList - Check if request is sent correctly", function(done) {
 
       var msl = new MessageSceneList();
 
       nock("http://0.0.0.0")
 
       .defaultReplyHeaders({
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
         })
         .get("/scene/list")
         .reply(200, {});
@@ -338,14 +335,15 @@
     });
 
     // This one is todo!
-    xit("MessageSceneList - Check if we get valid scenes", function(done) {
+    it("MessageSceneList - Check if we get valid scenes", function(done) {
 
       var msl = new MessageSceneList();
 
       nock("http://0.0.0.0")
 
       .defaultReplyHeaders({
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
         })
         .get("/scene/list")
         .reply(200, {
@@ -411,28 +409,28 @@
       done();
     });
 
-    xit("App - LoadTemplate - Check if mock template is added to DOM", function(mydone) {
+    // This test doesn't work, since it gets stuck when loading the main template.
+    it("App - LoadTemplate - Check if mock template is added to DOM", function(done) {
 
       nock("http://0.0.0.0")
         .get("templates/templates.html")
         .reply(200, "<div>template-ok</div>");
 
       // Todo: add other case when url is not correct.
-
       var app = new App();
 
       // Load main template and check if we get proper data.
       app.loadMainTemplate(function() {
 
-
         var html = global.$("body").html();
         var check = "<div id=\"template-container\"></div>";
 
         // This works better than the assert:
-        if (html === check) {
-          mydone();
-        } else {
-          mydone(new Error("HTML template does not match"));
+        try {
+          assert(html === check, "HTML template does not match");
+          done();
+        } catch (e) {
+          done(e);
         }
       });
 
