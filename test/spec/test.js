@@ -505,6 +505,7 @@
 
       /* eslint-disable quotes */
       var check = '<div id="app"></div><div id=\"template-container\"></div>';
+
       /* eslint-enable quotes */
 
         // This works better than the assert:
