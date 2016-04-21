@@ -1,47 +1,13 @@
-var ModelCreate;
-var ModelDetails;
-
-(function () {
+/* global fetchModel, fetchLog, deleteModel, startModel */
+var exports = (function () {
   "use strict";
-  /* global Vue, Clipboard */
 
-  ModelCreate = Vue.component("model-create", {
-    template: "#template-model-create",
-    // Show the details of one model
-    // Doesn't have a model yet....
-    data: function() {
-      return {
-        model: {
-          name: "",
-          id: 0,
-          params: {
-
-          },
-          results: [],
-          state: "PENDING",
-          log: ""
-
-        }
-      };
-    },
-    methods: {
-      submit: function() {
-        console.log("validating", this.$data);
-        console.log("submitting", JSON.stringify(this.$data));
-      }
-    }
-
-  });
-
-
-
-
-
-  ModelDetails = Vue.component("model-details", {
+  var ModelDetails = Vue.component("model-details", {
     template: "#template-model-details",
     // Show the details of one model
     data: function() {
       var id = this.$route.params.id;
+
       return {
         // model id
         id: id,
@@ -60,7 +26,7 @@ var ModelDetails;
       };
 
     },
-    ready: function(){
+    ready: function() {
       // enable the tab based menu (only for tabs, keep real links)
       $("#model-details-navigation .nav a[data-toggle='tab']").click(function (e) {
         e.preventDefault();
@@ -147,22 +113,24 @@ var ModelDetails;
         // get model (from a service or parent)
 
         console.log("transitioning", transition);
-        fetchModel(transition.to.params.id)
+        // somehow params is not parsed to numbers yet
+        fetchModel(parseInt(transition.to.params.id))
           .then(
             (json) => {
               console.log("fetched model", json);
               // copy old data and set model
               var data = this.$data;
+
               data.model = json;
               // transition to this new data;
               transition.next(data);
               // and fetch log afterwards
               fetchLog(data.model.id)
                 .then(log => {
-                  $('#model-log-output').text(log);
+                  $("#model-log-output").text(log);
                 })
                 .catch(e => {
-                  $('#model-log-output').text("Failed to get log");
+                  $("#model-log-output").text("Failed to get log: " + e);
                 });
             }
           );
@@ -218,10 +186,11 @@ var ModelDetails;
         fetchLog(this.model.id)
           .then(log => {
             // don't do this with jquery, too slow
-            document.getElementById('model-log-output').textContent = log;
+            document.getElementById("model-log-output").textContent = log;
           })
           .catch(e => {
-            $('#model-log-output').text('No log available');
+            console.log(e);
+            $("#model-log-output").text("No log available");
           });
       },
 
@@ -342,4 +311,18 @@ var ModelDetails;
       }
     }
   });
+
+  return {
+    ModelDetails: ModelDetails
+  };
+
 }());
+
+
+// If we're in node export to models
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = exports;
+} else {
+  // make global
+  _.assign(window, exports);
+}

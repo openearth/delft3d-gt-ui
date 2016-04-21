@@ -22,59 +22,67 @@
     vm.runInThisContext(code);
   }
 
-  // var Models = require("../../app/scripts/models.js").Models;
-  var App = require("../../app/scripts/app.js").App;
-
-
-  // Include our files (this was needed for mocha, not sure for Chai?)
-  // includeFile(path.join(__dirname, "/../../app/scripts/models.js"));
-
-
-  includeFile(path.join(__dirname, "/../../app/scripts/models.js"));
-  includeFile(path.join(__dirname, "/../../app/scripts/ui.js"));
-  includeFile(path.join(__dirname, "/../../app/scripts/inputvalidation.js"));
-  includeFile(path.join(__dirname, "/../../bower_components/validator-js/validator.js"));
-  includeFile(path.join(__dirname, "/../../bower_components/vue/dist/vue.min.js"));
-
-  // Views:
-  includeFile(path.join(__dirname, "/../../app/scripts/components/home.js"));
-  includeFile(path.join(__dirname, "/../../app/scripts/components/modeldetails.js"));
-  includeFile(path.join(__dirname, "/../../app/scripts/components/modellist.js"));
-  includeFile(path.join(__dirname, "/../../app/scripts/components/scenariobuilder.js"));
-
-  includeFile(path.join(__dirname, "/../../app/scripts/inputvalidation.js"));
-
-
-
-  includeFile(path.join(__dirname, "/../../app/scripts/data/message-scene-create.js"));
-  includeFile(path.join(__dirname, "/../../app/scripts/data/message-scene-changestate.js"));
-  includeFile(path.join(__dirname, "/../../app/scripts/data/message-scene-delete.js"));
-  includeFile(path.join(__dirname, "/../../app/scripts/data/message-scene-list.js"));
-
-  // This does not work in the tests, we cannot create the objects...
-  //var MessageSceneCreate = require("../../app/scripts/data/message-scene-create.js").MessageSceneCreate;
-  //var MessageSceneChangeState = require("../../app/scripts/data/message-scene-changestate.js").MessageSceneChangeState;
-  //var MessageSceneDelete = require("../../app/scripts/data/message-scene-delete.js").MessageSceneDelete;
-  //var MessageSceneList = require("../../app/scripts/data/message-scene-list.js").MessageSceneList;
 
   // Required for JQuery:
   var jsdom = require("jsdom").jsdom;
 
   // You might want to do this per test....
   // Create a document
-  global.document = jsdom("<!doctype html><html><body><div id='app'></div><div id='template-container'></div></body></html>", {});
+
+  /* eslint-disable quotes */
+  global.document = jsdom('<!doctype html><html><body><div id="app"></div><div id="template-container"></div></body></html>', {});
+  /* eslint-enable quotes */
+
   // Get the corresponding window
   global.window = document.defaultView;
-  // Load jquery with that window
+
+  global.navigator = {
+    userAgent: "You're own dedicated browser"
+  };
+
+
+  // we also need a history and location for #/urls
+  global.history = require("history").createHistory();
+  global.location = global.history.createLocation();
+  global.location.replace = function(location) {
+    console.log("ignoring replace, implemented in history >= 3.0", location);
+  };
+
+  // Load jquery with that window, required for app.js
   global.$ = require("jquery")(window);
 
-  // global.document = jsdom.jsdom("<!doctype html><html><body><div id='app'></div><div id='template-container'></div></body></html>");
-  // global.window = document.defaultView;
-  // global.navigator = {
-  //   userAgent: "node.js"
-  // };
-  // global.window.$ = global.window.jQuery = require(path.join(__dirname, "/../../bower_components/jquery/dist/jquery.js"));
-  // global.$ = global.window.jQuery;
+  global._ = require("lodash");
+
+  global.Vue = require("vue");
+  global.VueRouter = require("vue-router");
+
+  // Include our files (this was needed for mocha, not sure for Chai?)
+  // includeFile(path.join(__dirname, "/../../app/scripts/models.js"));
+
+  includeFile(path.join(__dirname, "/../../app/scripts/models.js"));
+  includeFile(path.join(__dirname, "/../../app/scripts/ui.js"));
+  includeFile(path.join(__dirname, "/../../app/scripts/inputvalidation.js"));
+  includeFile(path.join(__dirname, "/../../bower_components/validator-js/validator.js"));
+
+  // Views:
+  includeFile(path.join(__dirname, "/../../app/scripts/inputvalidation.js"));
+
+  includeFile(path.join(__dirname, "/../../app/scripts/data/message-scene-create.js"));
+  includeFile(path.join(__dirname, "/../../app/scripts/data/message-scene-changestate.js"));
+  includeFile(path.join(__dirname, "/../../app/scripts/data/message-scene-delete.js"));
+  includeFile(path.join(__dirname, "/../../app/scripts/data/message-scene-list.js"));
+
+  // load the application
+  var ModelDetails = require("../../app/scripts/components/modeldetails.js").ModelDetails;
+  var ModelCreate = require("../../app/scripts/components/modelcreate.js").ModelCreate;
+  var ModelList = require("../../app/scripts/components/modellist.js").ModelList;
+  var ScenarioCreate = require("../../app/scripts/components/scenariobuilder.js").ScenarioCreate;
+  var HomeView = require("../../app/scripts/components/home.js").HomeView;
+
+  console.log("ModelDetails:", ModelDetails);
+
+  require("../../app/scripts/app.js");
+
 
   // In testing we override the URL domain name. Otherwise nock cannot work. Nock does NOT support relative paths.
   // Using this, we can use http://0.0.0.0 in the nock.
@@ -394,6 +402,17 @@
     });
 
   });
+  describe("Components", function() {
+    it("Is possible to instantiate component ModelCreate", function(done) {
+
+      var modelCreate = new ModelCreate();
+
+      assert.isOk(modelCreate);
+      done();
+    });
+  });
+
+
 
 
 
@@ -401,11 +420,29 @@
   describe("App", function() {
 
 
-    it("App - Can it be initialized", function(done) {
+    it("can I initialized the application", function(done) {
+      var App = Vue.extend({});
 
-      var app = new App();
+      Vue.use(VueRouter);
+      var router = new VueRouter();
 
-      assert(app !== undefined, "App instantiated");
+      router.map({
+        "/models/:id": {
+          component: ModelDetails
+        },
+        "/scenarios/create": {
+          component: ScenarioCreate
+        },
+        "/models": {
+          component: ModelList
+        },
+        "/": {
+          component: HomeView
+        }
+      });
+      router.start(App, "#app");
+
+      assert(App !== undefined, "app created");
       done();
     });
 
@@ -416,23 +453,20 @@
         .get("templates/templates.html")
         .reply(200, "<div>template-ok</div>");
 
-      // Todo: add other case when url is not correct.
-      var app = new App();
 
-      // Load main template and check if we get proper data.
-      app.loadMainTemplate(function() {
+      var html = global.$("body").html();
 
-        var html = global.$("body").html();
-        var check = "<div id=\"template-container\"></div>";
+      /* eslint-disable quotes */
+      var check = '<div id="app"></div><div id=\"template-container\"></div>';
+      /* eslint-enable quotes */
 
         // This works better than the assert:
-        try {
-          assert(html === check, "HTML template does not match");
-          done();
-        } catch (e) {
-          done(e);
-        }
-      });
+      try {
+        assert.equal(html, check, "HTML template does not match");
+        done();
+      } catch (e) {
+        done(e);
+      }
 
     });
 

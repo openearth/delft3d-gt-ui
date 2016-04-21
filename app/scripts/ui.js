@@ -1,52 +1,9 @@
-/* global InputValidation  */
+/* global InputValidation, createModel, startModel  */
 
-(function () {
+var exports = (function () {
   "use strict";
 
-
-
-  // Submit button has been pressed
-  // We watch all events in the form input.
-  $("#run-model-input-properties input")
-    .on("change keyup", function(el) {
-      var form = el.closest("form");
-      validateForm(form);
-    });
-
-
-  function submitModel(model) {
-    var scenarioOptions = {
-      runid: $("#newrun-name").val(),
-      author: "placeholder"
-    };
-    var modelOptions = {
-      timestep: $("#newrun-timestep").val()
-    };
-
-    // TODO: We skip input validation at the moment!
-    prepareModel(scenarioOptions, modelOptions, function(ret) {
-
-      if (!ret.scene) {
-        console.log("can'it find a model")
-        return;
-      };
-
-      // otherwise continue
-      $("#newrun-alert .alert").html("Model is queued...");
-      $("#newrun-alert .alert").removeClass("alert-warning").addClass("alert-success");
-      $("#newrun-alert").show();
-
-      var model = new Model(ret.scence.id);
-
-      model.run();
-
-      // Delay and hide after a moment
-      $("#newrun-alert").delay(4000).fadeOut(500);
-
-    });
-  };
-
-  function validateForm(form) {
+  function validateForm() {
 
     var validation = new InputValidation();
 
@@ -100,6 +57,65 @@
     }
 
 
-  };
+  }
 
+
+  function prepareModel(ScenarioOptions, ModelOptions) {
+    // model as expected by /scene/create
+    var model = {
+      name: ScenarioOptions.runid,
+      info: JSON.stringify({
+        dt: ModelOptions.timestep
+      })
+    };
+
+    return model;
+  }
+
+  function submitModel() {
+    var scenarioOptions = {
+      runid: $("#newrun-name").val(),
+      author: "placeholder"
+    };
+    var modelOptions = {
+      timestep: $("#newrun-timestep").val()
+    };
+
+    // TODO: We skip input validation at the moment!
+    var model = prepareModel(scenarioOptions, modelOptions);
+
+    // create the model and update the gui.
+    createModel(model)
+      .then(ret => {
+        // otherwise continue
+        $("#newrun-alert .alert").html("Model is queued...");
+        $("#newrun-alert .alert").removeClass("alert-warning").addClass("alert-success");
+        $("#newrun-alert").show();
+
+        // if creating succeeded, start the model
+        startModel(ret.scence.id);
+
+        // Delay and hide after a moment
+        $("#newrun-alert").delay(4000).fadeOut(500);
+      });
+  }
+
+  // Submit button has been pressed
+  // We watch all events in the form input.
+  $("#run-model-input-properties input")
+    .on("change keyup", function() {
+      validateForm();
+    });
+
+  return {
+    submitModel: submitModel
+  };
 }());
+
+// If we're in node export to models
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = exports;
+} else {
+  // make global
+  _.assign(window, exports);
+}

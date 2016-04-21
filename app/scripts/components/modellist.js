@@ -1,12 +1,11 @@
-// globals: fetchModels
-var ModelList;
-
-(function () {
+/* globals fetchModels */
+var exports = (function () {
   "use strict";
   /* global Vue */
 
   // register the grid component
-  ModelList = Vue.component("model-list", {
+  var ModelList = Vue.component("model-list", {
+
     template: "#template-model-list",
 
     data: function() {
@@ -19,7 +18,9 @@ var ModelList;
       // Fix fetchmodel (and the server) so it actually fetches 1 model.
       // fetch now
       fetchModels()
-        .then((data) => {this.models = data;});
+        .then((data) => {
+          this.models = data;
+        });
 
       // and fetch on every 10 seconds
       setInterval(
@@ -27,7 +28,9 @@ var ModelList;
         () => {
           // fetch the models
           fetchModels()
-            .then((data) => {this.models = data;});
+            .then((data) => {
+              this.models = data;
+            });
         },
         // every 10 seconds
         10000
@@ -38,13 +41,14 @@ var ModelList;
       data: function(transition) {
         fetchModels()
           .then(
-            function(json) {
+            (json) => {
               // copy old data and set model
               var data = this.$data;
+
               data.models = json;
               // transition to this new data;
               transition.next(data);
-            }.bind(this)
+            }
           );
       }
 
@@ -56,4 +60,15 @@ var ModelList;
     }
   });
 
+  return {
+    ModelList: ModelList
+  };
 }());
+
+// If we're in node export to models
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = exports;
+} else {
+  // make global
+  _.assign(window, exports);
+}

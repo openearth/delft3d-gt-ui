@@ -26,7 +26,7 @@ var exports = (function () {
         });
 
     });
-  };
+  }
 
   /**
    * Fetch a model with data with given id.
@@ -46,21 +46,26 @@ var exports = (function () {
         // TODO: We just need 1 model. Use a unique id (uuid)
         // if we don't have it, reset all the models and see if it is there....
         fetchModels()
-          .then( (models) => {
-            if (_.has(models, id)) {
+          .then(models => {
+            // search through the list of models
+            // The `_.matchesProperty` iteratee shorthand.
+            // returns undefined if not found
+            var secondTryModel = _.find(models, ["id", id]);
+
+            if (secondTryModel) {
               // Ladies and gentlemen, we got him....
-              resolve(models[id]);
+              resolve(secondTryModel);
             } else {
               // still not here....
-              reject(new Exception("Model not found, even after updating "));
+              reject(new Error("Model not found, even after updating "));
             }
           })
           .catch((error) => {
             reject(error);
           });
-      };
+      }
     });
-  };
+  }
 
   function deleteModel(id, options) {
     return new Promise(function(resolve, reject) {
@@ -104,11 +109,32 @@ var exports = (function () {
 
   }
 
+  function createModel(model) {
+    return new Promise(function(resolve, reject) {
+      $.ajax({
+        url: "/scene/create",
+        data: model,
+        method: "POST"
+      })
+        .done(function() {
+          // no data to return, just call the callback
+          resolve();
+        })
+        .fail(function(error) {
+          // we're done
+          reject(error);
+        });
+
+    });
+
+  }
+
 
   function fetchLog(id) {
     return new Promise(function(resolve, reject) {
       try {
         var model = itemsCache[id];
+
       } catch(e) {
         // if we can't find a model reject and bail out
         reject(e);
@@ -137,6 +163,7 @@ var exports = (function () {
     fetchModels: fetchModels,
     fetchModel: fetchModel,
     fetchLog: fetchLog,
+    createModel: createModel,
     deleteModel: deleteModel,
     startModel: startModel
   };

@@ -1,13 +1,12 @@
-/* global UI, Models, Vue, ModelDetails,ComponentHome,ComponentModelList, ScenarioBuilder */
-//import modelList from "templates/list-running-models.vue";
-var vm;
+/* global ModelDetails, ScenarioCreate, ModelList, HomeView */
 
-(function() {
+var exports = (function() {
   "use strict";
+
+
   // wait for page to load
   $(document).ready(function() {
     console.log("document loaded");
-
 
     // Main javascript code, initialize components, there shouldn"t be much here.
 
@@ -48,4 +47,15 @@ var vm;
 
   });
 
+  // No global names
+  return {
+  };
 })();
+
+// If we're in node export to models
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = exports;
+} else {
+  // make global
+  _.assign(window, exports);
+}
