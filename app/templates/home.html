@@ -1,21 +1,18 @@
 <template id="template-home" keep-alive>
-  <div class="panel-body">
-    <!-- two rows, for two components -->
-    <div class="row">
+  <div>
+    <div class="panel-body">
+      <!--  two components TODO: why no rows?-->
       <div class="col-lg-12">
-        <div class="header-bar">
-          <h2>Running models</h2>
+          <div class="header-bar">
+            <h2>Running models</h2>
+          </div>
+          <model-list></model-list>
         </div>
-        <model-list></model-list>
-      </div>
-    </div>
-    <!-- the create view -->
-    <div class="row">
-      <div class="col-lg-12" >
-        <model-create></model-create>
-      </div>
-    </div>
+      <!-- the create view -->
+      <model-create></model-create>
 
 
+    </div>
   </div>
+
 </template>
