@@ -59,13 +59,9 @@
   // Include our files (this was needed for mocha, not sure for Chai?)
   // includeFile(path.join(__dirname, "/../../app/scripts/models.js"));
 
-  includeFile(path.join(__dirname, "/../../app/scripts/models.js"));
   includeFile(path.join(__dirname, "/../../app/scripts/ui.js"));
   includeFile(path.join(__dirname, "/../../app/scripts/inputvalidation.js"));
   includeFile(path.join(__dirname, "/../../bower_components/validator-js/validator.js"));
-
-  // Views:
-  includeFile(path.join(__dirname, "/../../app/scripts/inputvalidation.js"));
 
   includeFile(path.join(__dirname, "/../../app/scripts/data/message-scene-create.js"));
   includeFile(path.join(__dirname, "/../../app/scripts/data/message-scene-changestate.js"));
@@ -79,7 +75,8 @@
   var ScenarioCreate = require("../../app/scripts/components/scenariobuilder.js").ScenarioCreate;
   var HomeView = require("../../app/scripts/components/home.js").HomeView;
 
-  console.log("ModelDetails:", ModelDetails);
+  // why is this necessary....
+  _.assign(global, require("../../app/scripts/models.js"));
 
   require("../../app/scripts/app.js");
 
@@ -410,10 +407,60 @@
       assert.isOk(modelCreate);
       done();
     });
+
+    it("Is possible to instantiate component ModelDetails", function(done) {
+
+      var modelDetails = new ModelDetails();
+
+      assert.isOk(modelDetails);
+      done();
+    });
   });
 
 
+  describe("ModelDetails", function() {
+    var modelDetails = new ModelDetails();
 
+    it("Should be possible to start a model", function(done) {
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .post("/scene/start", {
+        })
+        .reply(200, {
+        });
+      modelDetails.startModel();
+      done();
+
+    });
+    it("Should be possible to stop image frames", function(done) {
+
+      modelDetails.stopImageFrame();
+      done();
+
+    });
+    it("Should be possible to play image frames the imageFrame", function(done) {
+
+      modelDetails.playImageFrame();
+      done();
+
+    });
+    it("Should be possible to change the imageFrame", function(done) {
+      modelDetails.nextImageFrame();
+      done();
+
+    });
+
+    it("Should be possible to change download options", function(done) {
+
+      modelDetails.downloadOptionsChange();
+      done();
+
+    });
+
+  });
 
 
   // Testing App

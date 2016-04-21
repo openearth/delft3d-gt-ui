@@ -175,5 +175,4 @@ if (typeof module !== "undefined" && module.exports) {
 } else {
   // make global
   _.assign(window, exports);
-
 }

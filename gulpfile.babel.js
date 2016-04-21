@@ -135,7 +135,7 @@ gulp.task("coverage", ["pre-coverage"], () => {
   // Creating the reports after tests ran
     .pipe(istanbul.writeReports())
   // Enforce a coverage of at least 90%
-    .pipe(istanbul.enforceThresholds({ thresholds: { global: 60 } }));
+    .pipe(istanbul.enforceThresholds({ thresholds: { global: 20 } }));
 });
 
 gulp.task("teamcity", ["scripts", "lint", "lint:test", "lint:scss", "coverage"], () => {
