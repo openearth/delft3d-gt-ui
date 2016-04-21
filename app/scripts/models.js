@@ -4,23 +4,6 @@ var itemsCache = {};
 var exports = (function () {
   "use strict";
 
-  /**
-   * Fetch a model with data with given id.
-   *
-   * @param {Number} id
-   * @return {Promise}
-   */
-  function fetchModel(id) {
-    return new Promise(function(resolve, reject) {
-      try {
-        var model = itemsCache[id];
-
-        resolve(model);
-      } catch (e) {
-        reject(e);
-      };
-    });
-  };
 
   /**
    * Fetch all models.
@@ -45,6 +28,83 @@ var exports = (function () {
     });
   };
 
+  /**
+   * Fetch a model with data with given id.
+   *
+   * @param {Number} id
+   * @return {Promise}
+   */
+  function fetchModel(id) {
+    return new Promise(function(resolve, reject) {
+
+      if (_.has(itemsCache, id)) {
+        // we already have the model, return it
+        var model = itemsCache[id];
+
+        resolve(model);
+      } else {
+        // TODO: We just need 1 model. Use a unique id (uuid)
+        // if we don't have it, reset all the models and see if it is there....
+        fetchModels()
+          .then( (models) => {
+            if (_.has(models, id)) {
+              // Ladies and gentlemen, we got him....
+              resolve(models[id]);
+            } else {
+              // still not here....
+              reject(new Exception("Model not found, even after updating "));
+            }
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      };
+    });
+  };
+
+  function deleteModel(id, options) {
+    return new Promise(function(resolve, reject) {
+      // add extra options to id
+      var postData = _.assign({id: id}, options);
+
+      $.ajax({
+        url: "/scene/delete",
+        data: postData,
+        method: "POST"
+      })
+        .done(function() {
+          // no data to return, just call the callback
+          resolve();
+        })
+        .fail(function(error) {
+          // we're done
+          reject(error);
+        });
+
+    });
+
+  }
+  function startModel(id) {
+    return new Promise(function(resolve, reject) {
+      $.ajax({
+        url: "/scene/start",
+        data: {id: id},
+        method: "POST"
+      })
+        .done(function() {
+          // no data to return, just call the callback
+          resolve();
+        })
+        .fail(function(error) {
+          // we're done
+          reject(error);
+        });
+
+    });
+
+  }
+
+
   function fetchLog(id) {
     return new Promise(function(resolve, reject) {
       try {
@@ -52,6 +112,7 @@ var exports = (function () {
       } catch(e) {
         // if we can't find a model reject and bail out
         reject(e);
+        console.log("model not found for id", id, "while retrieving log");
         return;
       }
 
@@ -63,6 +124,7 @@ var exports = (function () {
           resolve(text);
         })
         .fail(function(error) {
+          console.log("Failed to get log", error);
           reject(error);
         });
 
@@ -74,7 +136,9 @@ var exports = (function () {
   return {
     fetchModels: fetchModels,
     fetchModel: fetchModel,
-    fetchLog: fetchLog
+    fetchLog: fetchLog,
+    deleteModel: deleteModel,
+    startModel: startModel
   };
 }());
 

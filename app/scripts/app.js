@@ -31,6 +31,9 @@ var vm;
           "/models/:id": {
             component: ModelDetails
           },
+          "/scenarios/create": {
+            component: ScenarioCreate
+          },
           "/models": {
             component: ModelList
           },

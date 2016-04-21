@@ -8,6 +8,7 @@
         </div>
       </div>
 
+      <!-- model window for deletation -->
       <div class="modal default-hidden fade " id="dialog-confirm-delete" tabindex="-1" role="dialog">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -81,13 +82,13 @@
       <div class="tab-content col-lg-9" >
         <div role="tabpanel" class="tab-pane active fade in" id="model-summary">
           <div class="panel-body" v-if="model">
-            <h2>Summary</h2>
+            <h2>Summary </h2>
 
             <table class="table-default">
               <tbody>
                 <tr>
                   <td>Name</td>
-                  <td>{{model.name}}</td>
+                  <td>{{model.name}} </td>
                 </tr>
 
                 <tr>
@@ -98,6 +99,10 @@
                 <tr>
                   <td>Status</td>
                   <td><span class="label label-default">{{model.state | capitalize }}</span></td>
+                </tr>
+                <tr>
+                  <td>Identification</td>
+                  <td><span class="text-muted">{{ model.id }} {{ model.suid }} </span></td>
                 </tr>
               </tbody>
             </table>
@@ -166,7 +171,7 @@
               Please select an action to perform on this simulation
             </p>
 
-            <button type="button" class="btn btn-labeled btn-success" v-bind:class="{ 'inputdisabled': isModelRunning}" id="simulation-control-start" v-on:click="startModel(model)">
+            <button type="button" class="btn btn-labeled btn-success" v-bind:class="{ 'inputdisabled': isModelRunning}" id="simulation-control-start" v-on:click="startModel">
               <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>
               Start
             </button>
