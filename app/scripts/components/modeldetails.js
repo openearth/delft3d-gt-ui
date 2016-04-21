@@ -42,7 +42,6 @@ var ModelDetails;
         model: {
           id: id
         },
-        log: "",
         view: {
           currentChannelNetworkFrame: 0
         }
@@ -50,7 +49,8 @@ var ModelDetails;
       };
     },
     activate: function() {
-      console.log("activating model details");
+      console.log("activating details view");
+
     },
 
     route: {
@@ -65,22 +65,14 @@ var ModelDetails;
               data.model = json;
               // transition to this new data;
               transition.next(data);
+              // and fetch log afterwards
+              fetchLog(data.model.id)
+                .then(log => {
+                  $('#model-log-output').text(log);
+                });
+
             }.bind(this)
           );
-        // data.model = {
-        //   name: "fetched model info",
-        //   id: transition.to.params.id,
-        //   log: "logging of model: " + transition.to.params.id,
-        //   state: "PENDING",
-        //   results: {
-        //     channelNetworkFrames: ["a.png"],
-        //     deltaFringeFrames: []
-        //   },
-        //   params: {
-        //     timestep: 13.0
-        //   }
-        // };
-
       }
     },
     methods: {
@@ -93,12 +85,13 @@ var ModelDetails;
       },
       fetchLog: function() {
         // Working dir is at: modeldata.fileurl + delf3d + delft3d.log
-        $.ajax({
-          url: this.model.id + "/delft3d/delft3d.log",
-          method: "GET"
-        })
-          .done(function(resp) {
-            this.data.log = resp;
+        fetchLog(this.model.id)
+          .then(log => {
+            // don't do this with jquery, too slow
+            document.getElementById('model-log-output').textContent = log;
+          })
+          .catch(e => {
+            $('#model-log-output').text('No log available');
           });
       }
     }

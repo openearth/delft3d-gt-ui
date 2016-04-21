@@ -15,27 +15,24 @@ var ModelList;
       };
     },
     ready: function() {
-      // store interval
+      // TODO: this only works if the modellist is active. If you go directly to a model it does not work.
+      // Fix fetchmodel (and the server) so it actually fetches 1 model.
+      // fetch now
+      fetchModels()
+        .then((data) => {this.models = data;});
+
+      // and fetch on every 10 seconds
       setInterval(
         // create a callback for every second
-        function () {
+        () => {
           // fetch the models
           fetchModels()
-            .then(
-              // pass this as the ready function to the promise
-              function(data) {
-
-                // after data is retrieved
-                // update instance data
-                this.models = data;
-                // again bind to this
-              }.bind(this)
-            );
-          // bind it to this
-        }.bind(this),
-        // every second
+            .then((data) => {this.models = data;});
+        },
+        // every 10 seconds
         10000
       );
+
     },
     route: {
       data: function(transition) {

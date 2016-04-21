@@ -44,10 +44,37 @@ var exports = (function () {
 
     });
   };
+
+  function fetchLog(id) {
+    return new Promise(function(resolve, reject) {
+      try {
+        var model = itemsCache[id];
+      } catch(e) {
+        // if we can't find a model reject and bail out
+        reject(e);
+        return;
+      }
+
+      // Working dir is at: modeldata.fileurl + delf3d + delft3d.log
+      var url = model.fileurl + "delft3d/delft3d.log";
+
+      $.ajax(url)
+        .done(function(text) {
+          resolve(text);
+        })
+        .fail(function(error) {
+          reject(error);
+        });
+
+    });
+
+  }
+
   // exposed objects and functions
   return {
     fetchModels: fetchModels,
-    fetchModel: fetchModel
+    fetchModel: fetchModel,
+    fetchLog: fetchLog
   };
 }());
 
