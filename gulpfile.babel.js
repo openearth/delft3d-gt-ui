@@ -59,7 +59,7 @@ gulp.task("styles", () => {
 
 gulp.task("scripts", () => {
   return gulp.src([
-    "app/scripts/**/*.js",
+    "app/scripts/**/*.js"
   ])
     .pipe($.plumber())
     .pipe($.sourcemaps.init())
