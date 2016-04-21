@@ -23,7 +23,7 @@ const reload = browserSync.reload;
 
 // Server used for serving remote url"s
 // "http://136.231.10.175:8888";
-var apiServer = "";
+var apiServer = "http://dl-026.xtr.deltares.nl/";
 
 // Proxy paths which we map to a different source, for testing locally or
 // running the actual build.
@@ -136,7 +136,8 @@ gulp.task("coverage", ["pre-coverage"], () => {
 });
 
 gulp.task("teamcity", ["scripts", "lint", "lint:test", "lint:scss", "coverage"], () => {
-  // Just run all the dependencies.
+  return gulp.src("test/spec/**/*.js")
+    .pipe(mocha({reporter: "mocha-teamcity-reporter"}));
 });
 
 gulp.task("html", ["styles", "scripts"], () => {
