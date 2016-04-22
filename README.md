@@ -76,5 +76,14 @@ Check the tests:
 $ gulp lint:test
 ```
 
+Check the gulpfile:
+```sh
+$ gulp lint:babel
+```
+
+Optional: define server to fetch data from:
+```sh
+$ gulp serve --apiServer http://10.0.1.2
+```
 
 For development the [gitflow](http://nvie.com/posts/a-successful-git-branching-model) branching model is used.
