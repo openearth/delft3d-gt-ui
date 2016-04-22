@@ -18,309 +18,309 @@ import browserSync from "browser-sync";
 import proxyMiddleware from "http-proxy-middleware";
 import _ from "lodash";
 
-(function () {
+const $ = gulpLoadPlugins();
+const reload = browserSync.reload;
+
+var args = require("yargs").argv;
+// Server used for serving remote url"s
+// "http://136.231.10.175:8888";
+var apiServer = "http://10.0.1.2";
+
+// Process optional arguments
+processOptionalArguments();
+
+// Proxy paths which we map to a different source, for testing locally or
+// running the actual build.
+var paths = ["runs", "createrun", "deleterun", "dorun", "scene", "files", "scenario"];
+
+var proxies = _.map(paths, (path) => {
+  var proxyItem = null;
+
+  if (apiServer) {
+    proxyItem = proxyMiddleware("/" + path, {target: apiServer});
+  }
+
+  return proxyItem;
+});
+
+// Function to process the optional arguments
+function processOptionalArguments() {
   "use strict";
-  const $ = gulpLoadPlugins();
-  const reload = browserSync.reload;
-
-  var args = require("yargs").argv;
-  // Server used for serving remote url"s
-  // "http://136.231.10.175:8888";
-  var apiServer = "http://10.0.1.2";
-
-  // Process optional arguments
-  processOptionalArguments();
-
-  // Proxy paths which we map to a different source, for testing locally or
-  // running the actual build.
-  var paths = ["runs", "createrun", "deleterun", "dorun", "scene", "files", "scenario"];
-
-  var proxies = _.map(paths, function(path) {
-    var proxyItem = null;
-
-    if (apiServer) {
-      proxyItem = proxyMiddleware("/" + path, {target: apiServer});
-    }
-
-    return proxyItem;
-  });
-
-  // Function to process the optional arguments
-  function processOptionalArguments() {
-    // apiServer argument
-    if (args.apiServer) {
-      apiServer = args.apiServer;
-    }
+  // apiServer argument
+  if (args.apiServer) {
+    apiServer = args.apiServer;
   }
+}
 
 
-  gulp.task("styles", () => {
-    return gulp.src("app/styles/*.scss")
-      .pipe($.plumber())
-      .pipe($.sourcemaps.init())
-      .pipe($.sass.sync({
-        outputStyle: "expanded",
-        precision: 10,
-        includePaths: ["."]
-      }).on("error", $.sass.logError))
-      .pipe($.autoprefixer({browsers: ["> 1%", "last 2 versions", "Firefox ESR"]}))
-      .pipe($.sourcemaps.write())
-      .pipe(gulp.dest(".tmp/styles"))
-      .pipe(reload({stream: true}));
-  });
+gulp.task("styles", () => {
+  return gulp.src("app/styles/*.scss")
+    .pipe($.plumber())
+    .pipe($.sourcemaps.init())
+    .pipe($.sass.sync({
+      outputStyle: "expanded",
+      precision: 10,
+      includePaths: ["."]
+    }).on("error", $.sass.logError))
+    .pipe($.autoprefixer({browsers: ["> 1%", "last 2 versions", "Firefox ESR"]}))
+    .pipe($.sourcemaps.write())
+    .pipe(gulp.dest(".tmp/styles"))
+    .pipe(reload({stream: true}));
+});
 
-  gulp.task("scripts", () => {
-    return gulp.src([
-      "app/scripts/**/*.js"
-    ])
-      .pipe($.plumber())
-      .pipe($.sourcemaps.init())
-      .pipe($.babel())
-      .pipe($.sourcemaps.write("."))
-      .pipe(gulp.dest(".tmp/scripts"))
-      .pipe(reload({stream: true}));
-  });
+gulp.task("scripts", () => {
+  return gulp.src([
+    "app/scripts/**/*.js"
+  ])
+    .pipe($.plumber())
+    .pipe($.sourcemaps.init())
+    .pipe($.babel())
+    .pipe($.sourcemaps.write("."))
+    .pipe(gulp.dest(".tmp/scripts"))
+    .pipe(reload({stream: true}));
+});
 
-  function lint(files, options) {
-    return () => {
-      return gulp.src(files)
-        .pipe(reload({stream: true, once: true}))
-        .pipe($.eslint(options))
-        .pipe($.eslint.format())
-        .pipe($.if(!browserSync.active, $.eslint.failAfterError()));
-    };
+function lint(files, options) {
+  "use strict";
+  return () => {
+    return gulp.src(files)
+      .pipe(reload({stream: true, once: true}))
+      .pipe($.eslint(options))
+      .pipe($.eslint.format())
+      .pipe($.if(!browserSync.active, $.eslint.failAfterError()));
+  };
+}
+// some extra options for tests
+const testLintOptions = {
+  env: {
+    mocha: true
   }
-  // some extra options for tests
-  const testLintOptions = {
-    env: {
-      mocha: true
-    }
-  };
-  const es6LintOptions = {
-    extends: "eslint:recommended",
-    baseConfig: {
-      parser: "babel-eslint"
-    },
-    ecmaFeatures: {
-      "modules": true
-    },
-    env: {
-      es6: true
-    }
-  };
+};
+const es6LintOptions = {
+  extends: "eslint:recommended",
+  baseConfig: {
+    parser: "babel-eslint"
+  },
+  ecmaFeatures: {
+    "modules": true
+  },
+  env: {
+    es6: true
+  }
+};
 
-  gulp.task("lint", lint("app/scripts/**/*.js"));
+gulp.task("lint", lint("app/scripts/**/*.js"));
 
-  gulp.task("lint:test",
-            lint([
-              "test/spec/**/*.js"
-            ], testLintOptions)
-           );
-  gulp.task("lint:babel",
-            lint([
-              "gulpfile.babel.js"
-            ], es6LintOptions)
-           );
+gulp.task("lint:test",
+          lint([
+            "test/spec/**/*.js"
+          ], testLintOptions)
+         );
+gulp.task("lint:babel",
+          lint([
+            "gulpfile.babel.js"
+          ], es6LintOptions)
+         );
 
 
-  gulp.task("lint:scss", function() {
-    return gulp.src("app/styles/*.scss")
-      .pipe(scsslint());
-  });
+gulp.task("lint:scss", () => {
+  return gulp.src("app/styles/*.scss")
+    .pipe(scsslint());
+});
 
-  gulp.task("test", ["scripts", "lint", "lint:test"], () => {
-    return gulp.src("test/spec/**/*.js")
-      .pipe(mocha({}));
-  });
+gulp.task("test", ["scripts", "lint", "lint:test"], () => {
+  return gulp.src("test/spec/**/*.js")
+    .pipe(mocha({}));
+});
 
-  gulp.task("pre-coverage", () => {
-    return gulp.src(["app/**/*.js"])
-      .pipe(istanbul())
-      .pipe(istanbul.hookRequire());
-  });
+gulp.task("pre-coverage", () => {
+  return gulp.src(["app/**/*.js"])
+    .pipe(istanbul())
+    .pipe(istanbul.hookRequire());
+});
 
-  gulp.task("coverage", ["pre-coverage"], () => {
-    return gulp.src(["test/**/*.js"])
-      .pipe(mocha({reporter: "mocha-teamcity-reporter"}))
-    // Creating the reports after tests ran
-      .pipe(istanbul.writeReports())
-    // Enforce a coverage of at least 90%
-      .pipe(istanbul.enforceThresholds({ thresholds: { global: 20 } }));
-  });
+gulp.task("coverage", ["pre-coverage"], () => {
+  return gulp.src(["test/**/*.js"])
+    .pipe(mocha({reporter: "mocha-teamcity-reporter"}))
+  // Creating the reports after tests ran
+    .pipe(istanbul.writeReports())
+  // Enforce a coverage of at least 90%
+    .pipe(istanbul.enforceThresholds({ thresholds: { global: 20 } }));
+});
 
-  gulp.task("teamcity", ["scripts", "lint", "lint:test", "lint:scss", "coverage"], () => {
-    // Just run all the dependencies.
-  });
+gulp.task("teamcity", ["scripts", "lint", "lint:test", "lint:scss", "coverage"], () => {
+  // Just run all the dependencies.
+});
 
-  gulp.task("html", ["styles", "scripts"], () => {
-    return gulp.src("app/*.html")
-      .pipe($.useref({searchPath: [".tmp", "app", "."]}))
-      .pipe($.if("*.js", $.uglify()))
-      .pipe($.if("*.css", $.cssnano()))
-      .pipe($.if("*.html", $.htmlmin({collapseWhitespace: true})))
-      .pipe(gulp.dest("dist"));
-  });
+gulp.task("html", ["styles", "scripts"], () => {
+  return gulp.src("app/*.html")
+    .pipe($.useref({searchPath: [".tmp", "app", "."]}))
+    .pipe($.if("*.js", $.uglify()))
+    .pipe($.if("*.css", $.cssnano()))
+    .pipe($.if("*.html", $.htmlmin({collapseWhitespace: true})))
+    .pipe(gulp.dest("dist"));
+});
 
-  gulp.task("templates", [], () => {
-    return gulp.src("app/templates/*.html")
-      .pipe($.htmlmin({collapseWhitespace: true}))
-      .pipe(concat("templates.html"))
-    // this is used in serve and in build
-      .pipe(gulp.dest(".tmp/templates"))
-      .pipe(gulp.dest("dist/templates"));
-  });
+gulp.task("templates", [], () => {
+  return gulp.src("app/templates/*.html")
+    .pipe($.htmlmin({collapseWhitespace: true}))
+    .pipe(concat("templates.html"))
+  // this is used in serve and in build
+    .pipe(gulp.dest(".tmp/templates"))
+    .pipe(gulp.dest("dist/templates"));
+});
 
 
-  gulp.task("images", () => {
-    return gulp.src("app/images/**/*")
-      .pipe($.if(
-        $.if.isFile,
-        $.cache(
-          $.imagemin({
-            progressive: true,
-            interlaced: true,
-            // don"t remove IDs from SVGs, they are often used
-            // as hooks for embedding and styling
-            svgoPlugins: [{cleanupIDs: false}]
-          })
-        )
-          .on("error", function (err) {
-            console.log(err);
-            this.end();
-          })))
-      .pipe(gulp.dest("dist/images"));
-  });
-
-  gulp.task("fonts", () => {
-    return gulp.src(
-      // load from bower files
-      require("main-bower-files")(
-        "**/*.{eot,svg,ttf,woff,woff2}",
-        function (err) {
-          // just log and continue
-          console.error(err);
-        }
+gulp.task("images", () => {
+  return gulp.src("app/images/**/*")
+    .pipe($.if(
+      $.if.isFile,
+      $.cache(
+        $.imagemin({
+          progressive: true,
+          interlaced: true,
+          // don"t remove IDs from SVGs, they are often used
+          // as hooks for embedding and styling
+          svgoPlugins: [{cleanupIDs: false}]
+        })
       )
-        .concat("app/fonts/**/*"))
-      .pipe(gulp.dest(".tmp/fonts"))
-      .pipe(gulp.dest("dist/fonts"));
-  });
+        .on("error", (err) => {
+          console.log(err);
+          this.end();
+        })))
+    .pipe(gulp.dest("dist/images"));
+});
 
-  gulp.task("extras", () => {
-    return gulp.src([
-      "app/*.*",
-      "!app/*.html"
-    ], {
-      dot: true
-    }).pipe(gulp.dest("dist"));
-  });
+gulp.task("fonts", () => {
+  return gulp.src(
+    // load from bower files
+    require("main-bower-files")(
+      "**/*.{eot,svg,ttf,woff,woff2}",
+      (err) => {
 
-  gulp.task("clean", del.bind(null, [".tmp", "dist"]));
-
-  gulp.task("serve", ["styles", "scripts", "fonts", "images", "templates"], () => {
-    var options = {
-      notify: false,
-      port: 9000,
-      server: {
-        baseDir: [".tmp", "app"],
-        routes: {
-          "/bower_components": "bower_components"
-        }
-
+        // just log and continue
+        console.error(err);
       }
-    };
+    )
+      .concat("app/fonts/**/*"))
+    .pipe(gulp.dest(".tmp/fonts"))
+    .pipe(gulp.dest("dist/fonts"));
+});
 
-    // apiServer cannot be zero length, then the "target" parameter is not valid.
-    // so we only add the proxy if the length is not zero
-    if (apiServer) {
-      options.middleware = proxies;
+gulp.task("extras", () => {
+  return gulp.src([
+    "app/*.*",
+    "!app/*.html"
+  ], {
+    dot: true
+  }).pipe(gulp.dest("dist"));
+});
+
+gulp.task("clean", del.bind(null, [".tmp", "dist"]));
+
+gulp.task("serve", ["styles", "scripts", "fonts", "images", "templates"], () => {
+  var options = {
+    notify: false,
+    port: 9000,
+    server: {
+      baseDir: [".tmp", "app"],
+      routes: {
+        "/bower_components": "bower_components"
+      }
+
     }
+  };
 
-    browserSync(options);
+  // apiServer cannot be zero length, then the "target" parameter is not valid.
+  // so we only add the proxy if the length is not zero
+  if (apiServer) {
+    options.middleware = proxies;
+  }
 
-    gulp.watch([
-      "app/*.html",
-      "app/templates/*.html",
-      ".tmp/scripts/**/*.js",
-      "app/images/**/*",
-      ".tmp/fonts/**/*"
-    ]).on("change", reload);
+  browserSync(options);
 
-    // Also watch templates.
-    gulp.watch("app/templates/*.html", ["templates"]);
-    gulp.watch("app/styles/**/*.scss", ["styles"]);
-    gulp.watch("app/scripts/**/*.js", ["scripts"]);
-    gulp.watch("app/fonts/**/*", ["fonts"]);
-    gulp.watch("bower.json", ["wiredep", "fonts"]);
-  });
+  gulp.watch([
+    "app/*.html",
+    "app/templates/*.html",
+    ".tmp/scripts/**/*.js",
+    "app/images/**/*",
+    ".tmp/fonts/**/*"
+  ]).on("change", reload);
 
-  gulp.task("serve:dist", () => {
-    var options = {
-      notify: false,
-      port: 9000,
-      server: {
-        baseDir: ["dist"]
-      }
-    };
+  // Also watch templates.
+  gulp.watch("app/templates/*.html", ["templates"]);
+  gulp.watch("app/styles/**/*.scss", ["styles"]);
+  gulp.watch("app/scripts/**/*.js", ["scripts"]);
+  gulp.watch("app/fonts/**/*", ["fonts"]);
+  gulp.watch("bower.json", ["wiredep", "fonts"]);
+});
 
-    // apiServer cannot be zero length, then the "target" parameter is not valid.
-    // so we only add the proxy if the length is not zero
-    if (apiServer)  {
-      options.middleware = proxies;
+gulp.task("serve:dist", () => {
+  var options = {
+    notify: false,
+    port: 9000,
+    server: {
+      baseDir: ["dist"]
     }
+  };
 
-    browserSync(options);
-  });
+  // apiServer cannot be zero length, then the "target" parameter is not valid.
+  // so we only add the proxy if the length is not zero
+  if (apiServer)  {
+    options.middleware = proxies;
+  }
 
-  gulp.task("serve:test", ["scripts", "templates"], () => {
-    browserSync({
-      notify: false,
-      port: 9000,
-      ui: false,
-      server: {
-        baseDir: "test",
-        routes: {
-          "/scripts": ".tmp/scripts",
-          "/bower_components": "bower_components"
-        }
+  browserSync(options);
+});
+
+gulp.task("serve:test", ["scripts", "templates"], () => {
+  browserSync({
+    notify: false,
+    port: 9000,
+    ui: false,
+    server: {
+      baseDir: "test",
+      routes: {
+        "/scripts": ".tmp/scripts",
+        "/bower_components": "bower_components"
       }
-    });
-
-    gulp.watch("app/templates/**/*.html", ["templates"]);
-    gulp.watch("app/images/**/*", ["images"]);
-    gulp.watch("app/scripts/**/*.js", ["scripts"]);
-    gulp.watch("test/spec/**/*.js").on("change", reload);
-    gulp.watch("test/spec/**/*.js", ["lint:test"]);
+    }
   });
 
-  // inject bower components
-  gulp.task("wiredep", () => {
-    gulp.src("app/styles/*.scss")
-      .pipe(wiredep({
-        ignorePath: /^(\.\.\/)+/
-      }))
-      .pipe(gulp.dest("app/styles"));
+  gulp.watch("app/templates/**/*.html", ["templates"]);
+  gulp.watch("app/images/**/*", ["images"]);
+  gulp.watch("app/scripts/**/*.js", ["scripts"]);
+  gulp.watch("test/spec/**/*.js").on("change", reload);
+  gulp.watch("test/spec/**/*.js", ["lint:test"]);
+});
 
-    gulp.src("app/*.html")
-      .pipe(wiredep({
-        exclude: ["bootstrap-sass"],
-        ignorePath: /^(\.\.\/)*\.\./
-      }))
-      .pipe(gulp.dest("app"));
-    gulp.src("test/index.html")
-      .pipe(wiredep({
-        exclude: ["bootstrap-sass"],
-        ignorePath: /^(\.\.\/)*\.\./
-      }))
-      .pipe(gulp.dest("test"));
+// inject bower components
+gulp.task("wiredep", () => {
+  gulp.src("app/styles/*.scss")
+    .pipe(wiredep({
+      ignorePath: /^(\.\.\/)+/
+    }))
+    .pipe(gulp.dest("app/styles"));
 
-  });
+  gulp.src("app/*.html")
+    .pipe(wiredep({
+      exclude: ["bootstrap-sass"],
+      ignorePath: /^(\.\.\/)*\.\./
+    }))
+    .pipe(gulp.dest("app"));
+  gulp.src("test/index.html")
+    .pipe(wiredep({
+      exclude: ["bootstrap-sass"],
+      ignorePath: /^(\.\.\/)*\.\./
+    }))
+    .pipe(gulp.dest("test"));
 
-  gulp.task("build", ["lint", "html", "images", "fonts", "extras", "templates"], () => {
-    return gulp.src("dist/**/*").pipe($.size({title: "build", gzip: true}));
-  });
+});
 
-  gulp.task("default", ["clean"], () => {
-    gulp.start("build");
-  });
-})();
+gulp.task("build", ["lint", "html", "images", "fonts", "extras", "templates"], () => {
+  return gulp.src("dist/**/*").pipe($.size({title: "build", gzip: true}));
+});
+
+gulp.task("default", ["clean"], () => {
+  gulp.start("build");
+});
