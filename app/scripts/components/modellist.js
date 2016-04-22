@@ -1,106 +1,74 @@
-/* global Vue */
-
-// Exported globals
-var ComponentModelList;
-
-var exports = (function() {
+/* globals fetchModels */
+var exports = (function () {
   "use strict";
+  /* global Vue */
 
-  // Constructor of our component
-  ComponentModelList = function(app) {
-    // Store reference to our app
-    this.app = app;
+  // register the grid component
+  var ModelList = Vue.component("model-list", {
 
-    var that = this;
+    template: "#template-model-list",
 
-    // register the grid component
-    Vue.component("model-list", {
-      template: "#template-model-list",
+    data: function() {
+      return {
+        models: []
+      };
+    },
+    ready: function() {
+      // TODO: this only works if the modellist is active. If you go directly to a model it does not work.
+      // Fix fetchmodel (and the server) so it actually fetches 1 model.
+      // fetch now
+      fetchModels()
+        .then((data) => {
+          this.models = data;
+        });
 
-      props: {
-        data: Array,
-        columns: Array,
-        filterKey: String
-      },
-
-      computed: {
-        data: {
-          cache: false,
-          get: function() {
-            return that.app.getTemplateData().models.gridData;
-          }
+      // and fetch on every 10 seconds
+      setInterval(
+        // create a callback for every second
+        () => {
+          // fetch the models
+          fetchModels()
+            .then((data) => {
+              this.models = data;
+            });
         },
+        // every 10 seconds
+        10000
+      );
 
-        columns: {
-          cache: false,
-          get: function() {
-            return that.app.getTemplateData().models.gridColumns;
-          }
-        },
+    },
+    route: {
+      data: function(transition) {
+        fetchModels()
+          .then(
+            (json) => {
+              // copy old data and set model
+              var data = this.$data;
 
-        // Returns true if we have no items in the grid array
-        hasNoModels: {
-          get: function() {
-            return (that.app.getTemplateData().models.gridData.length === 0);
-          }
-        }
-
-      },
-
-      data: function() {
-        var templateData = that.app.getTemplateData();
-
-        this.columns = templateData.models.gridColumns;
-        this.data = templateData.models.gridData;
-
-        if (this.columns !== undefined) {
-          var sortOrders = {};
-
-          this.columns.forEach(function(key) {
-            sortOrders[key] = 1;
-          });
-        }
-
-        return {
-          sortKey: "",
-          sortOrders: sortOrders
-        };
-      },
-
-      methods: {
-        sortBy: function(key) {
-          this.sortKey = key;
-          this.sortOrders[key] = this.sortOrders[key] * -1;
-        },
-
-        detailModel: function(rowindex) {
-
-          var templateData = that.app.getTemplateData();
-
-          if (templateData.models.gridData[rowindex] !== undefined) {
-            // now we have access to the native event
-            var id = parseInt(templateData.models.gridData[rowindex].id);
-
-            that.app.TemplateData.selectedModel = that.app.models.findModelByID(id);
-            //Test:
-            templateData.selectedModelID = (id);
-
-            templateData.currentView = "model-details";
-          }
-        }
-
+              data.models = json;
+              // transition to this new data;
+              transition.next(data);
+            }
+          );
       }
-    });
-  };
+
+
+    },
+    methods: {
+
+
+    }
+  });
 
   return {
-    ComponentModelList: ComponentModelList
+    ModelList: ModelList
   };
-
 }());
-
 
 // If we're in node export to models
 if (typeof module !== "undefined" && module.exports) {
   module.exports = exports;
+} else {
+  // make global
+  _.assign(window, exports);
 }
