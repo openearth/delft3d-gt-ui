@@ -1,4 +1,4 @@
-/* global Vue, InputValidation */
+/* global Vue, InputValidation, fetchTemplates */
 
 // Exported globals
 var ScenarioCreate;
@@ -12,7 +12,7 @@ var exports = (function() {
 
     data: function() {
       return {
-        availableTemplates: null,
+        availableTemplates: [],
 
         // The scenario as configured by the user at the moment.
         scenarioConfig: null,
@@ -23,8 +23,8 @@ var exports = (function() {
         // Is the form completely valid? (Used to automatically set class on submit button)
         formIsValid: true,
 
-        selectedTemplate: null,
-        selectedId: -1
+        selectedTemplate: null
+
       };
     },
 
@@ -33,30 +33,10 @@ var exports = (function() {
 
     },
 
-    activate: function(done) {
-      var that = this;
-
-      //Load test template data:
-      $.ajax({
-        //url: "sampledata/template.json",
-        url: "scenario/template/list",
-        method: "GET"
-      })
-        .done(function(data) {
-
-          // If you want to see what is coming from the template request, uncomment this:
-          // console.log(JSON.stringify(config));
-
-          if (data.template_list !== undefined) {
-
-            // Store available templates:
-            that.availableTemplates = data.template_list;
-            that.selectedTemplate = null;
-
-            done();
-          }
-
-
+    created: function() {
+      fetchTemplates()
+        .then((templates) => {
+          this.availableTemplates = templates.template_list;
         });
     },
 
@@ -80,7 +60,10 @@ var exports = (function() {
     computed: {
 
       selectedId: {
+        get: function() {
+          return this.availableTemplates.indexOf(this.selectedTemplate);
 
+        },
         // setter
         set: function(newValue) {
 
@@ -133,12 +116,12 @@ var exports = (function() {
 
         var postdata = {
           templateid: this.selectedTemplate.templateid, // Temp!
-          scenariosettings: this.scenarioConfig
+          scenariosettings: JSON.stringify(this.scenarioConfig)
         };
 
         $.ajax({
           url: "/scenario/create",
-          data: JSON.stringify(postdata),
+          data: postdata,
           method: "POST"
         }).done(function(data) {
           console.log(data);

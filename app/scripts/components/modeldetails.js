@@ -10,10 +10,10 @@ var exports = (function () {
 
       // if this route is available, use that or use 0
       try {
-        id = this.$route.params.id;
+        id = parseInt(this.$route.params.id);
       } catch (e) {
         console.log("can't get model id from route parameters, falling back to model 0", e);
-        id = 0;
+        id = -1;
       }
 
 
