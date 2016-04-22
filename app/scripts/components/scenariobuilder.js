@@ -12,7 +12,7 @@ var exports = (function() {
 
     data: function() {
       return {
-        availableTemplates: null,
+        availableTemplates: [],
 
         // The scenario as configured by the user at the moment.
         scenarioConfig: null,
@@ -33,31 +33,11 @@ var exports = (function() {
 
     },
 
-    activate: function(done) {
-      var that = this;
-
-      //Load test template data:
-      $.ajax({
-        //url: "sampledata/template.json",
-        url: "scenario/template/list",
-        method: "GET"
-      })
-        .done(function(data) {
-
-          // If you want to see what is coming from the template request, uncomment this:
-          // console.log(JSON.stringify(config));
-
-          if (data.template_list !== undefined) {
-
-            // Store available templates:
-            that.availableTemplates = data.template_list;
-            that.selectedTemplate = null;
-
-            done();
-          }
-
-
-        });
+    created: function(done) {
+      fetchTemplates()
+        .then((templates) => {
+          this.availableTemplates = templates.template_list;
+        })
     },
 
 
