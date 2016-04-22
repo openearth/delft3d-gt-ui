@@ -23,8 +23,8 @@ var exports = (function() {
         // Is the form completely valid? (Used to automatically set class on submit button)
         formIsValid: true,
 
-        selectedTemplate: null,
-        selectedId: -1
+        selectedTemplate: null
+
       };
     },
 
@@ -60,7 +60,10 @@ var exports = (function() {
     computed: {
 
       selectedId: {
+        get: function() {
+          return this.availableTemplates.indexOf(this.selectedTemplate);
 
+        },
         // setter
         set: function(newValue) {
 
@@ -113,12 +116,12 @@ var exports = (function() {
 
         var postdata = {
           templateid: this.selectedTemplate.templateid, // Temp!
-          scenariosettings: this.scenarioConfig
+          scenariosettings: JSON.stringify(this.scenarioConfig)
         };
 
         $.ajax({
           url: "/scenario/create",
-          data: JSON.stringify(postdata),
+          data: postdata,
           method: "POST"
         }).done(function(data) {
           console.log(data);
