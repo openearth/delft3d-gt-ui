@@ -46,15 +46,18 @@ var exports = (function() {
 
         //Load test template data:
         $.ajax({
-            //url: "sampledata/template.json",
-            url: "scenario/template/list",
-            method: "GET"
+            url: "sampledata/template.json",
+           // url: "scenario/template/list",
+            method: "GET",
+            timeout: 4000 // We set a timelimit
           })
           .done(function(data) {
 
             // If you want to see what is coming from the template request, uncomment this:
-            // console.log(JSON.stringify(config));
-
+             console.log(JSON.stringify(data));
+            // Quick fix for working local with sample data.
+            data.template_list = data;
+            console.log(data.template_list.length);
             if (data.template_list !== undefined) {
 
               // Store available templates:
@@ -63,8 +66,12 @@ var exports = (function() {
 
               done();
             }
+          }).fail(function(data) {
 
+            // Templates could not be loaded.
+            console.log("Could not load templates");
 
+            done();
           });
       },
 

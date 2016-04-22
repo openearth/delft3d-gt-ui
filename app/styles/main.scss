@@ -11,8 +11,8 @@ $deltares-cyaan: #00c4d6;
 $deltares-oranje: #ff7200;
 $deltares-groen: #b4d300;
 $deltares-cyclaam: #eb0073;
-$white: #fff;
-$black: #000;
+$white: #f3f3f3;
+$black: #070707;
 
 
 $brand-primary: $deltares-blauw;
@@ -35,8 +35,10 @@ $gray-light: #cccccc;
 
 $color-scenario-column: #dddddd;
 $color-runs-column: #eee;
-$color-details-column: #fff;
+$color-details-column: $white;
 
+
+$builder-form-row: #d6d6ce;
 
 /* This part is wiredepped
 // bower:scss
@@ -314,12 +316,34 @@ html, body {
       margin: 4px;
     }
   }
-
-
 }
 
+.variable-row {
+  border-radius: 32;
+  background-color: $builder-form-row;
+}
+
+.scenario-builder-table {
+
+    tbody {
+
+      tr
+      {
+        td {
+
+        }
+      }
+    }
+
+    .label-variable
+    {
+      font-size: 13px;
+    }
+}
+
+
 .input-group-addon-info {
-  background-color: $gray-lighter;
+  background-color: $builder-form-row;
 }
 
 .input-group {
