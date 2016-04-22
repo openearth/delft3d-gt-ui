@@ -1,4 +1,4 @@
-/* global Vue, InputValidation */
+/* global Vue, InputValidation, fetchTemplates */
 
 // Exported globals
 var ScenarioCreate;
@@ -33,11 +33,11 @@ var exports = (function() {
 
     },
 
-    created: function(done) {
+    created: function() {
       fetchTemplates()
         .then((templates) => {
           this.availableTemplates = templates.template_list;
-        })
+        });
     },
 
 

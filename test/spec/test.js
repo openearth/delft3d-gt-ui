@@ -77,6 +77,7 @@
 
   // why is this necessary....
   _.assign(global, require("../../app/scripts/models.js"));
+  _.assign(global, require("../../app/scripts/templates.js"));
 
   require("../../app/scripts/app.js");
 
