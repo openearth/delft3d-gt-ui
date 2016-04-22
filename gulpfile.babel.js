@@ -21,17 +21,19 @@ import _ from "lodash";
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
+var args = require("yargs").argv;
 // Server used for serving remote url"s
 // "http://136.231.10.175:8888";
 var apiServer = "http://10.0.1.2";
 
+// Process optional arguments
+processOptionalArguments();
+
 // Proxy paths which we map to a different source, for testing locally or
 // running the actual build.
-
 var paths = ["runs", "createrun", "deleterun", "dorun", "scene", "files", "scenario"];
 
-var proxies = _.map(paths, function(path) {
-  "use strict";
+var proxies = _.map(paths, (path) => {
   var proxyItem = null;
 
   if (apiServer) {
@@ -40,6 +42,15 @@ var proxies = _.map(paths, function(path) {
 
   return proxyItem;
 });
+
+// Function to process the optional arguments
+function processOptionalArguments() {
+  "use strict";
+  // apiServer argument
+  if (args.apiServer) {
+    apiServer = args.apiServer;
+  }
+}
 
 
 gulp.task("styles", () => {
@@ -112,8 +123,7 @@ gulp.task("lint:babel",
          );
 
 
-gulp.task("lint:scss", function() {
-  "use strict";
+gulp.task("lint:scss", () => {
   return gulp.src("app/styles/*.scss")
     .pipe(scsslint());
 });
@@ -174,8 +184,7 @@ gulp.task("images", () => {
           svgoPlugins: [{cleanupIDs: false}]
         })
       )
-        .on("error", function (err) {
-          "use strict";
+        .on("error", (err) => {
           console.log(err);
           this.end();
         })))
@@ -187,8 +196,8 @@ gulp.task("fonts", () => {
     // load from bower files
     require("main-bower-files")(
       "**/*.{eot,svg,ttf,woff,woff2}",
-      function (err) {
-        "use strict";
+      (err) => {
+
         // just log and continue
         console.error(err);
       }
