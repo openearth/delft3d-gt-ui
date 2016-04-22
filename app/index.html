@@ -26,39 +26,29 @@
 
 
   </head>
-  <body>
+  <body style="overflow: hidden">
     <!--[if lt IE 10]>
-        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
+      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
 
-    <div id="app">
-      <!-- The main web page style. -->
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-12">
-            <!-- everything is inside a panel -->
-            <div class="panel panel-primary">
+    <!-- black bar on the top -->
+    <nav class="navbar navbar-default navbar-static-top heading-bar">
+      <div class="container-fluid">
+        <div class="navbar-header">
 
-              <!-- with a header -->
-              <div class="col-lg-12 heading-bar">
-                <h2 class="site-title"><a href="/"><img src="images/logo/app-icon.png" alt="Delft3D-GT Dashboard" />Delft3D-GT Dashboard</a></h2>
-              </div>
-
-              <!-- a button below it -->
-              <div class="col-lg-12">
-                <div class="col-lg-12">
-                  <a class="btn btn-primary btn-logout pull-right" href="/logout/">Logout</a>
-                </div>
-              </div>
-              <!-- and a content -->
-              <!-- This will be filled by app.js (vue-router) -->
-              <router-view keep-alive></router-view>
-              <!-- and no footer. -->
-
-            </div>
-          </div>
+          <a href="/" class="site-title"><img src="images/logo/delft3d-gt.svg" width="80" height="80" alt="Delft3D-GT Dashboard" />Delft3D-GT Dashboard</a></h2>
+          <!--<a class="btn btn-primary btn-logout pull-right" href="/logout/">Logout</a>-->
         </div>
       </div>
+    </nav>
+
+
+    <div id="app" class="full-height">
+
+      <!-- This will be filled by app.js (vue-router) -->
+      <router-view keep-alive></router-view>
+      <!-- and no footer. -->
+
     </div>
 
 

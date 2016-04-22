@@ -23,12 +23,11 @@ const reload = browserSync.reload;
 
 // Server used for serving remote url"s
 // "http://136.231.10.175:8888";
-var apiServer = "http://10.0.1.2";
 
 // Proxy paths which we map to a different source, for testing locally or
 // running the actual build.
 
-var paths = ["runs", "createrun", "deleterun", "dorun", "scene", "files", "scenario"];
+var paths = ["runs", "createrun", "deleterun", "dorun", "scene", "files", "scenario", "scenario/template"];
 
 var proxies = _.map(paths, function(path) {
   "use strict";

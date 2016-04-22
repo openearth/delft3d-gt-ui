@@ -34,30 +34,61 @@ var exports = (function() {
     },
 
     activate: function(done) {
-      var that = this;
+//       var that = this;
+// console.log('activate');
+//       //Load test template data:
+//       $.ajax({
+//         url: "sampledata/template.json",
+//         //url: "scenario/template/list",
+//         method: "GET"
+//       })
+//         .done(function(data) {
 
-      //Load test template data:
+//           // If you want to see what is coming from the template request, uncomment this:
+//            console.log(JSON.stringify(data));
+
+//           if (data.template_list !== undefined) {
+
+//             // Store available templates:
+//             that.availableTemplates = data.template_list;
+//             that.selectedTemplate = null;
+
+//             done();
+//           }
+
+
+//         });
+    },
+
+    route: {
+      data: function(transition) {
+        // Turn this into a promise.
+    var that = this;
       $.ajax({
-        //url: "sampledata/template.json",
-        url: "scenario/template/list",
+        url: "sampledata/template.json",
+        //url: "scenario/template/list",
         method: "GET"
       })
         .done(function(data) {
 
           // If you want to see what is coming from the template request, uncomment this:
-          // console.log(JSON.stringify(config));
+//           console.log(JSON.stringify(data));
 
+           // Quick solution to get this working with out own local test data. For the remote template this is not needed!
+          data.template_list = data;
           if (data.template_list !== undefined) {
 
             // Store available templates:
             that.availableTemplates = data.template_list;
             that.selectedTemplate = null;
 
-            done();
+            //done();
           }
 
 
         });
+
+      }
     },
 
 
@@ -133,12 +164,12 @@ var exports = (function() {
 
         var postdata = {
           templateid: this.selectedTemplate.templateid, // Temp!
-          scenariosettings: this.scenarioConfig
+          scenariosettings: JSON.stringify(this.scenarioConfig)
         };
 
         $.ajax({
           url: "/scenario/create",
-          data: JSON.stringify(postdata),
+          data: postdata,
           method: "POST"
         }).done(function(data) {
           console.log(data);

@@ -1,5 +1,25 @@
 <template id="template-scenario-builder">
     <div>
+
+        <!-- the grey toolbar for scenario builder -->
+        <nav class="navbar navbar-default navbar-static-top tool-bar ">
+          <div class="container-fluid">
+            <div class="row" >
+              <div class="col-xs-12">
+                <div class="btn-toolbar">
+                  <!-- mixed button and a tags will be fixed soon! -->
+                  <button class=" btn btn-primary" id="scenario-submit" v-on:click="submitScenario" value="" v-bind:class="{ 'inputdisabled': formIsValid == false}" >
+                    Save
+                  </button>
+
+                  <a href="#/" class="btn btn-primary pull-left">Cancel</button>
+                </a>
+              </div>
+            </div>
+          </div>
+        </nav>
+
+
         <div class="panel-body">
             <div class="col-lg-12">
                 <div class="header-bar">
@@ -7,7 +27,6 @@
                         Scenario builder
                     </h3>
                 </div>
-
                 <!-- User has to select a template first -->
                 <template v-if="availableTemplates !== null">
                   <div class="row">
@@ -132,13 +151,6 @@
                           </div>
                       </div>
 
-                      <div class="col-lg-2">
-                          <div class="btn-group">
-                              <button class="form-control btn btn-primary" id="scenario-submit" v-on:click="submitScenario" value="" v-bind:class="{ 'inputdisabled': formIsValid == false}" >
-                                  Create
-                              </button>
-                          </div>
-                      </div>
                     </div>
                 </template>
 
