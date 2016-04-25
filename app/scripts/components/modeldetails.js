@@ -4,6 +4,7 @@ var exports = (function () {
 
   var ModelDetails = Vue.component("model-details", {
     template: "#template-model-details",
+
     // Show the details of one model
     data: function() {
       console.log("loading model details for id", this.id);
@@ -43,6 +44,7 @@ var exports = (function () {
         $(this).tab("show");
       });
       var clipboard = new Clipboard("#btn-copy-log-output");
+
       clipboard.on("success", function(e) {
         e.clearSelection();
       });
@@ -51,15 +53,16 @@ var exports = (function () {
     },
     computed: {
       id: {
-        get:  function() {
+        get: function() {
           // default to -1
           var id = -1;
+
           try {
             // We always get the id from the route parameters. Update to props later.
             id = parseInt(this.$route.params.modelid);
           } catch (e) {
             console.log("can't get model id from route parameters, falling back to model -1", e);
-          };
+          }
           return id;
         },
         set: function(val) {
@@ -79,12 +82,6 @@ var exports = (function () {
             // model does not have a scenario;
             return -1;
           }
-        }
-      },
-      selectedModels: {
-        get: function() {
-          var scenario = parseInt(this.$route.params.scenarioid);
-          return _.filter(models, ["scenario", scenario]);
         }
       },
       // Update whenever selectedModel changes.

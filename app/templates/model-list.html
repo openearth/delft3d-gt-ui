@@ -11,7 +11,7 @@
       </thead>
 
       <tbody>
-        <tr v-for="entry in slectedModels">
+        <tr v-for="entry in selectedModels()">
           <td title="id={{ entry.id }}">
             <a href="#/scenarios/{{ entry.scenario }}/models/{{entry.id}}">{{entry.name}}</a>
           </td>

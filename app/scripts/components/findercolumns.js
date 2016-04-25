@@ -1,4 +1,4 @@
-/* global Vue */
+/* global Vue, ScenarioList, ModelList, ModelDetails */
 
 var exports = (function () {
   "use strict";

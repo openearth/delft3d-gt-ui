@@ -1,4 +1,4 @@
-/* global ModelDetails, ScenarioCreate, ModelList, HomeView */
+/* global ModelDetails, ScenarioCreate, ModelList, HomeView, FinderColumns */
 
 var router;
 

@@ -1,4 +1,4 @@
-/* globals fetchModels */
+/* globals fetchScenarios */
 var exports = (function () {
   "use strict";
   /* global Vue */
@@ -19,42 +19,17 @@ var exports = (function () {
         .then((data) => {
           this.scenarios = data.scenario_list;
         });
-
-      // // and fetch on every 10 seconds
-      // setInterval(
-      //   // create a callback for every second
-      //   () => {
-      //     // fetch the models
-      //     fetchScenarios()
-      //       .then((data) => {
-      //         this.scenarios = data;
-      //       });
-      //   },
-      //   // every 10 seconds
-      //   10000
-      // );
-
     },
     route: {
       data: function(transition) {
-        // fetchScenarios()
-        //   .then(
-        //     (json) => {
-        //       // copy old data and set model
-        //       var data = this.$data;
-
-        //       data.scenarios = json;
-        //       // transition to this new data;
-        //       transition.next(data);
-        //     }
-        //   );
+        fetchScenarios()
+          .then((data) => {
+            this.scenarios = data.scenario_list;
+            transition.next();
+          });
       }
-
-
     },
     methods: {
-
-
     }
   });
 
