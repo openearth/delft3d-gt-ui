@@ -27,7 +27,10 @@ var exports = (function() {
         var router = new VueRouter();
 
         router.map({
-          "/models/:id": {
+          "/scenarios/:scenarioid/models/:modelid": {
+            component: FinderColumns
+          },
+          "/models/:modelid": {
             component: ModelDetails
           },
           "/scenarios/create": {
@@ -39,6 +42,7 @@ var exports = (function() {
           "/": {
             component: HomeView
           }
+
         });
         router.start(App, "#app");
 

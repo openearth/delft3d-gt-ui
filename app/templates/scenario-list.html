@@ -1,0 +1,12 @@
+<template id="template-scenario-list" inline-template>
+  <div>
+    <ul>
+      <li v-for="scenario in scenarios">
+        <pre>
+          {{ scenario | json }}
+        </pre>
+      </li>
+    </ul>
+  </div>
+
+</template>

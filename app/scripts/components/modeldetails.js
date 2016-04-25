@@ -7,15 +7,14 @@ var exports = (function () {
     // Show the details of one model
     data: function() {
       var id;
-
       // if this route is available, use that or use 0
       try {
-        id = parseInt(this.$route.params.id);
+        id = parseInt(this.$route.params.modelid);
       } catch (e) {
         console.log("can't get model id from route parameters, falling back to model 0", e);
         id = -1;
       }
-
+      console.log("loading model details for id", id);
 
       return {
         // model id
@@ -31,11 +30,27 @@ var exports = (function () {
 
         isAnimating: false,
         model: {
+          id: id
         }
       };
 
     },
+    beforeCompile: function() {
+      console.log("before compile", this.model.id);
+    },
+    compiled: function() {
+      console.log("before compile", this.model.id);
+    },
+
+    created: function() {
+      console.log("Model details are created with model", JSON.stringify(this.model));
+      this.updateData(this.model.id);
+
+
+    },
     ready: function() {
+
+      console.log("model details are ready");
       // enable the tab based menu (only for tabs, keep real links)
       $("#model-details-navigation .nav a[data-toggle='tab']").click(function (e) {
         e.preventDefault();
@@ -47,6 +62,7 @@ var exports = (function () {
       clipboard.on("success", function(e) {
         e.clearSelection();
       });
+      console.log("updating model id");
 
     },
     computed: {
@@ -122,8 +138,16 @@ var exports = (function () {
         // get model (from a service or parent)
 
         console.log("transitioning", transition);
-        // somehow params is not parsed to numbers yet
-        fetchModel(parseInt(transition.to.params.id))
+        this.updateData(parseInt(transition.to.params.modelid), transition);
+      }
+    },
+    methods: {
+      updateData: function(id, transition) {
+        // update data with id, and if transition is passed transition to it
+        // afterwards, pass the log
+
+        // make sure id is a number
+        fetchModel(id)
           .then(
             (json) => {
               console.log("fetched model", json);
@@ -131,8 +155,10 @@ var exports = (function () {
               var data = this.$data;
 
               data.model = json;
-              // transition to this new data;
-              transition.next(data);
+              // transition to this new data if passed
+              if (transition) {
+                transition.next(data);
+              }
               // and fetch log afterwards
               fetchLog(data.model.id)
                 .then(log => {
@@ -143,9 +169,8 @@ var exports = (function () {
                 });
             }
           );
-      }
-    },
-    methods: {
+
+      },
       downloadFiles: function() {
         // Open download window
         var id = this.model.id;
