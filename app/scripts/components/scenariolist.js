@@ -15,13 +15,10 @@ var exports = (function () {
     },
 
     ready: function() {
-      // // TODO: this only works if the modellist is active. If you go directly to a model it does not work.
-      // // Fix fetchmodel (and the server) so it actually fetches 1 model.
-      // // fetch now
-      // fetchScenarios()
-      //   .then((data) => {
-      //     this.models = data;
-      //   });
+      fetchScenarios()
+        .then((data) => {
+          this.scenarios = data.scenario_list;
+        });
 
       // // and fetch on every 10 seconds
       // setInterval(
@@ -62,7 +59,7 @@ var exports = (function () {
   });
 
   return {
-    ModelList: ModelList
+    ScenarioList: ScenarioList
   };
 }());
 
