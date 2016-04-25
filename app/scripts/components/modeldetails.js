@@ -6,19 +6,9 @@ var exports = (function () {
     template: "#template-model-details",
     // Show the details of one model
     data: function() {
-      var id;
-      // if this route is available, use that or use 0
-      try {
-        id = parseInt(this.$route.params.modelid);
-      } catch (e) {
-        console.log("can't get model id from route parameters, falling back to model 0", e);
-        id = -1;
-      }
-      console.log("loading model details for id", id);
+      console.log("loading model details for id", this.id);
 
       return {
-        // model id
-        id: id,
         // Current animation frame:
         currentAnimationIndex: 0,
 
@@ -30,7 +20,6 @@ var exports = (function () {
 
         isAnimating: false,
         model: {
-          id: id
         }
       };
 
@@ -39,26 +28,21 @@ var exports = (function () {
       console.log("before compile", this.model.id);
     },
     compiled: function() {
-      console.log("before compile", this.model.id);
+      console.log("compiled", this.model.id);
     },
 
     created: function() {
       console.log("Model details are created with model", JSON.stringify(this.model));
       this.updateData(this.model.id);
-
-
     },
     ready: function() {
-
       console.log("model details are ready");
       // enable the tab based menu (only for tabs, keep real links)
       $("#model-details-navigation .nav a[data-toggle='tab']").click(function (e) {
         e.preventDefault();
         $(this).tab("show");
       });
-
       var clipboard = new Clipboard("#btn-copy-log-output");
-
       clipboard.on("success", function(e) {
         e.clearSelection();
       });
@@ -66,7 +50,43 @@ var exports = (function () {
 
     },
     computed: {
+      id: {
+        get:  function() {
+          // default to -1
+          var id = -1;
+          try {
+            // We always get the id from the route parameters. Update to props later.
+            id = parseInt(this.$route.params.modelid);
+          } catch (e) {
+            console.log("can't get model id from route parameters, falling back to model -1", e);
+          };
+          return id;
+        },
+        set: function(val) {
+          // updating the data
+          console.log("getting model data for model id", val);
+          this.updateData(parseInt(val));
+        }
 
+
+      },
+      scenario: {
+        get: function() {
+          if (_.has(this, "model.scenario")) {
+            // return the scenario from the model
+            return this.model.scenario;
+          } else {
+            // model does not have a scenario;
+            return -1;
+          }
+        }
+      },
+      selectedModels: {
+        get: function() {
+          var scenario = parseInt(this.$route.params.scenarioid);
+          return _.filter(models, ["scenario", scenario]);
+        }
+      },
       // Update whenever selectedModel changes.
       logoutput: {
         cache: false,
@@ -128,24 +148,25 @@ var exports = (function () {
         }
       }
     },
-    activate: function() {
-      console.log("activating details view");
-
-    },
-
     route: {
       data: function(transition) {
         // get model (from a service or parent)
 
-        console.log("transitioning", transition);
-        this.updateData(parseInt(transition.to.params.modelid), transition);
+        console.log("data transition", transition, this);
+        this.updateData(parseInt(transition.to.params.modelid));
+        transition.next();
+      },
+      activate: function(transition) {
+        console.log("activating transition", transition);
+        transition.next();
+
       }
     },
     methods: {
-      updateData: function(id, transition) {
+      updateData: function(id) {
         // update data with id, and if transition is passed transition to it
         // afterwards, pass the log
-
+        console.log("Updating data from id", id);
         // make sure id is a number
         fetchModel(id)
           .then(
@@ -155,10 +176,6 @@ var exports = (function () {
               var data = this.$data;
 
               data.model = json;
-              // transition to this new data if passed
-              if (transition) {
-                transition.next(data);
-              }
               // and fetch log afterwards
               fetchLog(data.model.id)
                 .then(log => {
@@ -168,7 +185,10 @@ var exports = (function () {
                   $("#model-log-output").text("Failed to get log: " + e);
                 });
             }
-          );
+          )
+          .catch(e => {
+            console.log("Failed to get model with id", id, "error", e);
+          });
 
       },
       downloadFiles: function() {
