@@ -2,16 +2,13 @@
   <div>
     <div class="panel-body">
       <div class="col-lg-12">
-
         <div class="header-bar">
-          <h2>Details for &ldquo;<strong>{{selModel.name}}</strong>&rdquo;
-            <!-- <button class="btn btn-primary pull-right" type="button" v-on:click="closeDetails()">
-                 CLOSE
-                 </button> -->
-          </h2>
+          <h2 v-if="model">Details for &ldquo;<strong>{{model.name}}</strong>&rdquo;</h2>
+          <h2 v-if="!model">No model loaded</h2>
         </div>
       </div>
 
+      <!-- model window for deletation -->
       <div class="modal default-hidden fade " id="dialog-confirm-delete" tabindex="-1" role="dialog">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -38,109 +35,95 @@
         </div><!-- /.modal-dialog -->
       </div><!-- /.modal -->
 
-      <nav class="navbar navbar-default sidebar" role="navigation">
+      <nav class="navbar navbar-default sidebar" role="navigation" id="model-details-navigation">
         <div class="container-fluid">
 
-            <ul class="nav navbar-nav">
-              <li><a href="#" v-on:click="closeDetails(); return false"><strong>Return to model list</strong> <span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-menu-left"></span></a></li>
+          <ul class="nav navbar-nav">
+            <li>
+              <!-- no data-toggle here, we're going back -->
+              <a href="#/"><strong>Return to model list</strong>
+                <span class="pull-right hidden-xs showopacity glyphicon glyphicon-menu-left"></span>
+              </a>
+            </li>
 
-              <li class="active"><a href="#" v-on:click="changeMenuItem" data-target="#results-summary">Summary<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-info-sign"></span></a></li>
+            <li class="active">
+              <a href="#model-summary" data-toggle="tab" >
+                Summary<span class="pull-right hidden-xs showopacity glyphicon glyphicon-info-sign"></span>
+              </a>
+            </li>
 
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Graphs <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-signal"></span></a>
-                <ul class="dropdown-menu for-animate" role="menu">
-                  <li><a href="#" v-on:click="changeMenuItem" data-target="#results-channel-network" data-animation="channel_network_images">Channel network</a></li>
-                  <li><a href="#" v-on:click="changeMenuItem" data-target="#results-delta-fringe" data-animation="delta_fringe_images">Delta plain fringe</a></li>
-                </ul>
-              </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Graphs <span class="caret"></span><span class="pull-right hidden-xs showopacity glyphicon glyphicon-signal"></span></a>
+              <ul class="dropdown-menu for-animate" role="menu">
+                <li><a href="#model-channel-network" data-toggle="tab">Channel network</a></li>
+                <li><a href="#model-delta-fringe" data-toggle="tab" data-animation="delta_fringe_images">Delta plain fringe</a></li>
+              </ul>
+            </li>
 
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Actions <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-cog"></span></a>
-                <ul class="dropdown-menu forAnimate" role="menu">
-                  <li><a href="#" v-on:click="changeMenuItem" data-target="#model-simulation-control">Simulation controls</a></li>
-                  <li><a href="#" v-on:click="changeMenuItem" data-target="#results-download">Download files</a></li>
-                </ul>
-              </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Actions <span class="caret"></span><span class="pull-right hidden-xs showopacity glyphicon glyphicon-cog"></span></a>
+              <ul class="dropdown-menu forAnimate" role="menu">
+                <li><a href="#model-simulation-controller" data-toggle="tab">Simulation controls</a></li>
+                <li><a href="#model-download" data-toggle="tab">Download files</a></li>
+              </ul>
+            </li>
 
-              <li><a href="#"  v-on:click="changeMenuItem" data-parent="#container-model-information" data-target="#model-log-output-container">View log file<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-th-list"></span></a></li>
-              <!--
-                  <li><a href="#">Meta information<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-tags"></span></a></li>
-                  -->
+            <li><a href="#model-log" data-toggle="tab" >
+                View log file<span  class="pull-right hidden-xs showopacity glyphicon glyphicon-th-list"></span></a>
+            </li>
 
-            </ul>
+          </ul>
         </div>
       </nav>
 
-      <!-- content for menu -->
-      <div class="pull-left model-information col-lg-9" id="accordion">
 
-        <div class="panel-collapse collapse in" id="results-summary">
-          <div class="panel-body">
-            <h2>Summary</h2>
+      <!--  -->
+      <!-- Tab panes -->
+      <div class="tab-content col-lg-9" >
+        <div role="tabpanel" class="tab-pane active fade in" id="model-summary">
+          <div class="panel-body" v-if="model">
+            <h2>Summary </h2>
 
             <table class="table-default">
               <tbody>
                 <tr>
                   <td>Name</td>
-                  <td>{{selModel.name}}</td>
+                  <td>{{model.name}} </td>
                 </tr>
 
                 <tr>
                   <td>Model files</td>
-                  <td>View <a href="{{selModel.fileurl}}">working directory</a></td>
+                  <td>View <a href="{{model.fileurl}}">working directory</a></td>
                 </tr>
 
                 <tr>
                   <td>Status</td>
-                  <td><span class="label label-default">{{selModel.state | capitalize }}</span></td>
+                  <td><span class="label label-default">{{model.state | capitalize }}</span></td>
                 </tr>
-<!--
                 <tr>
-                  <td>Time to finish</td>
-                  <td>...</td>
+                  <td>Identification</td>
+                  <td><span class="text-muted">{{ model.id }} {{ model.suid }} </span></td>
                 </tr>
-
-                <tr>
-                  <td>% Complete</td>
-                  <td>...</td>
-                </tr>
--->
-<!--
-                <tr>
-                  <td>Progress</td>
-                  <td>
-                    <div class="progress progress-incell">
-                      <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
-
-                      </div>
-                    </div>
-                  </td>
-                </tr>
--->
-
-
               </tbody>
             </table>
-
-
           </div>
         </div>
-
-
-        <div class="panel-collapse collapse" id="results-channel-network">
-          <div class="panel-body">
+        <div role="tabpanel" class="tab-pane fade" id="model-channel-network">
+          <div class="panel-body" v-if="model.results">
+            <pre>{{ model | json }}</pre>
             <h2>Channel network</h2>
 
-            <div class="text-center"  v-show="hasFrames">
+            <div class="text-center"  v-show="model.results.channelNetworkFrames">
 
-              <img v-bind:src="animationFrame" />
+
+              <img v-bind:src="model.results.channelNetworkFrames[view.currentChannelNetworkFrame]" />
 
               <div>
                 <div class="btn-group">
-                    <button class="btn btn-primary" v-on:click="previousImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-backward"></span></button>
-                    <button class="btn btn-primary" v-show="isAnimating" v-on:click="stopImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-stop"></span></button>
-                    <button class="btn btn-primary" v-show="isAnimating == false" v-on:click="playImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-play"></span></button>
-                    <button class="btn btn-primary" v-on:click="nextImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-forward"></span></button>
+                  <button class="btn btn-primary" v-on:click="previousImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-backward"></span></button>
+                  <button class="btn btn-primary" v-show="isAnimating" v-on:click="stopImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-stop"></span></button>
+                  <button class="btn btn-primary" v-show="isAnimating == false" v-on:click="playImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-play"></span></button>
+                  <button class="btn btn-primary" v-on:click="nextImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-forward"></span></button>
                 </div>
               </div>
             </div>
@@ -150,107 +133,99 @@
             <p>
               This graph shows the network of the channel [ ... ]
             </p>
-            </div>
-            </div>
+          </div>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="model-delta-fringe">
+          <div class="panel-body" v-if="model.results">
+            <h2>Delta plain fringe</h2>
 
-            <div class="panel-collapse collapse" id="results-delta-fringe">
-              <div class="panel-body">
-                <h2>Delta plain fringe</h2>
+            <div>
+
+              <div class="text-center" v-if="model.results.deltaFringeFrames">
+                <img v-bind:src="animationFrame" />
 
                 <div>
-
-                  <div class="text-center" v-show="hasFrames">
-                    <img v-bind:src="animationFrame" />
-
-                    <div>
-                      <div class="btn-group">
-                          <button class="btn btn-primary" v-on:click="previousImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-backward"></span></button>
-                          <button class="btn btn-primary" v-show="isAnimating" v-on:click="stopImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-stop"></span></button>
-                          <button class="btn btn-primary" v-show="isAnimating == false" v-on:click="playImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-play"></span></button>
-                          <button class="btn btn-primary" v-on:click="nextImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-forward"></span></button>
-                      </div>
-                    </div>
+                  <div class="btn-group">
+                    <button class="btn btn-primary" v-on:click="previousImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-backward"></span></button>
+                    <button class="btn btn-primary" v-show="isAnimating" v-on:click="stopImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-stop"></span></button>
+                    <button class="btn btn-primary" v-show="isAnimating == false" v-on:click="playImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-play"></span></button>
+                    <button class="btn btn-primary" v-on:click="nextImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-forward"></span></button>
                   </div>
-
-
                 </div>
-
-                <h4>Background information</h4>
-
-                <p>
-                  Delta plain fringe information [ ... ]
-                </p>
               </div>
+
+
             </div>
 
-            <div class="panel-collapse collapse" id="results-download">
-                <div class="panel-body">
-                    <h2>
-                        Download files
-                    </h2>
-                    <p>
-                        Please check what you would like to download. Your download will be a ZIP file which contains the requested files.
-                    </p>
+            <h4>Background information</h4>
 
-                    <p>
-                      Currently you can only dowload the generated output images.
-                    </p>
+            <p>
+              Delta plain fringe information [ ... ]
+            </p>
+          </div>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="model-simulation-controller">
+          <div class="panel-body">
+            <h2>Simulation control</h2>
+            <p>
+              Please select an action to perform on this simulation
+            </p>
 
-                    <div class="form-group input-group">
-                      <span class="input-group-addon"><input type="checkbox" class="downloadoption" checked="checked" v-on:change="downloadOptionsChange()"></span>
-                      <span class="form-control">Download generated output images</span>
-                    </div>
+            <button type="button" class="btn btn-labeled btn-success" v-bind:class="{ 'inputdisabled': isModelRunning}" id="simulation-control-start" v-on:click="startModel">
+              <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>
+              Start
+            </button>
 
-                    <div class="btn-group">
-                        <button class="form-control btn btn-primary" id="download-submit" v-on:click="downloadFiles()" value="">
-                            Download
-                        </button>
-                    </div>
-                </div>
+            <button type="button" class="btn btn-labeled btn-danger" v-on:click="removeModel(model)">
+              <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
+              Abort
+            </button>
+            <input type="checkbox" value="1" id="simulation-control-check-delete-files" /> Also delete all simulation files
+          </div>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="model-download">
+          <div class="panel-body">
+            <h2>Download files</h2>
+            <p>
+              Please check what you would like to download. Your download will be a ZIP file which contains the requested files.
+            </p>
+            <p>
+              Currently you can only dowload the generated output images.
+            </p>
+            <div class="form-group input-group">
+              <span class="input-group-addon"><input type="checkbox" class="downloadoption" checked="checked" v-on:change="downloadOptionsChange()"></span>
+              <span class="form-control">Download generated output images</span>
             </div>
-
-
-
-            <div class="panel-collapse collapse" id="model-simulation-control">
-              <div class="panel-body">
-                <h2>Simulation control</h2>
-
-                <p>
-                Please select an action to perform on this simulation
-                </p>
-
-                 <button type="button" class="btn btn-labeled btn-success" v-bind:class="{ 'inputdisabled': isModelRunning}" id="simulation-control-start" v-on:click="startModel(selModel)">
-                    <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>
-                    Start
-                  </button>
-
-                  <button type="button" class="btn btn-labeled btn-danger" v-on:click="removeModel(selModel)">
-                    <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
-                    Abort
-                  </button>
-                  <input type="checkbox" value="1" id="simulation-control-check-delete-files" /> Also delete all simulation files
-
-
-              </div>
+            <div class="btn-group">
+              <button class="form-control btn btn-primary" id="download-submit" v-on:click="downloadFiles()" value="">
+                Download
+              </button>
             </div>
+          </div>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="model-log">
+          <div class="panel-body">
+            <h2>Log output</h2>
 
+            <button class="btn btn-primary" type="button" id="btn-copy-log-output" data-clipboard-target="#model-log-output">
+              Copy log
+            </button>
+            <button class="btn btn-primary" type="button" id="btn-refresh-log-output" v-on:click="fetchLog">
+              Refresh log
+            </button>
 
-<div class="panel-collapse collapse" id="model-log-output-container">
-  <div class="panel-body">
-    <h2>Log output</h2>
+            <div id="model-log-output-wrap">
+              <!-- fill this directly cause debugging views with 3MB text are a bit slow -->
+              <pre>
+                <code id="model-log-output">
+                  Nog log available.
+                </code>
+              </pre>
 
-    <button class="btn btn-primary" type="button" id="btn-copy-log-output" data-clipboard-target="#model-log-output">
-      Copy log
-    </button>
-
-    <div id="model-log-output-wrap">
-      <code id="model-log-output">
-        {{logoutput}}
-      </code>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-</div>
-</div>
-</div>
 </template>

@@ -28,37 +28,38 @@
   </head>
   <body>
     <!--[if lt IE 10]>
-      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
 
-  <div id="app">
-   <div class="container">
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="panel panel-primary">
+    <div id="app">
+      <!-- The main web page style. -->
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <!-- everything is inside a panel -->
+            <div class="panel panel-primary">
 
+              <!-- with a header -->
               <div class="col-lg-12 heading-bar">
                 <h2 class="site-title"><a href="/"><img src="images/logo/app-icon.png" alt="Delft3D-GT Dashboard" />Delft3D-GT Dashboard</a></h2>
               </div>
 
+              <!-- a button below it -->
               <div class="col-lg-12">
                 <div class="col-lg-12">
                   <a class="btn btn-primary btn-logout pull-right" href="/logout/">Logout</a>
                 </div>
               </div>
-
-
-              <component :is="currentView" > </component>
-
-
+              <!-- and a content -->
+              <!-- This will be filled by app.js (vue-router) -->
+              <router-view keep-alive></router-view>
+              <!-- and no footer. -->
 
             </div>
           </div>
         </div>
-
-
-</div>
-
+      </div>
+    </div>
 
 
     <div id="template-container"></div>
@@ -71,6 +72,7 @@
     <script src="/bower_components/fetch/fetch.js"></script>
     <script src="/bower_components/clipboard/dist/clipboard.js"></script>
     <script src="/bower_components/vue/dist/vue.js"></script>
+    <script src="/bower_components/vue-router/dist/vue-router.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -90,24 +92,36 @@
     <!-- endbuild -->
 
     <!-- build:js scripts/main.js -->
-    <script src="scripts/app.js"></script>
-    <script src="scripts/components/home.js"></script>
-    <script src="scripts/components/modellist.js"></script>
+    <!-- First the functions that we use to exchange data and validate it  -->
+    <!-- these should have corresponding tests -->
+    <!-- no vue code in here.... -->
+    <!-- validate data -->
+    <script src="scripts/inputvalidation.js"></script>
+    <!-- data scripts: these should fetch data and allow to retrieve it from the components (see store docs in vue)-->
+    <script src="scripts/models.js"></script>
+    <script src="scripts/templates.js"></script>
+
+    <!-- load components, these provide webcomponents (with corresponding templates in app/templates)-->
+    <!-- mainly tested using integration tests -->
+    <!-- these should be replaceable if someone wants to switch to a different webcomponent platform -->
+    <script src="scripts/components/modelcreate.js"></script>
     <script src="scripts/components/modeldetails.js"></script>
+    <script src="scripts/components/modellist.js"></script>
+    <script src="scripts/components/home.js"></script>
     <script src="scripts/components/scenariobuilder.js"></script>
 
-    <script src="scripts/ui.js"></script>
-    <script src="scripts/models.js"></script>
-    <script src="scripts/inputvalidation.js"></script>
+    <!-- and the application (router and loading of components goes in here)-->
+    <!-- this should contain only loading of the app code. -->
+    <!-- this can be very vue specific vuex, vue-router etc... -->
+    <script src="scripts/app.js"></script>
 
+    <!-- These can be merged to models.js and components -->
+    <script src="scripts/ui.js"></script>
     <script src="scripts/data/message-scene-list.js"></script>
     <script src="scripts/data/message-scene-delete.js"></script>
     <script src="scripts/data/message-scene-create.js"></script>
     <script src="scripts/data/message-scene-changestate.js"></script>
-
     <script src="scripts/main.js"></script>
-
-
     <!-- endbuild -->
   </body>
 </html>
