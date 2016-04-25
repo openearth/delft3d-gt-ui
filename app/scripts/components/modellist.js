@@ -3,6 +3,11 @@ var exports = (function () {
   "use strict";
   /* global Vue */
 
+  Vue.filter('byScenario', function (models) {
+    console.log('filter', this);
+    return _.filter(models);
+  });
+
   // register the grid component
   var ModelList = Vue.component("model-list", {
 
@@ -55,8 +60,17 @@ var exports = (function () {
 
     },
     methods: {
-
-
+      selectModel: function(id) {
+        var params = {
+          modelid: id,
+          scenarioid: this.$route.params.scenarioid
+        };
+        console.log("using router", router, "to go to", params, this);
+        router.go({
+          name: "finder-columns",
+          params: params
+        });
+      }
     }
   });
 
