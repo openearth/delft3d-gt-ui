@@ -98,6 +98,7 @@ var exports = (function() {
 
     attached: function() {
       // Placeholder for events
+
     },
 
 
@@ -105,6 +106,7 @@ var exports = (function() {
 
       // Perform validate at start:
       this.validateForm();
+
 
     },
 
@@ -121,6 +123,13 @@ var exports = (function() {
             // First set data, then the template. Order is important!
             this.scenarioConfig = this.prepareScenarioConfig(this.availableTemplates[newValue]);
             this.selectedTemplate = this.availableTemplates[newValue];
+
+            // Initialize the tooltips:
+            // We do this after the DOM update.
+            Vue.nextTick(function () {
+              $('[data-toggle="tooltip"]').tooltip();
+            });
+
 
           } else {
 
