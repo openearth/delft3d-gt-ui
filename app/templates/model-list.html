@@ -24,15 +24,10 @@
           </td>
         </tr>
       </tbody>
-
-      <tfoot v-show="!models">
-        <tr>
-          <td colspan="4" class="centered">
-            There are no models right now.
-          </td>
-        </tr>
-      </tfoot>
     </table>
+    <div class="alert alert-info" v-show="!(models.length)">
+      There are no models loaded.
+    </div>
     <div class="alert alert-warning default-hidden" role="alert" id="alert-connectionfailed">
       Cannot reach model server.
     </div>
