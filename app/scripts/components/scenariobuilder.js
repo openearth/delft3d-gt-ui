@@ -138,15 +138,14 @@ var exports = (function() {
 
         submitScenario: function() {
 
-
           var postdata = {
-            templateid: this.selectedTemplate.templateid, // Temp!
-            scenariosettings: this.scenarioConfig
+            templateid: this.selectedTemplate.id, // Temp!
+            scenariosettings: JSON.stringify(this.scenarioConfig)
           };
 
           $.ajax({
             url: "/scenario/create",
-            data: JSON.stringify(postdata),
+            data: postdata,
             method: "POST"
           }).done(function(data) {
             console.log(data);
