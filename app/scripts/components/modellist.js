@@ -1,18 +1,13 @@
-/* globals fetchModels */
+/* globals fetchModels, router */
 var exports = (function () {
   "use strict";
   /* global Vue */
-
-  Vue.filter('byScenario', function (models) {
-    console.log('filter', this);
-    return _.filter(models);
-  });
 
   // register the grid component
   var ModelList = Vue.component("model-list", {
 
     template: "#template-model-list",
-
+    props: ["filter"],
     data: function() {
       return {
         models: []
@@ -65,12 +60,26 @@ var exports = (function () {
           modelid: id,
           scenarioid: this.$route.params.scenarioid
         };
+
         console.log("using router", router, "to go to", params, this);
         router.go({
           name: "finder-columns",
           params: params
         });
+      },
+      selectedModels: function() {
+        var result = this.models;
+
+        if (this.filter === "scenarios") {
+          // is this the best approach, couldn't get a filterkey to work (no access to routing info)
+          var scenario = parseInt(this.$route.params.scenarioid);
+
+          result = _.filter(this.models, ["scenario", scenario]);
+
+        }
+        return result;
       }
+
     }
   });
 
