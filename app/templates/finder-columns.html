@@ -1,4 +1,4 @@
-<template id="template-finder-columns" keep-alive>
+<template id="template-finder-columns">
   <div>
     <div>
       <div class="panel-body">
@@ -9,11 +9,11 @@
         <div class="col-lg-4">
           <model-list></model-list>
         </div>
+        <div class="col-lg-4">
+          <model-details :id="modelid"></model-details>
+        </div>
+
       </div>
-    </div>
-    <h2>Details</h2>
-    <div class="col-lg-12">
-      <model-details></model-details>
     </div>
   </div>
 
