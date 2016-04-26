@@ -63,6 +63,9 @@ $row-color-odd: #f7f7f7;
 // was #c2c3c6; is now consistent with forms
 $row-border-color: $gray-light;
 
+
+$selected-item-color: #dae4d1;
+
 // Make object shadowed.
 @mixin shadowed() {
   box-shadow: 0 0 32px 0 $gray-dark;
@@ -473,6 +476,8 @@ html, body {
 
 
   .list-group-item {
+    padding: 0px;
+
     @include rectangle-corners();
 
     &:hover {
@@ -481,9 +486,19 @@ html, body {
       cursor: pointer;
     }
 
+    &.selected
+    {
+    background-color: $selected-item-color;
+    }
+
     // A href becomes block
     a {
+      // hide the selection focus (dotted lines)
+      color: $black;
+      outline: none;
       display:block;
+      padding: 10px;
+      text-decoration :none;
     }
   }
 }
