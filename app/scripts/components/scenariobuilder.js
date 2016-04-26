@@ -74,6 +74,14 @@ var exports = (function() {
             this.scenarioConfig = this.prepareScenarioConfig(this.availableTemplates[newValue]);
             this.selectedTemplate = this.availableTemplates[newValue];
 
+
+            // Initialize the tooltips:
+            // We do this after the DOM update.
+            Vue.nextTick(function () {
+              $("[data-toggle='tooltip']").tooltip();
+            });
+
+
           } else {
 
             // Order is important!
@@ -128,6 +136,18 @@ var exports = (function() {
         });
       },
 
+      // Loop through all configured variables and validate.
+      validateAllFields: function() {
+        var that = this;
+
+        $.each(this.scenarioConfig, function(varKey, varValue) {
+
+          that.validateField(varValue);
+
+        });
+
+      },
+
       // This function is a work in progress, we need to use the InputValidation class.
       // For now it is a quick demo to show some interactivity for numeric fields.
       // Function also receives an "event" variable as second argument, but it is unused.
@@ -157,10 +177,13 @@ var exports = (function() {
 
           val = parseFloat(val);
 
+
+
           // Are we auto stepping? And is there a multipler of? Then check the interval - it should match the multiple of.
           if (configuredVar.useautostep === true) {
 
             var interval = parseFloat(configuredVar.stepinterval);
+
 
             if (variable.stepoptions.multipleof > 0) {
 
@@ -213,6 +236,11 @@ var exports = (function() {
             }
 
           }
+
+
+          // Make sure the number becomes a float:
+           this.scenarioConfig[variable.variableid].value = val;
+
 
           break;
 
@@ -358,9 +386,9 @@ var exports = (function() {
               valid: true, // We assume everything is ok
 
               useautostep: false, // Do not use autostep by default
-              minstep: varValue.min, // Default step min is min value of this var
-              maxstep: varValue.max, // Default step max is max value of this var
-              stepinterval: varValue.stepoptions.defaultstep, // Default step from the template
+              minstep: parseFloat(varValue.min), // Default step min is min value of this var
+              maxstep: parseFloat(varValue.max), // Default step max is max value of this var
+              stepinterval: parseFloat(varValue.stepoptions.defaultstep), // Default step from the template
               group: group // Group name, for shared variables.
             };
 

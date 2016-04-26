@@ -20,6 +20,7 @@ var exports = (function () {
         currentAnimationKey: "",
 
         isAnimating: false,
+
         model: {
         }
       };

@@ -1,4 +1,4 @@
-/* global ModelDetails, ScenarioCreate, ModelList, HomeView, FinderColumns */
+/* global ModelDetails, ScenarioCreate, ModelList,  FinderColumns */
 
 var router;
 
@@ -42,7 +42,7 @@ var exports = (function() {
             component: ModelList
           },
           "/": {
-            component: HomeView
+            component: FinderColumns
           }
 
         });

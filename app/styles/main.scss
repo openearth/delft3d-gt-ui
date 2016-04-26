@@ -214,17 +214,21 @@ html, body {
 
 }
 
+// Scenario list
 .column-scenario-list {
   background-color: $color-scenario-column;
 }
 
+// Runs list
 .column-runs-list {
   background-color: $color-runs-column;
 }
 
+// Detail view
 .column-details {
   background-color: $color-details-column;
 }
+
 
 .full-height {
   @include fill();
@@ -477,6 +481,10 @@ html, body {
       cursor: pointer;
     }
 
+    // A href becomes block
+    a {
+      display:block;
+    }
   }
 }
 
