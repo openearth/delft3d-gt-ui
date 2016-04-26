@@ -137,7 +137,7 @@
 
                                                 <td class="no-padding">
                                                   <!-- [TODO] improve these inputs on a later moment (proper type selection) -->
-                                                  <input  v-if="value.type == 'numeric'" v-model="scenarioConfig[value.variableid].value" v-bind:class="{ 'inputdisabled': scenarioConfig[value.variableid].useautostep == true}" class="form-control" data-max="{{value.max}}" data-min="{{value.min}}" name="{{value['variableid']}}" type="number" v-on:keyup="validateField(value, $event)" v-on:change="validateField(value, $event)" />
+                                                  <input  v-if="value.type == 'numeric'" v-model="scenarioConfig[value.variableid].value" v-bind:class="{ 'inputdisabled': scenarioConfig[value.variableid].useautostep == true}" class="form-control" data-max="{{value.max}}" data-min="{{value.min}}" name="{{value['variableid']}}" number type="number" v-on:keyup="validateField(value, $event)" v-on:change="validateField(value, $event)" />
                                                   <input  v-if="value.type == 'text'" v-model="scenarioConfig[value.variableid].value" v-bind:class="{ 'inputdisabled': scenarioConfig[value.variableid].useautostep == true}" class="form-control" data-max="{{value.max}}" data-min="{{value.min}}" name="{{value['variableid']}}" type="text" v-on:keyup="validateField(value, $event)" v-on:change="validateField(value, $event)" />
                                                 </td>
 
