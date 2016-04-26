@@ -68,6 +68,9 @@ var exports = (function () {
         },
         set: function(val) {
           // updating the data
+          // clear model data
+          console.log("New model set, replacing model by empty model");
+          this.model = {};
           console.log("getting model data for model id", val);
           this.updateData(parseInt(val));
         }
