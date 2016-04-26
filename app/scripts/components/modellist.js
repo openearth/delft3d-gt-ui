@@ -72,6 +72,11 @@ var exports = (function () {
           scenarioid: this.$route.params.scenarioid
         };
 
+        if(params.modelid === -1)
+        {
+          console.log("no model yet selected");
+        }
+
         console.log("using router", router, "to go to", params, this);
         router.go({
           name: "finder-columns",

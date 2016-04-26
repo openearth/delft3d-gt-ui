@@ -20,6 +20,7 @@ var exports = (function () {
       data: function(transition) {
         console.log("new finder column data", this.$children);
         var modelDetails = this.$children[2];
+
         var newData = {
           modelid: parseInt(transition.to.params.modelid)
         };
