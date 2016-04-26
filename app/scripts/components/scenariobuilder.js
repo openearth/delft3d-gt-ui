@@ -33,56 +33,37 @@ var exports = (function() {
 
     },
 
-    activate: function(done) {
-//       var that = this;
-// console.log('activate');
-//       //Load test template data:
-//       $.ajax({
-//         url: "sampledata/template.json",
-//         //url: "scenario/template/list",
-//         method: "GET"
-//       })
-//         .done(function(data) {
-
-//           // If you want to see what is coming from the template request, uncomment this:
-//            console.log(JSON.stringify(data));
-
-//           if (data.template_list !== undefined) {
-
-//             // Store available templates:
-//             that.availableTemplates = data.template_list;
-//             that.selectedTemplate = null;
-
-//             done();
-//           }
-
-
-//         });
-    },
 
     route: {
-      data: function(transition) {
+      data: function() {
         // Turn this into a promise.
-    var that = this;
-      $.ajax({
-        url: "sampledata/template.json",
-        //url: "scenario/template/list",
-        method: "GET"
-      })
+        var that = this;
+
+        $.ajax({
+          url: "sampledata/template.json",
+          //url: "scenario/template/list",
+          method: "GET"
+        })
         .done(function(data) {
 
           // If you want to see what is coming from the template request, uncomment this:
 //           console.log(JSON.stringify(data));
 
            // Quick solution to get this working with out own local test data. For the remote template this is not needed!
-          data.template_list = data;
+          //data.template_list = data;
           if (data.template_list !== undefined) {
 
             // Store available templates:
             that.availableTemplates = data.template_list;
             that.selectedTemplate = null;
 
-            //done();
+           //   console.log("len",  $(".combobox").length);
+
+            // We do this after the DOM update.
+               // Vue.nextTick(function () {
+               // $(".combobox").combobox();
+               // });
+
           }
 
 
@@ -127,7 +108,8 @@ var exports = (function() {
             // Initialize the tooltips:
             // We do this after the DOM update.
             Vue.nextTick(function () {
-              $('[data-toggle="tooltip"]').tooltip();
+              $("[data-toggle='tooltip']").tooltip();
+
             });
 
 

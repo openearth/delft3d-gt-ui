@@ -348,9 +348,14 @@ html, body {
 
     background-color: $row-color-error;
 
-    input {
+    // We color enabled inputs.
+    /*
+    This looks great, but for now we disable it as we cannot properly highlight the right input element
+
+    input:enabled {
      border-color: #cc3333;
     }
+    */
   }
 
 }
