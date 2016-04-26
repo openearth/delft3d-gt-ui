@@ -11,16 +11,14 @@
       </thead>
 
       <tbody>
-        <tr v-for="entry in models
-                   | filterBy filterKey
-                   | orderBy sortKey sortOrders[sortKey]
-                   "
-            >
-          <td>{{entry.name}}<input type="hidden" value="{{entry.id}}" v-model="entry.id" /></td>
+        <tr v-for="entry in selectedModels()">
+          <td title="id={{ entry.id }}">
+            <a href="#/scenarios/{{ entry.scenario }}/models/{{entry.id}}">{{entry.name}}</a>
+          </td>
           <td>{{entry.state}}</td>
 
           <td class="centered">
-            <a href="#/models/{{ entry.id }}"><button class="btn btn-primary inside-cell">Details</button></a>
+            <a href="#/models/{{ entry.id }}" class="btn btn-primary inside-cell">Details</a>
           </td>
         </tr>
       </tbody>

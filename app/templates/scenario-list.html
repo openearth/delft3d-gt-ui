@@ -1,0 +1,12 @@
+<template id="template-scenario-list" inline-template>
+  <div>
+    <ul>
+      <li v-for="scenario in scenarios">
+        <a href="#/scenarios/{{ scenario.id }}/models/-1">
+          {{ scenario.name }}
+        </a>
+      </li>
+    </ul>
+  </div>
+
+</template>
