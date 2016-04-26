@@ -21,7 +21,7 @@ var exports = (function () {
       // Get the current selected scenarioid from the routing URL
       selectedScenarioId: {
         get: function() {
-          return this.$route.params.scenarioid;
+          return parseInt(this.$route.params.scenarioid);
 
         }
       }
