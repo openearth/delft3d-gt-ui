@@ -145,7 +145,7 @@ var exports = (function () {
       }
 
       // Working dir is at: modeldata.fileurl + delf3d + delft3d.log
-      var url = model.fileurl + "delft3d/delft3d.log";
+      var url = model.fileurl + model.info.logfile;
 
       $.ajax(url)
         .done(function(text) {

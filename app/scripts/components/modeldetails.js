@@ -104,7 +104,7 @@ var exports = (function () {
         get: function() {
           var animationKey = this.currentAnimationKey;
           var imgs = this.model.info[animationKey];
-
+console.log(imgs);
           if (imgs !== undefined) {
             return this.model.fileurl + imgs.location + imgs.images[this.currentAnimationIndex];
           }
@@ -300,6 +300,7 @@ var exports = (function () {
         this.currentAnimationIndex--;
 
         var imgs = this.model.info[this.currentAnimationKey];
+console.log("images", imgs.length);
 
         // Probably wrap with active key.
         if (this.currentAnimationIndex < 0) {

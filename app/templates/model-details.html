@@ -42,37 +42,32 @@
         </div>
       </div>
 
-      <div class="panel"  v-if="model.results.length">
+      <div class="panel">
         <div class="panel-heading">
           <h2 class="panel-title">Channel network</h2>
         </div>
         <div class="panel-body">
-          <div class="text-center"  v-show="model.results.channelNetworkFrames">
+        {{model.info | json}}
+          <div class="text-center"  v-show="model.info.channel_network_images">
 
 
-            <img v-bind:src="model.results.channelNetworkFrames[view.currentChannelNetworkFrame]" />
+            <img v-bind:src="animationFrame" />
 
             <div>
               <div class="btn-group">
-                <button class="btn btn-primary" v-on:click="previousImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-backward"></span></button>
-                <button class="btn btn-primary" v-show="isAnimating" v-on:click="stopImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-stop"></span></button>
-                <button class="btn btn-primary" v-show="isAnimating == false" v-on:click="playImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-play"></span></button>
-                <button class="btn btn-primary" v-on:click="nextImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-forward"></span></button>
+                <button class="btn btn-primary" v-on:click="previousImageFrame('channel_network_images')"><span class="glyphicon glyphicon-backward"></span></button>
+                <button class="btn btn-primary" v-show="isAnimating" v-on:click="stopImageFrame('channel_network_images')"><span class="glyphicon glyphicon-stop"></span></button>
+                <button class="btn btn-primary" v-show="isAnimating == false" v-on:click="playImageFrame('channel_network_images')"><span class="glyphicon glyphicon-play"></span></button>
+                <button class="btn btn-primary" v-on:click="nextImageFrame('channel_network_images')"><span class="glyphicon glyphicon-forward"></span></button>
               </div>
             </div>
           </div>
-
-          <h4>Background information</h4>
-
-          <p>
-            This graph shows the network of the channel [ ... ]
-          </p>
 
 
         </div>
       </div>
 
-      <div class="panel" v-if="model.results.length">
+      <div class="panel">
         <div class="panel-heading">
           <h2 class="panel-title">Delta plain fringe</h2>
         </div>
@@ -80,7 +75,7 @@
 
           <div>
 
-            <div class="text-center" v-if="model.results.deltaFringeFrames">
+            <div class="text-center" v-if="model.info.delta_fringe_images">
               <img v-bind:src="animationFrame" />
 
               <div>
@@ -92,15 +87,9 @@
                 </div>
               </div>
             </div>
-
-
           </div>
 
-          <h4>Background information</h4>
 
-          <p>
-            Delta plain fringe information [ ... ]
-          </p>
         </div>
       </div>
 
