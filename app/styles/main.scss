@@ -230,7 +230,6 @@ html, body {
 // Detail view
 .column-details.column {
   background-color: $color-details-column;
-  overflow: scroll;
 }
 
 
@@ -241,8 +240,8 @@ html, body {
 // Columns in the design
 .column {
   @include fill();
-
-  overflow: hidden;
+  // Scroll columns (assumes some vertical height set)
+  overflow-x: scroll;
 }
 
 
