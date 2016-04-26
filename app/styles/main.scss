@@ -124,6 +124,7 @@ html, body {
   height: 100%;
 }
 
+
 /*
 [TO REMOVE - Almar]
 .container {
@@ -145,10 +146,6 @@ html, body {
   }
 }
 
-.panel {
-  @include rectangle-corners();
-  @include shadowed();
-}
 
 // Override rounded corners, default bootstrap style
 .input-group-addon {
@@ -228,8 +225,9 @@ html, body {
 }
 
 // Detail view
-.column-details {
+.column-details.column {
   background-color: $color-details-column;
+  overflow: scroll;
 }
 
 
