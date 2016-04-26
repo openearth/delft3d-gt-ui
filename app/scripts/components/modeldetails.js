@@ -73,6 +73,12 @@ var exports = (function () {
           this.model = {};
           console.log("getting model data for model id", val);
           this.updateData(parseInt(val));
+
+          // Stop any animation if we were animating.
+          this.stopImageFrame();
+
+          // Reset index:
+          this.currentAnimationIndex = 0;
         }
 
 
@@ -108,8 +114,7 @@ var exports = (function () {
           var animationKey = this.currentAnimationKey;
           if (animationKey.length > 0) {
             var imgs = this.model.info[animationKey];
-  console.log(imgs);
-  console.log(this.currentAnimationIndex);
+
             if (imgs !== undefined) {
               return this.model.fileurl + imgs.location + imgs.images[this.currentAnimationIndex];
             }

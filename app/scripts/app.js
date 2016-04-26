@@ -42,6 +42,7 @@ var exports = (function() {
             component: ModelList
           },
           "/": {
+            name: "home",
             component: FinderColumns
           }
 

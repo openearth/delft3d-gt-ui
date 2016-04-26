@@ -82,6 +82,7 @@ var exports = (function() {
             });
 
 
+
           } else {
 
             // Order is important!
@@ -89,6 +90,8 @@ var exports = (function() {
             this.scenarioConfig = null;
 
           }
+
+           this.validateForm();
         }
 
       }
@@ -100,7 +103,13 @@ var exports = (function() {
 
         //var validation = new InputValidation();
         var valid = true;
+console.log("id", this.selectedId);
+        // If we have no templateid, we bail out immediatly:
+        if (this.selectedId <= -1)
+        {
+          valid = false;
 
+        }
         // Loop through all fields and determine if we have a completely valid form.
         // Set form valid state:
         $.each(this.scenarioConfig, function(varKey, varValue) {
@@ -132,7 +141,14 @@ var exports = (function() {
           data: postdata,
           method: "POST"
         }).done(function(data) {
-          console.log(data);
+
+          //
+          var params = { };
+          router.go({
+            name: "home",
+            params: params
+          });
+
         });
       },
 
