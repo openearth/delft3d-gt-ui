@@ -1,4 +1,4 @@
-/* global fetchModel, fetchLog, deleteModel, startModel */
+/* global fetchModel, fetchLog, deleteModel, startModel, router */
 var exports = (function () {
   "use strict";
 
@@ -210,6 +210,8 @@ var exports = (function () {
       // Remove item, based on incoming modelinfo.
       removeModel: function() {
 
+        // keep track of the scenario before deletion
+        var scenarioId = this.scenario;
 
 
         $("#dialog-remove-name").html(this.model.name);
@@ -236,6 +238,18 @@ var exports = (function () {
 
           // Hide dialog when user presses this accept.:
           $("#dialog-confirm-delete").modal("hide");
+          // key values correspond to url parameters which are lowercase
+          var params = {
+            modelid: -1,
+            scenarioid: scenarioId
+          };
+
+          console.log("using router", router, "to go to", params, "from", this);
+          // TODO: keep routing logic in main window
+          router.go({
+            name: "finder-columns",
+            params: params
+          });
 
         });
 
@@ -244,6 +258,8 @@ var exports = (function () {
 
         // Show the dialog:
         $("#dialog-confirm-delete").modal({});
+
+
       },
       fetchLog: function() {
         // Working dir is at: modeldata.fileurl + delf3d + delft3d.log

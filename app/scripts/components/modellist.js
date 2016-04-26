@@ -110,6 +110,7 @@ var exports = (function () {
         }
 
         console.log("using router", router, "to go to", params, this);
+        // TODO: keep routing logic in main window
         router.go({
           name: "finder-columns",
           params: params
