@@ -1,4 +1,4 @@
-/* global Vue, InputValidation, fetchTemplates */
+/* global Vue, InputValidation, fetchTemplates, router */
 
 // Exported globals
 var ScenarioCreate;
@@ -74,6 +74,15 @@ var exports = (function() {
             this.scenarioConfig = this.prepareScenarioConfig(this.availableTemplates[newValue]);
             this.selectedTemplate = this.availableTemplates[newValue];
 
+
+            // Initialize the tooltips:
+            // We do this after the DOM update.
+            Vue.nextTick(function () {
+              $("[data-toggle='tooltip']").tooltip();
+            });
+
+
+
           } else {
 
             // Order is important!
@@ -81,6 +90,8 @@ var exports = (function() {
             this.scenarioConfig = null;
 
           }
+
+          this.validateForm();
         }
 
       }
@@ -92,6 +103,11 @@ var exports = (function() {
 
         //var validation = new InputValidation();
         var valid = true;
+
+        // If we have no templateid, we bail out immediatly:
+        if (this.selectedId <= -1) {
+          valid = false;
+        }
 
         // Loop through all fields and determine if we have a completely valid form.
         // Set form valid state:
@@ -123,9 +139,29 @@ var exports = (function() {
           url: "/scenario/create",
           data: postdata,
           method: "POST"
-        }).done(function(data) {
-          console.log(data);
+        }).done(function() {
+
+          // Go back to home.
+          var params = { };
+
+          router.go({
+            name: "home",
+            params: params
+          });
+
         });
+      },
+
+      // Loop through all configured variables and validate.
+      validateAllFields: function() {
+        var that = this;
+
+        $.each(this.scenarioConfig, function(varKey, varValue) {
+
+          that.validateField(varValue);
+
+        });
+
       },
 
       // This function is a work in progress, we need to use the InputValidation class.
@@ -157,10 +193,13 @@ var exports = (function() {
 
           val = parseFloat(val);
 
+
+
           // Are we auto stepping? And is there a multipler of? Then check the interval - it should match the multiple of.
           if (configuredVar.useautostep === true) {
 
             var interval = parseFloat(configuredVar.stepinterval);
+
 
             if (variable.stepoptions.multipleof > 0) {
 
@@ -213,6 +252,11 @@ var exports = (function() {
             }
 
           }
+
+
+          // Make sure the number becomes a float:
+           this.scenarioConfig[variable.variableid].value = val;
+
 
           break;
 
@@ -358,9 +402,9 @@ var exports = (function() {
               valid: true, // We assume everything is ok
 
               useautostep: false, // Do not use autostep by default
-              minstep: varValue.min, // Default step min is min value of this var
-              maxstep: varValue.max, // Default step max is max value of this var
-              stepinterval: varValue.stepoptions.defaultstep, // Default step from the template
+              minstep: parseFloat(varValue.min), // Default step min is min value of this var
+              maxstep: parseFloat(varValue.max), // Default step max is max value of this var
+              stepinterval: parseFloat(varValue.stepoptions.defaultstep), // Default step from the template
               group: group // Group name, for shared variables.
             };
 

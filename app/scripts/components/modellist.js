@@ -54,32 +54,67 @@ var exports = (function () {
 
 
     },
+
+    computed: {
+      // Get the current selected modelid from the routing URL
+      selectedModelId: {
+        get: function() {
+          var id = parseInt(this.$route.params.modelid);
+
+          if (id === -1) {
+            console.log("choose the first from selected models", this.selectedModels);
+            var selectedModel = _.first(this.selectedModels);
+
+            if (selectedModel) {
+              id = selectedModel.id;
+              // go to the new model
+              this.selectModel(id);
+            }
+          }
+          return id;
+
+        }
+      },
+      selectedScenarioId: {
+        get: function() {
+          var id = parseInt(this.$route.params.scenarioid);
+
+          return id;
+
+        }
+      },
+      selectedModels: {
+        get: function() {
+          var result = this.models;
+
+          if (this.filter === "scenarios") {
+            // is this the best approach, couldn't get a filterkey to work (no access to routing info)
+            var scenario = this.selectedScenarioId;
+
+            result = _.filter(this.models, ["scenario", scenario]);
+
+          }
+          return result;
+        }
+      }
+    },
     methods: {
       selectModel: function(id) {
         var params = {
           modelid: id,
-          scenarioid: this.$route.params.scenarioid
+          scenarioid: this.selectedScenarioId
         };
+
+        if(params.modelid === -1) {
+          console.log("no model yet selected");
+        }
 
         console.log("using router", router, "to go to", params, this);
         router.go({
           name: "finder-columns",
           params: params
         });
-      },
-      selectedModels: function() {
-        var result = this.models;
-
-        if (this.filter === "scenarios") {
-          // is this the best approach, couldn't get a filterkey to work (no access to routing info)
-          var scenario = parseInt(this.$route.params.scenarioid);
-
-          result = _.filter(this.models, ["scenario", scenario]);
-
-        }
-        return result;
       }
-
     }
   });
 

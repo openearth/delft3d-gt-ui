@@ -1,4 +1,4 @@
-/* global ModelDetails, ScenarioCreate, ModelList, HomeView, FinderColumns */
+/* global ModelDetails, ScenarioCreate, ModelList,  FinderColumns, DeleteScenario */
 
 var router;
 
@@ -42,7 +42,12 @@ var exports = (function() {
             component: ModelList
           },
           "/": {
-            component: HomeView
+            name: "home",
+            component: FinderColumns
+          },
+          "/scenarios/delete/:scenarioid": {
+            name: "delete-scenario",
+            component: DeleteScenario
           }
 
         });

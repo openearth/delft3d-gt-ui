@@ -19,6 +19,20 @@ var exports = (function () {
         .then((data) => {
           this.scenarios = data.scenario_list;
         });
+
+      // and fetch on every 10 seconds
+      setInterval(
+        // create a callback for every second
+        () => {
+          // fetch the scenarios
+          fetchScenarios()
+            .then((data) => {
+              this.scenarios = data.scenario_list;
+            });
+        },
+        // every 10 seconds
+        10000
+      );
     },
     route: {
       data: function(transition) {
@@ -29,7 +43,25 @@ var exports = (function () {
           });
       }
     },
+
+    computed: {
+      // Get the current selected scenarioid from the routing URL
+      selectedScenarioId: {
+        get: function() {
+          return this.$route.params.scenarioid;
+
+        }
+      },
+      defaultRun: {
+        get: function() {
+          return -1;
+        }
+      }
+    },
+
+
     methods: {
+
     }
   });
 

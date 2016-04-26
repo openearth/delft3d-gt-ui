@@ -1,19 +1,73 @@
 <template id="template-finder-columns">
-  <div>
-    <div>
-      <div class="panel-body">
-        <div class="col-lg-4">
-          <!-- scenarios/list -->
-          <scenario-list></scenario-list>
-        </div>
-        <div class="col-lg-4">
-          <model-list filter="scenarios"></model-list>
-        </div>
-        <div class="col-lg-4">
-          <model-details></model-details>
-        </div>
+  <div class="full-height">
 
+    <!-- the grey toolbar for main screen-->
+    <nav class="navbar navbar-default navbar-static-top tool-bar ">
+      <div class="container-fluid">
+        <div class="row" >
+          <div class="col-xs-2">
+            <div class="btn-toolbar">
+
+              <a href="#/scenarios/delete/{{selectedScenarioId}}" class="btn btn-primary pull-right" v-bind:class="{ 'inputdisabled': selectedScenarioId == -1 || selectedScenarioId === undefined}" >Delete</a>
+              <a href="#/scenarios/create" class="btn btn-primary pull-right">Add scenario</a>
+
+            </div>
+          </div>
+
+          <div class="col-xs-3">
+            <!-- we hide this for now. Please do not remove this comment
+            <div class="btn-toolbar">
+              <button class="btn btn-primary pull-right">Add runs</button>
+              <button class="btn btn-primary pull-right">Delete</button>
+            </div>
+            -->
+          </div>
+
+          <div class="col-xs-7">
+            &nbsp;
+          </div>
+        </div>
       </div>
+    </nav>
+
+
+    <div class="container-fluid full-height">
+        <div class="row full-height">
+
+          <div class="col-lg-2 column-scenario-list full-height">
+
+            <h3>Scenarios</h3>
+
+            <div class="row" id="scenario-list">
+
+              <div class="column-header"></div>
+
+              <!-- scenarios/list -->
+              <scenario-list></scenario-list>
+            </div>
+          </div>
+
+          <div class="col-lg-3 column column-runs-list full-height">
+
+            <h3>Runs</h3>
+
+              <div class="row" id="runs-list">
+
+                <div class="column-header"></div>
+
+                <model-list filter="scenarios"></model-list>
+              </div>
+            </div>
+
+            <div class="col-lg-7 column column-details full-height">
+              <model-details></model-details>
+            </div>
+
+          </div>
+
+
+
+        </div>
     </div>
   </div>
 

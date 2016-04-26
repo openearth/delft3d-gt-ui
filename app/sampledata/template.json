@@ -1,4 +1,5 @@
-{
+
+[{
   "version": 1,
   "templateid": 1,
   "templatename": "A Template",
@@ -12,8 +13,9 @@
       "targetvalue": 100
     }
   },
-  "variables": {
-    "scenario": {
+  "variables": [
+    {
+      "name": "scenario",
       "label": "Scenario information",
       "variables": [
         {
@@ -23,7 +25,6 @@
           "units": "",
           "iseditable": true,
           "type": "text",
-          "": {},
           "min": 4,
           "max": 128,
           "stepoptions": {
@@ -38,7 +39,8 @@
         }
       ]
     },
-    "simulationsettings": {
+    {
+      "name": "simulationsettings",
       "label": "Simulation settings",
       "variables": [
         {
@@ -81,7 +83,8 @@
         }
       ]
     },
-    "geometry": {
+    {
+      "name": "geometry",
       "label": "Geometry settings",
       "variables": [
         {
@@ -134,7 +137,8 @@
         }
       ]
     },
-    "forces": {
+    {
+      "name": "forces",
       "label": "Force settings",
       "variables": [
         {
@@ -182,7 +186,8 @@
         }
       ]
     },
-    "sedimentcomposition": {
+    {
+      "name": "sedimentcomposition",
       "label": "Sediment composition settings",
       "variables": [
         {
@@ -227,5 +232,5 @@
         }
       ]
     }
-  }
-}
+  ]
+}]

@@ -17,9 +17,10 @@ var exports = (function () {
         timerAnimation: -1,
 
         // Which imagelist are we currently watching?
-        currentAnimationKey: "",
+        currentAnimationKey: "delta_fringe_images",
 
         isAnimating: false,
+
         model: {
         }
       };
@@ -67,8 +68,17 @@ var exports = (function () {
         },
         set: function(val) {
           // updating the data
+          // clear model data
+          console.log("New model set, replacing model by empty model");
+          this.model = {};
           console.log("getting model data for model id", val);
           this.updateData(parseInt(val));
+
+          // Stop any animation if we were animating.
+          this.stopImageFrame();
+
+          // Reset index:
+          this.currentAnimationIndex = 0;
         }
 
 
@@ -102,10 +112,13 @@ var exports = (function () {
         cache: false,
         get: function() {
           var animationKey = this.currentAnimationKey;
-          var imgs = this.model.processingtask.state_meta[animationKey];
 
-          if (imgs !== undefined) {
-            return this.model.fileurl + imgs.location + imgs.images[this.currentAnimationIndex];
+          if (animationKey.length > 0) {
+            var imgs = this.model.info[animationKey];
+
+            if (imgs !== undefined) {
+              return this.model.fileurl + imgs.location + imgs.images[this.currentAnimationIndex];
+            }
           }
 
           return "";
@@ -134,7 +147,7 @@ var exports = (function () {
         get: function() {
 
           var animationKey = this.currentAnimationKey;
-          var imgs = this.model.processingtask.state_meta[animationKey];
+          var imgs = this.model.info[animationKey];
 
           if (imgs !== undefined) {
             return imgs.images.length > 0;
@@ -296,9 +309,16 @@ var exports = (function () {
           return;
         }
 
+        // Does not exist?
+        if (this.model.info === undefined) {
+          return;
+        }
+
+
         this.currentAnimationIndex--;
 
-        var imgs = this.model.processingtask.state_meta[this.currentAnimationKey];
+        var imgs = this.model.info[this.currentAnimationKey];
+
 
         // Probably wrap with active key.
         if (this.currentAnimationIndex < 0) {
@@ -341,9 +361,14 @@ var exports = (function () {
           return;
         }
 
+        // Does not exist?
+        if (this.model.info === undefined) {
+          return;
+        }
+
         this.currentAnimationIndex++;
 
-        var imgs = this.model.processingtask.state_meta[this.currentAnimationKey];
+        var imgs = this.model.info[this.currentAnimationKey];
 
         if (imgs !== undefined) {
           // Probably wrap.

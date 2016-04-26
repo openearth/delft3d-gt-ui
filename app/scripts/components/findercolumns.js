@@ -16,10 +16,22 @@ var exports = (function () {
       "model-list": ModelList,
       "model-details": ModelDetails
     },
+
+    computed: {
+      // Get the current selected scenarioid from the routing URL
+      selectedScenarioId: {
+        get: function() {
+          return parseInt(this.$route.params.scenarioid);
+
+        }
+      }
+    },
+
     route: {
       data: function(transition) {
         console.log("new finder column data", this.$children);
         var modelDetails = this.$children[2];
+
         var newData = {
           modelid: parseInt(transition.to.params.modelid)
         };

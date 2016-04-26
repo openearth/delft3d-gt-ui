@@ -24,14 +24,14 @@ const reload = browserSync.reload;
 var args = require("yargs").argv;
 // Server used for serving remote url"s
 // "http://136.231.10.175:8888";
-var apiServer = "http://10.0.1.2";
+var apiServer = "";
 
 // Process optional arguments
 processOptionalArguments();
 
 // Proxy paths which we map to a different source, for testing locally or
 // running the actual build.
-var paths = ["runs", "createrun", "deleterun", "dorun", "scene", "files", "scenario"];
+var paths = ["runs", "createrun", "deleterun", "dorun", "scene", "files", "scenario", "scenario/template"];
 
 var proxies = _.map(paths, (path) => {
   var proxyItem = null;
@@ -194,14 +194,7 @@ gulp.task("images", () => {
 gulp.task("fonts", () => {
   return gulp.src(
     // load from bower files
-    require("main-bower-files")(
-      "**/*.{eot,svg,ttf,woff,woff2}",
-      (err) => {
-
-        // just log and continue
-        console.error(err);
-      }
-    )
+    require("main-bower-files")("**/*.{eot,svg,ttf,woff,woff2}")
       .concat("app/fonts/**/*"))
     .pipe(gulp.dest(".tmp/fonts"))
     .pipe(gulp.dest("dist/fonts"));

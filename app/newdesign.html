@@ -27,7 +27,7 @@
 
 
   </head>
-  <body>
+  <body style=" overflow: hidden">
     <!--[if lt IE 10]>
       <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -38,23 +38,104 @@
         <div class="navbar-header">
 
           <a href="/" class="site-title"><img src="images/logo/delft3d-gt.svg" width="80" height="80" alt="Delft3D-GT Dashboard" />Delft3D-GT Dashboard</a></h2>
-
-        </div>
-
-        <div class="navbar-header pull-right">
-          <a class="btn btn-primary btn-logout" href="/logout/">Logout</a>
+          <!--<a class="btn btn-primary btn-logout pull-right" href="/logout/">Logout</a>-->
         </div>
       </div>
     </nav>
 
+    <!-- the grey toolbar for main screen-->
+    <nav class="navbar navbar-default navbar-static-top tool-bar ">
+      <div class="container-fluid">
+        <div class="row" >
+          <div class="col-xs-2">
+            <button class="btn btn-primary pull-left" v-on:click="gotoPage('scenario-builder')">Add scenario</button>
+            <button class="btn btn-primary pull-right">Delete</button>
+          </div>
 
+          <div class="col-xs-3">
+            <div class="btn-toolbar">
+              <button class="btn btn-primary pull-right">Add runs</button>
+              <button class="btn btn-primary pull-right">Delete</button>
+            </div>
+          </div>
+
+          <div class="col-xs-7">
+            &nbsp;
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- main components container -->
     <div id="app" class="full-height">
+      <div class="container-fluid full-height">
+        <div class="row full-height">
+          <div class="col-xs-2 column-scenario-list full-height">
 
-      <!-- This will be filled by app.js (vue-router) -->
-      <router-view keep-alive></router-view>
-      <!-- and no footer. -->
+            <h3>
+              Scenarios
+            </h3>
 
+
+
+            <div class="row" id="scenario-list">
+
+              <div class="column-header"></div>
+
+              <ul class="list-group checked-list-box" >
+                <li class="list-group-item"  v-on:click="showScenario(0)">Scenario 1</li>
+                <li class="list-group-item"  v-on:click="showScenario(0)">Scenario 2</li>
+                <li class="list-group-item"  v-on:click="showScenario(0)">Scenario 3</li>
+                <li class="list-group-item"  v-on:click="showScenario(0)">Scenario 4</li>
+                <li class="list-group-item"  v-on:click="showScenario(0)">Scenario 5</li>
+                <li class="list-group-item"  v-on:click="showScenario(0)">Scenario 6</li>
+                <li class="list-group-item"  v-on:click="showScenario(0)">Scenario 7</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-xs-3 column column-runs-list full-height">
+
+              <h3>
+                Runs
+              </h3>
+
+
+
+              <div class="row full-height">
+
+                <div class="column-header"></div>
+
+
+
+                <ul class="list-group checked-list-box" id="scenario-list">
+                  <li class="list-group-item"  v-on:click="detailModel(0)">Model 1</li>
+                  <li class="list-group-item"  v-on:click="detailModel(0)">Model 2</li>
+                  <li class="list-group-item"  v-on:click="detailModel(0)">Model 3</li>
+                  <li class="list-group-item"  v-on:click="detailModel(0)">Model 4</li>
+
+                </ul>
+
+  <p>"Runs van een geselecteerde scenario hier"</p>
+
+            </div>
+
+          </div>
+
+          <div class="col-xs-7 column column-details full-height">
+
+              <h3>
+                Run information
+              </h3>
+
+              <div class="column-header"></div>
+
+             <component :is="currentView" > </component>
+          </div>
+        </div>
+      </div>
     </div>
+
 
 
     <div id="template-container"></div>
@@ -88,41 +169,24 @@
     <!-- endbuild -->
 
     <!-- build:js scripts/main.js -->
-    <!-- First the functions that we use to exchange data and validate it  -->
-    <!-- these should have corresponding tests -->
-    <!-- no vue code in here.... -->
-    <!-- validate data -->
-    <script src="scripts/inputvalidation.js"></script>
-    <!-- data scripts: these should fetch data and allow to retrieve it from the components (see store docs in vue)-->
-    <script src="scripts/models.js"></script>
-    <script src="scripts/templates.js"></script>
-    <script src="scripts/scenarios.js"></script>
-
-    <!-- load components, these provide webcomponents (with corresponding templates in app/templates)-->
-    <!-- mainly tested using integration tests -->
-    <!-- these should be replaceable if someone wants to switch to a different webcomponent platform -->
-    <script src="scripts/components/modelcreate.js"></script>
-    <script src="scripts/components/modeldetails.js"></script>
-    <script src="scripts/components/modellist.js"></script>
-    <script src="scripts/components/scenariolist.js"></script>
-    <script src="scripts/components/home.js"></script>
-    <script src="scripts/components/findercolumns.js"></script>
-    <script src="scripts/components/scenariobuilder.js"></script>
-    <script src="scripts/components/scenariodelete.js"></script>
-
-
-    <!-- and the application (router and loading of components goes in here)-->
-    <!-- this should contain only loading of the app code. -->
-    <!-- this can be very vue specific vuex, vue-router etc... -->
     <script src="scripts/app.js"></script>
+    <script src="scripts/components/home.js"></script>
+    <script src="scripts/components/modellist.js"></script>
+    <script src="scripts/components/modeldetails.js"></script>
+    <script src="scripts/components/scenariobuilder.js"></script>
 
-    <!-- These can be merged to models.js and components -->
     <script src="scripts/ui.js"></script>
+    <script src="scripts/models.js"></script>
+    <script src="scripts/inputvalidation.js"></script>
+
     <script src="scripts/data/message-scene-list.js"></script>
     <script src="scripts/data/message-scene-delete.js"></script>
     <script src="scripts/data/message-scene-create.js"></script>
     <script src="scripts/data/message-scene-changestate.js"></script>
+
     <script src="scripts/main.js"></script>
+
+
     <!-- endbuild -->
   </body>
 </html>
