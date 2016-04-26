@@ -37,6 +37,11 @@ var exports = (function () {
           return this.$route.params.scenarioid;
 
         }
+      },
+      defaultRun: {
+        get: function() {
+          return -1;
+        }
       }
     },
 

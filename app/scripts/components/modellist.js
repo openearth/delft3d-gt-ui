@@ -59,7 +59,24 @@ var exports = (function () {
       // Get the current selected modelid from the routing URL
       selectedModelId: {
         get: function() {
-          return this.$route.params.modelid;
+          var id = parseInt(this.$route.params.modelid);
+          if (id === -1) {
+            console.log("choose the first from selected models", this.selectedModels);
+            var selectedModel = _.first(this.selectedModels);
+            if (selectedModel) {
+              id = selectedModel.id;
+              // go to the new model
+              this.selectModel(id);
+            }
+          }
+          return id;
+
+        }
+      },
+      selectedScenarioId: {
+        get: function() {
+          var id = parseInt(this.$route.params.scenarioid);
+          return id;
 
         }
       },
@@ -69,7 +86,7 @@ var exports = (function () {
 
           if (this.filter === "scenarios") {
             // is this the best approach, couldn't get a filterkey to work (no access to routing info)
-            var scenario = parseInt(this.$route.params.scenarioid);
+            var scenario = this.selectedScenarioId;
 
             result = _.filter(this.models, ["scenario", scenario]);
 
@@ -82,7 +99,7 @@ var exports = (function () {
       selectModel: function(id) {
         var params = {
           modelid: id,
-          scenarioid: this.$route.params.scenarioid
+          scenarioid: this.selectedScenarioId
         };
 
         if(params.modelid === -1) {

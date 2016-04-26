@@ -2,7 +2,7 @@
   <div>
       <ul class="list-group checked-list-box">
       <li v-for="scenario in scenarios"  class="list-group-item" v-bind:class="{ 'selected':  scenario.id == selectedScenarioId}">
-        <a href="#/scenarios/{{ scenario.id }}/models/-1">
+        <a href="#/scenarios/{{ scenario.id }}/models/{{ defaultRun }}">
           {{ scenario.name }}
         </a>
       </li>
