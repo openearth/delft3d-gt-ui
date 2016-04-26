@@ -54,6 +54,17 @@ var exports = (function () {
 
 
     },
+
+    computed: {
+      // Get the current selected modelid from the routing URL
+      selectedModelId: {
+        get: function() {
+          return this.$route.params.modelid;
+
+        }
+      }
+    },
+
     methods: {
       selectModel: function(id) {
         var params = {

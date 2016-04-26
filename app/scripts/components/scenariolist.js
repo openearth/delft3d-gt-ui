@@ -29,6 +29,18 @@ var exports = (function () {
           });
       }
     },
+
+    computed: {
+      // Get the current selected scenarioid from the routing URL
+      selectedScenarioId: {
+        get: function() {
+          return this.$route.params.scenarioid;
+
+        }
+      }
+    },
+
+
     methods: {
     }
   });
