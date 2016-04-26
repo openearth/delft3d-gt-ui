@@ -194,14 +194,7 @@ gulp.task("images", () => {
 gulp.task("fonts", () => {
   return gulp.src(
     // load from bower files
-    require("main-bower-files")(
-      "**/*.{eot,svg,ttf,woff,woff2}",
-      (err) => {
-
-        // just log and continue
-        console.error(err);
-      }
-    )
+    require("main-bower-files")("**/*.{eot,svg,ttf,woff,woff2}")
       .concat("app/fonts/**/*"))
     .pipe(gulp.dest(".tmp/fonts"))
     .pipe(gulp.dest("dist/fonts"));
