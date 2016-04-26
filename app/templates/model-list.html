@@ -1,13 +1,13 @@
 <template id="template-model-list" inline-template>
   <div>
 
-    <ul class="list-group checked-list-box" id="scenario-list" v-show="(models.length)">
-      <li class="list-group-item"  v-for="entry in selectedModels()" v-bind:class="{ 'selected': entry.id == selectedModelId}">
+    <ul class="list-group checked-list-box" id="scenario-list" v-show="selectedModels.length">
+      <li class="list-group-item"  v-for="entry in selectedModels" v-bind:class="{ 'selected': entry.id == selectedModelId}">
        <a href="#/scenarios/{{ entry.scenario }}/models/{{entry.id}}">{{entry.name}}
       </li>
     </ul>
 
-    <div class="alert alert-info" v-show="(selectedModels().length == 0)">
+    <div class="alert alert-info" v-show="!selectedModels.length">
       There are no models loaded.
     </div>
     <div class="alert alert-warning default-hidden" role="alert" id="alert-connectionfailed">

@@ -62,9 +62,22 @@ var exports = (function () {
           return this.$route.params.modelid;
 
         }
+      },
+      selectedModels: {
+        get: function() {
+          var result = this.models;
+
+          if (this.filter === "scenarios") {
+            // is this the best approach, couldn't get a filterkey to work (no access to routing info)
+            var scenario = parseInt(this.$route.params.scenarioid);
+
+            result = _.filter(this.models, ["scenario", scenario]);
+
+          }
+          return result;
+        }
       }
     },
-
     methods: {
       selectModel: function(id) {
         var params = {
@@ -81,20 +94,7 @@ var exports = (function () {
           name: "finder-columns",
           params: params
         });
-      },
-      selectedModels: function() {
-        var result = this.models;
-
-        if (this.filter === "scenarios") {
-          // is this the best approach, couldn't get a filterkey to work (no access to routing info)
-          var scenario = parseInt(this.$route.params.scenarioid);
-
-          result = _.filter(this.models, ["scenario", scenario]);
-
-        }
-        return result;
       }
-
     }
   });
 
