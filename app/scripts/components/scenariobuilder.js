@@ -1,4 +1,4 @@
-/* global Vue, InputValidation, fetchTemplates */
+/* global Vue, InputValidation, fetchTemplates, router */
 
 // Exported globals
 var ScenarioCreate;
@@ -91,7 +91,7 @@ var exports = (function() {
 
           }
 
-           this.validateForm();
+          this.validateForm();
         }
 
       }
@@ -103,13 +103,12 @@ var exports = (function() {
 
         //var validation = new InputValidation();
         var valid = true;
-console.log("id", this.selectedId);
-        // If we have no templateid, we bail out immediatly:
-        if (this.selectedId <= -1)
-        {
-          valid = false;
 
+        // If we have no templateid, we bail out immediatly:
+        if (this.selectedId <= -1) {
+          valid = false;
         }
+
         // Loop through all fields and determine if we have a completely valid form.
         // Set form valid state:
         $.each(this.scenarioConfig, function(varKey, varValue) {
@@ -140,10 +139,11 @@ console.log("id", this.selectedId);
           url: "/scenario/create",
           data: postdata,
           method: "POST"
-        }).done(function(data) {
+        }).done(function() {
 
-          //
+          // Go back to home.
           var params = { };
+
           router.go({
             name: "home",
             params: params

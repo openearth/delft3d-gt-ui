@@ -47,8 +47,7 @@
           <h2 class="panel-title">Channel network</h2>
         </div>
         <div class="panel-body">
-          <div class="text-center"  v-show="model.info.channel_network_images">
-
+          <div class="text-center" v-show="hasFrames == true" >
 
             <img v-bind:src="animationFrame" />
 
@@ -62,6 +61,9 @@
             </div>
           </div>
 
+          <div class="text-center"  v-show="hasFrames == false">
+            No images available yet.
+          </div>
 
         </div>
       </div>
@@ -71,10 +73,7 @@
           <h2 class="panel-title">Delta plain fringe</h2>
         </div>
         <div class="panel-body" >
-
-          <div>
-
-            <div class="text-center" v-if="model.info.delta_fringe_images">
+            <div class="text-center" v-if="model.info.delta_fringe_images" v-show="hasFrames == true">
               <img v-bind:src="animationFrame" />
 
               <div>
@@ -85,9 +84,11 @@
                   <button class="btn btn-primary" v-on:click="nextImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-forward"></span></button>
                 </div>
               </div>
-            </div>
           </div>
 
+          <div class="text-center"  v-show="hasFrames == false">
+            No images available yet.
+          </div>
 
         </div>
       </div>

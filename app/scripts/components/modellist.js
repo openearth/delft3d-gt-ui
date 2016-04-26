@@ -60,9 +60,11 @@ var exports = (function () {
       selectedModelId: {
         get: function() {
           var id = parseInt(this.$route.params.modelid);
+
           if (id === -1) {
             console.log("choose the first from selected models", this.selectedModels);
             var selectedModel = _.first(this.selectedModels);
+
             if (selectedModel) {
               id = selectedModel.id;
               // go to the new model
@@ -76,6 +78,7 @@ var exports = (function () {
       selectedScenarioId: {
         get: function() {
           var id = parseInt(this.$route.params.scenarioid);
+
           return id;
 
         }

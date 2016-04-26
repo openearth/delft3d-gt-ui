@@ -112,6 +112,7 @@ var exports = (function () {
         cache: false,
         get: function() {
           var animationKey = this.currentAnimationKey;
+
           if (animationKey.length > 0) {
             var imgs = this.model.info[animationKey];
 
@@ -308,10 +309,17 @@ var exports = (function () {
           return;
         }
 
+        // Does not exist?
+        if (this.model.info === undefined)
+        {
+          return;
+        }
+
+
         this.currentAnimationIndex--;
 
         var imgs = this.model.info[this.currentAnimationKey];
-console.log("images", imgs.length);
+
 
         // Probably wrap with active key.
         if (this.currentAnimationIndex < 0) {
@@ -351,6 +359,12 @@ console.log("images", imgs.length);
       nextImageFrame: function() {
         // Check if an animation key has been set. If not, we bail out.
         if (this.currentAnimationKey.length === 0) {
+          return;
+        }
+
+        // Does not exist?
+        if (this.model.info === undefined)
+        {
           return;
         }
 
