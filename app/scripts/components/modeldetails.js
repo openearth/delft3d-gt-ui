@@ -106,7 +106,7 @@ var exports = (function () {
         cache: false,
         get: function() {
           var animationKey = this.currentAnimationKey;
-          var imgs = this.model.processingtask.state_meta[animationKey];
+          var imgs = this.model.info[animationKey];
 
           if (imgs !== undefined) {
             return this.model.fileurl + imgs.location + imgs.images[this.currentAnimationIndex];
@@ -138,7 +138,7 @@ var exports = (function () {
         get: function() {
 
           var animationKey = this.currentAnimationKey;
-          var imgs = this.model.processingtask.state_meta[animationKey];
+          var imgs = this.model.info[animationKey];
 
           if (imgs !== undefined) {
             return imgs.images.length > 0;
@@ -302,7 +302,7 @@ var exports = (function () {
 
         this.currentAnimationIndex--;
 
-        var imgs = this.model.processingtask.state_meta[this.currentAnimationKey];
+        var imgs = this.model.info[this.currentAnimationKey];
 
         // Probably wrap with active key.
         if (this.currentAnimationIndex < 0) {
@@ -347,7 +347,7 @@ var exports = (function () {
 
         this.currentAnimationIndex++;
 
-        var imgs = this.model.processingtask.state_meta[this.currentAnimationKey];
+        var imgs = this.model.info[this.currentAnimationKey];
 
         if (imgs !== undefined) {
           // Probably wrap.
