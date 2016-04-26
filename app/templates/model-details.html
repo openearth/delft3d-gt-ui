@@ -47,7 +47,6 @@
           <h2 class="panel-title">Channel network</h2>
         </div>
         <div class="panel-body">
-        {{model.info | json}}
           <div class="text-center"  v-show="model.info.channel_network_images">
 
 
@@ -154,11 +153,8 @@
 
           <div id="model-log-output-wrap">
             <!-- fill this directly cause debugging views with 3MB text are a bit slow -->
-            <pre>
-              <code id="model-log-output">
-                Nog log available.
-              </code>
-            </pre>
+
+            <pre><code id="model-log-output">No log available.</code></pre>
 
           </div>
         </div>
