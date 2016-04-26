@@ -10,7 +10,7 @@ var exports = (function () {
 
     data: function() {
       return {
-        scenarios: ["a", "b", "c"]
+        scenarios: []
       };
     },
 
