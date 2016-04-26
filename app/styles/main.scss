@@ -166,6 +166,9 @@ html, body {
 
 }
 
+.panel {
+   @include rectangle-corners();
+}
 
 
 .heading-bar {
@@ -655,6 +658,5 @@ nav:hover .for-animate {
 section {
   padding-left: 15px;
 }
-
 
  /* End left nav */
