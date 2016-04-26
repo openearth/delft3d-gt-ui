@@ -310,8 +310,7 @@ var exports = (function () {
         }
 
         // Does not exist?
-        if (this.model.info === undefined)
-        {
+        if (this.model.info === undefined) {
           return;
         }
 
@@ -363,8 +362,7 @@ var exports = (function () {
         }
 
         // Does not exist?
-        if (this.model.info === undefined)
-        {
+        if (this.model.info === undefined) {
           return;
         }
 
