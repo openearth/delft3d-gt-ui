@@ -77,6 +77,8 @@
 
   // why is this necessary....
   _.assign(global, require("../../app/scripts/models.js"));
+  _.assign(global, require("../../app/scripts/templates.js"));
+  _.assign(global, require("../../app/scripts/scenarios.js"));
 
   require("../../app/scripts/app.js");
 
@@ -104,7 +106,36 @@
     //fetch = window.fetch;
   }
 
-  describe("Testing message handlers", function() {
+  describe("Testing data exchange with api", function() {
+    describe("If we can query the scenario list", function() {
+
+
+      it("Should be possible to start a model", function(done) {
+        nock("http://0.0.0.0")
+          .defaultReplyHeaders({
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          })
+          .log(console.log)
+          .get("/scenario/list")
+          .reply(200, {
+          });
+        global.fetchScenarios()
+          .then(function(data) {
+            assert.isOk(data, "we have some data");
+            done();
+          })
+          .catch(function(e) {
+            // rethrow error to capture it and avoid time out
+            try {
+              throw new Error("exception from fetching scenarios" + JSON.stringify(e));
+            } catch (exc) {
+              done(exc);
+            }
+          });
+
+      });
+    });
     describe("MessageSceneCreate", function() {
 
 

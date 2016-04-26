@@ -1,8 +1,9 @@
-/* global ModelDetails, ScenarioCreate, ModelList, HomeView */
+/* global ModelDetails, ScenarioCreate, ModelList, HomeView, FinderColumns */
+
+var router;
 
 var exports = (function() {
   "use strict";
-
 
   // wait for page to load
   $(document).ready(function() {
@@ -24,10 +25,14 @@ var exports = (function() {
         // (selected model is done using routing)
         var App = Vue.extend({});
 
-        var router = new VueRouter();
+        router = new VueRouter();
 
         router.map({
-          "/models/:id": {
+          "/scenarios/:scenarioid/models/:modelid": {
+            name: "finder-columns",
+            component: FinderColumns
+          },
+          "/models/:modelid": {
             component: ModelDetails
           },
           "/scenarios/create": {
@@ -39,6 +44,7 @@ var exports = (function() {
           "/": {
             component: HomeView
           }
+
         });
         router.start(App, "#app");
 
@@ -47,15 +53,18 @@ var exports = (function() {
 
   });
 
-  // No global names
+  // Export the router
   return {
+    router: router
   };
 })();
 
 // If we're in node export to models
 if (typeof module !== "undefined" && module.exports) {
+  console.log("module available", module);
   module.exports = exports;
 } else {
+  console.log("exporting", exports);
   // make global
   _.assign(window, exports);
 }

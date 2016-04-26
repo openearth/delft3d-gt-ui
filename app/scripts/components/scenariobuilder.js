@@ -1,4 +1,4 @@
-/* global Vue, InputValidation */
+/* global Vue, InputValidation, fetchTemplates */
 
 // Exported globals
 var ScenarioCreate;
@@ -12,7 +12,7 @@ var exports = (function() {
 
     data: function() {
       return {
-        availableTemplates: null,
+        availableTemplates: [],
 
         // The scenario as configured by the user at the moment.
         scenarioConfig: null,
@@ -23,8 +23,8 @@ var exports = (function() {
         // Is the form completely valid? (Used to automatically set class on submit button)
         formIsValid: true,
 
-        selectedTemplate: null,
-        selectedId: -1
+        selectedTemplate: null
+
       };
     },
 
@@ -33,43 +33,11 @@ var exports = (function() {
 
     },
 
-
-    route: {
-      data: function() {
-        // Turn this into a promise.
-        var that = this;
-
-        $.ajax({
-          url: "sampledata/template.json",
-          //url: "scenario/template/list",
-          method: "GET"
-        })
-        .done(function(data) {
-
-          // If you want to see what is coming from the template request, uncomment this:
-//           console.log(JSON.stringify(data));
-
-           // Quick solution to get this working with out own local test data. For the remote template this is not needed!
-          //data.template_list = data;
-          if (data.template_list !== undefined) {
-
-            // Store available templates:
-            that.availableTemplates = data.template_list;
-            that.selectedTemplate = null;
-
-           //   console.log("len",  $(".combobox").length);
-
-            // We do this after the DOM update.
-               // Vue.nextTick(function () {
-               // $(".combobox").combobox();
-               // });
-
-          }
-
-
+    created: function() {
+      fetchTemplates()
+        .then((templates) => {
+          this.availableTemplates = templates.template_list;
         });
-
-      }
     },
 
 
@@ -79,7 +47,6 @@ var exports = (function() {
 
     attached: function() {
       // Placeholder for events
-
     },
 
 
@@ -88,13 +55,15 @@ var exports = (function() {
       // Perform validate at start:
       this.validateForm();
 
-
     },
 
     computed: {
 
       selectedId: {
+        get: function() {
+          return this.availableTemplates.indexOf(this.selectedTemplate);
 
+        },
         // setter
         set: function(newValue) {
 
@@ -104,14 +73,6 @@ var exports = (function() {
             // First set data, then the template. Order is important!
             this.scenarioConfig = this.prepareScenarioConfig(this.availableTemplates[newValue]);
             this.selectedTemplate = this.availableTemplates[newValue];
-
-            // Initialize the tooltips:
-            // We do this after the DOM update.
-            Vue.nextTick(function () {
-              $("[data-toggle='tooltip']").tooltip();
-
-            });
-
 
           } else {
 

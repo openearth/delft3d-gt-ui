@@ -15,10 +15,12 @@ var exports = (function () {
       itemsCache = {};
       $.ajax("/scene/list")
         .done(function(json) {
-          console.log("json", json);
+          console.log("before", _.assign({}, json.scene_list[0]));
+          // copy object
           _.each(json.scene_list, function(model) {
             itemsCache[model.id] = model;
           });
+          console.log("after", itemsCache["25"]);
           resolve(json.scene_list);
         })
         .fail(function(error) {

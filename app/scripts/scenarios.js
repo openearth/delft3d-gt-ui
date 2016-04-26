@@ -2,17 +2,17 @@ var exports = (function() {
   "use strict";
 
   /**
-   * Fetch all models.
+   * Fetch all scenarios.
    *
    * @return {Promise}
    */
-  function fetchTemplates() {
+  function fetchScenarios() {
     return new Promise(function(resolve, reject) {
 
       //Load test template data:
       $.ajax({
         //url: "sampledata/template.json",
-        url: "scenario/template/list",
+        url: "/scenario/list",
         method: "GET"
       })
         .done(function(data) {
@@ -25,7 +25,7 @@ var exports = (function() {
     });
   }
   return {
-    fetchTemplates: fetchTemplates
+    fetchScenarios: fetchScenarios
   };
 
 }());
