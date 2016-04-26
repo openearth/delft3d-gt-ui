@@ -17,7 +17,7 @@ var exports = (function () {
         timerAnimation: -1,
 
         // Which imagelist are we currently watching?
-        currentAnimationKey: "",
+        currentAnimationKey: "delta_fringe_images",
 
         isAnimating: false,
 
@@ -106,10 +106,13 @@ var exports = (function () {
         cache: false,
         get: function() {
           var animationKey = this.currentAnimationKey;
-          var imgs = this.model.info[animationKey];
-console.log(imgs);
-          if (imgs !== undefined) {
-            return this.model.fileurl + imgs.location + imgs.images[this.currentAnimationIndex];
+          if (animationKey.length > 0) {
+            var imgs = this.model.info[animationKey];
+  console.log(imgs);
+  console.log(this.currentAnimationIndex);
+            if (imgs !== undefined) {
+              return this.model.fileurl + imgs.location + imgs.images[this.currentAnimationIndex];
+            }
           }
 
           return "";
