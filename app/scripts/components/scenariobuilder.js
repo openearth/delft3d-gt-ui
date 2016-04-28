@@ -133,9 +133,27 @@ var exports = (function() {
 
         var that = this;
 
+        // Prepare variables types (make sure numbers are really of a numeric type)
+        var config = {};
+        $.each(this.scenarioConfig, function(varKey, varValue) {
+
+          // If this seems to be numeric, make it an int.
+          if ($.isNumeric(varValue.value) == true)
+          {
+            varValue.value = parseFloat(varValue.value);
+          }
+
+          varValue.maxstep = parseFloat(varValue.maxstep);
+          varValue.minstep = parseFloat(varValue.minstep);
+          varValue.stepinterval = parseFloat(varValue.stepinterval);
+
+          config[varKey] = varValue;
+
+        });
+
         var postdata = {
           templateid: this.selectedTemplate.templateid, // Temp!
-          scenariosettings: JSON.stringify(this.scenarioConfig)
+          scenariosettings: JSON.stringify(config)
         };
 
         $.ajax({
