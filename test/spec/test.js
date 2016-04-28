@@ -69,11 +69,14 @@
   includeFile(path.join(__dirname, "/../../app/scripts/data/message-scene-list.js"));
 
   // load the application
+  var ImageAnimation = require("../../app/scripts/components/imageanimation.js").ImageAnimation;
   var ModelDetails = require("../../app/scripts/components/modeldetails.js").ModelDetails;
   var ModelCreate = require("../../app/scripts/components/modelcreate.js").ModelCreate;
   var ModelList = require("../../app/scripts/components/modellist.js").ModelList;
   var ScenarioCreate = require("../../app/scripts/components/scenariobuilder.js").ScenarioCreate;
   var HomeView = require("../../app/scripts/components/home.js").HomeView;
+
+
 
   // why is this necessary....
   _.assign(global, require("../../app/scripts/models.js"));
@@ -466,30 +469,33 @@
       done();
 
     });
+
+
+  });
+
+
+  describe("ImageAnimation", function() {
+    var imageAnimation = new ImageAnimation();
+
+
     it("Should be possible to stop image frames", function(done) {
 
-      modelDetails.stopImageFrame();
+      imageAnimation.stopImageFrame();
       done();
 
     });
     it("Should be possible to play image frames the imageFrame", function(done) {
 
-      modelDetails.playImageFrame();
+      imageAnimation.playImageFrame();
       done();
 
     });
     it("Should be possible to change the imageFrame", function(done) {
-      modelDetails.nextImageFrame();
+      imageAnimation.nextImageFrame();
       done();
 
     });
 
-    it("Should be possible to change download options", function(done) {
-
-      modelDetails.downloadOptionsChange();
-      done();
-
-    });
 
   });
 
