@@ -15,21 +15,15 @@ var exports = (function () {
     },
 
     ready: function() {
-      fetchScenarios()
-        .then((data) => {
-          this.scenarios = data.scenario_list;
-        });
+
+      this.updateScenarios();
+
+
 
       // and fetch on every 10 seconds
       setInterval(
-        // create a callback for every second
-        () => {
-          // fetch the scenarios
-          fetchScenarios()
-            .then((data) => {
-              this.scenarios = data.scenario_list;
-            });
-        },
+        // Call the update function:
+        this.updateScenarios,
         // every 10 seconds
         10000
       );
@@ -61,7 +55,16 @@ var exports = (function () {
 
 
     methods: {
+      // Update scenario list, this function is also called by a timer.
+      updateScenarios: function() {
+        fetchScenarios()
+          .then((data) => {
+            this.scenarios = data.scenario_list;
+          });
 
+
+
+      }
     }
   });
 

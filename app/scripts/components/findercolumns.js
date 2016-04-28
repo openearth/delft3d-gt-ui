@@ -30,7 +30,9 @@ var exports = (function () {
     route: {
       data: function(transition) {
         console.log("new finder column data", this.$children);
-        var modelDetails = this.$children[2];
+
+        // Lookup a child by name:
+        var modelDetails = this.getChildByName("model-details"); //this.$children[2]; //
 
         var newData = {
           modelid: parseInt(transition.to.params.modelid)
@@ -39,7 +41,25 @@ var exports = (function () {
         modelDetails.id = newData.modelid;
         transition.next(newData);
       }
+    },
+
+    methods: {
+      // Get a child by name, such that we do not have a fixed index.
+      getChildByName: function(name) {
+        var that = this;
+
+        for(var i = 0; i < that.$children.length; i++) {
+
+          // Check if name matches:
+          if (that.$children[i].$options.name === name) {
+            return that.$children[i];
+          }
+        }
+
+        return null;
+      }
     }
+
   });
 
   return {

@@ -131,6 +131,7 @@ var exports = (function() {
 
       submitScenario: function() {
 
+        var that = this;
 
         var postdata = {
           templateid: this.selectedTemplate.templateid, // Temp!
@@ -144,7 +145,13 @@ var exports = (function() {
         }).done(function() {
 
           // Go back to home.
-          var params = { };
+          var params = {
+
+          };
+
+          // This is not practical, but the only way in vue? (using $parent)
+
+          that.$parent.$broadcast("show-alert", { message: "Scenario submitted", showTime: 5000, type: "info"});
 
           router.go({
             name: "home",
