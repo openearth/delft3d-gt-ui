@@ -42,6 +42,30 @@
         </div>
       </div>
 
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h2 class="panel-title">Run input parameters</h2>
+        </div>
+        <div class="panel-body">
+          <table class="table-default">
+            <tr>
+              <td>Variable</td>
+              <td>Value</td>
+            </tr>
+            <tr>
+              <td>Variable</td>
+              <td>Value</td>
+            </tr>
+            <tr>
+              <td>Variable</td>
+              <td>Value</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+
       <div class="panel panel-default">
         <div class="panel-heading">
           <h2 class="panel-title">Channel network</h2>
@@ -109,13 +133,13 @@
 
           <button type="button" class="btn btn-labeled btn-warning" v-bind:class="{ 'inputdisabled': !isModelRunning}" id="simulation-control-stop" v-on:click="stopModel">
             <span class="btn-label"><i class="glyphicon glyphicon-stop"></i></span>
-            Start
+            Stop
           </button>
 
 
           <button type="button" class="btn btn-labeled btn-danger" v-on:click="removeModel(model)">
             <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
-            Abort
+            Remove
           </button>
           <input type="checkbox" value="1" id="simulation-control-check-delete-files" /> Also delete all simulation files
         </div>
