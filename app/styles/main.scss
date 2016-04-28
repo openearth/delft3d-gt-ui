@@ -79,8 +79,9 @@ $selected-item-color: #dae4d1;
 
 // Fill max height.
 @mixin fill {
-    min-height: 100%;
-    height: 100%;
+    //min-height: 100%;
+    //height: 100%;
+    height: 87vh;
 }
 
 
@@ -116,12 +117,14 @@ $selected-item-color: #dae4d1;
 
 // Force a scrollbar so we do not have center changes when it shows up because of content changes.
 html {
-  overflow-y: scroll;
+
 }
 
 // In order to make full height columns, we need document to be 100% already
 html, body {
-  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  height:100%;
 }
 
 
@@ -241,7 +244,8 @@ html, body {
 .column {
   @include fill();
   // Scroll columns (assumes some vertical height set)
-  overflow-x: scroll;
+//  overflow-x: scroll;
+  overflow-y: auto;
 }
 
 
