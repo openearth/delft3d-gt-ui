@@ -135,11 +135,11 @@ var exports = (function() {
 
         // Prepare variables types (make sure numbers are really of a numeric type)
         var config = {};
+
         $.each(this.scenarioConfig, function(varKey, varValue) {
 
           // If this seems to be numeric, make it an int.
-          if ($.isNumeric(varValue.value) == true)
-          {
+          if ($.isNumeric(varValue.value) === true) {
             varValue.value = parseFloat(varValue.value);
           }
 
