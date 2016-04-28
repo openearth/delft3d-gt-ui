@@ -15,7 +15,6 @@
           <h2 class="panel-title">Summary </h2>
         </div>
 
-
         <div class="panel-body" v-if="model">
           <table class="table-default">
             <tbody>
@@ -39,87 +38,6 @@
               </tr>
             </tbody>
           </table>
-        </div>
-      </div>
-
-
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h2 class="panel-title">Run input parameters</h2>
-        </div>
-        <div class="panel-body">
-          <table class="table-default">
-            <thead>
-              <tr>
-                <th>Parameter</th>
-                <th>Value</th>
-                <th>Using vary</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(key, param) in model.parameters">
-                <td>{{key}}</td>
-                <td>{{param.value}}</td>
-                <td>
-                  <span v-if="param.useautostep === true">Yes</span>
-                  <span v-else>No</span>
-                </td>
-              </tr>
-            </tbody>
-
-          </table>
-        </div>
-      </div>
-
-
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h2 class="panel-title">Channel network</h2>
-        </div>
-        <div class="panel-body">
-          <div class="text-center" v-show="hasFrames == true" >
-
-            <img v-bind:src="animationFrame" />
-
-            <div>
-              <div class="btn-group">
-                <button class="btn btn-primary" v-on:click="previousImageFrame('channel_network_images')"><span class="glyphicon glyphicon-backward"></span></button>
-                <button class="btn btn-primary" v-show="isAnimating" v-on:click="stopImageFrame('channel_network_images')"><span class="glyphicon glyphicon-stop"></span></button>
-                <button class="btn btn-primary" v-show="isAnimating == false" v-on:click="playImageFrame('channel_network_images')"><span class="glyphicon glyphicon-play"></span></button>
-                <button class="btn btn-primary" v-on:click="nextImageFrame('channel_network_images')"><span class="glyphicon glyphicon-forward"></span></button>
-              </div>
-            </div>
-          </div>
-
-          <div class="text-center"  v-show="hasFrames == false">
-            No images available yet.
-          </div>
-
-        </div>
-      </div>
-
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h2 class="panel-title">Delta plain fringe</h2>
-        </div>
-        <div class="panel-body" >
-            <div class="text-center" v-if="model.info.delta_fringe_images" v-show="hasFrames == true">
-              <img v-bind:src="animationFrame" />
-
-              <div>
-                <div class="btn-group">
-                  <button class="btn btn-primary" v-on:click="previousImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-backward"></span></button>
-                  <button class="btn btn-primary" v-show="isAnimating" v-on:click="stopImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-stop"></span></button>
-                  <button class="btn btn-primary" v-show="isAnimating == false" v-on:click="playImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-play"></span></button>
-                  <button class="btn btn-primary" v-on:click="nextImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-forward"></span></button>
-                </div>
-              </div>
-          </div>
-
-          <div class="text-center"  v-show="hasFrames == false">
-            No images available yet.
-          </div>
-
         </div>
       </div>
 
@@ -151,9 +69,48 @@
           Do not give option anymore to remove files. WE will always do this.
           <input type="checkbox" value="1" id="simulation-control-check-delete-files" /> Also delete all simulation files
           -->
-
         </div>
       </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h2 class="panel-title">Run input parameters</h2>
+        </div>
+        <div class="panel-body">
+          <table class="table-default">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+                <th>Using vary</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(key, param) in model.parameters">
+                <td>{{key}}</td>
+                <td>{{param.value}}</td>
+                <td>
+                  <span v-if="param.useautostep === true">Yes</span>
+                  <span v-else>No</span>
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h2 class="panel-title">Generated images</h2>
+        </div>
+        <div class="panel-body">
+          <image-animation :model="model"></image-animation>
+        </div>
+      </div>
+
+
+
 
 
       <div class="panel panel-default">

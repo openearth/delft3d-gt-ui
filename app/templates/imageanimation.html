@@ -1,0 +1,37 @@
+<template id="template-image-animation">
+  <div>
+    <div v-show="hasFrames === true">
+
+      <div class="row">
+
+        <div class="col-lg-12">
+          <button class="btn btn-primary" v-on:click="switchAnimation('channel_network_images')">Channel network</button>
+          <button class="btn btn-primary" v-on:click="switchAnimation('sediment_fraction_images')">Sediment fraction</button>
+          <button class="btn btn-primary" v-on:click="switchAnimation('delta_fringe_images')">Delta fringe</button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-12">
+            <img v-bind:src="animationFrame" class="animation-frame" />
+        </div>
+      </div>
+
+       <div class="row">
+        <div class="col-lg-12 text-center">
+          <div class="btn-group">
+            <button class="btn btn-primary" v-on:click="previousImageFrame('channel_network_images')"><span class="glyphicon glyphicon-backward"></span></button>
+            <button class="btn btn-primary" v-show="isAnimating" v-on:click="stopImageFrame('channel_network_images')"><span class="glyphicon glyphicon-stop"></span></button>
+            <button class="btn btn-primary" v-show="isAnimating == false" v-on:click="playImageFrame('channel_network_images')"><span class="glyphicon glyphicon-play"></span></button>
+            <button class="btn btn-primary" v-on:click="nextImageFrame('channel_network_images')"><span class="glyphicon glyphicon-forward"></span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center"  v-show="hasFrames == false">
+      No images available yet.
+   </div>
+  </div>
+
+</template>
