@@ -107,6 +107,12 @@
             Start
           </button>
 
+          <button type="button" class="btn btn-labeled btn-warning" v-bind:class="{ 'inputdisabled': !isModelRunning}" id="simulation-control-stop" v-on:click="stopModel">
+            <span class="btn-label"><i class="glyphicon glyphicon-stop"></i></span>
+            Start
+          </button>
+
+
           <button type="button" class="btn btn-labeled btn-danger" v-on:click="removeModel(model)">
             <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
             Abort

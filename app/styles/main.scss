@@ -509,6 +509,10 @@ html, body {
 
 }
 
+.message-alert {
+  margin: 0;
+  @include rectangle-corners();
+}
 
 /* Left nav */
 
@@ -531,6 +535,10 @@ nav.sidebar,
 
 .no-margin {
   margin: 0;
+}
+
+.no-minheight {
+  min-height: initial;
 }
 
 .centered {

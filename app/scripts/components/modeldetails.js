@@ -227,7 +227,8 @@ var exports = (function () {
         // User accepts deletion:
         $("#dialog-remove-response-accept").on("click", () => {
           var deletedId = this.model.id;
-          console.log("removing", this.model, "with options", options);
+
+
           deleteModel(deletedId, options)
             .then(function(data) {
               console.log("model deleted from server", deletedId, "data:", data);
