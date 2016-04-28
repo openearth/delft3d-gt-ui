@@ -108,6 +108,26 @@ var exports = (function () {
         });
 
     });
+  }
+
+  // Stop a model.
+  function stopModel(id) {
+    return new Promise(function(resolve, reject) {
+      $.ajax({
+        url: "/scene/stop",
+        data: {id: id},
+        method: "POST"
+      })
+        .done(function() {
+          // no data to return, just call the callback
+          resolve();
+        })
+        .fail(function(error) {
+          // we're done
+          reject(error);
+        });
+
+    });
 
   }
 
@@ -145,7 +165,14 @@ var exports = (function () {
       }
 
       // Working dir is at: modeldata.fileurl + delf3d + delft3d.log
-      var url = model.fileurl + model.info.logfile;
+      var url = model.fileurl + model.info.logfile.location + model.info.logfile.file;
+
+      // Without a filename, we just give back a custom string.
+      if (model.info.logfile.file.length === 0) {
+
+        resolve("No log output available yet");
+        return;
+      }
 
       $.ajax(url)
         .done(function(text) {
@@ -167,7 +194,8 @@ var exports = (function () {
     fetchLog: fetchLog,
     createModel: createModel,
     deleteModel: deleteModel,
-    startModel: startModel
+    startModel: startModel,
+    stopModel: stopModel
   };
 }());
 

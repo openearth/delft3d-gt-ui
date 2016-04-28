@@ -1,4 +1,4 @@
-/* global fetchModel, fetchLog, deleteModel, startModel, router */
+/* global fetchModel, fetchLog, deleteModel, startModel, stopModel, router */
 var exports = (function () {
   "use strict";
 
@@ -212,12 +212,12 @@ var exports = (function () {
 
         // keep track of the scenario before deletion
         var scenarioId = this.scenario;
-
+        var that = this;
 
         $("#dialog-remove-name").html(this.model.name);
         // Do we also remove all the additional files? This is based on the checkmark.
         // if deletefiles is true, we will tell the server that we want to remove these files.
-        var deletefiles = $("#simulation-control-check-delete-files").is(":checked");
+        var deletefiles = true; // We do not provide this option anymore. LEaving it here shortly if someone changes his or her mind: $("#simulation-control-check-delete-files").is(":checked");
 
 
         var options = {
@@ -232,6 +232,9 @@ var exports = (function () {
           deleteModel(deletedId, options)
             .then(function(data) {
               console.log("model deleted from server", deletedId, "data:", data);
+
+              that.$parent.$broadcast("show-alert", { message: "Deleting run... It might take a moment before the view is updated.", showTime: 5000, type: "success"});
+
             })
             .catch(e => {
               console.log("model deletion failed", e);
@@ -239,13 +242,13 @@ var exports = (function () {
 
           // Hide dialog when user presses this accept.:
           $("#dialog-confirm-delete").modal("hide");
+
           // key values correspond to url parameters which are lowercase
           var params = {
             modelid: -1,
             scenarioid: scenarioId
           };
 
-          console.log("using router", router, "to go to", params, "from", this);
           // TODO: keep routing logic in main window
           router.go({
             name: "finder-columns",
@@ -309,14 +312,35 @@ var exports = (function () {
 
       // User wants to start a model. We just do not do anything now, as this needs to be implemented.
       startModel: function() {
+        var that = this;
+
         // We use the runmodel for this.
         startModel(this.model.id)
           .then(msg => {
+            that.$parent.$broadcast("show-alert", { message: "Restarting run... It might take a moment before the view is updated.", showTime: 5000, type: "success"});
             console.log(msg);
           })
           .catch(e => {
             console.log(e);
           });
+      },
+
+      // Stop a model.
+      stopModel: function() {
+
+        var deletedId = this.model.id;
+        var that = this;
+
+        stopModel(deletedId)
+          .then(msg => {
+            console.log(msg);
+            that.$parent.$broadcast("show-alert", { message: "Stopping run... It might take a moment before the view is updated.", showTime: 5000, type: "success"});
+
+          })
+          .catch(e => {
+            console.log(e);
+          });
+
       },
 
       // For animations:

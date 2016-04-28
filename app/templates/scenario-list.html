@@ -1,5 +1,9 @@
 <template id="template-scenario-list" inline-template>
   <div>
+    <div class="alert alert-info" v-show="!scenarios.length">
+      There are no scenarios yet.
+    </div>
+
       <ul class="list-group checked-list-box">
       <li v-for="scenario in scenarios"  class="list-group-item" v-bind:class="{ 'selected':  scenario.id == selectedScenarioId}">
         <a href="#/scenarios/{{ scenario.id }}/models/{{ defaultRun }}">
