@@ -79,9 +79,9 @@ var exports = (function () {
         data: postData,
         method: "POST"
       })
-        .done(function() {
+        .done(function(data) {
           // no data to return, just call the callback
-          resolve();
+          resolve(data);
         })
         .fail(function(error) {
           // we're done

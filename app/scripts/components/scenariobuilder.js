@@ -54,6 +54,7 @@ var exports = (function() {
 
       // Perform validate at start:
       this.validateForm();
+      this.validateAllFields();
 
     },
 
@@ -125,6 +126,7 @@ var exports = (function() {
 
         // Submit button will be disabled:
         this.formIsValid = valid;
+
       },
 
       submitScenario: function() {
