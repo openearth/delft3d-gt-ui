@@ -13,9 +13,11 @@ var exports = (function() {
       $.ajax({
         //url: "sampledata/template.json",
         url: "/scenario/list",
-        method: "GET"
+        method: "GET",
+        cache: false
       })
         .done(function(data) {
+          console.log("GOT DATA:" + data);
           resolve(data);
         })
         .fail(function(error) {
@@ -24,8 +26,33 @@ var exports = (function() {
 
     });
   }
+
+  function deleteScenario(id, options) {
+    return new Promise(function(resolve, reject) {
+      // add extra options to id
+      var postData = _.assign({id: id}, options);
+
+      $.ajax({
+        url: "/scenario/delete",
+        data: postData,
+        method: "POST"
+      })
+        .done(function(data) {
+          // no data to return, just call the callback
+          resolve(data);
+        })
+        .fail(function(error) {
+          // we're done
+          reject(error);
+        });
+
+    });
+  }
+
+
   return {
-    fetchScenarios: fetchScenarios
+    fetchScenarios: fetchScenarios,
+    deleteScenario: deleteScenario
   };
 
 }());

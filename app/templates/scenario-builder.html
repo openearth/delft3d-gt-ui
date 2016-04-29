@@ -41,7 +41,7 @@
                       <div class="col-lg-12">
                         <select class="combobox form-control" v-model="selectedId"  v-on:select="selectScenario()">
 
-                          <option value="-1" selected="selected">Select a template</option>
+
 
                           <option v-for="option in availableTemplates" v-bind:value="$index">
                             {{ option.templatename }}
@@ -101,7 +101,6 @@
                                                 <td class="no-padding">
                                                   <!-- this input is disabled when autostep is enabled -->
                                                   <span v-if="value.type == 'numeric'" class="input-group-addon no-background">Default:</span>
-
                                                 </td>
 
                                                 <template v-if="value.stepoptions.defaultstep !== 0">
@@ -131,6 +130,16 @@
                                                   </td>
 
                                                 </template>
+
+                                                <!-- also show unit when there is not a step value -->
+                                                <template v-if="value.stepoptions.defaultstep === 0 && value.units.length > 0">
+                                                  <td  class="no-padding" colspan="5" rowspan="1" style="vertical-align: top">
+                                                      <!-- only show units if type is numeric -->
+                                                    <span class="input-group-addon  no-background">Unit:</span>
+
+                                                  </td>
+                                                </template>
+
 
                                               </tr>
                                               <tr>
@@ -167,6 +176,11 @@
 
                                                 </template>
 
+
+                                                <!-- also show unit when there is not a step value -->
+                                                <template v-if="value.stepoptions.defaultstep === 0 && value.units.length > 0">
+                                                  <td colspan="5" class="no-padding  text-center">{{value.units}}</td>
+                                                </template>
 
 
                                               </tr>

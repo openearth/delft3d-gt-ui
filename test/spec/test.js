@@ -1,4 +1,4 @@
-/* global chai  MessageSceneCreate MessageSceneChangeState MessageSceneDelete MessageSceneList */
+/* global chai , MessageSceneCreate, MessageSceneChangeState, MessageSceneDelete, MessageSceneList */
 
 (function() {
   "use strict";
@@ -70,12 +70,14 @@
 
   // load the application
   var ImageAnimation = require("../../app/scripts/components/imageanimation.js").ImageAnimation;
+
+  global.ImageAnimation = ImageAnimation;
+
   var ModelDetails = require("../../app/scripts/components/modeldetails.js").ModelDetails;
   var ModelCreate = require("../../app/scripts/components/modelcreate.js").ModelCreate;
   var ModelList = require("../../app/scripts/components/modellist.js").ModelList;
   var ScenarioCreate = require("../../app/scripts/components/scenariobuilder.js").ScenarioCreate;
   var HomeView = require("../../app/scripts/components/home.js").HomeView;
-
 
 
   // why is this necessary....
@@ -112,23 +114,29 @@
   describe("Testing data exchange with api", function() {
     describe("If we can query the scenario list", function() {
 
-
-      it("Should be possible to start a model", function(done) {
+      // This test is now working using the filteringPath option.
+      // When testing get request, this seems to be the solution.
+      it("Should be possible list scenarios", function(done) {
         nock("http://0.0.0.0")
           .defaultReplyHeaders({
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*"
           })
           .log(console.log)
+          .filteringPath(function() {
+             return "/scenario/list";
+           })
           .get("/scenario/list")
           .reply(200, {
           });
+
         global.fetchScenarios()
           .then(function(data) {
             assert.isOk(data, "we have some data");
             done();
           })
           .catch(function(e) {
+            console.log(e);
             // rethrow error to capture it and avoid time out
             try {
               throw new Error("exception from fetching scenarios" + JSON.stringify(e));
@@ -139,9 +147,9 @@
 
       });
     });
+
+
     describe("MessageSceneCreate", function() {
-
-
       // Create a MessageSceneCreate without options, we should have an empty options object (null)
       it("Test scene creation - without name", function() {
 

@@ -1,4 +1,4 @@
-/* global Vue, ScenarioList, ModelList, ModelDetails */
+/* global Vue, ScenarioList, ModelList, ModelDetails, deleteScenario */
 
 var exports = (function () {
   "use strict";
@@ -57,7 +57,42 @@ var exports = (function () {
         }
 
         return null;
+      },
+
+      // Remove item, based on incoming modelinfo.
+      removeScenario: function() {
+
+        var that = this;
+
+        $("#dialog-remove-scenario-name").empty();
+
+          // User accepts deletion:
+        $("#dialog-remove-scenario-response-accept").on("click", () => {
+          var deletedId = this.selectedScenarioId;
+
+          var options = {};
+
+          deleteScenario(deletedId, options)
+            .then(function(data) {
+              console.log("scenario deleted from server", deletedId, "data:", data);
+
+              that.$parent.$broadcast("show-alert", { message: "Deleting scenario... It might take a moment before the view is updated.", showTime: 5000, type: "success"});
+
+            })
+            .catch(e => {
+              console.log("scenario deletion failed", e);
+            });
+
+          // Hide dialog when user presses this accept.:
+          $("#dialog-confirm-delete-scenario").modal("hide");
+
+
+        });
+
+        // Show the dialog:
+        $("#dialog-confirm-delete-scenario").modal({});
       }
+
     }
 
   });

@@ -21,7 +21,10 @@ var exports = (function () {
         // Which imagelist are we currently watching?
         currentAnimationKey: "delta_fringe_images",
 
-        isAnimating: false
+        isAnimating: false,
+
+        // Automatically filled by component
+        model: {}
       };
     },
 
@@ -38,14 +41,8 @@ var exports = (function () {
         cache: false,
         get: function() {
 
-          var animationKey = this.currentAnimationKey;
-          var imgs = this.model.info[animationKey];
-
-          if (imgs !== undefined) {
-            return imgs.images.length > 0;
-          }
-
-          return 0;
+          // More than 0, then we have frames...
+          return this.frameCount > 0;
 
         }
       },
@@ -74,7 +71,24 @@ var exports = (function () {
           return "";
 
         }
+      },
+
+      // Return amount of frames for current selected key.
+      frameCount: {
+        cache: false,
+        get: function() {
+
+          var animationKey = this.currentAnimationKey;
+          var imgs = this.model.info[animationKey];
+
+          if (imgs !== undefined) {
+            return imgs.images.length;
+          }
+
+          return 0;
+        }
       }
+
     },
 
     events: {
@@ -143,7 +157,7 @@ var exports = (function () {
 
         // Stop and start. (We do not want multiiple setintervals)
         this.stopImageFrame();
-        this.timerAnimation = setInterval(this.nextImageFrame, 1000);
+        this.timerAnimation = setInterval(this.nextImageFrame, 200);
 
       },
 
