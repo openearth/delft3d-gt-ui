@@ -336,7 +336,26 @@ body {
   }
 
   .variable-name {
-    width: 25%;
+    width: 20%;
+  }
+
+  .unit-label {
+    width: 10%;
+  }
+
+  .input-number
+  {
+    width: 20%;
+  }
+
+  // Disable spinner icon at numeric fields
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type=number] {
+    -moz-appearance: textfield;
   }
 
  &.error {
@@ -365,6 +384,8 @@ body {
 
 
 .scenario-builder-table {
+
+  width: 100%;
 
   tbody {
     td {
@@ -483,7 +504,7 @@ body {
 
 
   .list-group-item {
-    padding: 0px;
+    padding: 0;
 
     @include rectangle-corners();
 
