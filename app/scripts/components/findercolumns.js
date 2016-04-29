@@ -1,4 +1,4 @@
-/* global Vue, ScenarioList, ModelList, ModelDetails */
+/* global Vue, ScenarioList, ModelList, ModelDetails, deleteScenario */
 
 var exports = (function () {
   "use strict";
@@ -62,14 +62,9 @@ var exports = (function () {
       // Remove item, based on incoming modelinfo.
       removeScenario: function() {
 
-        // keep track of the scenario before deletion
-        var scenarioId = this.scenario;
         var that = this;
 
-        $("#dialog-remove-scenario-name").html("");
-        // Do we also remove all the additional files? This is based on the checkmark.
-        // if deletefiles is true, we will tell the server that we want to remove these files.
-        var deletefiles = true; // We do not provide this option anymore. LEaving it here shortly if someone changes his or her mind: $("#simulation-control-check-delete-files").is(":checked");
+        $("#dialog-remove-scenario-name").empty();
 
           // User accepts deletion:
         $("#dialog-remove-scenario-response-accept").on("click", () => {
@@ -91,16 +86,12 @@ var exports = (function () {
           // Hide dialog when user presses this accept.:
           $("#dialog-confirm-delete-scenario").modal("hide");
 
-          // key values correspond to url parameters which are lowercase
-          var params = {
-            scenarioid: scenarioId
-          };
 
         });
 
         // Show the dialog:
         $("#dialog-confirm-delete-scenario").modal({});
-      },
+      }
 
     }
 
