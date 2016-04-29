@@ -11,8 +11,8 @@ $deltares-cyaan: #00c4d6;
 $deltares-oranje: #ff7200;
 $deltares-groen: #b4d300;
 $deltares-cyclaam: #eb0073;
-$white: #fff;
-$black: #000;
+$white: #f3f3f3;
+$black: #070707;
 
 
 $brand-primary: $deltares-blauw;
@@ -20,7 +20,7 @@ $brand-info: $deltares-metallic;
 $brand-success: $deltares-groen;
 $brand-warning: $deltares-oranje;
 $brand-danger: $deltares-cyclaam;
-$body-bg: lighten($black, 33.5%);
+$body-bg: $white; //lighten($black, 33.5%);
 
 // These are in the variables.scss in bootstrap, you can reuse or overwrite them
 // $gray-base:              #000 !default;
@@ -32,6 +32,13 @@ $body-bg: lighten($black, 33.5%);
 
 // We're using a lighter gray-light here than default
 $gray-light: #ccc;
+
+$color-scenario-column: #ddd;
+$color-runs-column: #eee;
+$color-details-column: $white;
+
+
+$builder-form-row: #d6d6ce;
 
 /* This part is wiredepped
 // bower:scss
@@ -56,6 +63,9 @@ $row-color-odd: #f7f7f7;
 // was #c2c3c6; is now consistent with forms
 $row-border-color: $gray-light;
 
+
+$selected-item-color: #dae4d1;
+
 // Make object shadowed.
 @mixin shadowed() {
   box-shadow: 0 0 32px 0 $gray-dark;
@@ -66,6 +76,14 @@ $row-border-color: $gray-light;
 @mixin rectangle-corners() {
   border-radius: 0;
 }
+
+// Fill max height.
+@mixin fill {
+  //min-height: 100%;
+  //height: 100%;
+  height: 87vh;
+}
+
 
 @mixin status-colors() {
   &.completed {
@@ -89,21 +107,19 @@ $row-border-color: $gray-light;
   &.error {
     background-color: $row-color-error;
 
+    // No highlight for errors. (so same color)
     &:hover {
-      background-color: mix($row-color-error, $white, 50%);
+      background-color: $row-color-error;
     }
   }
 }
 
-
-// Force a scrollbar so we do not have center changes when it shows up because of content changes.
-html {
-  overflow-y: scroll;
-}
-
-.container {
-  // we don't have a header menu so we use the margin-top of the container to give it a bit of space on the top
-  margin-top: 32px;
+// In order to make full height columns, we need document to be 100% already
+html,
+body {
+  margin: 0;
+  overflow: hidden;
+  height: 100%;
 }
 
 .alert {
@@ -119,54 +135,122 @@ html {
   }
 }
 
-.panel {
-  @include rectangle-corners();
-  @include shadowed();
-}
 
 // Override rounded corners, default bootstrap style
 .input-group-addon {
   @include rectangle-corners();
 }
 
+.form-control {
+  @include rectangle-corners();
+}
+
+
 .footer {
   margin: 8px 0 0;
 }
 
 .btn-logout {
-  margin: 8px 8px 0px 0px;
+  margin: 8px 8px 0 0;
 
 }
 
-.heading-bar {
-  background-color: $gray-lighter;
-  color: $gray;
+.panel {
+   @include rectangle-corners();
+}
 
-  padding: 10px 0 10px 32px;
+
+.heading-bar {
+  background-color: $black;
+  border: 0;
+  color: $white;
+  font-size: 32px;
+  padding: 0;
+
+  // To stop the default margin from bootstrep we add a negative one here.
+  margin-bottom: 0;
+  margin-left: -16px;
 
   h2 {
     margin: 0;
   }
 
   .site-title {
-    font-size: 32px;
+
+    color: $white;
+    text-decoration: none;
 
     img {
+      height: 80px;
+      width: 80px;
       margin-right: 32px;
     }
+  }
+}
 
-    // The title bar is also a link to home
-    a {
-      color: $gray;
-      text-decoration: none;
-    }
+.tool-bar {
+  background-color: $gray-light;
+  height: 50px;
+
+  margin-bottom: 0;
+
+  overflow: hidden;
+
+  .btn {
+    margin-top: 10px;
+    height: 30px;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 1;
   }
 
+}
+
+// Scenario list
+.column-scenario-list {
+  background-color: $color-scenario-column;
+}
+
+// Runs list
+.column-runs-list {
+  background-color: $color-runs-column;
+}
+
+// Detail view
+.column-details.column {
+  background-color: $color-details-column;
+}
+
+
+.full-height {
+  @include fill();
+}
+
+// Columns in the design
+.column {
+  @include fill();
+  // Scroll columns (assumes some vertical height set)
+  //  overflow-x: scroll;
+  overflow-y: auto;
+}
+
+
+
+// Generic disabled element
+.inputdisabled {
+  border-color: $gray-light;
+  background: $gray-lighter;
+  color: $gray-light;
+  pointer-events: none;
 }
 
 .table-default {
   margin-bottom: 32px;
   width: 100%;
+
+  .error {
+    background-color: $row-color-error;
+  }
 
   td {
     border: 1px solid $row-border-color;
@@ -174,6 +258,10 @@ html {
 
     &.centered {
       text-align: center;
+    }
+
+    &.cell-zero-padding {
+      padding: 0;
     }
 
   }
@@ -226,12 +314,101 @@ html {
       margin: 4px;
     }
   }
+}
 
+
+.scenario-builder-var
+{
+  padding: 0px 4px 2px 4px;
+  border-radius: 4px;
+  background-color: $builder-form-row;
+  font-size: 11px;
+  margin-bottom: 8px;
+
+  input[type="text"] {
+    border-radius: 4px;
+  }
+
+  .no-background {
+    background-color: transparent;
+    border: 0;
+    font-size: 11px;
+    font-weight: bold;
+  }
+
+  .variable-name {
+    width: 20%;
+  }
+
+  .unit-label {
+    width: 10%;
+  }
+
+  .input-number
+  {
+    width: 20%;
+  }
+
+  // Disable spinner icon at numeric fields
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+
+ &.error {
+    background-color: $row-color-error;
+
+    // We color enabled inputs.
+    /*
+    This looks great, but for now we disable it as we cannot properly highlight the right input element
+
+    input:enabled {
+    border-color: #cc3333;
+    }
+    */
+  }
 
 }
 
+.scenariobuilder-schematic
+{
+  width: 60%;
+  margin-top: 32px;
+}
+
+#scenariobuilder-input {
+  h3 {
+
+    font-size: 13px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+}
+
+
+.scenario-builder-table {
+
+  width: 100%;
+
+  tbody {
+    td {
+      font-size: 11px;
+    }
+  }
+
+  .label-variable
+  {
+    font-size: 11px;
+  }
+}
+
+
 .input-group-addon-info {
-  background-color: $gray-lighter;
+ // background-color: $builder-form-row;
 }
 
 .input-group {
@@ -250,6 +427,20 @@ html {
 
 }
 
+.animation-frame {
+  max-width: 100%;
+}
+
+// Based upon btn but without all the hover fx, etc
+.animframeindicator {
+  //border: 1px solid $gray-lighter;
+  padding: 6px 12px;
+  text-align: center;
+  vertical-align: middle;
+  display: inline-block;
+  float:left;
+  margin-left:4px;
+}
 
 .model-information {
   padding: 4px 0 0 32px;
@@ -261,23 +452,30 @@ html {
 }
 
 
-#model-log-output-container {
-  padding: 4px;
 
-  #model-log-output-wrap {
-    border: 1px solid  $gray-lighter;
-    overflow: scroll;
-    padding: 8px;
+#model-log-output-wrap {
+  border: 1px solid  $gray-lighter;
+  overflow: auto;
+
+  padding: 8px;
+  max-height: 400px;
+
+  // Rectangle borders:
+  pre {
+    border-radius: 0;
   }
 
-  #model-log-output {
+}
 
-    background-color: transparent;
-    color: $gray-dark;
-    white-space: pre-line;
-    word-break: normal;
-    word-wrap: normal;
-  }
+#model-log-output {
+
+  background-color: transparent;
+  color: $gray-dark;
+  white-space: pre-line;
+  word-break: normal;
+  word-wrap: normal;
+
+
 }
 
 
@@ -306,8 +504,50 @@ html {
   overflow: auto;
 }
 
-/* Left nav */
+#scenario-list {
 
+  overflow: auto;
+  padding: 0;
+
+
+  .list-group-item {
+    padding: 0;
+
+    @include rectangle-corners();
+
+    &:hover {
+
+      background-color: mix($row-color-even, $white, 50%);
+      cursor: pointer;
+    }
+
+    &.selected {
+      background-color: $selected-item-color;
+    }
+
+    // A href becomes block
+    a {
+      // hide the selection focus (dotted lines)
+      color: $black;
+      outline: none;
+      display: block;
+      padding: 10px;
+      text-decoration :none;
+    }
+  }
+}
+
+.column-header {
+  border-bottom: 1px solid $gray-light;
+
+}
+
+.message-alert {
+  margin: 0;
+  @include rectangle-corners();
+}
+
+/* Left nav */
 
 nav.sidebar,
 .main {
@@ -319,6 +559,37 @@ nav.sidebar,
 .main {
   padding: 10px 10px 0;
 }
+
+// Some helper functions:
+
+.no-padding {
+  padding: 0;
+}
+
+.no-margin {
+  margin: 0;
+}
+
+.no-minheight {
+  min-height: initial;
+}
+
+.centered {
+  margin: 0 auto;
+}
+
+.max-width {
+  width: 100%;
+}
+
+.vertical-align {
+  vertical-align: middle;
+}
+
+.row-top-margin {
+  margin-top: 32px;
+}
+
 
 @media (min-width: 765px) {
   .main {
@@ -426,6 +697,5 @@ nav:hover .for-animate {
 section {
   padding-left: 15px;
 }
-
 
  /* End left nav */

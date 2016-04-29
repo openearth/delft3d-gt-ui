@@ -21,18 +21,19 @@ import _ from "lodash";
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
 
+var args = require("yargs").argv;
 // Server used for serving remote url"s
 // "http://136.231.10.175:8888";
 var apiServer = "";
-// apiServer = "http://136.231.10.175:8888";
-// apiServer = "http://136.231.175.21:8888";
+
+// Process optional arguments
+processOptionalArguments();
 
 // Proxy paths which we map to a different source, for testing locally or
 // running the actual build.
-var paths = ["runs", "createrun", "deleterun", "dorun", "scene"];
+var paths = ["runs", "createrun", "deleterun", "dorun", "scene", "files", "scenario", "scenario/template"];
 
-var proxies = _.map(paths, function(path) {
-  "use strict";
+var proxies = _.map(paths, (path) => {
   var proxyItem = null;
 
   if (apiServer) {
@@ -41,6 +42,15 @@ var proxies = _.map(paths, function(path) {
 
   return proxyItem;
 });
+
+// Function to process the optional arguments
+function processOptionalArguments() {
+  "use strict";
+  // apiServer argument
+  if (args.apiServer) {
+    apiServer = args.apiServer;
+  }
+}
 
 
 gulp.task("styles", () => {
@@ -59,7 +69,9 @@ gulp.task("styles", () => {
 });
 
 gulp.task("scripts", () => {
-  return gulp.src("app/scripts/**/*.js")
+  return gulp.src([
+    "app/scripts/**/*.js"
+  ])
     .pipe($.plumber())
     .pipe($.sourcemaps.init())
     .pipe($.babel())
@@ -111,8 +123,7 @@ gulp.task("lint:babel",
          );
 
 
-gulp.task("lint:scss", function() {
-  "use strict";
+gulp.task("lint:scss", () => {
   return gulp.src("app/styles/*.scss")
     .pipe(scsslint());
 });
@@ -134,12 +145,11 @@ gulp.task("coverage", ["pre-coverage"], () => {
   // Creating the reports after tests ran
     .pipe(istanbul.writeReports())
   // Enforce a coverage of at least 90%
-    .pipe(istanbul.enforceThresholds({ thresholds: { global: 60 } }));
+    .pipe(istanbul.enforceThresholds({ thresholds: { global: 20 } }));
 });
 
 gulp.task("teamcity", ["scripts", "lint", "lint:test", "lint:scss", "coverage"], () => {
-  return gulp.src("test/spec/**/*.js")
-    .pipe(mocha({reporter: "mocha-teamcity-reporter"}));
+  // Just run all the dependencies.
 });
 
 gulp.task("html", ["styles", "scripts"], () => {
@@ -174,8 +184,7 @@ gulp.task("images", () => {
           svgoPlugins: [{cleanupIDs: false}]
         })
       )
-        .on("error", function (err) {
-          "use strict";
+        .on("error", (err) => {
           console.log(err);
           this.end();
         })))
@@ -185,14 +194,7 @@ gulp.task("images", () => {
 gulp.task("fonts", () => {
   return gulp.src(
     // load from bower files
-    require("main-bower-files")(
-      "**/*.{eot,svg,ttf,woff,woff2}",
-      function (err) {
-        "use strict";
-        // just log and continue
-        console.error(err);
-      }
-    )
+    require("main-bower-files")("**/*.{eot,svg,ttf,woff,woff2}")
       .concat("app/fonts/**/*"))
     .pipe(gulp.dest(".tmp/fonts"))
     .pipe(gulp.dest("dist/fonts"));
@@ -238,6 +240,8 @@ gulp.task("serve", ["styles", "scripts", "fonts", "images", "templates"], () => 
     ".tmp/fonts/**/*"
   ]).on("change", reload);
 
+  // Also watch templates.
+  gulp.watch("app/templates/*.html", ["templates"]);
   gulp.watch("app/styles/**/*.scss", ["styles"]);
   gulp.watch("app/scripts/**/*.js", ["scripts"]);
   gulp.watch("app/fonts/**/*", ["fonts"]);

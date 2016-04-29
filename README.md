@@ -1,4 +1,4 @@
-# delft3d-gt-ui
+# delft3d geological tool (user interface)
 
 
 [![Build Master](https://travis-ci.org/openearth/delft3d-gt-ui.svg?branch=master)](https://travis-ci.org/openearth/delft3d-gt-ui)  master build status
@@ -9,6 +9,8 @@
 Frontend for the Delft3D GT web-based user interface
 
 # Getting Started
+
+Make sure you have [node.js](https://nodejs.org/en/) (>=4.0) installed, preferably through your package manager or using nvm.
 
 #### Install gulp, bower and the latest version of npm and a few test scripts globally:
 
@@ -74,5 +76,14 @@ Check the tests:
 $ gulp lint:test
 ```
 
+Check the gulpfile:
+```sh
+$ gulp lint:babel
+```
+
+Optional: define server to fetch data from:
+```sh
+$ gulp serve --apiServer http://10.0.1.2
+```
 
 For development the [gitflow](http://nvie.com/posts/a-successful-git-branching-model) branching model is used.

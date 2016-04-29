@@ -8,7 +8,9 @@
     "fetch": "~0.11.0",
     "validator-js": "~4.5.2",
     "clipboard": "~1.5.9",
-    "vue": "^1.0.17"
+    "vue": "^1.0.17",
+    "vue-router": "^0.7.13",
+    "bootstrap-combobox": "~1.1.6"
   },
   "overrides": {
     "bootstrap-sass": {
@@ -16,6 +18,13 @@
         "assets/stylesheets/_bootstrap.scss",
         "assets/fonts/bootstrap/*",
         "assets/javascripts/bootstrap.js"
+      ]
+    },
+
+    "bootstrap-combobox": {
+      "main": [
+        "css/bootstrap-combobox.css",
+        "js/bootstrap-combobox.js"
       ]
     }
   },

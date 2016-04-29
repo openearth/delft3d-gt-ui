@@ -1,54 +1,5 @@
-<template id="template-home" keep-alive>
-  <div>
-    <div class="panel-body">
-      <div class="col-lg-12">
+<template id="template-home">
 
-        <div class="header-bar">
-          <h2>Running models</h2>
-        </div>
+    <finder-columns></finder-columns>
 
-        <model-list :filter-key="searchQuery"></model-list>
-
-        <div class="alert alert-warning default-hidden" role="alert" id="alert-connectionfailed">
-          Cannot reach model server.
-        </div>
-
-    </div>
-
-    <div class="col-lg-12" id="run-model-input-properties">
-
-      <h2>Start new run</h2>
-
-      <h3>Run properties</h3>
-
-      <div class="input-group">
-
-        <span class="input-group-addon item-group-title" id="newrun-name-label">Run id</span>
-        <input type="text" class="form-control"  value="Model 1" id="newrun-name" maxlength="32" aria-describedby="newrun-name-label" autocomplete="off">
-        <span class="input-group-addon input-group-addon-info item-group-width">Name</span>
-      </div>
-
-      <div class="input-group">
-        <span class="input-group-addon"><input type="checkbox" disabled="disabled" checked="checked" /></span>
-        <span class="input-group-addon  item-group-title" id="newrun-timestep-label"> Time step</span>
-        <input type="number" pattern="[0-9]*" class="form-control"  value="1"  id="newrun-timestep"  min="1" max="50" aria-describedby="newrun-timestep-label" autocomplete="off">
-        <span class="input-group-addon input-group-addon-info item-group-width">Time step [minutes] (min. 1)</span>
-      </div>
-
-    </div>
-
-    <div class="col-lg-12 default-hidden"  id="newrun-alert">
-      <div class="alert" role="alert">
-      </div>
-    </div>
-
-    <div class="col-lg-2">
-
-      <div class="btn-group">
-        <button class="form-control btn btn-primary"  id="newrun-submit" value="" v-on:click="submitModel()">Create</button>
-     </div>
-   </div>
-
-   <div class="col-lg-10"></div>
-  </div>
 </template>

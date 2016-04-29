@@ -1,16 +1,186 @@
 <template id="template-model-details">
   <div>
-    <div class="panel-body">
-      <div class="col-lg-12">
+    <h3 >Details <span v-if="(model.id !== undefined)">for &ldquo;<strong>{{model.name}}</strong>&rdquo;</span></h3>
+    <div class="column-header"></div>
+    <div class="alert alert-info" v-if="(model.id === undefined)">
+      No run selected.
+    </div>
 
-        <div class="header-bar">
-          <h2>Details for &ldquo;<strong>{{selModel.name}}</strong>&rdquo;
-            <!-- <button class="btn btn-primary pull-right" type="button" v-on:click="closeDetails()">
-                 CLOSE
-                 </button> -->
-          </h2>
+    <div v-if="(model.id !== undefined)">
+
+      <!-- model window for deletation -->
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h2 class="panel-title">Summary </h2>
+        </div>
+
+        <div class="panel-body" v-if="model">
+          <table class="table-default">
+            <tbody>
+              <tr>
+                <td>Name</td>
+                <td>{{model.name}} </td>
+              </tr>
+
+              <tr>
+                <td>Model files</td>
+                <td>View <a href="{{model.fileurl}}">working directory</a></td>
+              </tr>
+
+              <tr>
+                <td>Status</td>
+                <td><span class="label label-default">{{model.state | capitalize }}</span></td>
+              </tr>
+
+              <tr>
+                <td>Progress</td>
+                <td>
+
+                  <div class="progress progress-incell ">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" v-bind:style="{width: progress + '%'}" data-toggle="tooltip" data-placement="top" title="Progress">
+                      <span class="sr-only">{{progress}}% Complete</span>
+                      <span class="progress-type">{{progress}}%</span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+
+              <tr>
+                <td>Identification</td>
+                <td><span class="text-muted">{{ model.id }} {{ model.suid }} </span></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h2 class="panel-title">Simulation control</h2>
+        </div>
+        <div class="panel-body">
+          <p>
+            Please select an action to perform on this simulation
+          </p>
+
+          <button type="button" class="btn btn-labeled btn-success" v-bind:class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE') }" id="simulation-control-start" v-on:click="startModel">
+            <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>
+            Restart
+          </button>
+
+          <button type="button" class="btn btn-labeled btn-warning" v-bind:class="{ 'inputdisabled':  !(model.state === 'PROCESSING') }" id="simulation-control-stop" v-on:click="stopModel">
+            <span class="btn-label"><i class="glyphicon glyphicon-stop"></i></span>
+            Stop
+          </button>
+
+
+          <button type="button" class="btn btn-labeled btn-danger" v-bind:class="{ 'inputdisabled': !((model.state === 'SUCCESS' || model.state === 'FAILURE') || model.state === 'PENDING') }"  v-on:click="removeModel(model)">
+            <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
+            Remove run
+          </button>
+          <!--
+          Do not give option anymore to remove files. WE will always do this.
+          <input type="checkbox" value="1" id="simulation-control-check-delete-files" /> Also delete all simulation files
+          -->
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h2 class="panel-title">Run input parameters</h2>
+        </div>
+        <div class="panel-body">
+          <table class="table-default">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+                <th>Using vary</th>
+                <th>Units</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(key, param) in model.parameters">
+                <td>{{key}}</td>
+                <td>{{param.value}}</td>
+                <td>
+                  <span v-if="param.useautostep === true">Yes</span>
+                  <span v-else>No</span>
+                </td>
+                <td>
+                  <!-- we add this as we might have some older models not having the units var yet. -->
+                  <span v-if="param.units !== undefined">
+                    {{param.units}}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h2 class="panel-title">Generated images</h2>
+        </div>
+        <div class="panel-body">
+          <image-animation :model="model"></image-animation>
+        </div>
+      </div>
+
+
+
+
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h2 class="panel-title">Download files</h2>
+        </div>
+        <div class="panel-body">
+          <p>
+            Please check what you would like to download. Your download will be a ZIP file which contains the requested files.
+          </p>
+          <p>
+            Currently you can only dowload the generated output images.
+          </p>
+          <div class="form-group input-group">
+            <span class="input-group-addon"><input type="checkbox" class="downloadoption" checked="checked" v-on:change="downloadOptionsChange()"></span>
+            <span class="form-control">Download generated output images</span>
+          </div>
+          <div class="btn-group">
+            <button class="form-control btn btn-primary" id="download-submit" v-on:click="downloadFiles()" value="">
+              Download
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h2 class="panel-title">Log output</h2>
+        </div>
+        <div class="panel-body">
+
+          <button class="btn btn-primary" type="button" id="btn-copy-log-output" data-clipboard-target="#model-log-output">
+            Copy log
+          </button>
+          <button class="btn btn-primary" type="button" id="btn-refresh-log-output" v-on:click="fetchLog">
+            Refresh log
+          </button>
+
+          <div id="model-log-output-wrap">
+            <!-- fill this directly cause debugging views with 3MB text are a bit slow -->
+
+            <pre><code id="model-log-output">No log available.</code></pre>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- MODALS -->
 
       <div class="modal default-hidden fade " id="dialog-confirm-delete" tabindex="-1" role="dialog">
         <div class="modal-dialog">
@@ -23,6 +193,12 @@
               <p>
                 Are you sure you want to remove this model?
               </p>
+
+              <!-- warning which is shown if user also wants to delete additional files. -->
+              <div class="msg-delete-extra alert alert-info" role="alert">
+                Additional files already generated by this models will also be deleted.
+              </div>
+
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-warning" id="dialog-remove-response-accept">Delete</button>
@@ -30,183 +206,9 @@
             </div>
           </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
-      </div><!-- /.modal -->
-
-      <nav class="navbar navbar-default sidebar" role="navigation">
-        <div class="container-fluid">
-
-            <ul class="nav navbar-nav">
-              <li><a href="#" v-on:click="closeDetails(); return false"><strong>Return to model list</strong> <span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-menu-left"></span></a></li>
-
-              <li class="active"><a href="#" v-on:click="changeMenuItem" data-target="#results-summary">Summary<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-info-sign"></span></a></li>
-
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Graphs <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-signal"></span></a>
-                <ul class="dropdown-menu for-animate" role="menu">
-                  <li><a href="#" v-on:click="changeMenuItem" data-target="#results-channel-network" data-animation="channel_network_images">Channel network</a></li>
-                  <li><a href="#" v-on:click="changeMenuItem" data-target="#results-delta-fringe" data-animation="delta_fringe_images">Delta plain fringe</a></li>
-                </ul>
-              </li>
-
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Actions <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-cog"></span></a>
-                <ul class="dropdown-menu forAnimate" role="menu">
-                  <li><a href="#" v-on:click="removeModel(selModel)">Abort simulation</a></li>
-                  <!-- <li><a href="#" v-on:click="changeMenuItem" data-target="#results-download">Download files</a></li> -->
-                </ul>
-              </li>
-
-              <li><a href="#"  v-on:click="changeMenuItem" data-parent="#container-model-information" data-target="#model-log-output-container">View log file<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-th-list"></span></a></li>
-              <!--
-                  <li><a href="#">Meta information<span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-tags"></span></a></li>
-                  -->
-
-            </ul>
-        </div>
-      </nav>
-
-      <!-- content for menu -->
-      <div class="pull-left model-information col-lg-9" id="accordion">
-
-        <div class="panel-collapse collapse in" id="results-summary">
-          <div class="panel-body">
-            <h2>Summary</h2>
-
-            <table class="table-default">
-              <tbody>
-                <tr>
-                  <td>Name</td>
-                  <td>{{selModel.name}}</td>
-                </tr>
-
-                <tr>
-                  <td>Model files</td>
-                  <td>View <a href="{{selModel.fileurl}}">working directory</a></td>
-                </tr>
-
-                <tr>
-                  <td>Status</td>
-                  <td><span class="label label-default">{{selModel.state | capitalize }}</span></td>
-                </tr>
-<!--
-                <tr>
-                  <td>Time to finish</td>
-                  <td>...</td>
-                </tr>
-
-                <tr>
-                  <td>% Complete</td>
-                  <td>...</td>
-                </tr>
--->
-<!--
-                <tr>
-                  <td>Progress</td>
-                  <td>
-                    <div class="progress progress-incell">
-                      <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
-
-                      </div>
-                    </div>
-                  </td>
-                </tr>
--->
-
-
-              </tbody>
-            </table>
-
-
-          </div>
-        </div>
-
-
-        <div class="panel-collapse collapse" id="results-channel-network">
-          <div class="panel-body">
-            <h2>Channel network</h2>
-
-            <div class="text-center"  v-show="hasFrames">
-
-              <img v-bind:src="animationFrame" />
-
-              <div>
-                <div class="btn-group">
-                    <button class="btn btn-primary" v-on:click="previousImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-backward"></span></button>
-                    <button class="btn btn-primary" v-show="isAnimating" v-on:click="stopImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-stop"></span></button>
-                    <button class="btn btn-primary" v-show="isAnimating == false" v-on:click="playImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-play"></span></button>
-                    <button class="btn btn-primary" v-on:click="nextImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-forward"></span></button>
-                </div>
-              </div>
-            </div>
-
-            <h4>Background information</h4>
-
-            <p>
-              This graph shows the network of the channel [ ... ]
-            </p>
-            </div>
-            </div>
-
-            <div class="panel-collapse collapse" id="results-delta-fringe">
-              <div class="panel-body">
-                <h2>Delta plain fringe</h2>
-
-                <div>
-
-                  <div class="text-center" v-show="hasFrames">
-                    <img v-bind:src="animationFrame" />
-
-                    <div>
-                      <div class="btn-group">
-                          <button class="btn btn-primary" v-on:click="previousImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-backward"></span></button>
-                          <button class="btn btn-primary" v-show="isAnimating" v-on:click="stopImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-stop"></span></button>
-                          <button class="btn btn-primary" v-show="isAnimating == false" v-on:click="playImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-play"></span></button>
-                          <button class="btn btn-primary" v-on:click="nextImageFrame('delta_fringe_images')"><span class="glyphicon glyphicon-forward"></span></button>
-                      </div>
-                    </div>
-                  </div>
-
-
-                </div>
-
-                <h4>Background information</h4>
-
-                <p>
-                  Delta plain fringe information [ ... ]
-                </p>
-              </div>
-            </div>
-
-            <div class="panel-collapse collapse" id="results-download">
-              <div class="panel-body">
-                <h2>Download files</h2>
-
-                <ul>
-                  <li>Download model files</li>
-                  <li>Download all images</li>
-                  <li> ... </li>
-                </ul>
-              </div>
-            </div>
-
-
-
-<div class="panel-collapse collapse" id="model-log-output-container">
-  <div class="panel-body">
-    <h2>Log output</h2>
-
-    <button class="btn btn-primary" type="button" id="btn-copy-log-output" data-clipboard-target="#model-log-output">
-      Copy log
-    </button>
-
-    <div id="model-log-output-wrap">
-      <code id="model-log-output">
-        {{logoutput}}
-      </code>
+      </div>
+      <!-- REMOVE FROM HERE -->
     </div>
+
   </div>
-</div>
-</div>
-</div>
-</div>
 </template>

@@ -10,7 +10,7 @@ var exports = (function() {
 
   // Constructor of the MessageSceneDelete class.
   // The callback is used when data is returned after receiving and validation are complete.
-  MessageSceneDelete = function(id) {
+  MessageSceneDelete = function(id, options) {
 
     this.modelid = null;
 
@@ -24,6 +24,13 @@ var exports = (function() {
     } else {
 
       console.error("[MessageSceneDelete] No id specified to delete.");
+    }
+
+    this.options = {};
+
+    // If we have options, store these too.
+    if (options !== undefined) {
+      this.options = options;
     }
 
     // The location where this message will request to.
@@ -74,9 +81,13 @@ var exports = (function() {
   MessageSceneDelete.prototype.request = function(callback) {
     var url = this.targetURL;
     var that = this;
+
     var postdata = {
       id: this.modelid
     };
+
+    // Merge options in postdata (postdata is modified):
+    $.extend(postdata, this.options);
 
     $.ajax({
         url: url,
@@ -96,7 +107,7 @@ var exports = (function() {
         }
 
       })
-      .error(function(xhr, status, error) {
+      .fail(function(xhr, status, error) {
         // Call error callback, let application know something went wrong.
         if (that.onError !== undefined && that.onError !== null) {
           that.onError({
