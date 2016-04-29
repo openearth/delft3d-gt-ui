@@ -17,7 +17,6 @@ var exports = (function() {
         cache: false
       })
         .done(function(data) {
-          console.log("GOT DATA:" + data);
           resolve(data);
         })
         .fail(function(error) {

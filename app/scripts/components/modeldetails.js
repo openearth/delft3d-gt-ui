@@ -22,12 +22,6 @@ var exports = (function () {
       };
 
     },
-    beforeCompile: function() {
-      console.log("before compile", this.model.id);
-    },
-    compiled: function() {
-      console.log("compiled", this.model.id);
-    },
 
     created: function() {
       console.log("Model details are created with model", JSON.stringify(this.model));
@@ -174,12 +168,12 @@ var exports = (function () {
       updateData: function(id) {
         // update data with id, and if transition is passed transition to it
         // afterwards, pass the log
-        console.log("Updating data from id", id);
+
         // make sure id is a number
         fetchModel(id)
           .then(
             (json) => {
-              console.log("fetched model", json);
+
               // copy old data and set model
               var data = this.$data;
 

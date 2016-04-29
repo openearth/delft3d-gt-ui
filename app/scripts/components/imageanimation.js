@@ -8,7 +8,14 @@ var exports = (function () {
 
 
     template: "#template-image-animation",
-    props: ["model"],
+    props: {
+     model: {
+      type: Object,
+      default: function () {
+        return { };
+      }
+    }
+   },
 
     data: function() {
       return {
@@ -21,10 +28,7 @@ var exports = (function () {
         // Which imagelist are we currently watching?
         currentAnimationKey: "delta_fringe_images",
 
-        isAnimating: false,
-
-        // Automatically filled by component
-        model: {}
+        isAnimating: false
       };
     },
 
