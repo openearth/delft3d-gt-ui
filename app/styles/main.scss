@@ -449,6 +449,7 @@ html, body {
 
 #model-log-output-wrap {
   border: 1px solid  $gray-lighter;
+  overflow: auto;
 
   padding: 8px;
   max-height: 400px;
