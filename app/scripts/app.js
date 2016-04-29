@@ -66,10 +66,9 @@ var exports = (function() {
 
 // If we're in node export to models
 if (typeof module !== "undefined" && module.exports) {
-  console.log("module available", module);
+
   module.exports = exports;
 } else {
-  console.log("exporting", exports);
   // make global
   _.assign(window, exports);
 }

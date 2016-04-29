@@ -29,7 +29,6 @@ var exports = (function () {
 
     route: {
       data: function(transition) {
-        console.log("new finder column data", this.$children);
 
         // Lookup a child by name:
         var modelDetails = this.getChildByName("model-details"); //this.$children[2]; //

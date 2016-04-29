@@ -485,6 +485,7 @@
   describe("ImageAnimation", function() {
     var imageAnimation = new ImageAnimation();
 
+    imageAnimation.model = { };
 
     it("Should be possible to stop image frames", function(done) {
 

@@ -38,7 +38,7 @@
                 <td>
 
                   <div class="progress progress-incell ">
-                    <div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progress}}%;" data-toggle="tooltip" data-placement="top" title="Progress">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" v-bind:style="{width: progress + '%'}" data-toggle="tooltip" data-placement="top" title="Progress">
                       <span class="sr-only">{{progress}}% Complete</span>
                       <span class="progress-type">{{progress}}%</span>
                     </div>
