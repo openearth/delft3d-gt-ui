@@ -254,7 +254,7 @@ var exports = (function() {
             valid = valid && (configuredVar.minstep < configuredVar.maxstep);
 
             // Interval cannot be larger than max - min.
-            valid = valid && (interval < (maxStepValue - min));
+            valid = valid && (interval <= (maxStepValue - min));
 
             // Step interval should always be >= 0.
             valid = valid && (interval > 0);
