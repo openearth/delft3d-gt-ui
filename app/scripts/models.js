@@ -12,15 +12,17 @@ var exports = (function () {
    */
   function fetchModels() {
     return new Promise(function(resolve, reject) {
-      itemsCache = {};
+
       $.ajax("/scene/list", {cache: false})
         .done(function(json) {
-          console.log("before", _.assign({}, json.scene_list[0]));
+
+          itemsCache = {};
+
           // copy object
           _.each(json.scene_list, function(model) {
             itemsCache[model.id] = model;
           });
-          console.log("after", itemsCache["25"]);
+
           resolve(json.scene_list);
         })
         .fail(function(error) {

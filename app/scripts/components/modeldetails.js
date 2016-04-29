@@ -16,7 +16,7 @@ var exports = (function () {
       console.log("loading model details for id", this.id);
 
       return {
-
+        timerId: -1,
         model: {
         }
       };
@@ -66,9 +66,22 @@ var exports = (function () {
           // updating the data
           // clear model data
           console.log("New model set, replacing model by empty model");
+          var modelId = parseInt(val);
+
           this.model = {};
-          console.log("getting model data for model id", val);
-          this.updateData(parseInt(val));
+
+          this.updateData(modelId);
+
+          // Regularly update the details.
+          // Clear previous timers.
+          if (this.timerId !== -1) {
+            clearInterval(this.timerId);
+            this.timerId = -1;
+          }
+
+          this.timerId = setInterval(() => {
+            this.updateData(modelId);
+          }, 5000);
 
           // Stop any animation if we were animating.
           //this.stopImageFrame();
@@ -95,25 +108,32 @@ var exports = (function () {
       progress: {
         get: function() {
 
+          if(this.model === undefined) {
+            return 0;
+          }
+
           var max = 0;
 
-          $.each(this.model.info, function(key, value) {
-            // Channel network images, etc are also inhere.. so we have to check if the info object exists..
-            if (value.info !== undefined) {
-              // We loop through all output arrays, and take the highest progress.
-              if (value.info.output !== undefined) {
-                for(var i = 0; i < value.info.output.length; i++) {
-                  if (value.info.output[i].progress > max) {
-                    max = value.info.output[i].progress;
+          if (this.model.info !== undefined) {
+            $.each(this.model.info, function(key, value) {
+
+              // Channel network images, etc are also inhere.. so we have to check if the info object exists..
+              if (value.info !== undefined && value.info !== null) {
+                // We loop through all output arrays, and take the highest progress.
+                if (value.info.output !== undefined) {
+                  for(var i = 0; i < value.info.output.length; i++) {
+                    if (value.info.output[i].progress > max) {
+                      max = value.info.output[i].progress;
+                    }
                   }
                 }
               }
-            }
 
-          });
+            });
+          }
 
           // Return in percent.
-          return max * 100;
+          return Math.round(max * 100);
         }
 
       },
