@@ -88,9 +88,7 @@
 
                                         <!-- Auto step options -->
 <!--
- <div v-if="scenarioConfig[value.variableid].useautostep == true && value.stepoptions.multipleof != 0">
-                                        <small>Step interval needs to be a multiple of {{value.stepoptions.multipleof}}</small>
-                                      </div>
+
                                       Not sure where to put this,.
 -->
 
@@ -120,7 +118,11 @@
                                                   </td>
 
                                                   <td class="no-padding">
-                                                    <span class="input-group-addon  no-background">Step</span>
+                                                     <span class="input-group-addon  no-background">Step
+                                                    <div v-if="value.stepoptions.multipleof != 0">
+                                                      <small>[Multiple of {{value.stepoptions.multipleof}}]</small>
+                                                    </div>
+                                                    </span>
                                                   </td>
 
                                                   <td  class="no-padding" rowspan="1" style="vertical-align: top">
