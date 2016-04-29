@@ -13,7 +13,7 @@ var exports = (function () {
   function fetchModels() {
     return new Promise(function(resolve, reject) {
       itemsCache = {};
-      $.ajax("/scene/list")
+      $.ajax("/scene/list", {cache: false})
         .done(function(json) {
           console.log("before", _.assign({}, json.scene_list[0]));
           // copy object

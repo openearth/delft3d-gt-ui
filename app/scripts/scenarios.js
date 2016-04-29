@@ -13,9 +13,11 @@ var exports = (function() {
       $.ajax({
         //url: "sampledata/template.json",
         url: "/scenario/list",
-        method: "GET"
+        method: "GET",
+        cache: false
       })
         .done(function(data) {
+          console.log("GOT DATA:" + data);
           resolve(data);
         })
         .fail(function(error) {

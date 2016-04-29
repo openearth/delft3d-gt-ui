@@ -422,6 +422,18 @@ html, body {
   max-width: 100%;
 }
 
+// Based upon btn but without all the hover fx, etc
+.animframeindicator
+{
+  //border: 1px solid $gray-lighter;
+  padding: 6px 12px;
+  text-align: center;
+  vertical-align: middle;
+  display: inline-block;
+  float:left;
+  margin-left:4px;
+}
+
 .model-information {
   padding: 4px 0 0 32px;
 
@@ -432,23 +444,31 @@ html, body {
 }
 
 
-#model-log-output-container {
-  padding: 4px;
 
-  #model-log-output-wrap {
-    border: 1px solid  $gray-lighter;
-    overflow: scroll;
-    padding: 8px;
+#model-log-output-wrap {
+  border: 1px solid  $gray-lighter;
+  overflow: auto;
+
+  padding: 8px;
+  max-height: 400px;
+
+  // Rectangle borders:
+  pre
+  {
+    border-radius: 0;
   }
 
-  #model-log-output {
+}
 
-    background-color: transparent;
-    color: $gray-dark;
-    white-space: pre-line;
-    word-break: normal;
-    word-wrap: normal;
-  }
+#model-log-output {
+
+  background-color: transparent;
+  color: $gray-dark;
+  white-space: pre-line;
+  word-break: normal;
+  word-wrap: normal;
+
+
 }
 
 

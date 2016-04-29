@@ -1,37 +1,90 @@
 <template id="template-image-animation">
-  <div>
-    <div v-show="hasFrames === true">
-
-      <div class="row">
-
-        <div class="col-lg-12">
-          <button class="btn btn-primary" v-on:click="switchAnimation('channel_network_images')">Channel network</button>
-          <button class="btn btn-primary" v-on:click="switchAnimation('sediment_fraction_images')">Sediment fraction</button>
-          <button class="btn btn-primary" v-on:click="switchAnimation('delta_fringe_images')">Delta fringe</button>
+    <div>
+        <div class="row">
+            <div class="col-lg-12 text-center" >
+                <button class="btn btn-primary" v-bind:class="{ 'btn-success': currentAnimationKey === 'delta_fringe_images' }"  v-on:click="switchAnimation('delta_fringe_images')">
+                    Delta fringe
+                </button>
+                <button class="btn btn-primary" v-bind:class="{ 'btn-success': currentAnimationKey === 'channel_network_images' }" v-on:click="switchAnimation('channel_network_images')">
+                    Channel network
+                </button>
+                <button class="btn btn-primary" v-bind:class="{ 'btn-success': currentAnimationKey === 'sediment_fraction_images' }" v-on:click="switchAnimation('sediment_fraction_images')">
+                    Sediment fraction
+                </button>
+            </div>
         </div>
-      </div>
 
-      <div class="row">
-        <div class="col-lg-12">
-            <img v-bind:src="animationFrame" class="animation-frame" />
-        </div>
-      </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="text-center"  v-show="hasFrames == false">
+                    <p>
+                      <div class="alert alert-info" role="alert">No images available yet.</div>
+                    </p>
+                </div>
 
-       <div class="row">
-        <div class="col-lg-12 text-center">
-          <div class="btn-group">
-            <button class="btn btn-primary" v-on:click="previousImageFrame('channel_network_images')"><span class="glyphicon glyphicon-backward"></span></button>
-            <button class="btn btn-primary" v-show="isAnimating" v-on:click="stopImageFrame('channel_network_images')"><span class="glyphicon glyphicon-stop"></span></button>
-            <button class="btn btn-primary" v-show="isAnimating == false" v-on:click="playImageFrame('channel_network_images')"><span class="glyphicon glyphicon-play"></span></button>
-            <button class="btn btn-primary" v-on:click="nextImageFrame('channel_network_images')"><span class="glyphicon glyphicon-forward"></span></button>
-          </div>
-        </div>
-      </div>
-    </div>
+                <div class="text-center" v-show="hasFrames == true">
+                    <img v-bind:src="animationFrame" class="animation-frame"/>
+                </div>
 
-    <div class="text-center"  v-show="hasFrames == false">
-      No images available yet.
-   </div>
-  </div>
+                <div>
+                  <div v-show="currentAnimationKey === 'channel_network_images'">
+                  <h3>Channel network</h3>
+                    <p>
+                      These graphs display the properties, the architecture and the evolution of the channel network. Fluvial deposits are targets for hydrocarbon and groundwater exploration as they are typically permeable and continuous, and consequently a potential reservoir or aquifer.
+                    </p>
+                    <p>
+                      The size and the quality of a fluvial reservoir in a delta depends on the size of the network, the connection between the different branches, and the relation of the channel network with the substrate, the mouth bars, and the prodelta. Therefore, a good characterization of the properties and the architecture of the channel network allows a better estimation of the reservoir properties in the subsurface. The most important parameters of the channel network are extracted and processed from the Delft3D output.
+                    </p>
+                  </div>
 
-</template>
+                  <div v-show="currentAnimationKey === 'delta_fringe_images'">
+                    <h3>Delta fringe</h3>
+
+                    <p>
+                    This graph shows the position of the delta plain fringe superimposed on the graph of the water depth. This is an indicator for the large-scale plan-view morphology of a delta, which is a function of the dominant forcing processes (waves, rivers, tides) and grain size of transported sediments.<br />
+                    </p>
+
+                    <p>
+                      A good characterization of the plan-view morphology of the delta allows better predictions on grain size distribution and heterogeneity in the delta geo-body. The delta fringe is calculated based on a cutoff value of water depth and on local slope.
+                    </p>
+                  </div>
+
+                  <div v-show="currentAnimationKey === 'sediment_fraction_images'">
+
+
+                  </div>
+
+            </div>
+
+                <div class="col-lg-12 text-center" v-show="hasFrames == true">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" v-on:click="previousImageFrame('channel_network_images')">
+                            <span class="glyphicon glyphicon-backward">
+                            </span>
+                        </button>
+                        <button class="btn btn-primary" v-show="isAnimating" v-on:click="stopImageFrame('channel_network_images')">
+                            <span class="glyphicon glyphicon-stop">
+                            </span>
+                        </button>
+                        <button class="btn btn-primary" v-show="isAnimating == false" v-on:click="playImageFrame('channel_network_images')">
+                            <span class="glyphicon glyphicon-play">
+                            </span>
+                        </button>
+                        <button class="btn btn-primary" v-on:click="nextImageFrame('channel_network_images')">
+                            <span class="glyphicon glyphicon-forward">
+                            </span>
+                        </button>
+
+                    </div>
+                </div>
+
+
+                <div class="col-lg-12 text-center" v-show="hasFrames == true">
+                <div class="btn-group">
+                  <div class="animframeindicator">
+                    Frame {{animationIndex}} of {{frameCount}}
+                  </div>
+                </div>
+                </div>
+
+    </template>

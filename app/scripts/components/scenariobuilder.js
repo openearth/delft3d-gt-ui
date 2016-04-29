@@ -432,6 +432,7 @@ var exports = (function() {
               minstep: parseFloat(varValue.min), // Default step min is min value of this var
               maxstep: parseFloat(varValue.max), // Default step max is max value of this var
               stepinterval: parseFloat(varValue.stepoptions.defaultstep), // Default step from the template
+              units: varValue.units,
               group: group // Group name, for shared variables.
             };
 

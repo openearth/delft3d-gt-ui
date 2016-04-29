@@ -83,6 +83,7 @@
                 <th>Parameter</th>
                 <th>Value</th>
                 <th>Using vary</th>
+                <th>Units</th>
               </tr>
             </thead>
             <tbody>
@@ -92,6 +93,12 @@
                 <td>
                   <span v-if="param.useautostep === true">Yes</span>
                   <span v-else>No</span>
+                </td>
+                <td>
+                  <!-- we add this as we might have some older models not having the units var yet. -->
+                  <span v-if="param.units !== undefined">
+                    {{param.units}}
+                  </span>
                 </td>
               </tr>
             </tbody>
