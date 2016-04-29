@@ -37,6 +37,9 @@ var exports = (function() {
       fetchTemplates()
         .then((templates) => {
           this.availableTemplates = templates.template_list;
+
+          // Select the first template automatic:
+          this.selectedId = 0;
         });
     },
 

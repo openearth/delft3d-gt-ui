@@ -26,6 +26,38 @@
                     <img v-bind:src="animationFrame" class="animation-frame"/>
                 </div>
 
+                <div class="col-lg-12 text-center" v-show="hasFrames == true">
+                    <div class="btn-group">
+                        <button class="btn btn-primary" v-on:click="previousImageFrame('channel_network_images')">
+                            <span class="glyphicon glyphicon-backward">
+                            </span>
+                        </button>
+                        <button class="btn btn-primary" v-show="isAnimating" v-on:click="stopImageFrame('channel_network_images')">
+                            <span class="glyphicon glyphicon-stop">
+                            </span>
+                        </button>
+                        <button class="btn btn-primary" v-show="isAnimating == false" v-on:click="playImageFrame('channel_network_images')">
+                            <span class="glyphicon glyphicon-play">
+                            </span>
+                        </button>
+                        <button class="btn btn-primary" v-on:click="nextImageFrame('channel_network_images')">
+                            <span class="glyphicon glyphicon-forward">
+                            </span>
+                        </button>
+
+                    </div>
+                </div>
+
+
+                <div class="col-lg-12 text-center" v-show="hasFrames == true">
+                  <div class="btn-group">
+                    <div class="animframeindicator">
+                      Frame {{animationIndex}} of {{frameCount}}
+                    </div>
+                  </div>
+                </div>
+
+
                 <div>
                   <div v-show="currentAnimationKey === 'channel_network_images'">
                   <h3>Channel network</h3>
@@ -56,35 +88,5 @@
 
             </div>
 
-                <div class="col-lg-12 text-center" v-show="hasFrames == true">
-                    <div class="btn-group">
-                        <button class="btn btn-primary" v-on:click="previousImageFrame('channel_network_images')">
-                            <span class="glyphicon glyphicon-backward">
-                            </span>
-                        </button>
-                        <button class="btn btn-primary" v-show="isAnimating" v-on:click="stopImageFrame('channel_network_images')">
-                            <span class="glyphicon glyphicon-stop">
-                            </span>
-                        </button>
-                        <button class="btn btn-primary" v-show="isAnimating == false" v-on:click="playImageFrame('channel_network_images')">
-                            <span class="glyphicon glyphicon-play">
-                            </span>
-                        </button>
-                        <button class="btn btn-primary" v-on:click="nextImageFrame('channel_network_images')">
-                            <span class="glyphicon glyphicon-forward">
-                            </span>
-                        </button>
-
-                    </div>
-                </div>
-
-
-                <div class="col-lg-12 text-center" v-show="hasFrames == true">
-                <div class="btn-group">
-                  <div class="animframeindicator">
-                    Frame {{animationIndex}} of {{frameCount}}
-                  </div>
-                </div>
-                </div>
 
     </template>

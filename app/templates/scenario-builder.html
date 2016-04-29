@@ -41,7 +41,7 @@
                       <div class="col-lg-12">
                         <select class="combobox form-control" v-model="selectedId"  v-on:select="selectScenario()">
 
-                          <option value="-1" selected="selected">Select a template</option>
+
 
                           <option v-for="option in availableTemplates" v-bind:value="$index">
                             {{ option.templatename }}
