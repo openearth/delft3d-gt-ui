@@ -238,6 +238,7 @@ body {
 
 // Generic disabled element
 .inputdisabled {
+  border-color: $gray-light;
   background: $gray-lighter;
   color: $gray-light;
   pointer-events: none;
