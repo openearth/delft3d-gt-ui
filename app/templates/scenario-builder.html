@@ -75,14 +75,14 @@
 
                               <table class="scenario-builder-table">
                                 <tr>
-                                  <td class="variable-name">
+                                  <td class="variable-name" >
                                       <label for="{{value.variableid}}" class="label-variable">
                                           {{value['label']}}
                                           <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="{{value.description}}"></span>
                                       </label>
                                   </td>
 
-                                    <td width="60%">
+                                    <td>
 
 
 
@@ -135,9 +135,10 @@
 
                                                 <!-- also show unit when there is not a step value -->
                                                 <template v-if="value.stepoptions.defaultstep === 0 && value.units.length > 0">
-                                                  <td  class="no-padding" colspan="5" rowspan="1" style="vertical-align: top">
-                                                      <!-- only show units if type is numeric -->
-                                                    <span class="input-group-addon  no-background">Unit:</span>
+                                                  <td colspan="5" class="no-padding">&nbsp;</td>
+                                                  <!-- only show units if type is numeric -->
+                                                  <td  class="no-padding" rowspan="1" style="vertical-align: top">
+                                                    <span class="input-group-addon no-background unit-label">Unit:</span>
 
                                                   </td>
                                                 </template>
@@ -146,7 +147,7 @@
                                               </tr>
                                               <tr>
 
-                                                <td class="no-padding">
+                                                <td class="no-padding" >
                                                   <!-- [TODO] improve these inputs on a later moment (proper type selection) -->
                                                   <input  v-if="value.type == 'numeric'" v-model="scenarioConfig[value.variableid].value" v-bind:class="{ 'inputdisabled': scenarioConfig[value.variableid].useautostep == true}" class="form-control" data-max="{{value.max}}" data-min="{{value.min}}" name="{{value['variableid']}}" number type="number" v-on:keyup="validateField(value, $event)" v-on:change="validateField(value, $event)" />
                                                   <input  v-if="value.type == 'text'" v-model="scenarioConfig[value.variableid].value" v-bind:class="{ 'inputdisabled': scenarioConfig[value.variableid].useautostep == true}" class="form-control" data-max="{{value.max}}" data-min="{{value.min}}" name="{{value['variableid']}}" type="text" v-on:keyup="validateField(value, $event)" v-on:change="validateField(value, $event)" />
@@ -161,15 +162,15 @@
                                                     </div>
                                                   </td>
 
-                                                  <td class="no-padding">
+                                                  <td class="no-padding  input-number">
                                                      <input type="number" v-bind:class="{ 'inputdisabled': scenarioConfig[value.variableid].useautostep == false}" class="form-control" name="step{{value['variableid']}}-min" v-model="scenarioConfig[value.variableid].minstep" v-on:keyup="validateField(value, $event)" v-on:change="validateField(value, $event)" />
                                                   </td>
 
-                                                  <td class="no-padding">
+                                                  <td class="no-padding  input-number">
                                                     <input type="number" v-bind:class="{ 'inputdisabled': scenarioConfig[value.variableid].useautostep == false}" class="form-control"  name="step{{value['variableid']}}-max"  v-model="scenarioConfig[value.variableid].maxstep" v-on:keyup="validateField(value, $event)" v-on:change="validateField(value, $event)" />
                                                   </td>
 
-                                                  <td class="no-padding">
+                                                  <td class="no-padding  input-number">
                                                     <input type="number" v-bind:class="{ 'inputdisabled': scenarioConfig[value.variableid].useautostep == false}" class="form-control" name="step{{value['variableid']}}-interval" v-model="scenarioConfig[value.variableid].stepinterval" v-on:keyup="validateField(value, $event)" v-on:change="validateField(value, $event)" />
                                                   </td>
 
@@ -181,7 +182,8 @@
 
                                                 <!-- also show unit when there is not a step value -->
                                                 <template v-if="value.stepoptions.defaultstep === 0 && value.units.length > 0">
-                                                  <td colspan="5" class="no-padding  text-center">{{value.units}}</td>
+                                                  <td colspan="5" class="no-padding">&nbsp;</td>
+                                                  <td class="no-padding text-center unit-label" >{{value.units}}</td>
                                                 </template>
 
 
