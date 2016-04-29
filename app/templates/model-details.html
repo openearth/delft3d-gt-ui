@@ -32,6 +32,21 @@
                 <td>Status</td>
                 <td><span class="label label-default">{{model.state | capitalize }}</span></td>
               </tr>
+
+              <tr>
+                <td>Progress</td>
+                <td>
+
+                  <div class="progress progress-incell ">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{progress}}%;" data-toggle="tooltip" data-placement="top" title="Progress">
+                      <span class="sr-only">{{progress}}% Complete</span>
+                      <span class="progress-type">{{progress}}%</span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
+
               <tr>
                 <td>Identification</td>
                 <td><span class="text-muted">{{ model.id }} {{ model.suid }} </span></td>

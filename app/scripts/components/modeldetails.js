@@ -90,6 +90,34 @@ var exports = (function () {
           }
         }
       },
+
+      // Get progress from data, in percentages.
+      progress: {
+        get: function() {
+
+          var max = 0;
+
+          $.each(this.model.info, function(key, value) {
+            // Channel network images, etc are also inhere.. so we have to check if the info object exists..
+            if (value.info !== undefined) {
+              // We loop through all output arrays, and take the highest progress.
+              if (value.info.output !== undefined) {
+                for(var i = 0; i < value.info.output.length; i++) {
+                  if (value.info.output[i].progress > max) {
+                    max = value.info.output[i].progress;
+                  }
+                }
+              }
+            }
+
+          });
+
+          // Return in percent.
+          return max * 100;
+        }
+
+      },
+
       // Update whenever selectedModel changes.
       logoutput: {
         cache: false,
