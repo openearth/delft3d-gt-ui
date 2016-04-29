@@ -114,16 +114,18 @@
   describe("Testing data exchange with api", function() {
     describe("If we can query the scenario list", function() {
 
-      // This test does not work anymore for some rather strange reason?
-      // Temporarily disabling it as we have a lot of work to do, and all seems to work just fine.
-      // Nock issue?
-      /*it("Should be possible list scenarios", function(done) {
+      // This test is now working using the filteringPath option.
+      // When testing get request, this seems to be the solution.
+      it("Should be possible list scenarios", function(done) {
         nock("http://0.0.0.0")
           .defaultReplyHeaders({
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*"
           })
           .log(console.log)
+          .filteringPath(function() {
+             return "/scenario/list";
+           })
           .get("/scenario/list")
           .reply(200, {
           });
@@ -143,7 +145,7 @@
             }
           });
 
-      });*/
+      });
     });
 
 
