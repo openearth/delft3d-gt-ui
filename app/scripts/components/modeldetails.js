@@ -179,13 +179,13 @@ var exports = (function () {
 
               data.model = json;
               // and fetch log afterwards
-              fetchLog(data.model.id)
-                .then(log => {
-                  $("#model-log-output").text(log);
-                })
-                .catch(e => {
-                  $("#model-log-output").text("Failed to get log: " + e);
-                });
+              // fetchLog(data.model.id)
+              //   .then(log => {
+              //     $("#model-log-output").text(log);
+              //   })
+              //   .catch(e => {
+              //     $("#model-log-output").text("Failed to get log: " + e);
+              //   });
             }
           )
           .catch(e => {
