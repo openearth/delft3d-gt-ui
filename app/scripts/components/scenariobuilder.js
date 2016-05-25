@@ -15,7 +15,7 @@ var exports = (function() {
         availableTemplates: [],
 
         // The scenario as configured by the user at the moment.
-        scenarioConfig: null,
+        scenarioConfig: {},
 
         // Calculated total runs.
         totalRuns: 1,
@@ -43,6 +43,13 @@ var exports = (function() {
         });
     },
 
+    route: {
+      data: function(transition) {
+        console.log("transition", transition);
+
+        transition.next();
+      }
+    },
 
     beforeCompile: function() {
       // Placeholder for events
@@ -76,6 +83,7 @@ var exports = (function() {
 
             // First set data, then the template. Order is important!
             this.scenarioConfig = this.prepareScenarioConfig(this.availableTemplates[newValue]);
+            this.updateWithQueryParameters();
             this.selectedTemplate = this.availableTemplates[newValue];
 
 
@@ -91,7 +99,7 @@ var exports = (function() {
 
             // Order is important!
             this.selectedTemplate = null;
-            this.scenarioConfig = null;
+            this.scenarioConfig = {};
 
           }
 
@@ -102,7 +110,19 @@ var exports = (function() {
     },
 
     methods: {
-
+      updateWithQueryParameters: function() {
+        if (_.has(this.$route, "query.parameters")) {
+          // get parameters from query
+          var parameters = JSON.parse(this.$route.query.parameters);
+          // assign all parameters ot the scenario
+          _.assign(this.scenarioConfig, parameters);
+        }
+        // This is a bit ugly, but if we have a name, add (copy) to it and then use it.
+        if (_.has(this.$route, "query.name") && _.has(this.scenarioConfig, "scenarioname.value")) {
+          var name = this.$route.query.name;
+          this.scenarioConfig.scenarioname.value = name + " (copy)";
+        }
+      },
       validateForm: function() {
 
         //var validation = new InputValidation();
