@@ -140,6 +140,13 @@ var exports = (function () {
         }
       },
 
+      publishlevel: {
+        get: function() {
+
+          return "";
+        }
+      },
+
       // Returns true if the model is running. We might have to depend on some other variables
       // But for now we say that "processing" means running.
       isModelRunning: {
@@ -165,6 +172,14 @@ var exports = (function () {
       }
     },
     methods: {
+
+      /// Publish a model and set it to the new state
+      publishModel: function(model, newState) {
+
+        publishModel(model.id, newState);
+      },
+
+
       updateData: function(id) {
         // update data with id, and if transition is passed transition to it
         // afterwards, pass the log

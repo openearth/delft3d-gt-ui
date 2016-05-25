@@ -1,3 +1,5 @@
+/* globals validator */
+
 // Store items in this cache
 var itemsCache = {};
 
@@ -61,13 +63,50 @@ var exports = (function () {
               resolve(secondTryModel);
             } else {
               // still not here....
-              reject(new Error("Model not found, even after updating "));
+              reject(new Error("Model not found, even after updating"));
             }
           })
           .catch((error) => {
             reject(error);
           });
       }
+    });
+  }
+
+  // Publish a model and set it to a new state.
+  function publishModel(id, newState) {
+
+    return new Promise(function(resolve, reject) {
+
+      if (validator.isIn(newState, ["private", "company", "public"]) === false)
+      {
+        return reject(new Error("[publishModel] New state: " + newState + " is not valid."));
+      }
+
+      if (validator.isInt(id) == false)
+      {
+          return reject(new Error("[publishModel id is not valid"));
+      }
+
+      // add extra options to id
+      var postData = {
+        "publish_level": newState
+      };
+
+      $.ajax({
+        url: "/api/v1/scenes/" + id,
+        data: postData,
+        method: "PATCH"
+      })
+        .done(function(data) {
+          // no data to return, just call the callback
+          resolve(data);
+        })
+        .fail(function(error) {
+          // we're done
+          reject(error);
+        });
+
     });
   }
 
@@ -93,6 +132,7 @@ var exports = (function () {
     });
 
   }
+
   function startModel(id) {
     return new Promise(function(resolve, reject) {
       $.ajax({
@@ -197,7 +237,8 @@ var exports = (function () {
     createModel: createModel,
     deleteModel: deleteModel,
     startModel: startModel,
-    stopModel: stopModel
+    stopModel: stopModel,
+    publishModel: publishModel
   };
 }());
 

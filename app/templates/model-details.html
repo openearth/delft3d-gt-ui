@@ -80,12 +80,35 @@
             <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
             Remove run
           </button>
-          <!--
-          Do not give option anymore to remove files. WE will always do this.
-          <input type="checkbox" value="1" id="simulation-control-check-delete-files" /> Also delete all simulation files
-          -->
         </div>
       </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h2 class="panel-title">Publish controls</h2>
+        </div>
+        <div class="panel-body">
+          <p>
+            You can change the rights of your simulation results. You can change them to public to your group or public (all users of this site). Please note that this action is one-time only and cannot be undone.
+          </p>
+
+          <p>
+          Current publish status: <strong>{{published}}</strong>.
+          </p>
+
+<!-- should be model.published when the data is available. Now we use a calculated property -->
+          <button type="button" class="btn btn-labeled btn-success" v-bind:class="{ 'inputdisabled': publishlevel.length > 0,  'selected' : published === 'company' }" v-on:click="publishModel(model,'company')">
+            <span class="btn-label"><i class="glyphicon glyphicon-ice-lolly-tasted"></i></span>
+            Group only
+          </button>
+
+          <button type="button" class="btn btn-labeled btn-warning" v-bind:class="{ 'inputdisabled': publishlevel.length > 0,  'selected' : published === 'public' }"  v-on:click="publishModel(model,'public')">
+            <span class="btn-label"><i class="glyphicon glyphicon-globe"></i></span>
+            Public
+          </button>
+        </div>
+      </div>
+
 
       <div class="panel panel-default">
         <div class="panel-heading">
