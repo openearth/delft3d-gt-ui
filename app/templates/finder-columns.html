@@ -8,8 +8,15 @@
           <div class="col-xs-2">
             <div class="btn-toolbar">
 
-              <button v-on:click="removeScenario(model)" class="btn btn-primary pull-right" v-bind:class="{ 'inputdisabled': selectedScenarioId === -1 || isNaN(selectedScenarioId) === true || selectedScenarioId === undefined}" >Delete</button>
-              <a href="#/scenarios/create" class="btn btn-primary pull-right" >Add</a>
+              <button title="delete" v-on:click="removeScenario(model)" class="btn btn-primary pull-right" v-bind:class="{ 'inputdisabled': selectedScenarioId === -1 || isNaN(selectedScenarioId) === true || selectedScenarioId === undefined}" >
+                <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+              </button>
+              <button title="clone"  v-on:click="removeScenario(model)" class="btn btn-primary pull-right" v-bind:class="{ 'inputdisabled': selectedScenarioId === -1 || isNaN(selectedScenarioId) === true || selectedScenarioId === undefined}" >
+                <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
+              </button>
+              <a title="create" href="#/scenarios/create" class="btn btn-primary pull-right" >
+                <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+              </a>
 
             </div>
           </div>
