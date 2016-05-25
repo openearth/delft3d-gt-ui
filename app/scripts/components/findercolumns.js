@@ -31,12 +31,15 @@ var exports = (function () {
           // it is the first
           var scenarioList = _.first(
             // of the child components
-            _.filter(this.$children,
-            // filtered with name ScenarioList
-            function(x){
-              return x.constructor.name === "ScenarioList";
-            })
+            _.filter(
+              this.$children,
+              // filtered with name ScenarioList
+              function(x) {
+                return x.constructor.name === "ScenarioList";
+              }
+            )
           );
+
           // found it
           return scenarioList;
         }
@@ -85,7 +88,8 @@ var exports = (function () {
           _.get(scenario.parameters, 0)
         );
 
-        console.log("cloning scenario", parameters, this);
+        // These parameters are passed to the other view
+        // alternative would be to store them in the app or to call an event
         var req = {
           name: "scenarios-create",
           params: {},
@@ -94,6 +98,7 @@ var exports = (function () {
             "name": _.get(this.scenarioList.selectedScenario, "name")
           }
         };
+
         this.$router.go(req);
       },
       // Remove item, based on incoming modelinfo.
@@ -103,7 +108,7 @@ var exports = (function () {
 
         $("#dialog-remove-scenario-name").empty();
 
-          // User accepts deletion:
+        // User accepts deletion:
         $("#dialog-remove-scenario-response-accept").on("click", () => {
           var deletedId = this.selectedScenarioId;
 

@@ -126,8 +126,8 @@
           })
           .log(console.log)
           .filteringPath(function() {
-             return "/scenario/list";
-           })
+            return "/scenario/list";
+          })
           .get("/scenario/list")
           .reply(200, {
           });
@@ -324,7 +324,7 @@
         .reply(200, {
           "status": "deleted"
         })
-        // Otherwise we return an 500. The postdata did not match.
+      // Otherwise we return an 500. The postdata did not match.
         .post("/scene/delete")
         .reply(500, {
           status: "error"
@@ -358,7 +358,7 @@
 
       nock("http://0.0.0.0")
 
-      .defaultReplyHeaders({
+        .defaultReplyHeaders({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*"
         })
@@ -390,7 +390,7 @@
 
       nock("http://0.0.0.0")
 
-      .defaultReplyHeaders({
+        .defaultReplyHeaders({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*"
         })
@@ -612,7 +612,7 @@
             done(e);
           }
 
-      });
+        });
     });
 
 

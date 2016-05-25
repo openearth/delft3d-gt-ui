@@ -30,7 +30,6 @@ var exports = (function() {
 
     props: {
       data: Array
-
     },
 
     created: function() {
@@ -114,12 +113,16 @@ var exports = (function() {
         if (_.has(this.$route, "query.parameters")) {
           // get parameters from query
           var parameters = JSON.parse(this.$route.query.parameters);
+
           // assign all parameters ot the scenario
           _.assign(this.scenarioConfig, parameters);
         }
         // This is a bit ugly, but if we have a name, add (copy) to it and then use it.
         if (_.has(this.$route, "query.name") && _.has(this.scenarioConfig, "scenarioname.value")) {
+          // we also have a name
           var name = this.$route.query.name;
+
+          // reuse it and create (copy) (copy) (over) (roger)
           this.scenarioConfig.scenarioname.value = name + " (copy)";
         }
       },
