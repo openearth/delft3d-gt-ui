@@ -43,6 +43,7 @@ $builder-form-row: #d6d6ce;
 /* This part is wiredepped
 // bower:scss
 @import "bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
+@import "bower_components/font-awesome/scss/font-awesome.scss";
 // endbower:scss
 */
 
@@ -150,43 +151,49 @@ body {
   margin: 8px 0 0;
 }
 
-.btn-logout {
-  margin: 8px 8px 0 0;
-
+.navbar-header .btn {
+  vertical-align: middle;
 }
 
 .panel {
    @include rectangle-corners();
 }
 
-
-.heading-bar {
-  background-color: $black;
-  border: 0;
-  color: $white;
-  font-size: 32px;
+.navbar-brand  {
   padding: 0;
-
-  // To stop the default margin from bootstrep we add a negative one here.
-  margin-bottom: 0;
-  margin-left: -16px;
-
-  h2 {
-    margin: 0;
+  height: 80px;
+  img {
+    height: 100%;
   }
 
-  .site-title {
+}
+.navbar-static-top {
+  // no borders pls
+  margin: 0;
+  border: 0;
+  .navbar-right {
+    // by default buttons stick all the way to the right
+    margin-right: 0;
+  }
 
-    color: $white;
-    text-decoration: none;
-
-    img {
-      height: 80px;
-      width: 80px;
-      margin-right: 32px;
+  .navbar-btn {
+    // smaller button margins than default nav-btns
+    margin-left: 6px;
+    padding: 6px 12px;
+  }
+  // height: 80px;
+  .navbar-nav li {
+    // 2*15px margin
+    h3 {
+      margin: 0;
+      line-height: 1;
     }
   }
+
 }
+
+
+
 
 .tool-bar {
   background-color: $gray-light;

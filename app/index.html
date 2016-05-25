@@ -33,16 +33,27 @@
     <![endif]-->
 
     <!-- black bar on the top -->
-    <nav class="navbar navbar-default navbar-static-top heading-bar">
+    <nav class="navbar navbar-default navbar-static-top navbar-inverse">
       <div class="container-fluid">
         <div class="navbar-header">
+          <!-- Title -->
+          <a href="/" class="navbar-brand">
+            <img src="images/logo/delft3d-gt.svg"/>
 
-          <a href="/" class="site-title"><img src="images/logo/delft3d-gt.svg" id="site-logo" />Delft3D-GT Dashboard</a></h2>
+          </a>
+
 
         </div>
+        <div class="collapse navbar-collapse">
+          <!-- Items -->
+          <ul class="navbar-nav nav">
+            <li><a href="#"><h3>Delft3D<br /><small>Geological Tool</small></h3></a></li>
+          </ul>
+          <ul class="navbar-nav nav navbar-right">
+            <li><a class="btn btn-primary navbar-btn" href="/api/v1/"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a></li>
+            <li><a class="btn btn-primary navbar-btn" href="/logout/">logout</a></li>
+          </ul>
 
-        <div class="navbar-header pull-right">
-          <a class="btn btn-primary btn-logout" href="/logout/">Logout</a>
         </div>
       </div>
     </nav>
