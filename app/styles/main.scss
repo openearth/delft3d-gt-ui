@@ -118,9 +118,9 @@ $selected-item-color: #dae4d1;
 // In order to make full height columns, we need document to be 100% already
 html,
 body {
+  height: 100%;
   margin: 0;
   overflow: hidden;
-  height: 100%;
 }
 
 .alert {
@@ -156,21 +156,23 @@ body {
 }
 
 .panel {
-   @include rectangle-corners();
+  @include rectangle-corners();
 }
 
-.navbar-brand  {
-  padding: 0;
+.navbar-brand {
   height: 80px;
+  padding: 0;
+
   img {
     height: 100%;
   }
-
 }
+
 .navbar-static-top {
   // no borders pls
-  margin: 0;
   border: 0;
+  margin: 0;
+
   .navbar-right {
     // by default buttons stick all the way to the right
     margin-right: 0;
@@ -187,14 +189,12 @@ body {
   .navbar-nav li {
     // 2*15px margin
     h3 {
-      margin: 0;
       line-height: 1;
+      margin: 0;
     }
   }
 
 }
-
-
 
 
 .tool-bar {
@@ -206,11 +206,11 @@ body {
   overflow: hidden;
 
   .btn {
-    margin-top: 10px;
-    height: 30px;
-    font-weight: bold;
     font-size: 14px;
+    font-weight: bold;
+    height: 30px;
     line-height: 1;
+    margin-top: 10px;
   }
 
 }
@@ -247,8 +247,8 @@ body {
 
 // Generic disabled element
 .inputdisabled {
-  border-color: $gray-light;
   background: $gray-lighter;
+  border-color: $gray-light;
   color: $gray-light;
   pointer-events: none;
 }
@@ -326,13 +326,12 @@ body {
 }
 
 
-.scenario-builder-var
-{
-  padding: 0px 4px 2px 4px;
-  border-radius: 4px;
+.scenario-builder-var {
   background-color: $builder-form-row;
+  border-radius: 4px;
   font-size: 11px;
   margin-bottom: 8px;
+  padding: 0 4px 2px;
 
   input[type="text"] {
     border-radius: 4px;
@@ -353,8 +352,7 @@ body {
     width: 10%;
   }
 
-  .input-number
-  {
+  .input-number {
     width: 20%;
   }
 
@@ -364,37 +362,36 @@ body {
     -webkit-appearance: none;
     margin: 0;
   }
+
   input[type=number] {
     -moz-appearance: textfield;
   }
 
- &.error {
+  &.error {
     background-color: $row-color-error;
 
     // We color enabled inputs.
-    /*
+/*
     This looks great, but for now we disable it as we cannot properly highlight the right input element
 
     input:enabled {
     border-color: #cc3333;
     }
-    */
+*/
   }
 
 }
 
-.scenariobuilder-schematic
-{
-  width: 60%;
+.scenariobuilder-schematic {
   margin-top: 32px;
+  width: 60%;
 }
 
 #scenariobuilder-input {
   h3 {
-
     font-size: 13px;
-    text-transform: uppercase;
     font-weight: bold;
+    text-transform: uppercase;
   }
 }
 
@@ -409,15 +406,14 @@ body {
     }
   }
 
-  .label-variable
-  {
+  .label-variable {
     font-size: 11px;
   }
 }
 
 
 .input-group-addon-info {
- // background-color: $builder-form-row;
+  // background-color: $builder-form-row;
 }
 
 .input-group {
@@ -443,12 +439,12 @@ body {
 // Based upon btn but without all the hover fx, etc
 .animframeindicator {
   //border: 1px solid $gray-lighter;
+  display: inline-block;
+  float: left;
+  margin-left: 4px;
   padding: 6px 12px;
   text-align: center;
   vertical-align: middle;
-  display: inline-block;
-  float:left;
-  margin-left:4px;
 }
 
 .model-information {
@@ -464,10 +460,9 @@ body {
 
 #model-log-output-wrap {
   border: 1px solid  $gray-lighter;
-  overflow: auto;
-
-  padding: 8px;
   max-height: 400px;
+  overflow: auto;
+  padding: 8px;
 
   // Rectangle borders:
   pre {
@@ -520,9 +515,9 @@ body {
 
 
   .list-group-item {
-    padding: 0;
-
     @include rectangle-corners();
+
+    padding: 0;
 
     &:hover {
 
@@ -538,11 +533,13 @@ body {
     a {
       // hide the selection focus (dotted lines)
       color: $black;
-      outline: none;
       display: block;
+      outline: none;
       padding: 10px;
-      text-decoration :none;
+      text-decoration: none;
     }
+
+
   }
 }
 
@@ -552,8 +549,8 @@ body {
 }
 
 .message-alert {
-  margin: 0;
   @include rectangle-corners();
+  margin: 0;
 }
 
 /* Left nav */
@@ -632,7 +629,7 @@ nav.sidebar,
     border-bottom: 1px $gray-lighter solid;
   }
 
-    // No bottom for last item.
+  // No bottom for last item.
   nav.sidebar .navbar-nav > li:last-child {
     border-bottom: 0;
   }
@@ -707,4 +704,4 @@ section {
   padding-left: 15px;
 }
 
- /* End left nav */
+/* End left nav */
