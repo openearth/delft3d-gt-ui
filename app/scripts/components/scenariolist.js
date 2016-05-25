@@ -42,7 +42,7 @@ var exports = (function () {
       // Get the current selected scenarioid from the routing URL
       selectedScenarioId: {
         get: function() {
-          return this.$route.params.scenarioid;
+          return parseInt(this.$route.params.scenarioid);
 
         }
       },
@@ -54,10 +54,10 @@ var exports = (function () {
       selectedScenario: {
         get: function() {
           // Get all scenarios with the current id
-          var scenarios = _.filter(this.scenarios, ["scenario", this.selectedScenarioId]);
+          var scenarios = _.filter(this.scenarios, ["id", this.selectedScenarioId]);
           // We want the first one
           var scenario = _.first(scenarios);
-          
+
           return scenario;
         }
       }
