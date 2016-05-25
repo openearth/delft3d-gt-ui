@@ -6,7 +6,7 @@
     Theme author: @adamwhitcroft
 \*------------------------------------*/
 
-@import url('main.css');
+@import url('/static/styles/main.css');
 
 
 body
@@ -22,7 +22,7 @@ body
 	padding:0;
 	-webkit-box-sizing:border-box;
 	   -moz-box-sizing:border-box;
-	       box-sizing: border-box; 
+	       box-sizing: border-box;
 }
 
 html {
@@ -34,11 +34,11 @@ html {
 	line-height:2em;
 }
 body {
-	
+
 	-webkit-backface-visibility:hidden;
 }
 code {
-	font-family:consolas,monospace;	
+	font-family:consolas,monospace;
 }
 a {
 	color:#61666c;
