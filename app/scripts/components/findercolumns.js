@@ -24,6 +24,22 @@ var exports = (function () {
           return parseInt(this.$route.params.scenarioid);
 
         }
+      },
+      scenarioList: {
+        get: function() {
+          // lookup scenarioList component
+          // it is the first
+          var scenarioList = _.first(
+            // of the child components
+            _.filter(this.$children,
+            // filtered with name ScenarioList
+            function(x){
+              return x.constructor.name === "ScenarioList";
+            })
+          );
+          // found it
+          return scenarioList;
+        }
       }
     },
 
@@ -57,7 +73,29 @@ var exports = (function () {
 
         return null;
       },
+      cloneScenario: function() {
 
+        // TODO: this should be in the scenario, but the button is in finder-columns
+        var scenario = this.scenarioList.selectedScenario;
+        var parameters = _.assign(
+          // create a new object (no data binding)
+          {},
+          // fill it with the parameters
+          // TODO: replace by object parameters instead of list of parameters
+          _.get(scenario.parameters, 0)
+        );
+
+        console.log("cloning scenario", parameters, this);
+        var req = {
+          name: "scenarios-create",
+          params: {},
+          query: {
+            "parameters": JSON.stringify(parameters),
+            "name": _.get(this.scenarioList.selectedScenario, "name")
+          }
+        };
+        this.$router.go(req);
+      },
       // Remove item, based on incoming modelinfo.
       removeScenario: function() {
 
