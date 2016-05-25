@@ -31,7 +31,11 @@ processOptionalArguments();
 
 // Proxy paths which we map to a different source, for testing locally or
 // running the actual build.
-var paths = ["runs", "createrun", "deleterun", "dorun", "scene", "files", "scenario", "scenario/template"];
+var paths = [
+  "api", "static",
+  // old apis
+  "runs", "createrun", "deleterun", "dorun", "scene", "files", "scenario", "scenario/template"
+];
 
 var proxies = _.map(paths, (path) => {
   var proxyItem = null;
