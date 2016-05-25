@@ -193,11 +193,17 @@ var exports = (function () {
           });
 
       },
+
       downloadFiles: function() {
         // Open download window
         var id = this.model.id;
 
-        window.open("/scene/export?id=" + id);
+        // Get array of checked download options.
+        var downloadOptions = $(".downloadoption:checked").map(function(){
+          return $(this).val();
+        }).get(); //
+
+        window.open("/scene/export?id=" + id + "&options=" + downloadOptions.join(";"));
       },
       // Remove item, based on incoming modelinfo.
       removeModel: function() {
