@@ -63,6 +63,9 @@ $row-color-odd: #f7f7f7;
 // was #c2c3c6; is now consistent with forms
 $row-border-color: $gray-light;
 
+$state-completed: #6ca15e;
+$state-pending: $gray-light;
+$state-processing: #7facc5;
 
 $selected-item-color: #dae4d1;
 
@@ -82,6 +85,14 @@ $selected-item-color: #dae4d1;
   //min-height: 100%;
   //height: 100%;
   height: 87vh;
+}
+
+// Truncate a line of text with elli...
+@mixin truncate {
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 
@@ -113,6 +124,25 @@ $selected-item-color: #dae4d1;
     }
   }
 }
+
+
+// COlor for the model state (processing, pending, completed, error?)
+@mixin model-state-colors() {
+
+  &.processing {
+    background-color: $state-processing;
+  }
+
+  &.pending {
+    background-color: $state-pending;
+  }
+
+  &.completed {
+    background-color: $state-completed;
+  }
+
+}
+
 
 // In order to make full height columns, we need document to be 100% already
 html,
@@ -533,6 +563,17 @@ body {
       display: block;
       padding: 10px;
       text-decoration :none;
+      width: 80%;
+      @include truncate();
+    }
+
+    .model-state
+    {
+      @include model-state-colors();
+      border: 1px solid $gray-lighter;
+      position: absolute;
+      right: 4px;
+      bottom: 30%;
     }
   }
 }
