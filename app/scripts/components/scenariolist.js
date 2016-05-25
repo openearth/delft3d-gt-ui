@@ -50,6 +50,16 @@ var exports = (function () {
         get: function() {
           return -1;
         }
+      },
+      selectedScenario: {
+        get: function() {
+          // Get all scenarios with the current id
+          var scenarios = _.filter(this.scenarios, ["scenario", this.selectedScenarioId]);
+          // We want the first one
+          var scenario = _.first(scenarios);
+          
+          return scenario;
+        }
       }
     },
 
