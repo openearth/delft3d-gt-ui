@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js" lang="">
+<html class="no-js" lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="description" content="">
@@ -29,31 +29,37 @@
   </head>
   <body>
     <!--[if lt IE 10]>
-      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
 
     <!-- black bar on the top -->
-    <nav class="navbar navbar-default navbar-static-top heading-bar">
+    <nav class="navbar navbar-default navbar-static-top navbar-inverse">
       <div class="container-fluid">
         <div class="navbar-header">
-
-          <a href="/" class="site-title"><img src="images/logo/delft3d-gt.svg" id="site-logo" />Delft3D-GT Dashboard</a>
-
+          <!-- Title -->
+          <a href="/" class="navbar-brand">
+            <img src="images/logo/delft3d-gt.svg" alt="logo"/>
+          </a>
         </div>
+        <div class="collapse navbar-collapse">
+          <!-- Items -->
+          <ul class="navbar-nav nav">
+            <li><a href="#"><h3>Delft3D<br /><small>Geological Tool</small></h3></a></li>
+          </ul>
+          <ul class="navbar-nav nav navbar-right">
+            <li><a class="btn btn-primary navbar-btn" href="/api/v1/" title="rest api documentation (for developers)"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a></li>
+            <li><a class="btn btn-primary navbar-btn" href="/logout/">logout</a></li>
+          </ul>
 
-        <div class="navbar-header pull-right">
-          <a class="btn btn-primary btn-logout" href="/logout/">Logout</a>
         </div>
       </div>
     </nav>
 
 
     <div id="app" class="full-height">
-
       <!-- This will be filled by app.js (vue-router) -->
       <router-view keep-alive></router-view>
       <!-- and no footer. -->
-
     </div>
 
 
@@ -124,7 +130,6 @@
     <script src="scripts/data/message-scene-delete.js"></script>
     <script src="scripts/data/message-scene-create.js"></script>
     <script src="scripts/data/message-scene-changestate.js"></script>
-    <script src="scripts/main.js"></script>
     <!-- endbuild -->
   </body>
 </html>
