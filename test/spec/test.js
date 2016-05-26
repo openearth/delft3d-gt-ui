@@ -101,7 +101,7 @@
 
     // stuff to test without a browser
     var assert = require("chai").assert;
-
+    var sinon = require("sinon");
 
     //console.log(jsdom);
 
@@ -518,24 +518,16 @@
       modelDetails.startModel();
       done();
 
-    });
-    it("Should be possible to download files", function(done) {
-      var windowOpenCalled = false;
-      var oldOpen = global.window.open;
+    });    
 
-      // mock open function
-      global.window.open = function() {
-        windowOpenCalled = true;
-      };
+    it("Should be possible to download files", function(done) {
+      var windowSpy = sinon.spy(window, "open");
 
       // this should open a new window
       modelDetails.downloadFiles();
 
       // did it?
-      assert.equal(true, windowOpenCalled);
-
-      // restore open function
-      global.window.open = oldOpen;
+      sinon.assert.calledOnce(windowSpy);
 
       done();
 
