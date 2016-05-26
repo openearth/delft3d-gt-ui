@@ -46,9 +46,9 @@ var exports = (function () {
 
       ownerfullname: {
 
-        get : function() {
+        get: function() {
           // Placeholder of variable in model info.
-          return  "first " + " last";
+          return "first " + " last";
         }
       },
 
