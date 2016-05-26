@@ -23,7 +23,8 @@ var exports = (function() {
         // Is the form completely valid? (Used to automatically set class on submit button)
         formIsValid: true,
 
-        selectedTemplate: null
+        // the current template
+        template : null
 
       };
     },
@@ -35,10 +36,11 @@ var exports = (function() {
     created: function() {
       fetchTemplates()
         .then((templates) => {
-          this.availableTemplates = templates.template_list;
+          this.availableTemplates = templates;
 
           // Select the first template automatic:
-          this.selectedId = 0;
+          var template = _.get(this.availableTemplates, 0);
+          this.selectTemplate(template);
         });
     },
 
@@ -67,48 +69,28 @@ var exports = (function() {
 
     },
 
-    computed: {
-
-      selectedId: {
-        get: function() {
-          return this.availableTemplates.indexOf(this.selectedTemplate);
-
-        },
-        // setter
-        set: function(newValue) {
-
-          // A different model has been selected.
-          if (newValue >= 0) {
-
-            // First set data, then the template. Order is important!
-            this.scenarioConfig = this.prepareScenarioConfig(this.availableTemplates[newValue]);
-            this.updateWithQueryParameters();
-            this.selectedTemplate = this.availableTemplates[newValue];
-
-
-            // Initialize the tooltips:
-            // We do this after the DOM update.
-            Vue.nextTick(function () {
-              $("[data-toggle='tooltip']").tooltip();
-            });
-
-
-
-          } else {
-
-            // Order is important!
-            this.selectedTemplate = null;
-            this.scenarioConfig = {};
-
-          }
-
-          this.validateForm();
-        }
-
-      }
-    },
-
     methods: {
+      selectTemplate: function(template) {
+        console.log("setting template to", template);
+
+        // First set data, then the template. Order is important!
+        this.scenarioConfig = this.prepareScenarioConfig(template);
+
+        this.updateWithQueryParameters();
+
+        // set the selected template
+        this.template = template;
+
+        // Initialize the tooltips:
+        // We do this after the DOM update.
+        Vue.nextTick(function () {
+          $("[data-toggle='tooltip']").tooltip();
+        });
+
+        this.validateForm();
+      },
+
+
       updateWithQueryParameters: function() {
         if (_.has(this.$route, "query.parameters")) {
           // get parameters from query
@@ -132,7 +114,7 @@ var exports = (function() {
         var valid = true;
 
         // If we have no templateid, we bail out immediatly:
-        if (this.selectedId <= -1) {
+        if (!this.template) {
           valid = false;
         }
 
@@ -144,7 +126,6 @@ var exports = (function() {
 
             // The form is not valid. We vail out immediatly of this loop and updatye the form with the new value.
             valid = false;
-
             return;
           }
 
@@ -178,7 +159,7 @@ var exports = (function() {
         });
 
         var postdata = {
-          templateid: this.selectedTemplate.templateid, // Temp!
+          templateid: this.template.templateid, // Temp!
           scenariosettings: JSON.stringify(config)
         };
 
@@ -298,8 +279,8 @@ var exports = (function() {
             var groupSum = this.calculateGroupSum(configuredVar.group);
 
             // What is the target?
-            if (this.selectedTemplate.groups[configuredVar.group] !== undefined) {
-              var targetVal = parseFloat(this.selectedTemplate.groups[configuredVar.group].targetvalue);
+            if (this.template.groups[configuredVar.group] !== undefined) {
+              var targetVal = parseFloat(this.template.groups[configuredVar.group].targetvalue);
 
               valid = valid && (targetVal === groupSum);
             }
@@ -432,43 +413,43 @@ var exports = (function() {
 
       // We have to prepare the scenario config
       prepareScenarioConfig: function(data) {
-        var config = {};
 
-        if (data === undefined) {
-          return config;
-        }
+        // create a deep copy so we don't change the template
+        var scenario = _.cloneDeep(data);
+
+        // TODO: the first level of variables are sections, not variables
+        // FIX at the source
+        scenario.sections = scenario.variables;
+        delete scenario.variables;
 
         // Loop through all variables and set the default value:
-        $.each(data.variables, function(categorykey, categoryValue) {
+        var sections = scenario.sections;
 
+        // flatten variables
+        _.forEach(sections, function(section) {
           // Loop through all category vars
-          $.each(categoryValue.variables, function(varKey, varValue) {
+          _.forEach(section.variables, function(variable) {
 
-            var group = "";
+            // Set all the defaults
 
-            if (varValue.group !== undefined) {
-              group = varValue.group;
-            }
-
-            config[varValue.variableid] = {
-              value: varValue.default, // Default value
-              valid: true, // We assume everything is ok
-
-              useautostep: false, // Do not use autostep by default
-              minstep: parseFloat(varValue.min), // Default step min is min value of this var
-              maxstep: parseFloat(varValue.max), // Default step max is max value of this var
-              stepinterval: parseFloat(varValue.stepoptions.defaultstep), // Default step from the template
-              units: varValue.units,
-              group: group // Group name, for shared variables.
-            };
-
-
+            // Set Default value
+            variable.value = variable.default;
+            // We assume everything is ok
+            variable.valid = true;
+            // Do not use autostep by default
+            variable.useautostep = false;
+            // Default step min is min value of this var
+            variable.minstep = parseFloat(variable.min);
+            // Default step max is max value of this var
+            variable.maxstep = parseFloat(variable.max);
+            // Default step from the template
+            variable.stepinterval =parseFloat(variable.stepoptions.defaultstep);
 
           });
 
         });
 
-        return config;
+        return scenario;
       }
     }
   });

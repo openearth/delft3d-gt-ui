@@ -16,59 +16,89 @@
             </div>
           </div>
         </div>
+      </div>
     </nav>
 
     <!-- User has to select a template first -->
 
-    <div class="panel-body column">
+    <div class="container-fluid">
       <div class="row">
         <div class="col-sm-12">
-          <div class="header-bar">
-            <h2>
-              Scenario builder
-            </h2>
-          </div>
+          <h2>Scenario builder</h2>
         </div>
       </div>
 
       <div class="row">
-        <div class="col-sm-5 ">
-
-          <!-- User has to select a template first -->
-          <template v-if="availableTemplates !== null">
-            <div class="row">
-              <div class="col-sm-12">
-                <select class="combobox form-control" v-model="selectedId"  v-on:select="selectScenario()">
-
-
-
-                  <option v-for="option in availableTemplates" v-bind:value="$index">
-                    {{ option.templatename }}
+        <!-- 2 column layout, 1st column scenario properties -->
+        <div class="col-sm-5">
+          <!--  -->
+          <div class="row" v-if="availableTemplates.length">
+            <div class="col-sm-12">
+              <div class="form-group ">
+                <label for="select-template">Select a template</label>
+                <select class="combobox form-control" v-model="template"  id="select-template">
+                  <option v-for="template in availableTemplates" v-bind:value="template">
+                    {{ template.templatename }}
                   </option>
-
                 </select>
               </div>
             </div>
-          </template>
+          </div>
 
           <!-- if user selected something, show GUI -->
-          <template v-if="selectedTemplate !== null ">
-
-            <h3>
-              Template: {{selectedTemplate.templatename}} <span class="label label-default">version {{selectedTemplate.version}}</span>
-            </h3>
+          <div>
 
             <!-- categories -->
-            <div id="scenariobuilder-input">
-              <div v-for="item in selectedTemplate.variables">
-                <h3>
-                  {{item.label}}
-                </h3>
+            <div>
+              <form>
+                <!-- variables in scenarioConfig are sections -->
+                <div v-for="section in scenarioConfig.sections">
+                  <div class="panel panel-default">
+                    <div class="panel-heading">
+                      <h3 class="panel-title">{{section.label}}</h3>
+                    </div>
+                    <div class="panel-body">
+                      <div class="form-group has-success" v-for="variable in section.variables">
+                        <label class="control-label" for="{{variable.variableid}}">
+                          {{variable['label']}}
+                          <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="{{variable.description}}"></span>
+                        </label>
+                        <div class="input-group">
+                          <span class="input-group-addon" v-if="variable.stepoptions.autostep">
+                            <input type="checkbox" name="" value="" />
+                          </span>
+                          <input type="{{ variable.type }}"
+                                 class="form-control"
+                                 id="{{ variable.variableid }}"
+                                 :placeholder=""
+                                 aria-describedby="{{ variable.variableid }}status">
+                          <span class="input-group-addon">
+                            {{ variable.units || '-' }}
+                          </span>
+                        </div>
+                        <span id="{{ variable.variableid }}status" class="sr-only">(success)</span>
+                        <pre>
+                          {{ variable | json }}
+                        </pre>
+                      </div>
+
+
+                    </div>
+                  </div>
+
+
+                </div>
+              </form>
+            </div>
+            <div v-if="template">
+              <div v-for="item in template.variables">
+                <h3>{{item.label}}</h3>
 
                 <!--
                     The color of this entire row is determined automatically by the valid state in the scenarioConfig variable.
                     The class is applied when a condition is true
                   -->
+
 
                 <div v-for="value in item['variables']" v-bind:class="{ 'error': scenarioConfig[value.variableid].valid == false}" class="scenario-builder-var">
 
@@ -82,8 +112,6 @@
                       </td>
 
                       <td>
-
-
 
                         <!-- Auto step options -->
                         <!--
@@ -189,7 +217,7 @@
                             </tr>
                           </table>
                         </div>
-                        <!--    </template>-->
+                        <!--    </div>-->
 
                         <!-- End auto step -->
 
@@ -216,30 +244,40 @@
               </div>
 
             </div>
-          </template>
 
+
+
+          </div>
 
 
         </div>
         <div class="col-sm-7 text-center">
-          <img src="images/schematic.svg" class="scenariobuilder-schematic" />
-        </div>
-      </div>
-
-
-      <template v-else="">
-
-        <div class="row">
-          <div class="col-sm-5">
-
-            <div class="row row-top-margin">
-              <div class="col-sm-12">
-                <div class="alert alert-info"  role="alert">
-                  <p class="lead">Please select a template</p>
+            <div v-if="template">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Template details</h3>
+                </div>
+                <!-- template details -->
+                <div class="panel-body">
+                  <p>Name: {{template.templatename}}</p>
+                  <p><span class="label label-default">version {{template.version}}</span></p>
+                </div>
+              </div>
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Schematic</h3>
+                </div>
+                <!-- template details -->
+                <div class="panel-body">
+                  <img src="images/schematic.svg" class="scenariobuilder-schematic" />
                 </div>
               </div>
             </div>
+
+
+
           </div>
-        </div>
+      </div>
     </div>
-    </template>
+  </div>
+</template>
