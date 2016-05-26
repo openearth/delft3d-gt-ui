@@ -3,7 +3,8 @@
 
     <ul class="list-group checked-list-box" id="scenario-list" v-show="selectedModels.length">
       <li class="list-group-item"  v-for="entry in selectedModels" v-bind:class="{ 'selected': entry.id == selectedModelId}">
-       <a href="#/scenarios/{{ entry.scenario }}/models/{{entry.id}}">{{entry.name}}
+       <a href="#/scenarios/{{ entry.scenario }}/models/{{entry.id}}">{{entry.name}}</a>
+       <span class="model-state label label-default {{ entry.state | lowercase }}">{{entry.state | capitalize }}</span>
       </li>
     </ul>
 
@@ -13,39 +14,6 @@
     <div class="alert alert-warning default-hidden" role="alert" id="alert-connectionfailed">
       Cannot reach model server.
     </div>
-
-    <!--
-    <table id="list-model-status" class="table-default">
-      <thead>
-        <tr>
-          <th>Run #</th>
-          <th>Status</th>
-          <th>&nbsp;</th>
-
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr v-for="entry in selectedModels()">
-          <td title="id={{ entry.id }}">
-            <a href="#/scenarios/{{ entry.scenario }}/models/{{entry.id}}">{{entry.name}}</a>
-          </td>
-          <td>{{entry.state}}</td>
-
-          <td class="centered">
-            <a href="#/models/{{ entry.id }}" class="btn btn-primary inside-cell">Details</a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="alert alert-info" v-show="!(models.length)">
-      There are no models loaded.
-    </div>
-    <div class="alert alert-warning default-hidden" role="alert" id="alert-connectionfailed">
-      Cannot reach model server.
-    </div>
-    -->
-
   </div>
 
 </template>
