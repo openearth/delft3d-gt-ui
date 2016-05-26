@@ -199,7 +199,7 @@ var exports = (function () {
         var id = this.model.id;
 
         // Get array of checked download options.
-        var downloadOptions = $(".downloadoption:checked").map(function(){
+        var downloadOptions = $(".downloadoption:checked").map(function() {
           return $(this).val();
         }).get(); //
 

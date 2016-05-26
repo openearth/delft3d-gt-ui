@@ -477,6 +477,19 @@
       done();
 
     });
+    it("Should be possible to download files", function(done) {
+      var windowOpenCalled = false;
+
+      global.window.open = function() {
+        windowOpenCalled = true;
+      };
+
+      modelDetails.downloadFiles();
+      assert.equal(true, windowOpenCalled);
+
+      done();
+
+    });
 
 
   });
