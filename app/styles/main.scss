@@ -144,15 +144,6 @@ $selected-item-color: #dae4d1;
 
 }
 
-
-// In order to make full height columns, we need document to be 100% already
-html,
-body {
-  height: 100%;
-  margin: 0;
-  overflow: hidden;
-}
-
 .alert {
   @include rectangle-corners();
 }
