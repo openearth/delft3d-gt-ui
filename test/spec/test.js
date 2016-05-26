@@ -521,13 +521,21 @@
     });
     it("Should be possible to download files", function(done) {
       var windowOpenCalled = false;
+      var oldOpen = global.window.open;
 
+      // mock open function
       global.window.open = function() {
         windowOpenCalled = true;
       };
 
+      // this should open a new window
       modelDetails.downloadFiles();
+
+      // did it?
       assert.equal(true, windowOpenCalled);
+
+      // restore open function
+      global.window.open = oldOpen;
 
       done();
 
