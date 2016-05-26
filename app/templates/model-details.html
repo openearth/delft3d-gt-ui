@@ -166,13 +166,16 @@
           <p>
             Please check what you would like to download. Your download will be a ZIP file which contains the requested files.
           </p>
-          <p>
-            Currently you can only dowload the generated output images.
-          </p>
+
           <div class="form-group input-group">
-            <span class="input-group-addon"><input type="checkbox" class="downloadoption" checked="checked" v-on:change="downloadOptionsChange()"></span>
+            <span class="input-group-addon"><input type="checkbox" class="downloadoption" checked="checked" value="export_images" v-on:change="downloadOptionsChange()"></span>
             <span class="form-control">Download generated output images</span>
           </div>
+          <div class="form-group input-group">
+            <span class="input-group-addon"><input type="checkbox" class="downloadoption" checked="checked" value="export_thirdparty" v-on:change="downloadOptionsChange()"></span>
+            <span class="form-control">Include export for RMS / Petrel</span>
+          </div>
+
           <div class="btn-group">
             <button class="form-control btn btn-primary" id="download-submit" v-on:click="downloadFiles()" value="">
               Download

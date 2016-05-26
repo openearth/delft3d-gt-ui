@@ -77,6 +77,8 @@
   var ModelCreate = require("../../app/scripts/components/modelcreate.js").ModelCreate;
   var ModelList = require("../../app/scripts/components/modellist.js").ModelList;
   var ScenarioCreate = require("../../app/scripts/components/scenariobuilder.js").ScenarioCreate;
+  var ScenarioList = require("../../app/scripts/components/scenariolist.js").ScenarioList;
+
   var HomeView = require("../../app/scripts/components/home.js").HomeView;
 
 
@@ -124,8 +126,8 @@
           })
           .log(console.log)
           .filteringPath(function() {
-             return "/scenario/list";
-           })
+            return "/scenario/list";
+          })
           .get("/scenario/list")
           .reply(200, {
           });
@@ -322,7 +324,7 @@
         .reply(200, {
           "status": "deleted"
         })
-        // Otherwise we return an 500. The postdata did not match.
+      // Otherwise we return an 500. The postdata did not match.
         .post("/scene/delete")
         .reply(500, {
           status: "error"
@@ -356,7 +358,7 @@
 
       nock("http://0.0.0.0")
 
-      .defaultReplyHeaders({
+        .defaultReplyHeaders({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*"
         })
@@ -388,7 +390,7 @@
 
       nock("http://0.0.0.0")
 
-      .defaultReplyHeaders({
+        .defaultReplyHeaders({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*"
         })
@@ -460,6 +462,46 @@
   });
 
 
+  describe("Scenarios", function() {
+    it("Is possible to create a scenarioList", function(done) {
+      var scenarioList = new ScenarioList();
+
+      console.log("routing", scenarioList.$route);
+      assert.isOk(scenarioList);
+      done();
+    });
+    it("Is possible to get a default run", function(done) {
+      var scenarioList = new ScenarioList();
+
+      assert(scenarioList.defaultRun === -1);
+      done();
+    });
+
+    it("Is possible to use the scenario in a router", function(done) {
+      Vue.config.debug = true;
+      Vue.use(VueRouter);
+
+      var App = Vue.extend({});
+      var router = new VueRouter();
+
+      router.map({
+        "/scenarios/:scenarioids": {
+          component: ScenarioList
+        }
+      });
+
+      router.start(App, "#app");
+      router.go("/scenario/1");
+      console.log("children", App.$children);
+      done();
+    });
+    it("Is possible to clone a scenario", function(done) {
+
+      assert.isOk(true);
+      done();
+    });
+  });
+
   describe("ModelDetails", function() {
     var modelDetails = new ModelDetails();
 
@@ -474,6 +516,27 @@
         .reply(200, {
         });
       modelDetails.startModel();
+      done();
+
+    });
+    it("Should be possible to download files", function(done) {
+      var windowOpenCalled = false;
+      var oldOpen = global.window.open;
+
+      // mock open function
+      global.window.open = function() {
+        windowOpenCalled = true;
+      };
+
+      // this should open a new window
+      modelDetails.downloadFiles();
+
+      // did it?
+      assert.equal(true, windowOpenCalled);
+
+      // restore open function
+      global.window.open = oldOpen;
+
       done();
 
     });
@@ -543,25 +606,34 @@
     it("App - LoadTemplate - Check if mock template is added to DOM", function(done) {
 
       nock("http://0.0.0.0")
-        .get("templates/templates.html")
+        .defaultReplyHeaders({
+          "Content-Type": "text/html",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .log(console.log)
+        .get("/templates/templates.html")
         .reply(200, "<div>template-ok</div>");
 
+      // TODO: put this code in some app level promise
+      $("#template-container").load(
+        "/templates/templates.html",
+        function() {
+          var html = global.$("#template-container").html();
 
-      var html = global.$("body").html();
+          /* eslint-disable quotes */
+          var check = '<div>template-ok</div>';
 
-      /* eslint-disable quotes */
-      var check = '<div id="app"></div><div id=\"template-container\"></div>';
+          /* eslint-enable quotes */
 
-      /* eslint-enable quotes */
+          // This works better than the assert:
+          try {
+            assert.equal(check, html, "HTML template does not match");
+            done();
+          } catch (e) {
+            done(e);
+          }
 
-        // This works better than the assert:
-      try {
-        assert.equal(html, check, "HTML template does not match");
-        done();
-      } catch (e) {
-        done(e);
-      }
-
+        });
     });
 
 

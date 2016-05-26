@@ -36,6 +36,7 @@ var exports = (function() {
             component: ModelDetails
           },
           "/scenarios/create": {
+            name: "scenarios-create",
             component: ScenarioCreate
           },
           "/models": {
