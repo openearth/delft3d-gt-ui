@@ -43,6 +43,15 @@ var exports = (function () {
 
     },
     computed: {
+
+      ownerfullname: {
+
+        get : function() {
+          // Placeholder of variable in model info.
+          return  "first " + " last";
+        }
+      },
+
       id: {
         get: function() {
           // default to -1
@@ -270,38 +279,6 @@ var exports = (function () {
           });
       },
 
-      // Not used anymore?
-      // changeMenuItem: function(event) {
-
-      //   var el = $(event.target);
-
-      //   // Hide all panels except for the target.
-      //   $(".collapse").hide();
-
-      //   // Get target:
-      //   var targetSelector = $(el).attr("data-target");
-      //   var target = $(targetSelector);
-
-      //   target.show();
-
-
-      //   // If there is an animation property, we set this:
-      //   var targetAnimation = $(el).attr("data-animation");
-
-      //   if (targetAnimation !== undefined && targetAnimation.length > 0) {
-      //     this.currentAnimationKey = targetAnimation;
-      //     this.currentAnimationIndex = 0;
-      //     this.stopImageFrame();
-
-      //   } else {
-      //     this.currentAnimationKey = "";
-      //     this.currentAnimationIndex = 0;
-      //   }
-
-
-
-      //   event.stopPropagation();
-      // },
 
       // User wants to start a model. We just do not do anything now, as this needs to be implemented.
       startModel: function() {
