@@ -41,7 +41,10 @@ var exports = (function() {
           // Select the first template automatic:
           var template = _.get(this.availableTemplates, 0);
           this.selectTemplate(template);
+
         });
+
+
     },
 
     route: {
@@ -85,6 +88,7 @@ var exports = (function() {
         // We do this after the DOM update.
         Vue.nextTick(function () {
           $("[data-toggle='tooltip']").tooltip();
+          $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
         });
 
         this.validateForm();
