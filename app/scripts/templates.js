@@ -10,9 +10,7 @@ var exports = (function() {
     return new Promise(function(resolve, reject) {
 
       //Load test template data:
-      $.getJSON({
-        url: "/api/v1/templates/"
-      })
+      $.getJSON("/api/v1/templates/")
         .done(function(data) {
           resolve(data);
         })
