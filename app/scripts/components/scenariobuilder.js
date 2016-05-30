@@ -71,7 +71,28 @@ var exports = (function() {
       this.validateAllFields();
 
     },
-
+    validators: { // `numeric` and `url` custom validator is local registration
+      max: function (val, rule) {
+        var vals = this.vm.factorToArray({
+          factor: true,
+          value: val,
+          type: 'numeric'
+        });
+        // check if any value is > rule
+        var valid = _.every(vals, function(x) {return x <= rule;});
+        return valid;
+      },
+      min: function (val, rule) {
+        var vals = this.vm.factorToArray({
+          factor: true,
+          value: val,
+          type: 'numeric'
+        });
+        // check if any value is > rule
+        var valid = _.every(vals, function(x) {return x >= rule;});
+        return valid;
+      }
+    },
     computed: {
       totalRuns:{
         cache: false,
