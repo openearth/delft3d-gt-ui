@@ -6,6 +6,30 @@ var ScenarioCreate;
 var exports = (function() {
   "use strict";
 
+  // a separate function that we can test.
+  function factorToArray(variable) {
+    if (!_.get(variable, "factor")) {
+      // if variable is not a factor return the value
+      return variable.value;
+    }
+    // split it up
+    var tagsArray = _.split(variable.value, ",");
+
+    // if we have a number, return numbers
+    if (variable.type === "numeric") {
+      // convert to number
+      var numbers = _.map(
+        tagsArray,
+        _.toNumber
+      );
+
+      // otherwise return the strings
+      tagsArray = numbers;
+    }
+    return tagsArray;
+  }
+
+
   // Constructor of our component
   ScenarioCreate = Vue.component("scenario-builder", {
     template: "#template-scenario-builder",
@@ -51,7 +75,7 @@ var exports = (function() {
     validators: { // `numeric` and `url` custom validator is local registration
       max: function (val, rule) {
         // create a value object and split up the value
-        var vals = this.vm.factorToArray({
+        var vals = factorToArray({
           factor: true,
           value: val,
           type: "numeric"
@@ -65,7 +89,7 @@ var exports = (function() {
         return valid;
       },
       min: function (val, rule) {
-        var vals = this.vm.factorToArray({
+        var vals = factorToArray({
           factor: true,
           value: val,
           type: "numeric"
@@ -119,27 +143,6 @@ var exports = (function() {
       }
     },
     methods: {
-      factorToArray: function(variable) {
-        if (!_.get(variable, "factor")) {
-          // if variable is not a factor return the value
-          return variable.value;
-        }
-        // split it up
-        var tagsArray = _.split(variable.value, ",");
-
-        // if we have a number, return numbers
-        if (variable.type === "numeric") {
-          // convert to number
-          var numbers = _.map(
-            tagsArray,
-            _.toNumber
-          );
-
-          // otherwise return the strings
-          tagsArray = numbers;
-        }
-        return tagsArray;
-      },
       selectTemplate: function(template) {
         console.log("setting template to", template);
 
@@ -186,7 +189,7 @@ var exports = (function() {
         };
 
         $.ajax({
-          url: "/scenario/create",
+          url: "/api/v1/scenarios/",
           data: postdata,
           method: "POST"
         })
@@ -235,7 +238,8 @@ var exports = (function() {
     }
   });
   return {
-    ScenarioCreate: ScenarioCreate
+    ScenarioCreate: ScenarioCreate,
+    factorToArray: factorToArray
   };
 
 }());

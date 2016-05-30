@@ -77,6 +77,7 @@
   var ModelCreate = require("../../app/scripts/components/modelcreate.js").ModelCreate;
   var ModelList = require("../../app/scripts/components/modellist.js").ModelList;
   var ScenarioCreate = require("../../app/scripts/components/scenariobuilder.js").ScenarioCreate;
+  var factorToArray = require("../../app/scripts/components/scenariobuilder.js").factorToArray;
   var ScenarioList = require("../../app/scripts/components/scenariolist.js").ScenarioList;
 
   var HomeView = require("../../app/scripts/components/home.js").HomeView;
@@ -461,6 +462,103 @@
     });
   });
 
+  describe("Scenario builder", function() {
+    it("Is possible to create a scenarioBuilder", function(done) {
+      var scenarioCreate = new ScenarioCreate();
+
+      console.log("routing", scenarioCreate.$route);
+      assert.isOk(scenarioCreate);
+      done();
+    });
+    it("Should be possible to convert a single value to a tag array", function(done) {
+      var array = factorToArray({
+        factor: true,
+        value: 0.3,
+        type: "numeric"
+      });
+
+      assert.equal(0.3, array[0]);
+      done();
+    });
+    it("Should be possible to convert a comma separated string to a tag array", function(done) {
+      var array = factorToArray({
+        factor: true,
+        value: "0,2,3",
+        type: "numeric"
+      });
+
+      assert.equal(0, array[0]);
+      done();
+    });
+    it("Should be possible to check a value using the custom max validator", function(done) {
+      var scenarioCreate = new ScenarioCreate();
+
+      // check if we get an invalid error if we pass 0
+      var valid = scenarioCreate.$options.validators.min("0,2,3", 1);
+
+      assert.isFalse(valid);
+      done();
+    });
+    it("Should be possible get the total number of runs", function(done) {
+      var scenarioCreate = new ScenarioCreate();
+
+      // check if we get an invalid error if we pass 0
+
+      assert.equal(1, scenarioCreate.totalRuns);
+      done();
+    });
+    it("Should be possible to prepare a scenario", function(done) {
+      var scenarioCreate = new ScenarioCreate();
+
+      // empty template
+      var template = {};
+
+      scenarioCreate.selectTemplate(template);
+
+      assert.isOk(scenarioCreate.scenarioConfig);
+
+      done();
+    });
+    it("Should be possible to updte with query parameters", function(done) {
+      var scenarioCreate = new ScenarioCreate();
+
+      scenarioCreate.updateWithQueryParameters();
+
+      assert.isOk(scenarioCreate.scenarioConfig);
+
+      done();
+    });
+    it("Should be possible to submit a scenario", function(done) {
+      var scenarioCreate = new ScenarioCreate();
+
+      scenarioCreate.submitScenario();
+
+      assert.isOk(scenarioCreate.scenarioConfig);
+
+      done();
+    });
+    it("Should be possible to prepare a scenario", function(done) {
+      var scenarioCreate = new ScenarioCreate();
+
+      scenarioCreate.prepareScenarioConfig({
+        "sections": [
+          {
+            "variables": [
+              {
+                id: "var1",
+                default: 0,
+                factor: true
+              }
+            ]
+          }
+        ]
+      });
+
+      assert.isOk(scenarioCreate.scenarioConfig);
+
+      done();
+    });
+  });
 
   describe("Scenarios", function() {
     it("Is possible to create a scenarioList", function(done) {
