@@ -38,7 +38,7 @@
                 <label for="select-template">Select a template</label>
                 <select class="combobox form-control" v-model="template"  id="select-template">
                   <option v-for="template in availableTemplates" v-bind:value="template">
-                    {{ template.templatename }}
+                    {{ template.name }}
                   </option>
                 </select>
               </div>
@@ -47,12 +47,10 @@
 
           <!-- if user selected something, show GUI -->
           <div>
-
-            <!-- categories -->
             <div>
-              <validator name="validation1">
-                <form>
-                  <!-- variables in scenarioConfig are sections -->
+              <!-- the vue validator config, stores form validation result in validation -->
+              <validator name="validation">
+                <form novalidate>
                   <div v-for="section in scenarioConfig.sections">
                     <div class="panel panel-default">
                       <div class="panel-heading">
@@ -60,31 +58,39 @@
                       </div>
                       <div class="panel-body">
                         <div class="form-group" v-for="variable in section.variables" v-bind:class="{'.has-success': variable.variableid === 'scenarioname'}">
-                          <label class="control-label" for="{{variable.variableid}}">
-                            {{variable['label']}}
-                            <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="{{variable.description}}"></span>
-                            [min - max]
+                          <label class="control-label" for="{{variable.id}}">
+                            {{ variable.name }}
+                            <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="{{variable.description}}" v-if="variable.description"></span>
+                            <span v-for="validator in variable.validators" v-if="validator.type === 'range'">
+                              [{{ validator.min }} - {{ validator.max }}]
+                            </span>
                           </label>
                           <div class="input-group">
-                            <!-- <span class="input-group-addon" v-if="variable.stepoptions.autostep"> -->
-                            <!--   <input type="checkbox" v-model="variable.useautostep" title="vary"/> -->
-                            <!-- </span> -->
-                            <input type="{{ variable.type }}"
-                                   class="form-control"
-                                   id="{{ variable.variableid }}"
-                                   :data-role="variable.stepoptions.autostep ? 'tagsinput' : ''"
-                                   v-model="variable.value"
-                                   aria-describedby="{{ variable.variableid }}status"
-                                   v-validate:scenename="{ maxlength: 2 }"
+                            <template v-if="variable.type !== 'textarea'">
+                              <input
 
-                                   >
+                                 type="{{ variable.type }}"
+                                 class="form-control"
+                                 id="{{ variable.id }}"
+                                 :data-role="variable.factor ? 'tagsinput' : ''"
+                                 v-model="variable.value"
+                                 :disabled="variable.disabled"
+                                 aria-describedby="{{ variable.variableid }}status"
+                                 >
+                            </template>
+                            <textarea
+                               class="form-control"
+                               rows="3"
+                               v-if="variable.type === 'textarea'"
+                               :disabled="variable.disabled"
+                               >{{ variable.value }}</textarea>
+                            <!-- if we add this to 1 we need to add it to all, bug in bootstrap -->
                             <span class="input-group-addon">
                               {{ variable.units || '-' }}
                             </span>
+
                           </div>
                           <div class="errors">
-                            <p v-if="$validation1.scenename.required">Required your name.</p>
-                            <p v-if="variable.variableid === 'scenarioname'">Your name is too short.</p>
                           </div>
 
                           <span id="{{ variable.variableid }}status" class="sr-only">(success)</span>
@@ -102,167 +108,28 @@
                 </form>
               </validator>
             </div>
-            <div v-if="template">
-              <div v-for="item in template.variables">
-                <h3>{{item.label}}</h3>
-
-                <!--
-                    The color of this entire row is determined automatically by the valid state in the scenarioConfig variable.
-                    The class is applied when a condition is true
-                  -->
 
 
-                <div v-for="value in item['variables']" v-bind:class="{ 'error': scenarioConfig[value.variableid].valid == false}" class="scenario-builder-var">
+            <!-- expected runs indicator. It becomes a different color if the totalRuns exceed 20 -->
+            <div class="row" >
+              <div class="col-sm-12">
+                <div class="alert alert-info" v-bind:class="{ 'alert-warning': totalRuns > 20}" role="alert">
+                  <p class="lead">Expected runs: <strong>~{{totalRuns}}</strong></p>
+                  <p v-if="totalRuns > 20">
+                    At the moment you cannot submit more than 20 runs in one scenario.
+                  </p>
 
-                  <table class="scenario-builder-table">
-                    <tr>
-                      <td class="variable-name" >
-                        <label for="{{value.variableid}}" class="label-variable">
-                          {{value['label']}}
-                          <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="{{value.description}}"></span>
-                        </label>
-                      </td>
-
-                      <td>
-
-                        <!-- Auto step options -->
-                        <!--
-
-                            Not sure where to put this,.
-                          -->
-
-                        <div class="centered">
-                          <table class="centered max-width">
-
-                            <tr>
-                              <td class="no-padding">
-                                <!-- this input is disabled when autostep is enabled -->
-                                <span v-if="value.type == 'numeric'" class="input-group-addon no-background">Default:</span>
-                              </td>
-
-                              <template v-if="value.stepoptions.defaultstep !== 0">
-
-                                <td class="no-padding">
-                                  <!-- enable autostep? -->
-                                  <span class="input-group-addon no-background">Vary:</span>
-
-                                </td>
-
-                                <td class="no-padding">
-                                  <span class="input-group-addon no-background">Min [{{value.min}}]:</span>
-                                </td>
-
-                                <td class="no-padding">
-                                  <span class="input-group-addon  no-background">Max <template v-if="value.max !== 0">[{{value.max}}]:</template></span>
-                                </td>
-
-                                <td class="no-padding">
-                                  <span class="input-group-addon  no-background">Step
-                                    <div v-if="value.stepoptions.multipleof != 0">
-                                      <small>[Multiple of {{value.stepoptions.multipleof}}]</small>
-                                    </div>
-                                  </span>
-                                </td>
-
-                                <td  class="no-padding" rowspan="1" style="vertical-align: top">
-                                  <!-- only show units if type is numeric -->
-                                  <span class="input-group-addon  no-background">Unit:</span>
-
-                                </td>
-
-                              </template>
-
-                              <!-- also show unit when there is not a step value -->
-                              <template v-if="value.stepoptions.defaultstep === 0 && value.units.length > 0">
-                                <td colspan="5" class="no-padding">&nbsp;</td>
-                                <!-- only show units if type is numeric -->
-                                <td  class="no-padding" rowspan="1" style="vertical-align: top">
-                                  <span class="input-group-addon no-background unit-label">Unit:</span>
-
-                                </td>
-                              </template>
-
-
-                            </tr>
-                            <tr>
-
-                              <td class="no-padding" >
-                                <!-- [TODO] improve these inputs on a later moment (proper type selection) -->
-                                <input  v-if="value.type == 'numeric'" v-model="scenarioConfig[value.variableid].value" v-bind:class="{ 'inputdisabled': scenarioConfig[value.variableid].useautostep == true}" class="form-control" data-max="{{value.max}}" data-min="{{value.min}}" name="{{value['variableid']}}" number type="number" v-on:keyup="validateField(value, $event)" v-on:change="validateField(value, $event)" />
-                                <input  v-if="value.type == 'text'" v-model="scenarioConfig[value.variableid].value" v-bind:class="{ 'inputdisabled': scenarioConfig[value.variableid].useautostep == true}" class="form-control" data-max="{{value.max}}" data-min="{{value.min}}" name="{{value['variableid']}}" type="text" v-on:keyup="validateField(value, $event)" v-on:change="validateField(value, $event)" />
-                              </td>
-
-                              <template v-if="value.stepoptions.defaultstep !== 0">
-                                <td class="no-padding">
-                                  <div class="input-group no-margin">
-                                    <span class="input-group-addon  no-background">
-                                      <input type="checkbox" aria-label="autostep" v-model="scenarioConfig[value.variableid].useautostep" v-on:change="toggleAutoStep(value, $event)">
-                                    </span>
-                                  </div>
-                                </td>
-
-                                <td class="no-padding  input-number">
-                                  <input type="number" v-bind:class="{ 'inputdisabled': scenarioConfig[value.variableid].useautostep == false}" class="form-control" name="step{{value['variableid']}}-min" v-model="scenarioConfig[value.variableid].minstep" v-on:keyup="validateField(value, $event)" v-on:change="validateField(value, $event)" />
-                                </td>
-
-                                <td class="no-padding  input-number">
-                                  <input type="number" v-bind:class="{ 'inputdisabled': scenarioConfig[value.variableid].useautostep == false}" class="form-control"  name="step{{value['variableid']}}-max"  v-model="scenarioConfig[value.variableid].maxstep" v-on:keyup="validateField(value, $event)" v-on:change="validateField(value, $event)" />
-                                </td>
-
-                                <td class="no-padding  input-number">
-                                  <input type="number" v-bind:class="{ 'inputdisabled': scenarioConfig[value.variableid].useautostep == false}" class="form-control" name="step{{value['variableid']}}-interval" v-model="scenarioConfig[value.variableid].stepinterval" v-on:keyup="validateField(value, $event)" v-on:change="validateField(value, $event)" />
-                                </td>
-
-
-                                <td class="no-padding  text-center">{{value.units}}</td>
-
-                              </template>
-
-
-                              <!-- also show unit when there is not a step value -->
-                              <template v-if="value.stepoptions.defaultstep === 0 && value.units.length > 0">
-                                <td colspan="5" class="no-padding">&nbsp;</td>
-                                <td class="no-padding text-center unit-label" >{{value.units}}</td>
-                              </template>
-
-
-                            </tr>
-                          </table>
-                        </div>
-                        <!--    </div>-->
-
-                        <!-- End auto step -->
-
-                      </td>
-
-                    </tr>
-                  </table>
                 </div>
               </div>
-
-
-
-              <!-- expected runs indicator. It becomes a different color if the totalRuns exceed 20 -->
-              <div class="row" >
-                <div class="col-sm-12">
-                  <div class="alert alert-info" v-bind:class="{ 'alert-warning': totalRuns > 20}" role="alert">
-                    <p class="lead">Expected runs: <strong>~{{totalRuns}}</strong></p>
-                    <p v-if="totalRuns > 20">
-                      At the moment you cannot submit more than 20 runs in one scenario.
-                    </p>
-
-                  </div>
-                </div>
-              </div>
-
             </div>
-
-
 
           </div>
 
 
+
         </div>
+
+
         <div class="col-sm-7">
           <div v-if="template">
             <div class="panel panel-default">

@@ -72,7 +72,58 @@ var exports = (function() {
 
     },
 
+    computed: {
+      totalRuns:{
+        cache: false,
+        get: function() {
+          var totalRuns = 1;
+
+          // lookup all variables
+          var variables = _.flatMap(
+            this.scenarioConfig.sections,
+            function(section){return section.variables;}
+          );
+
+          // lookup number of runs per variable
+          var runs = _.map(
+            variables,
+            function(variable) {
+              var n = 1;
+              if (variable.factor) {
+                n = this.factorToArray(variable).length;
+              }
+              return n;
+            }.bind(this));
+          // reduce product
+          totalRuns = _.reduce(runs, function(prod, n) {
+            return prod * n;
+          }, 1);
+          return totalRuns;
+
+        }
+      }
+
+
+    },
     methods: {
+      factorToArray: function(variable) {
+        if (!_.get(variable, 'factor')) {
+          // if variable is not a factor return the value
+          return variable.value;
+        };
+        var tagsArray =  _.split(variable.value, ',');
+
+        // if we have a number, return numbers
+        if (variable.type === 'numeric') {
+          var numbers = _.map(
+            tagsArray,
+            _.toNumber
+          );
+          // otherwise return the strings
+          tagsArray = numbers;
+        }
+        return tagsArray;
+      },
       selectTemplate: function(template) {
         console.log("setting template to", template);
 
@@ -113,7 +164,8 @@ var exports = (function() {
         }
       },
       validateForm: function() {
-
+        // Return true for now
+        return true;
         //var validation = new InputValidation();
         var valid = true;
 
@@ -351,67 +403,11 @@ var exports = (function() {
       },
 
 
-      // Set validation state of group:
-      setGroupValidationState: function(groupName, state) {
-        // If it's an empty name, we just exit.
-        if (groupName.length === 0) {
-          return;
-        }
-
-        var that = this;
-
-        // We loop through all fields and change the group validation state for all variables that match the group name.
-        $.each(this.scenarioConfig, function(variableId, varValue) {
-
-          if (varValue.group === groupName) {
-            that.setVariableValidationState(variableId, state);
-          }
-
-        });
-      },
-
-      setVariableValidationState: function(variableId, state) {
-        this.scenarioConfig[variableId].valid = state;
-      },
-
-      /// User has clicked on an autostep toggle in the GUI. Process this event.
-      toggleAutoStep: function(variable, event) {
-
-        this.validateField(variable, event);
-
-        this.calculatetotalRuns();
-
-      },
 
       // Calculate total number of runs this scenario contains so far.
       // It's either 1. Or multiple, because of interval steps. We take a rough calculation here first.
       calculatetotalRuns: function() {
 
-        var totalRuns = 1;
-
-        $.each(this.scenarioConfig, function(varKey, varValue) {
-
-          // This model uses autostepping, so we calculate how many there are in there.
-          if (varValue.useautostep === true) {
-
-            var stepInterval = varValue.stepinterval;
-
-            if (stepInterval > 0) {
-              var diff = (Math.abs(varValue.maxstep - varValue.minstep) / stepInterval) + 1;
-
-              // We multiply the number of runs with every interval.
-              totalRuns *= diff;
-            }
-
-          }
-        });
-
-
-
-        console.log(totalRuns);
-
-        // Store back in config.
-        this.totalRuns = Math.ceil(totalRuns);
 
       },
 
@@ -421,33 +417,19 @@ var exports = (function() {
         // create a deep copy so we don't change the template
         var scenario = _.cloneDeep(data);
 
-        // TODO: the first level of variables are sections, not variables
-        // FIX at the source
-        scenario.sections = scenario.variables;
-        delete scenario.variables;
-
         // Loop through all variables and set the default value:
         var sections = scenario.sections;
+
 
         // flatten variables
         _.forEach(sections, function(section) {
           // Loop through all category vars
           _.forEach(section.variables, function(variable) {
 
-            // Set all the defaults
-
             // Set Default value
-            variable.value = variable.default;
-            // We assume everything is ok
-            variable.valid = true;
-            // Do not use autostep by default
-            variable.useautostep = false;
-            // Default step min is min value of this var
-            variable.minstep = parseFloat(variable.min);
-            // Default step max is max value of this var
-            variable.maxstep = parseFloat(variable.max);
-            // Default step from the template
-            variable.stepinterval =parseFloat(variable.stepoptions.defaultstep);
+            variable.value = _.get(variable, 'default');
+            // Set factor to false
+            variable.factor = _.get(variable, 'factor', false);
 
           });
 
