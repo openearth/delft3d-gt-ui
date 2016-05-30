@@ -12,9 +12,15 @@
     "vue-router": "^0.7.13",
     "bootstrap-combobox": "~1.1.6",
     "font-awesome": "fontawesome#^4.6.3",
-    "bootstrap-tagsinput": "^0.8.0"
+    "bootstrap-tagsinput": "^0.8.0",
+    "vue-validator": "https://github.com/vuejs/vue-validator.git#^2.1.2"
   },
   "overrides": {
+    "vue-validator": {
+      "main": [
+        "dist/vue-validator.js"
+      ]
+    },
     "bootstrap-sass": {
       "main": [
         "assets/stylesheets/_bootstrap.scss",

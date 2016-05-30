@@ -50,47 +50,57 @@
 
             <!-- categories -->
             <div>
-              <form>
-                <!-- variables in scenarioConfig are sections -->
-                <div v-for="section in scenarioConfig.sections">
-                  <div class="panel panel-default">
-                    <div class="panel-heading">
-                      <h3 class="panel-title">{{section.label}}</h3>
-                    </div>
-                    <div class="panel-body">
-                      <div class="form-group" v-for="variable in section.variables">
-                        <label class="control-label" for="{{variable.variableid}}">
-                          {{variable['label']}}
-                          <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="{{variable.description}}"></span>
-                        </label>
-                        <div class="input-group">
-                          <!-- <span class="input-group-addon" v-if="variable.stepoptions.autostep"> -->
-                          <!--   <input type="checkbox" v-model="variable.useautostep" title="vary"/> -->
-                          <!-- </span> -->
-                          <input type="{{ variable.type }}"
-                                 class="form-control"
-                                 id="{{ variable.variableid }}"
-                                 :data-role="variable.stepoptions.autostep ? 'tagsinput' : ''"
-                                 v-model="variable.value"
-                                 aria-describedby="{{ variable.variableid }}status">
-
-                          <span class="input-group-addon">
-                            {{ variable.units || '-' }}
-                          </span>
-                        </div>
-                        <span id="{{ variable.variableid }}status" class="sr-only">(success)</span>
-                        <!-- <pre> -->
-                        <!--   {{ variable | json }} -->
-                        <!-- </pre> -->
+              <validator name="validation1">
+                <form>
+                  <!-- variables in scenarioConfig are sections -->
+                  <div v-for="section in scenarioConfig.sections">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">{{section.label}}</h3>
                       </div>
+                      <div class="panel-body">
+                        <div class="form-group" v-for="variable in section.variables" v-bind:class="{'.has-success': variable.variableid === 'scenarioname'}">
+                          <label class="control-label" for="{{variable.variableid}}">
+                            {{variable['label']}}
+                            <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="{{variable.description}}"></span>
+                            [min - max]
+                          </label>
+                          <div class="input-group">
+                            <!-- <span class="input-group-addon" v-if="variable.stepoptions.autostep"> -->
+                            <!--   <input type="checkbox" v-model="variable.useautostep" title="vary"/> -->
+                            <!-- </span> -->
+                            <input type="{{ variable.type }}"
+                                   class="form-control"
+                                   id="{{ variable.variableid }}"
+                                   :data-role="variable.stepoptions.autostep ? 'tagsinput' : ''"
+                                   v-model="variable.value"
+                                   aria-describedby="{{ variable.variableid }}status"
+                                   v-validate:scenename="{ maxlength: 2 }"
+
+                                   >
+                            <span class="input-group-addon">
+                              {{ variable.units || '-' }}
+                            </span>
+                          </div>
+                          <div class="errors">
+                            <p v-if="$validation1.scenename.required">Required your name.</p>
+                            <p v-if="variable.variableid === 'scenarioname'">Your name is too short.</p>
+                          </div>
+
+                          <span id="{{ variable.variableid }}status" class="sr-only">(success)</span>
+                          <!-- <pre> -->
+                          <!--   {{ variable | json }} -->
+                          <!-- </pre> -->
+                        </div>
 
 
+                      </div>
                     </div>
+
+
                   </div>
-
-
-                </div>
-              </form>
+                </form>
+              </validator>
             </div>
             <div v-if="template">
               <div v-for="item in template.variables">
@@ -254,41 +264,41 @@
 
         </div>
         <div class="col-sm-7">
-            <div v-if="template">
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h3 class="panel-title">Template details</h3>
-                </div>
-                <!-- template details -->
-                <div class="panel-body">
-                  <dl class="dl-horizontal">
-                    <dt>Name</dt>
-                    <dd>{{template.templatename}}</dd>
-                    <dt>Email</dt>
-                    <dd>{{ template.email }}</dd>
-                    <dt>Site</dt>
-                    <dd>{{ template.site }}</dd>
-                    <dt>Description</dt>
-                    <dd>{{ template.description }}</dd>
-                    <dt>Version</dt>
-                    <dd>{{ template.version}}</dd>
-                  </dl>
-                </div>
+          <div v-if="template">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Template details</h3>
               </div>
-              <div class="panel panel-default">
-                <div class="panel-heading">
-                  <h3 class="panel-title">Schematic</h3>
-                </div>
-                <!-- template details -->
-                <div class="panel-body  text-center">
-                  <img src="images/schematic.svg" class="scenariobuilder-schematic" />
-                </div>
+              <!-- template details -->
+              <div class="panel-body">
+                <dl class="dl-horizontal">
+                  <dt>Name</dt>
+                  <dd>{{template.templatename}}</dd>
+                  <dt>Email</dt>
+                  <dd>{{ template.email }}</dd>
+                  <dt>Site</dt>
+                  <dd>{{ template.site }}</dd>
+                  <dt>Description</dt>
+                  <dd>{{ template.description }}</dd>
+                  <dt>Version</dt>
+                  <dd>{{ template.version}}</dd>
+                </dl>
               </div>
             </div>
-
-
-
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Schematic</h3>
+              </div>
+              <!-- template details -->
+              <div class="panel-body  text-center">
+                <img src="images/schematic.svg" class="scenariobuilder-schematic" />
+              </div>
+            </div>
           </div>
+
+
+
+        </div>
       </div>
     </div>
   </div>
