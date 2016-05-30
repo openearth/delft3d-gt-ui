@@ -57,15 +57,19 @@
                         <h3 class="panel-title">{{section.label}}</h3>
                       </div>
                       <div class="panel-body">
-                        <div class="form-group" v-for="variable in section.variables" v-bind:class="{'.has-success': variable.variableid === 'scenarioname'}">
+                        <div class="form-group" v-for="variable in section.variables" v-bind:class="{'has-error': !($validation[variable.id].valid)}">
                           <label class="control-label" for="{{variable.id}}">
                             {{ variable.name }}
-                            <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="{{variable.description}}" v-if="variable.description"></span>
-                            <span v-for="validator in variable.validators" v-if="validator.type === 'range'">
-                              [{{ validator.min }} - {{ validator.max }}]
+                            <!-- TODO: get rid of this space -->
+                            <span v-if="variable.description" class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="{{variable.description}}"></span>
+
+                            <span v-if="variable.validators.min !== undefined">
+                              [{{ variable.validators.min }} - {{ variable.validators.max }}]
                             </span>
                           </label>
                           <div class="input-group">
+                            <!-- two types of input for now: textarea and other -->
+                            <!-- other first -->
                             <template v-if="variable.type !== 'textarea'">
                               <input
 
@@ -75,28 +79,34 @@
                                  :data-role="variable.factor ? 'tagsinput' : ''"
                                  v-model="variable.value"
                                  :disabled="variable.disabled"
+                                 :field="variable.id"
+                                 v-validate="variable.validators"
                                  aria-describedby="{{ variable.variableid }}status"
                                  >
                             </template>
-                            <textarea
-                               class="form-control"
-                               rows="3"
+                            <!-- text area -->
+                            <template
                                v-if="variable.type === 'textarea'"
-                               :disabled="variable.disabled"
-                               >{{ variable.value }}</textarea>
+                               >
+                              <textarea
+                                 class="form-control"
+                                 rows="3"
+                                 :disabled="variable.disabled"
+                                 :field="variable.id"
+                                 v-validate="variable.validators"
+                                 >{{ variable.value }}</textarea>
+                            </template>
                             <!-- if we add this to 1 we need to add it to all, bug in bootstrap -->
                             <span class="input-group-addon">
                               {{ variable.units || '-' }}
                             </span>
 
                           </div>
-                          <div class="errors">
+                          <div v-if="$validation[variable.id]">
+                            <p v-if="$validation[variable.id].required">required</p>
+                            <p v-if="$validation[variable.id].min">value &lt; min</p>
+                            <p v-if="$validation[variable.id].max">value &gt; max</p>
                           </div>
-
-                          <span id="{{ variable.variableid }}status" class="sr-only">(success)</span>
-                          <!-- <pre> -->
-                          <!--   {{ variable | json }} -->
-                          <!-- </pre> -->
                         </div>
 
 
@@ -106,6 +116,10 @@
 
                   </div>
                 </form>
+                <!-- <pre> -->
+                <!--   {{ $validation | json }} -->
+                <!-- </pre> -->
+
               </validator>
             </div>
 
@@ -134,21 +148,15 @@
           <div v-if="template">
             <div class="panel panel-default">
               <div class="panel-heading">
-                <h3 class="panel-title">Template details</h3>
+                <h3 class="panel-title">Details for {{ template.name }} <small>id: {{ template.id }}</small></h3>
               </div>
               <!-- template details -->
               <div class="panel-body">
                 <dl class="dl-horizontal">
-                  <dt>Name</dt>
-                  <dd>{{template.templatename}}</dd>
-                  <dt>Email</dt>
-                  <dd>{{ template.email }}</dd>
-                  <dt>Site</dt>
-                  <dd>{{ template.site }}</dd>
-                  <dt>Description</dt>
-                  <dd>{{ template.description }}</dd>
-                  <dt>Version</dt>
-                  <dd>{{ template.version}}</dd>
+                  <template v-for="(key, val) in template.meta">
+                    <dt>{{ key }}</dt>
+                    <dd>{{ val }}</dd>
+                  </template>
                 </dl>
               </div>
             </div>
