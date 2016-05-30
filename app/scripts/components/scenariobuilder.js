@@ -1,4 +1,4 @@
-/* global Vue, InputValidation, fetchTemplates, router */
+/* global Vue,  fetchTemplates */
 
 // Exported globals
 var ScenarioCreate;
@@ -18,7 +18,7 @@ var exports = (function() {
         scenarioConfig: {},
 
         // the current template
-        template : null
+        template: null
       };
     },
 
@@ -33,6 +33,8 @@ var exports = (function() {
 
           // Select the first template automatic:
           var template = _.get(this.availableTemplates, 0);
+
+          // set the template, somehow a computed setter was not working...
           this.selectTemplate(template);
 
         });
@@ -42,36 +44,43 @@ var exports = (function() {
 
     route: {
       data: function(transition) {
-        console.log("transition", transition);
-
         transition.next();
       }
     },
 
     validators: { // `numeric` and `url` custom validator is local registration
       max: function (val, rule) {
+        // create a value object and split up the value
         var vals = this.vm.factorToArray({
           factor: true,
           value: val,
-          type: 'numeric'
+          type: "numeric"
         });
+
         // check if any value is > rule
-        var valid = _.every(vals, function(x) {return x <= rule;});
+        var valid = _.every(vals, function(x) {
+          return x <= rule;
+        });
+
         return valid;
       },
       min: function (val, rule) {
         var vals = this.vm.factorToArray({
           factor: true,
           value: val,
-          type: 'numeric'
+          type: "numeric"
         });
+
         // check if any value is > rule
-        var valid = _.every(vals, function(x) {return x >= rule;});
+        var valid = _.every(vals, function(x) {
+          return x >= rule;
+        });
+
         return valid;
       }
     },
     computed: {
-      totalRuns:{
+      totalRuns: {
         cache: false,
         get: function() {
           var totalRuns = 1;
@@ -79,19 +88,27 @@ var exports = (function() {
           // lookup all variables
           var variables = _.flatMap(
             this.scenarioConfig.sections,
-            function(section){return section.variables;}
+            function(section) {
+              return section.variables;
+            }
           );
 
           // lookup number of runs per variable
           var runs = _.map(
             variables,
-            function(variable) {
+            // use an arrow because we need this
+            (variable) => {
+              // by default we have 1 run
               var n = 1;
+
+              // unless we have a factor, then it's the number of values
               if (variable.factor) {
                 n = this.factorToArray(variable).length;
               }
               return n;
-            }.bind(this));
+              // we need to access a function
+            });
+
           // reduce product
           totalRuns = _.reduce(runs, function(prod, n) {
             return prod * n;
@@ -100,23 +117,24 @@ var exports = (function() {
 
         }
       }
-
-
     },
     methods: {
       factorToArray: function(variable) {
-        if (!_.get(variable, 'factor')) {
+        if (!_.get(variable, "factor")) {
           // if variable is not a factor return the value
           return variable.value;
-        };
-        var tagsArray =  _.split(variable.value, ',');
+        }
+        // split it up
+        var tagsArray = _.split(variable.value, ",");
 
         // if we have a number, return numbers
-        if (variable.type === 'numeric') {
+        if (variable.type === "numeric") {
+          // convert to number
           var numbers = _.map(
             tagsArray,
             _.toNumber
           );
+
           // otherwise return the strings
           tagsArray = numbers;
         }
@@ -172,13 +190,14 @@ var exports = (function() {
           data: postdata,
           method: "POST"
         })
-          .done(function() {
+          .done(() => {
             // Go back to home.
             var params = {
             };
+
             // This is not practical, but the only way in vue? (using $parent)
-            that.$parent.$broadcast("show-alert", { message: "Scenario submitted", showTime: 5000, type: "info"});
-            router.go({
+            this.$parent.$broadcast("show-alert", { message: "Scenario submitted", showTime: 5000, type: "info"});
+            this.$router.go({
               name: "home",
               params: params
             });
@@ -203,9 +222,9 @@ var exports = (function() {
           _.forEach(section.variables, function(variable) {
 
             // Set Default value
-            variable.value = _.get(variable, 'default');
+            variable.value = _.get(variable, "default");
             // Set factor to false
-            variable.factor = _.get(variable, 'factor', false);
+            variable.factor = _.get(variable, "factor", false);
 
           });
 
