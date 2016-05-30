@@ -503,8 +503,22 @@
       var scenarioCreate = new ScenarioCreate();
 
       // check if we get an invalid error if we pass 0
-
-      assert.equal(1, scenarioCreate.totalRuns);
+      scenarioCreate.scenarioConfig = scenarioCreate.prepareScenarioConfig({
+        "sections": [
+          {
+            "variables": [
+              {
+                id: "var1",
+                value: "0,3",
+                default: "0,3",
+                type: "numeric",
+                factor: true
+              }
+            ]
+          }
+        ]
+      });
+      assert.equal(2, scenarioCreate.totalRuns);
       done();
     });
     it("Should be possible to prepare a scenario", function(done) {

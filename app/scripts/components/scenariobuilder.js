@@ -127,7 +127,7 @@ var exports = (function() {
 
               // unless we have a factor, then it's the number of values
               if (variable.factor) {
-                n = this.factorToArray(variable).length;
+                n = factorToArray(variable).length;
               }
               return n;
               // we need to access a function
