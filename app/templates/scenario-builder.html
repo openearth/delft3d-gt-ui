@@ -36,7 +36,7 @@
             <div class="col-sm-12">
               <div class="form-group ">
                 <label for="select-template">Select a template</label>
-                <select class="combobox form-control" v-model="template"  id="select-template">
+                <select class="combobox form-control" v-model="template"  id="select-template" :update="selectTemplate(template)">
                   <option v-for="template in availableTemplates" v-bind:value="template">
                     {{ template.name }}
                   </option>
@@ -103,9 +103,9 @@
 
                           </div>
                           <div v-if="$validation[variable.id]">
-                            <p v-if="$validation[variable.id].required">required</p>
-                            <p v-if="$validation[variable.id].min">value &lt; min</p>
-                            <p v-if="$validation[variable.id].max">value &gt; max</p>
+                            <p v-if="$validation[variable.id].required" class="help-block has-error">required</p>
+                            <p v-if="$validation[variable.id].min" class="help-block has-error">value &lt; min</p>
+                            <p v-if="$validation[variable.id].max" class="help-block has-error">value &gt; max</p>
                           </div>
                         </div>
 
