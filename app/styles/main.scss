@@ -144,15 +144,6 @@ $selected-item-color: #dae4d1;
 
 }
 
-
-// In order to make full height columns, we need document to be 100% already
-html,
-body {
-  height: 100%;
-  margin: 0;
-  overflow: hidden;
-}
-
 .alert {
   @include rectangle-corners();
 }
@@ -355,112 +346,10 @@ body {
   }
 }
 
-
-.scenario-builder-var {
-  background-color: $builder-form-row;
-  border-radius: 4px;
-  font-size: 11px;
-  margin-bottom: 8px;
-  padding: 0 4px 2px;
-
-  input[type="text"] {
-    border-radius: 4px;
-  }
-
-  .no-background {
-    background-color: transparent;
-    border: 0;
-    font-size: 11px;
-    font-weight: bold;
-  }
-
-  .variable-name {
-    width: 20%;
-  }
-
-  .unit-label {
-    width: 10%;
-  }
-
-  .input-number {
-    width: 20%;
-  }
-
-  // Disable spinner icon at numeric fields
-  input[type=number]::-webkit-inner-spin-button,
-  input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-
-  input[type=number] {
-    -moz-appearance: textfield;
-  }
-
-  &.error {
-    background-color: $row-color-error;
-
-    // We color enabled inputs.
-/*
-    This looks great, but for now we disable it as we cannot properly highlight the right input element
-
-    input:enabled {
-    border-color: #cc3333;
-    }
-*/
-  }
-
-}
-
 .scenariobuilder-schematic {
-  margin-top: 32px;
-  width: 60%;
+  max-width: 80%;
 }
 
-#scenariobuilder-input {
-  h3 {
-    font-size: 13px;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-}
-
-
-.scenario-builder-table {
-
-  width: 100%;
-
-  tbody {
-    td {
-      font-size: 11px;
-    }
-  }
-
-  .label-variable {
-    font-size: 11px;
-  }
-}
-
-
-.input-group-addon-info {
-  // background-color: $builder-form-row;
-}
-
-.input-group {
-  margin-bottom: 16px;
-
-  // Color when a field is not valid.
-  &.error {
-    span {
-      background-color: $row-color-error;
-    }
-
-    input {
-      background-color: mix($row-color-error, $white, 50%);
-    }
-  }
-
-}
 
 .animation-frame {
   max-width: 100%;
@@ -742,6 +631,15 @@ nav:hover .for-animate {
 
 section {
   padding-left: 15px;
+}
+
+
+.bootstrap-tagsinput {
+  @include rectangle-corners();
+  @include transition(border-color ease-in-out .15s, box-shadow ease-in-out .15s);
+  @include box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
+  border: 1px solid $input-border;
+  width: 100%;
 }
 
 /* End left nav */

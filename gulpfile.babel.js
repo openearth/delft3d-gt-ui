@@ -33,6 +33,11 @@ processOptionalArguments();
 // running the actual build.
 var paths = ["runs", "createrun", "deleterun", "dorun", "scene", "files", "scenario", "scenario/template", "api/v1/scenes/"];
 
+if (args.develop) {
+  // if we are running in develop mode use only local files, no proxies;
+  paths = [];
+}
+
 var proxies = _.map(paths, (path) => {
   var proxyItem = null;
 
