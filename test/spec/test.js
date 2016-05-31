@@ -1,4 +1,4 @@
-/* global chai , MessageSceneCreate, MessageSceneChangeState, MessageSceneDelete, MessageSceneList */
+/* global chai  */
 
 (function() {
   "use strict";
@@ -63,27 +63,21 @@
   includeFile(path.join(__dirname, "/../../app/scripts/inputvalidation.js"));
   includeFile(path.join(__dirname, "/../../bower_components/validator-js/validator.js"));
 
-  includeFile(path.join(__dirname, "/../../app/scripts/data/message-scene-create.js"));
-  includeFile(path.join(__dirname, "/../../app/scripts/data/message-scene-changestate.js"));
-  includeFile(path.join(__dirname, "/../../app/scripts/data/message-scene-delete.js"));
-  includeFile(path.join(__dirname, "/../../app/scripts/data/message-scene-list.js"));
-
-  // load the application
+  // load the components
   var ImageAnimation = require("../../app/scripts/components/imageanimation.js").ImageAnimation;
 
+  // this is needed because this object is used as a global variable
   global.ImageAnimation = ImageAnimation;
-
   var ModelDetails = require("../../app/scripts/components/modeldetails.js").ModelDetails;
   var ModelCreate = require("../../app/scripts/components/modelcreate.js").ModelCreate;
   var ModelList = require("../../app/scripts/components/modellist.js").ModelList;
   var ScenarioCreate = require("../../app/scripts/components/scenariobuilder.js").ScenarioCreate;
-  var factorToArray = require("../../app/scripts/components/scenariobuilder.js").factorToArray;
   var ScenarioList = require("../../app/scripts/components/scenariolist.js").ScenarioList;
-
   var HomeView = require("../../app/scripts/components/home.js").HomeView;
 
-
   // why is this necessary....
+  var factorToArray = require("../../app/scripts/components/scenariobuilder.js").factorToArray;
+
   _.assign(global, require("../../app/scripts/models.js"));
   _.assign(global, require("../../app/scripts/templates.js"));
   _.assign(global, require("../../app/scripts/scenarios.js"));
@@ -150,300 +144,53 @@
 
       });
     });
+    describe("If we can query the model list", function() {
 
-
-    describe("MessageSceneCreate", function() {
-      // Create a MessageSceneCreate without options, we should have an empty options object (null)
-      it("Test scene creation - without name", function() {
-
-        var msc = new MessageSceneCreate({});
-
-        assert(msc.options == null, "MessageSceneCreate should be null");
-      });
-
-
-
-      // Create a MessageSceneCreate without options, we should have an empty options object (null)
-      it("Test scene creation - with name", function() {
-        var options = {
-          name: "Model to create"
-        };
-
-        var msc = new MessageSceneCreate(options);
-
-        assert(msc.options.name === options.name, "MessageSceneCreate name is set");
-      });
-
-
-      it("Test scene creation - check create request - ok", function(done) {
-        var options = {
-          name: "Model to create"
-        };
-
+      // This test is now working using the filteringPath option.
+      // When testing get request, this seems to be the solution.
+      it("Should be possible list models", function(done) {
         nock("http://0.0.0.0")
           .defaultReplyHeaders({
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*"
           })
-          .post("/scene/create", {
-            // We have to match these post fields:
-            // If it does not, we get an error in the report (which is what we want then?)
-            name: options.name
+          .log(console.log)
+          .filteringPath(function() {
+            return "/api/v1/models/";
           })
-          .reply(200, {
-            scene: {
-              "info": "",
-              "name": options.name,
-              "simulationtask": null,
-              "workingdir": "",
-              "postprocessingtask": null,
-              "state": "",
-              "processingtask": null,
-              "fileurl": "",
-              "id": 30
+          .get("/api/v1/models/")
+          .reply(200, [
+            {
+              id: 1,
+              name: "Run 1"
+            }
+          ]);
+
+        global.fetchModels()
+          .then(function(data) {
+            console.log("data", data);
+            assert.isOk(data, "we have some data");
+            done();
+          })
+          .catch(function(e) {
+            console.log(e);
+            // rethrow error to capture it and avoid time out
+            try {
+              throw e;
+            } catch (exc) {
+              done(exc);
             }
           });
 
-        var msc = new MessageSceneCreate(options);
-
-        msc.onErrorCallback(function(errorInfo) {
-          // Somehow we need a try catch blog for asserts?
-          try {
-            console.log(errorInfo.status);
-            assert(errorInfo.status !== "error", "Model status is: error - Name does not match?");
-          } catch (x) {
-            done(x);
-          }
-        });
-
-        // Execute AJAX call to remote server to get list of models.
-        msc.executeRequest(function(data) {
-          assert(data.scene.name === options.name, "model name is ok");
-          done();
-        });
       });
     });
 
 
-    // Testing MessageSceneChangeState messages
-    describe("MessageSceneChangeState", function() {
 
-
-      // Create a MessageSceneCreate without options, we should have an empty options object (nulll)
-      it("MessageSceneChangeState - Create instance without options", function() {
-
-        var mscs = new MessageSceneChangeState();
-
-        assert(mscs.modelid == null, "MessageSceneChangeState modelid should be null");
-      });
-
-      // Create a MessageSceneCreate without options, we should have an empty options object (nulll)
-      it("MessageSceneChangeState - Create instance with string parameter", function() {
-
-        var mscs = new MessageSceneChangeState("notallowed");
-
-        assert(mscs.modelid == null, "MessageSceneChangeState modelid should be null");
-      });
-
-
-      it("MessageSceneChangeState - Check sceneid being sent", function(done) {
-
-        // Id of the scene we will start:
-        var startid = 1;
-        var mscs = new MessageSceneChangeState(startid);
-
-        nock("http://0.0.0.0")
-          .defaultReplyHeaders({
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*"
-          })
-          .post("/scene/start", {
-            // We have to match these post fields:
-            // If it does not, we get an error in the report (which is what we want then?)
-            id: "" + startid
-          })
-          .reply(200, {
-            "status": "started"
-          });
-
-        mscs.onErrorCallback(function(errorInfo) {
-          // Somehow we need a try catch blog for asserts?
-          try {
-            assert(errorInfo.status !== "error", "MessageSceneChangeState did not make correct AJAX call.");
-          } catch (x) {
-            done(x);
-          }
-        });
-
-        // Execute AJAX call to remote server to get list of models.
-        mscs.executeRequest(function(data) {
-          assert(data.status === "started", "MessageSceneChangeState status = started ok");
-          done();
-        });
-      });
-    });
-
-  });
-
-  // Testing MessageSceneChangeState messages
-  describe("MessageSceneDelete", function() {
-
-
-    // Create a MessageSceneCreate without options, we should have an empty options object (null)
-    it("MessageSceneDelete - Create instance without options", function() {
-
-      var msd = new MessageSceneDelete();
-
-      assert(msd.modelid == null, "MessageSceneDelete modelid should be null");
-    });
-
-    // Create a MessageSceneCreate without options, we should have an empty options object (null)
-    it("MessageSceneDelete - Create instance with string parameter", function() {
-
-      var msd = new MessageSceneDelete("notallowed");
-
-      assert(msd.modelid == null, "MessageSceneDelete modelid should be null");
-    });
-
-
-    it("MessageSceneDelete - Check sceneid being sent", function(done) {
-
-      // Id of the scene we will start:
-      var deleteid = 1;
-      var msd = new MessageSceneDelete(deleteid);
-
-      nock("http://0.0.0.0")
-        .defaultReplyHeaders({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*"
-        })
-        .post("/scene/delete", {
-          // We have to match these post fields:
-          // If it does not, we get an error in the report (which is what we want then?)
-          id: "" + deleteid
-        })
-        .reply(200, {
-          "status": "deleted"
-        })
-      // Otherwise we return an 500. The postdata did not match.
-        .post("/scene/delete")
-        .reply(500, {
-          status: "error"
-        });
-
-
-      msd.onErrorCallback(function(errorInfo) {
-        // Somehow we need a try catch blog for asserts?
-        try {
-          assert(errorInfo.status !== "error", "MessageSceneDelete did not make correct AJAX call.");
-        } catch (x) {
-          done(x);
-        }
-      });
-
-      // Execute AJAX call to remote server to get list of models.
-      msd.executeRequest(function(data) {
-        assert(data.status === "deleted", "MessageSceneDelete status = started ok");
-        done();
-      });
-    });
   });
 
 
   // Testing MessageSceneList messages
-  describe("MessageSceneList", function() {
-
-    it("MessageSceneList - Check if request is sent correctly", function(done) {
-
-      var msl = new MessageSceneList();
-
-      nock("http://0.0.0.0")
-
-        .defaultReplyHeaders({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*"
-        })
-        .get("/scene/list")
-        .reply(200, {});
-
-
-
-      msl.onErrorCallback(function() {
-        // Somehow we need a try catch blog for asserts?
-        try {
-          assert(false, "MessageSceneList did not make correct AJAX call.");
-        } catch (x) {
-          done(x);
-        }
-      });
-
-      // Execute AJAX call to remote server to get list of models.
-      msl.executeRequest(function() {
-        //assert(data.status === "deleted", "MessageSceneList status = started ok");
-        done();
-      });
-    });
-
-    // This one is todo!
-    it("MessageSceneList - Check if we get valid scenes", function(done) {
-
-      var msl = new MessageSceneList();
-
-      nock("http://0.0.0.0")
-
-        .defaultReplyHeaders({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*"
-        })
-        .get("/scene/list")
-        .reply(200, {
-          "paginator": null,
-          "scene_list": [{
-            "info": "",
-            "name": "My Scene #1",
-            "simulationtask": {
-              "state": "PENDING",
-              "state_meta": {},
-              "uuid": "2a0bca03-47c2-4f3f-9901-4164261134ff"
-            },
-            "workingdir": "",
-            "postprocessingtask": null,
-            "state": "",
-            "processingtask": {
-              "state": "PENDING",
-              "state_meta": {},
-              "uuid": "af15e2d8-6033-4c09-bfb1-2fc7cb825b80"
-            },
-            "fileurl": "",
-            "id": 29
-          }],
-          "page_obj": null,
-          "is_paginated": false
-        });
-
-
-
-      msl.onErrorCallback(function() {
-        // Somehow we need a try catch blog for asserts?
-        try {
-          assert(false, "MessageSceneList did not make correct AJAX call.");
-        } catch (x) {
-          done(x);
-        }
-      });
-
-      // Execute AJAX call to remote server to get list of models.
-      msl.executeRequest(function(data) {
-        //console.log(data);
-        assert(data.scenes.length === 1, "Scenes has 1 item. OK");
-        assert(data.scenes[0].name === "My Scene #1", "Scene has correct name item. OK");
-        assert(data.scenes[0].id === 29, "Scene has correct id. OK");
-
-        done();
-      });
-    });
-
-  });
   describe("Components", function() {
     it("Is possible to instantiate component ModelCreate", function(done) {
 
