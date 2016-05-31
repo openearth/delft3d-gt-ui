@@ -7,8 +7,9 @@
   var path = require("path");
 
   // We use a setInterval mock function, otherwise setIntervals will cause Mocha to never stop!
-  global.setInterval = function(callback, time) {
-    console.log("setInterval override " + callback + " time " + time);
+  global.setInterval = function() {
+    // args: callback, time
+    // "setInterval override " + callback + " time " + time
   };
 
 
@@ -44,8 +45,9 @@
   // we also need a history and location for #/urls
   global.history = require("history").createHistory();
   global.location = global.history.createLocation();
-  global.location.replace = function(location) {
-    console.log("ignoring replace, implemented in history >= 3.0", location);
+  global.location.replace = function() {
+    // args: location
+    // "ignoring replace, implemented in history >= 3.0", location
   };
 
   // Load jquery with that window, required for app.js
@@ -103,9 +105,6 @@
     // stuff to test without a browser
     var assert = require("chai").assert;
     var sinon = require("sinon");
-
-    //console.log(jsdom);
-
     var nock = require("nock");
 
 
@@ -125,7 +124,6 @@
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*"
           })
-          .log(console.log)
           .filteringPath(function() {
             return "/scenario/list";
           })
@@ -139,7 +137,6 @@
             done();
           })
           .catch(function(e) {
-            console.log(e);
             // rethrow error to capture it and avoid time out
             try {
               throw new Error("exception from fetching scenarios" + JSON.stringify(e));
@@ -209,7 +206,6 @@
         msc.onErrorCallback(function(errorInfo) {
           // Somehow we need a try catch blog for asserts?
           try {
-            console.log(errorInfo.status);
             assert(errorInfo.status !== "error", "Model status is: error - Name does not match?");
           } catch (x) {
             done(x);
@@ -434,7 +430,6 @@
 
       // Execute AJAX call to remote server to get list of models.
       msl.executeRequest(function(data) {
-        //console.log(data);
         assert(data.scenes.length === 1, "Scenes has 1 item. OK");
         assert(data.scenes[0].name === "My Scene #1", "Scene has correct name item. OK");
         assert(data.scenes[0].id === 29, "Scene has correct id. OK");
@@ -444,6 +439,8 @@
     });
 
   });
+
+
   describe("Components", function() {
     it("Is possible to instantiate component ModelCreate", function(done) {
 
@@ -466,7 +463,6 @@
     it("Is possible to create a scenarioBuilder", function(done) {
       var scenarioCreate = new ScenarioCreate();
 
-      console.log("routing", scenarioCreate.$route);
       assert.isOk(scenarioCreate);
       done();
     });
@@ -578,7 +574,6 @@
     it("Is possible to create a scenarioList", function(done) {
       var scenarioList = new ScenarioList();
 
-      console.log("routing", scenarioList.$route);
       assert.isOk(scenarioList);
       done();
     });
@@ -604,7 +599,6 @@
 
       router.start(App, "#app");
       router.go("/scenario/1");
-      console.log("children", App.$children);
       done();
     });
     it("Is possible to clone a scenario", function(done) {
@@ -713,7 +707,6 @@
           "Content-Type": "text/html",
           "Access-Control-Allow-Origin": "*"
         })
-        .log(console.log)
         .get("/templates/templates.html")
         .reply(200, "<div>template-ok</div>");
 
