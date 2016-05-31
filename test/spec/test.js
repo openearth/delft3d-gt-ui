@@ -629,8 +629,7 @@
         });
       modelDetails.startModel();
       done();
-
-    });    
+    });
 
     it("Should be possible to download files", function(done) {
       var windowSpy = sinon.spy(window, "open");
