@@ -1,4 +1,4 @@
-/* globals validator */
+/* globals */
 
 // Store items in this cache
 var itemsCache = {};
@@ -74,23 +74,13 @@ var exports = (function () {
   }
 
   // Publish a model and set it to a new state.
-  function publishModel(id, newState) {
+  function shareModel(id, audience) {
 
     return new Promise(function(resolve, reject) {
 
-      if (validator.isIn(newState, ["private", "company", "public"]) === false)
-      {
-        return reject(new Error("[publishModel] New state: " + newState + " is not valid."));
-      }
-
-      if (validator.isInt(id) == false)
-      {
-          return reject(new Error("[publishModel id is not valid"));
-      }
-
       // add extra options to id
       var postData = {
-        "publish_level": newState
+        "audience": audience
       };
 
       $.ajax({
@@ -106,7 +96,6 @@ var exports = (function () {
           // we're done
           reject(error);
         });
-
     });
   }
 
@@ -238,7 +227,7 @@ var exports = (function () {
     deleteModel: deleteModel,
     startModel: startModel,
     stopModel: stopModel,
-    publishModel: publishModel
+    shareModel: shareModel
   };
 }());
 

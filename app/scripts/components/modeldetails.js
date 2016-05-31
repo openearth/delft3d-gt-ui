@@ -1,4 +1,4 @@
-/* global ImageAnimation, fetchModel, fetchLog, deleteModel, startModel, stopModel, router */
+/* global ImageAnimation, fetchModel, fetchLog, deleteModel, startModel, stopModel, shareModel, router */
 var exports = (function () {
   "use strict";
 
@@ -13,22 +13,21 @@ var exports = (function () {
 
     // Show the details of one model
     data: function() {
-      console.log("loading model details for id", this.id);
-
       return {
         timerId: -1,
         model: {
+          id: -1
         }
       };
 
     },
 
     created: function() {
-      console.log("Model details are created with model", JSON.stringify(this.model));
-      this.updateData(this.model.id);
+      if (this.model.id !== -1) {
+        this.updateData(this.model.id);
+      }
     },
     ready: function() {
-      console.log("model details are ready");
       // enable the tab based menu (only for tabs, keep real links)
       $("#model-details-navigation .nav a[data-toggle='tab']").click(function (e) {
         e.preventDefault();
@@ -39,7 +38,6 @@ var exports = (function () {
       clipboard.on("success", function(e) {
         e.clearSelection();
       });
-      console.log("updating model id");
 
     },
     computed: {
@@ -77,11 +75,6 @@ var exports = (function () {
             this.updateData(modelId);
           }, 5000);
 
-          // Stop any animation if we were animating.
-          //this.stopImageFrame();
-
-          // Reset index:
-          //this.currentAnimationIndex = 0;
         }
 
 
@@ -140,13 +133,6 @@ var exports = (function () {
         }
       },
 
-      publishlevel: {
-        get: function() {
-
-          return "";
-        }
-      },
-
       // Returns true if the model is running. We might have to depend on some other variables
       // But for now we say that "processing" means running.
       isModelRunning: {
@@ -161,12 +147,10 @@ var exports = (function () {
       data: function(transition) {
         // get model (from a service or parent)
 
-        console.log("data transition", transition, this);
         this.updateData(parseInt(transition.to.params.modelid));
         transition.next();
       },
       activate: function(transition) {
-        console.log("activating transition", transition);
         transition.next();
 
       }
@@ -174,9 +158,9 @@ var exports = (function () {
     methods: {
 
       /// Publish a model and set it to the new state
-      publishModel: function(model, newState) {
+      shareModel: function(model, audience) {
 
-        publishModel(model.id, newState);
+        shareModel(model.id, audience);
       },
 
 
@@ -244,8 +228,6 @@ var exports = (function () {
 
           deleteModel(deletedId, options)
             .then(function(data) {
-              console.log("model deleted from server", deletedId, "data:", data);
-
               that.$parent.$broadcast("show-alert", { message: "Deleting run... It might take a moment before the view is updated.", showTime: 5000, type: "success"});
 
             })
@@ -291,39 +273,6 @@ var exports = (function () {
           });
       },
 
-      // Not used anymore?
-      // changeMenuItem: function(event) {
-
-      //   var el = $(event.target);
-
-      //   // Hide all panels except for the target.
-      //   $(".collapse").hide();
-
-      //   // Get target:
-      //   var targetSelector = $(el).attr("data-target");
-      //   var target = $(targetSelector);
-
-      //   target.show();
-
-
-      //   // If there is an animation property, we set this:
-      //   var targetAnimation = $(el).attr("data-animation");
-
-      //   if (targetAnimation !== undefined && targetAnimation.length > 0) {
-      //     this.currentAnimationKey = targetAnimation;
-      //     this.currentAnimationIndex = 0;
-      //     this.stopImageFrame();
-
-      //   } else {
-      //     this.currentAnimationKey = "";
-      //     this.currentAnimationIndex = 0;
-      //   }
-
-
-
-      //   event.stopPropagation();
-      // },
-
       // User wants to start a model. We just do not do anything now, as this needs to be implemented.
       startModel: function() {
         var that = this;
@@ -332,7 +281,6 @@ var exports = (function () {
         startModel(this.model.id)
           .then(msg => {
             that.$parent.$broadcast("show-alert", { message: "Restarting run... It might take a moment before the view is updated.", showTime: 5000, type: "success"});
-            console.log(msg);
           })
           .catch(e => {
             console.log(e);
