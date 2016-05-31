@@ -209,7 +209,6 @@ var exports = (function () {
 
         // keep track of the scenario before deletion
         var scenarioId = this.scenario;
-        var that = this;
 
         $("#dialog-remove-name").html(this.model.name);
         // Do we also remove all the additional files? This is based on the checkmark.
@@ -227,8 +226,12 @@ var exports = (function () {
 
 
           deleteModel(deletedId, options)
-            .then(function(data) {
-              that.$parent.$broadcast("show-alert", { message: "Deleting run... It might take a moment before the view is updated.", showTime: 5000, type: "success"});
+            .then(() => {
+              this.$parent.$broadcast("show-alert", {
+                message: "Deleting run... It might take a moment before the view is updated.",
+                showTime: 5000,
+                type: "success"
+              });
 
             })
             .catch(e => {
@@ -275,14 +278,17 @@ var exports = (function () {
 
       // User wants to start a model. We just do not do anything now, as this needs to be implemented.
       startModel: function() {
-        var that = this;
 
         // We use the runmodel for this.
         startModel(this.model.id)
-          .then(msg => {
-            that.$parent.$broadcast("show-alert", { message: "Restarting run... It might take a moment before the view is updated.", showTime: 5000, type: "success"});
+          .then(() => {
+            this.$parent.$broadcast("show-alert", {
+              message: "Restarting run... It might take a moment before the view is updated.",
+              showTime: 5000,
+              type: "success"
+            });
           })
-          .catch(e => {
+          .catch((e) => {
             console.log(e);
           });
       },
@@ -291,15 +297,17 @@ var exports = (function () {
       stopModel: function() {
 
         var deletedId = this.model.id;
-        var that = this;
 
         stopModel(deletedId)
-          .then(msg => {
-            console.log(msg);
-            that.$parent.$broadcast("show-alert", { message: "Stopping run... It might take a moment before the view is updated.", showTime: 5000, type: "success"});
+          .then(() => {
+            this.$parent.$broadcast("show-alert", {
+              message: "Stopping run... It might take a moment before the view is updated.",
+              showTime: 5000,
+              type: "success"
+            });
 
           })
-          .catch(e => {
+          .catch((e) => {
             console.log(e);
           });
 
