@@ -54,7 +54,7 @@
                   <div v-for="section in scenarioConfig.sections">
                     <div class="panel panel-default">
                       <div class="panel-heading">
-                        <h3 class="panel-title">{{section.label}}</h3>
+                        <h3 class="panel-title">{{section.name}}</h3>
                       </div>
                       <div class="panel-body">
                         <div class="form-group" v-for="variable in section.variables" v-bind:class="{'has-error': !($validation[variable.id].valid)}">
