@@ -169,7 +169,7 @@ var exports = (function() {
           // get parameters from query
           var parameters = JSON.parse(this.$route.query.parameters);
 
-          // assign all parameters ot the scenario
+          // assign all parameters of the scenario
           _.assign(this.scenarioConfig, parameters);
         }
         // This is a bit ugly, but if we have a name, add (copy) to it and then use it.
@@ -184,8 +184,27 @@ var exports = (function() {
 
       submitScenario: function() {
 
+        var parameters = {},
+            name = "";
+
+        // map each variable in each section to parameters
+        _.forEach(this.scenarioConfig.sections, function(section) {
+          _.forEach(section.variables, function(variable) {
+            if(variable.id === "name") {
+              name = variable.value;
+            } else {
+              parameters[variable.id] = {
+                "values": variable.value,
+                "units": variable.units
+              };
+            }
+          });
+        });
+
         var postdata = {
-          scenario: JSON.stringify(this.scenarioConfig)
+          "name": name,
+          "template": null,
+          "parameters": JSON.stringify(parameters)
         };
 
         $.ajax({
