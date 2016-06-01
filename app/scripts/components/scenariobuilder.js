@@ -193,8 +193,13 @@ var exports = (function() {
             if(variable.id === "name") {
               name = variable.value;
             } else {
+
+              var valuearray = _.map(("" + variable.value).split(","), function(d) {
+                return parseFloat(d) || d;
+              });
+
               parameters[variable.id] = {
-                "values": variable.value,
+                "values": valuearray,
                 "units": variable.units
               };
             }
