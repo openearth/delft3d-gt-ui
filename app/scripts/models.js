@@ -13,16 +13,18 @@ var exports = (function () {
   function fetchModels() {
     return new Promise(function(resolve, reject) {
 
-      $.ajax("/api/v1/scenes/", {cache: false})
+      $.getJSON("/api/v1/scenes/", {
+        cache: false
+      })
         .done(function(json) {
-
+          console.log("itemsCache", itemsCache);
           itemsCache = {};
 
           // copy object
           _.each(json, function(model) {
             itemsCache[model.id] = model;
           });
-
+          console.log("json", json);
           resolve(json);
         })
         .fail(function(error) {
