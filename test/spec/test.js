@@ -1,10 +1,6 @@
 /* global chai  */
-
 (function() {
   "use strict";
-
-  // imports
-  var path = require("path");
 
   // We use a setInterval mock function, otherwise setIntervals will cause Mocha to never stop!
   global.setInterval = function(callback, time) {
@@ -12,56 +8,53 @@
   };
 
 
-  // http://stackoverflow.com/questions/21421701/javascript-test-mocha-with-import-js-file
-  function includeFile(pathName) {
-    var fs = require("fs");
-    var vm = require("vm");
-
-    var code = fs.readFileSync(pathName);
-
-    vm.runInThisContext(code);
-  }
-
-
-  // Required for JQuery:
+  // We need a fake dom, history and window
   var jsdom = require("jsdom").jsdom;
 
   // You might want to do this per test....
   // Create a document
-
   /* eslint-disable quotes */
-  global.document = jsdom('<!doctype html><html><body><div id="app"></div><div id="template-container"></div></body></html>', {});
+  var document = jsdom('<!doctype html><html><body><div id="app"><div id="image-animation"></div></div><div id="template-container"></div></body></html>', {});
   /* eslint-enable quotes */
 
   // Get the corresponding window
-  global.window = document.defaultView;
+  var window = document.defaultView;
 
-  global.navigator = {
+  // Load jquery with that window
+  // Don't put this after global.document (if a global document exists $ won't work)
+  var $ = require("jquery")(window);
+
+  // The next steps assume some kind of dom is available
+  global.document = document;
+  global.window = window;
+
+  // some more settings
+  var navigator = {
     userAgent: "You're own dedicated browser"
   };
 
+  global.navigator = navigator;
 
+  // This assumes a navigator is present
   // we also need a history and location for #/urls
-  global.history = require("history").createHistory();
-  global.location = global.history.createLocation();
-  global.location.replace = function(location) {
-    console.log("ignoring replace, implemented in history >= 3.0", location);
+  var history = require("history").createHistory();
+  var location = history.createLocation();
+
+  global.history = history;
+  global.location = location;
+  location.replace = function(newLocation) {
+    console.log("ignoring replace, implemented in history >= 3.0", newLocation);
   };
 
-  // Load jquery with that window, required for app.js
-  global.$ = require("jquery")(window);
+  var _ = require("lodash");
+  var Vue = require("vue");
+  var VueRouter = require("vue-router");
 
-  global._ = require("lodash");
-
-  global.Vue = require("vue");
-  global.VueRouter = require("vue-router");
-
-  // Include our files (this was needed for mocha, not sure for Chai?)
-  // includeFile(path.join(__dirname, "/../../app/scripts/models.js"));
-
-  includeFile(path.join(__dirname, "/../../app/scripts/ui.js"));
-  includeFile(path.join(__dirname, "/../../app/scripts/inputvalidation.js"));
-  includeFile(path.join(__dirname, "/../../bower_components/validator-js/validator.js"));
+  // export to global;
+  global.$ = $;
+  global._ = _;
+  global.Vue = Vue;
+  global.VueRouter = VueRouter;
 
   // load the components
   var ImageAnimation = require("../../app/scripts/components/imageanimation.js").ImageAnimation;
@@ -82,8 +75,6 @@
   _.assign(global, require("../../app/scripts/templates.js"));
   _.assign(global, require("../../app/scripts/scenarios.js"));
 
-  require("../../app/scripts/app.js");
-
 
   // In testing we override the URL domain name. Otherwise nock cannot work. Nock does NOT support relative paths.
   // Using this, we can use http://0.0.0.0 in the nock.
@@ -91,22 +82,11 @@
     options.url = "http://0.0.0.0" + (options.url);
   });
 
+  // stuff to test without a browser
+  var sinon = require("sinon");
+  var nock = require("nock");
+  var assert = require("chai").assert;
 
-  if (typeof require !== "undefined") {
-
-    // stuff to test without a browser
-    var assert = require("chai").assert;
-    var sinon = require("sinon");
-
-    //console.log(jsdom);
-
-    var nock = require("nock");
-
-
-  } else {
-    assert = chai.assert;
-    //fetch = window.fetch;
-  }
 
   describe("Testing data exchange with api", function() {
     describe("If we can query the scenario list", function() {
@@ -154,7 +134,6 @@
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*"
           })
-          .log(console.log)
           .filteringPath(function() {
             return "/api/v1/models/";
           })
@@ -168,7 +147,39 @@
 
         global.fetchModels()
           .then(function(data) {
-            console.log("data", data);
+            assert.isOk(data, "we have some data");
+            done();
+          })
+          .catch(function(e) {
+            console.log(e);
+            // rethrow error to capture it and avoid time out
+            try {
+              throw e;
+            } catch (exc) {
+              done(exc);
+            }
+          });
+
+      });
+      it("Should be possible get a model by id", function(done) {
+        nock("http://0.0.0.0")
+          .defaultReplyHeaders({
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          })
+          .filteringPath(function() {
+            return "/api/v1/models/";
+          })
+          .get("/api/v1/models/")
+          .reply(200, [
+            {
+              id: 1,
+              name: "Run 1"
+            }
+          ]);
+
+        global.fetchModel(1)
+          .then(function(data) {
             assert.isOk(data, "we have some data");
             done();
           })
@@ -396,8 +407,15 @@
 
 
   describe("ImageAnimation", function() {
-    var imageAnimation = new ImageAnimation();
+    var app = new Vue({
+      el: "#app"
+    });
+    // TODO: this element is not found
+    var imageAnimation = new ImageAnimation({
+      el: "#image-animation"
+    });
 
+    assert.isOk(app, "app");
     imageAnimation.model = { };
 
     it("Should be possible to stop image frames", function(done) {
