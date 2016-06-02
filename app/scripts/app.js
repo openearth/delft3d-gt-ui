@@ -28,6 +28,10 @@ var exports = (function() {
         router = new VueRouter();
 
         router.map({
+          "/search": {
+            name: "search",
+            component: SearchColumns
+          },
           "/scenarios/:scenarioid/models/:modelid": {
             name: "finder-columns",
             component: FinderColumns
