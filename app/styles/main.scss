@@ -40,7 +40,7 @@ $row-border-color: $gray-light;
 $state-completed: #6ca15e;
 $state-pending: $gray-light;
 $state-processing: #7facc5;
-
+$box-shadow-color: rgba(0, 0, 0, .075);
 
 /* This part is wiredepped
 // bower:scss
@@ -50,7 +50,7 @@ $state-processing: #7facc5;
 
 // it's better to include the main package
 @import 'bower_components/bootstrap-sass/assets/stylesheets/bootstrap';
-@import 'bower_components/font-awesome/scss/font-awesome.scss';
+@import 'bower_components/font-awesome/scss/font-awesome';
 
 
 /* Utilities */
@@ -136,9 +136,9 @@ $row-height: 32px;
 
 
 .fa-top-right {
+  font-size: small;
   left: 1em;
   top: -1em;
-  font-size: small;
 }
 
 .alert {
@@ -173,7 +173,8 @@ $row-height: 32px;
   vertical-align: middle;
 }
 
-.panel,.panel-group .panel {
+.panel,
+.panel-group .panel {
   @include rectangle-corners();
 }
 
@@ -591,7 +592,7 @@ section {
 .bootstrap-tagsinput {
   @include rectangle-corners();
   @include transition(border-color ease-in-out .15s, box-shadow ease-in-out .15s);
-  @include box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
+  @include box-shadow(inset 0 1px 1px $box-shadow-color);
   border: 1px solid $input-border;
   width: 100%;
 }
@@ -602,49 +603,63 @@ section {
 /* Components */
 
 
-.finder-columns,.search-columns {
+.finder-columns,
+.search-columns {
   .column {
     /* 1 px for the border */
     padding-left: 0;
     padding-right: 0;
   }
-
 }
+
 .search-details {
   .panel {
     margin: 0 6px;
   }
+
   .ion-range-container {
     /* todo lookup variable */
-
   }
-  .irs-from, .irs-to, .irs-single {
+
+  .irs-from,
+  .irs-to,
+  .irs-single {
     background-color: $brand-primary;
   }
-  .irs-slider, .irs-bar {
+
+  .irs-slider,
+  .irs-bar {
     background: $brand-primary;
   }
-  .irs-from:after,.irs-to:after,.irs-single:after {
+
+  .irs-from::after,
+  .irs-to::after,
+  .irs-single::after {
     border-top-color: $brand-primary;
   }
+
   .irs-slider {
     width: 5px;
   }
 }
 
-.scenario-list,.model-list,.model-details,.search-details {
-
-  overflow: auto;
+.scenario-list,
+.model-list,
+.model-details,
+.search-details {
   min-height: 100%;
+  overflow: auto;
   padding: 0;
 
   h3 {
     /* pad left and right */
     padding: 0 10px;
   }
+
   .alert {
     margin: 1px;
   }
+
   .list-group-item {
     @include rectangle-corners();
 
@@ -687,6 +702,7 @@ section {
 .scenario-list {
   background-color: darken($gray-lighter, 10%);
 }
+
 .model-list {
   background-color: darken($gray-lighter, 5%);
 }
