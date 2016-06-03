@@ -143,19 +143,6 @@ var exports = (function() {
           return totalRuns;
 
         }
-      },
-      scrollTop: {
-        get: function() {
-          var top = 0;
-          if (typeof(window.pageYOffset) === "number") {
-            top = window.pageYOffset;
-          } else if (document.body && document.body.scrollTop) {
-            top = document.body.scrollTop;
-          } else if (document.documentElement && document.documentElement.scrollTop) {
-            top = document.documentElement.scrollTop;
-          }
-          return top;
-        }
       }
     },
     methods: {
@@ -278,14 +265,15 @@ var exports = (function() {
 
       initFixedToolbar: function() {
         var that = this;
+
         if (window.addEventListener) {
-          window.addEventListener("scroll", function () {that.updateFixedToolbarStyle(); });
-          window.addEventListener("touchmove", function () {that.updateFixedToolbarStyle(); });
-          window.addEventListener("load", function () {that.updateFixedToolbarStyle(); });
+          window.addEventListener("scroll", that.updateFixedToolbarStyle);
+          window.addEventListener("touchmove", that.updateFixedToolbarStyle);
+          window.addEventListener("load", that.updateFixedToolbarStyle);
         } else if (window.attachEvent) {
-          window.attachEvent("onscroll", function () {that.updateFixedToolbarStyle(); });
-          window.attachEvent("ontouchmove", function () {that.updateFixedToolbarStyle(); });
-          window.attachEvent("onload", function () {that.updateFixedToolbarStyle(); });
+          window.attachEvent("onscroll", that.updateFixedToolbarStyle);
+          window.attachEvent("ontouchmove", that.updateFixedToolbarStyle);
+          window.attachEvent("onload", that.updateFixedToolbarStyle);
         }
         this.updateFixedToolbarStyle();
       },
@@ -305,7 +293,8 @@ var exports = (function() {
 
       getTop: function() {
         var top = 0;
-        if (typeof(window.pageYOffset) === "number") {
+
+        if (typeof (window.pageYOffset) === "number") {
           top = window.pageYOffset;
         } else if (document.body && document.body.scrollTop) {
           top = document.body.scrollTop;
@@ -320,7 +309,7 @@ var exports = (function() {
         topBar: document.getElementById("top-bar"),
         toolBar: document.getElementById("tool-bar"),
         belowToolBar: document.getElementById("below-tool-bar")
-      }
+      };
       this.initFixedToolbar();
     }
   });
