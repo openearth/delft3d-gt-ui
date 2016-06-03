@@ -71,14 +71,29 @@
   // load the application
   var ImageAnimation = require("../../app/scripts/components/imageanimation.js").ImageAnimation;
 
+  // used by other component
   global.ImageAnimation = ImageAnimation;
 
   var ModelDetails = require("../../app/scripts/components/modeldetails.js").ModelDetails;
+
+  // used by other component
+  global.ModelDetails = ModelDetails;
+
   var ModelCreate = require("../../app/scripts/components/modelcreate.js").ModelCreate;
   var ModelList = require("../../app/scripts/components/modellist.js").ModelList;
+
+  // used by other component
+  global.ModelList = ModelList;
+
   var ScenarioCreate = require("../../app/scripts/components/scenariobuilder.js").ScenarioCreate;
   var factorToArray = require("../../app/scripts/components/scenariobuilder.js").factorToArray;
   var ScenarioList = require("../../app/scripts/components/scenariolist.js").ScenarioList;
+  var SearchDetails = require("../../app/scripts/components/searchdetails.js").SearchDetails;
+
+  // used by other component
+  global.SearchDetails = SearchDetails;
+
+  var SearchColumns = require("../../app/scripts/components/searchcolumns.js").SearchColumns;
 
   var HomeView = require("../../app/scripts/components/home.js").HomeView;
 
@@ -461,7 +476,22 @@
       done();
     });
   });
+  describe("Search list", function() {
+    it("Is possible to create a search columns", function(done) {
+      var searchColumns = new SearchColumns();
 
+      assert.isOk(searchColumns);
+      done();
+    });
+  });
+  describe("Search details", function() {
+    it("Is possible to create a search details", function(done) {
+      var searchDetails = new SearchDetails();
+
+      assert.isOk(searchDetails);
+      done();
+    });
+  });
   describe("Scenario builder", function() {
     it("Is possible to create a scenarioBuilder", function(done) {
       var scenarioCreate = new ScenarioCreate();

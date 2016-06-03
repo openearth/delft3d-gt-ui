@@ -8,27 +8,12 @@ var exports = (function () {
     template: "#template-search-columns",
     data: function() {
       return {
-        modelid: -1
       };
     },
     components: {
       "search-details": SearchDetails,
       "model-list": ModelList,
       "model-details": ModelDetails
-    },
-
-    computed: {
-    },
-
-    route: {
-      data: function(transition) {
-
-        var newData = {
-          modelid: parseInt(transition.to.params.modelid)
-        };
-
-        transition.next(newData);
-      }
     },
 
     methods: {
