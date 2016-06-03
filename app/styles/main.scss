@@ -194,6 +194,12 @@ $selected-item-color: #dae4d1;
   border: 0;
   margin: 0;
 
+  // Span over all available width
+  width: 100%;
+
+  // Shadow below the div
+  box-shadow: 0px 2px 4px #888888;
+
   .navbar-right {
     // by default buttons stick all the way to the right
     margin-right: 0;
