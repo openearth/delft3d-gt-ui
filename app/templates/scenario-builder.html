@@ -57,7 +57,7 @@
                         <h3 class="panel-title">{{section.name}}</h3>
                       </div>
                       <div class="panel-body">
-                        <div class="form-group" v-for="variable in section.variables" v-bind:class="{'has-error': !($validation[variable.id].valid)}">
+                        <div class="form-group" v-for="variable in section.variables" v-bind:class="{'has-error': !($validation[getId(variable)].valid)}">
                           <label class="control-label" for="{{variable.id}}">
                             {{ variable.name }}
                             <!-- TODO: get rid of this space -->
@@ -79,7 +79,7 @@
                                  :data-role="variable.factor ? 'tagsinput' : ''"
                                  v-model="variable.value"
                                  :disabled="variable.disabled"
-                                 :field="variable.id"
+                                 :field="getId(variable)"
                                  v-validate="variable.validators"
                                  aria-describedby="{{ variable.variableid }}status"
                                  >
@@ -92,7 +92,7 @@
                                  class="form-control"
                                  rows="3"
                                  :disabled="variable.disabled"
-                                 :field="variable.id"
+                                 :field="getId(variable)"
                                  v-validate="variable.validators"
                                  >{{ variable.value }}</textarea>
                             </template>
@@ -102,10 +102,10 @@
                             </span>
 
                           </div>
-                          <div v-if="$validation[variable.id]">
-                            <p v-if="$validation[variable.id].required" class="help-block has-error">required</p>
-                            <p v-if="$validation[variable.id].min" class="help-block has-error">value &lt; min</p>
-                            <p v-if="$validation[variable.id].max" class="help-block has-error">value &gt; max</p>
+                          <div v-if="$validation[getId(variable)]">
+                            <p v-if="$validation[getId(variable)].required" class="help-block has-error">required</p>
+                            <p v-if="$validation[getId(variable)].min" class="help-block has-error">value &lt; min</p>
+                            <p v-if="$validation[getId(variable)].max" class="help-block has-error">value &gt; max</p>
                           </div>
                         </div>
 
