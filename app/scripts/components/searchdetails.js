@@ -8,7 +8,35 @@ var exports = (function () {
     template: "#template-search-details",
     data: function() {
       return {
+        selectedTemplates: [],
+        selectedModelEngines: []
       };
+    },
+    props: {
+      templates: {
+        default: function () {
+          return [
+            {
+              name: "Template A"
+            },
+            {
+              name: "Template B"
+            }
+          ];
+        }
+      },
+      modelEngines: {
+        default: function () {
+          return [
+            {
+              name: "Delft3D Curvilinear"
+            },
+            {
+              name: "Delft3D Flexible Mesh"
+            }
+          ];
+        }
+      }
     },
 
     ready: function() {
