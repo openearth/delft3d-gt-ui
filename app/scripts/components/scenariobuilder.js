@@ -140,6 +140,19 @@ var exports = (function() {
           return totalRuns;
 
         }
+      },
+      scrollTop: {
+        get: function() {
+          var top = 0;
+          if (typeof(window.pageYOffset) === "number") {
+            top = window.pageYOffset;
+          } else if (document.body && document.body.scrollTop) {
+            top = document.body.scrollTop;
+          } else if (document.documentElement && document.documentElement.scrollTop) {
+            top = document.documentElement.scrollTop;
+          }
+          return top;
+        }
       }
     },
     methods: {
@@ -258,7 +271,52 @@ var exports = (function() {
         });
 
         return scenario;
+      },
+
+      initFixedToolbar: function() {
+        var that = this;
+        if (window.addEventListener) {
+          window.addEventListener("scroll", function () {that.updateFixedToolbarStyle(); });
+          window.addEventListener("touchmove", function () {that.updateFixedToolbarStyle(); });
+          window.addEventListener("load", function () {that.updateFixedToolbarStyle(); });
+        } else if (window.attachEvent) {
+          window.attachEvent("onscroll", function () {that.updateFixedToolbarStyle(); });
+          window.attachEvent("ontouchmove", function () {that.updateFixedToolbarStyle(); });
+          window.attachEvent("onload", function () {that.updateFixedToolbarStyle(); });
+        }
+        this.updateFixedToolbarStyle();
+      },
+
+      updateFixedToolbarStyle: function() {
+        var top = this.getTop();
+        var topBar = document.getElementById("top-bar");
+        var toolBar = document.getElementById("tool-bar");
+        var belowToolBar = document.getElementById("below-tool-bar");
+
+        if (top > toolBar.clientHeight) {
+          belowToolBar.style.paddingTop = topBar.clientHeight + "px";
+          toolBar.style.position = "fixed";
+          toolBar.style.top = "0";
+        } else {
+          belowToolBar.style.paddingTop = "0px";
+          toolBar.style.position = "relative";
+        }
+      },
+
+      getTop: function() {
+        var top = 0;
+        if (typeof(window.pageYOffset) === "number") {
+          top = window.pageYOffset;
+        } else if (document.body && document.body.scrollTop) {
+          top = document.body.scrollTop;
+        } else if (document.documentElement && document.documentElement.scrollTop) {
+          top = document.documentElement.scrollTop;
+        }
+        return top;
       }
+    },
+    ready: function() {
+      this.initFixedToolbar();
     }
   });
   return {
