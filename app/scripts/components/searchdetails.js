@@ -9,7 +9,18 @@ var exports = (function () {
     data: function() {
       return {
         selectedTemplates: [],
-        selectedModelEngines: []
+        selectedModelEngines: [],
+        parameters: {
+          "river-width": null,
+          "river-discharge": null
+        },
+        audience: {
+          "private": true
+        },
+        startDate: null,
+        endDate: null,
+        text: ""
+
       };
     },
     props: {
@@ -40,7 +51,12 @@ var exports = (function () {
     },
 
     ready: function() {
-      $(".ion-range").ionRangeSlider();
+      $(".ion-range").ionRangeSlider({
+        onFinish: (data) => {
+          this.search();
+        }
+      });
+
       $(".select-picker").selectpicker();
     },
     computed: {
@@ -48,9 +64,40 @@ var exports = (function () {
 
 
     methods: {
+      buildRequest: function() {
+        // for now we just copy everything
+
+        var params = {
+          name: this.name,
+          state: this.state,
+          scenario: this.scenario,
+          template: this.selectedTemplates,
+        };
+
+        _.forEach(this.parameters, function(value, key) {
+          if (value.includes(";")) {
+            params[key] = value.split(";");
+          }
+
+        });
+
+        return {
+          url: "/api/v1/scenes/",
+          data: params,
+          dataType: "json"
+        };
+      },
+      search: function() {
+        $.ajax(this.buildRequest())
+          .then(function(data){
+            console.log("data", data);
+          })
+          .fail(function(err){
+            console.log(err);
+          });
+      }
     }
   });
-
   return {
     SearchDetails: SearchDetails
   };
