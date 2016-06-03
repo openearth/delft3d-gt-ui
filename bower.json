@@ -37,7 +37,7 @@
         "js/bootstrap-combobox.js"
       ]
     },
-    "fontawesome": {
+    "font-awesome": {
       "main": [
         "less/font-awesome.less",
         "scss/font-awesome.scss",
