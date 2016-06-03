@@ -1,4 +1,4 @@
-/* global ModelDetails, ScenarioCreate, ModelList,  FinderColumns, DeleteScenario */
+/* global ModelDetails, ScenarioCreate, ModelList,  FinderColumns, DeleteScenario, SearchColumns */
 
 var router;
 

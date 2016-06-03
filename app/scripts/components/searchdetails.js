@@ -1,4 +1,4 @@
-/* global Vue, SearchColumn, ModelList, ModelDetails, deleteScenario */
+/* global Vue */
 
 var exports = (function () {
   "use strict";
@@ -18,10 +18,6 @@ var exports = (function () {
     computed: {
     },
 
-    route: {
-      data: function(transition) {
-      }
-    },
 
     methods: {
     }

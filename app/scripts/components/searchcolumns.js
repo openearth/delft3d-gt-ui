@@ -1,4 +1,4 @@
-/* global Vue, SearchColumn, ModelList, ModelDetails, deleteScenario */
+/* global Vue, SearchDetails, ModelList, ModelDetails */
 
 var exports = (function () {
   "use strict";
