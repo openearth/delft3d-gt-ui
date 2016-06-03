@@ -42,7 +42,10 @@ var exports = (function() {
         scenarioConfig: {},
 
         // the current template
-        template: null
+        template: null,
+
+        // The DOM elements used for the fixed toolbar event listener
+        navBars: null
       };
     },
 
@@ -289,17 +292,14 @@ var exports = (function() {
 
       updateFixedToolbarStyle: function() {
         var top = this.getTop();
-        var topBar = document.getElementById("top-bar");
-        var toolBar = document.getElementById("tool-bar");
-        var belowToolBar = document.getElementById("below-tool-bar");
 
-        if (top > toolBar.clientHeight) {
-          belowToolBar.style.paddingTop = topBar.clientHeight + "px";
-          toolBar.style.position = "fixed";
-          toolBar.style.top = "0";
+        if (top > this.navBars.topBar.clientHeight) {
+          this.navBars.belowToolBar.style.paddingTop = this.navBars.toolBar.clientHeight + "px";
+          this.navBars.toolBar.style.position = "fixed";
+          this.navBars.toolBar.style.top = "0";
         } else {
-          belowToolBar.style.paddingTop = "0px";
-          toolBar.style.position = "relative";
+          this.navBars.belowToolBar.style.paddingTop = "0px";
+          this.navBars.toolBar.style.position = "relative";
         }
       },
 
@@ -316,6 +316,11 @@ var exports = (function() {
       }
     },
     ready: function() {
+      this.navBars = {
+        topBar: document.getElementById("top-bar"),
+        toolBar: document.getElementById("tool-bar"),
+        belowToolBar: document.getElementById("below-tool-bar")
+      }
       this.initFixedToolbar();
     }
   });
