@@ -10,6 +10,9 @@ import concat from "gulp-concat";
 import gulpLoadPlugins from "gulp-load-plugins";
 import istanbul from "gulp-istanbul";
 
+// Use this to debug the contents of a pipe
+// import filelog from 'gulp-filelog';
+
 import mainBowerFiles from "gulp-main-bower-files";
 
 // other stuff
