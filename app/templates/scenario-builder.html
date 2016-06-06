@@ -57,7 +57,7 @@
                         <h3 class="panel-title">{{section.name}}</h3>
                       </div>
                       <div class="panel-body">
-                        <div class="form-group" v-for="variable in section.variables" v-bind:class="{'has-error': !($validation[variable.id].valid)}">
+                        <div class="form-group" v-for="variable in section.variables" v-bind:class="{'has-error': ($validation[variable.id] ? !$validation[variable.id].valid : false)}">
                           <label class="control-label" for="{{variable.id}}">
                             {{ variable.name }}
                             <!-- TODO: get rid of this space -->
@@ -71,8 +71,21 @@
                             <!-- two types of input for now: textarea and other -->
                             <!-- other first -->
                             <template v-if="variable.type !== 'textarea'">
-                              <input
-
+                              <template v-if="variable.type === 'slider'">
+                                <input
+                                  type="text"
+                                  class="form-control ion-range"
+                                  id="{{ variable.id }}"
+                                  v-model="variable.inputValue"
+                                  :disabled="variable.disabled"
+                                  :field="variable.id"
+                                  aria-describedby="{{ variable.variableid }}status"
+                                 />
+                                 <span>
+                                   {{ variable.value }}%
+                                 </span>
+                              </template>
+                              <input v-else
                                  type="{{ variable.type }}"
                                  class="form-control"
                                  id="{{ variable.id }}"
@@ -82,7 +95,7 @@
                                  :field="variable.id"
                                  v-validate="variable.validators"
                                  aria-describedby="{{ variable.variableid }}status"
-                                 >
+                                 />
                             </template>
                             <!-- text area -->
                             <template
