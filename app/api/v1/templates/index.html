@@ -147,27 +147,35 @@
           {
             "id": "sandvolcomposition",
             "name": "Sand volumetric composition",
-            "default": 50,
+            "default": 1,
             "units": "%",
-            "type": "numeric",
+            "type": "slider",
             "validators": {
-              "min": 0,
-              "max": 100
             }
           },
           {
             "id": "clayvolcomposition",
             "name": "Clay volumetric composition",
             "disabled": false,
-            "default": 50,
+            "default": 1,
             "units": "%",
-            "type": "numeric",
+            "type": "slider",
             "validators": {
-              "min": 0,
-              "max": 100
             }
           }
-        ]
+        ],
+        "slider": {
+          "sum": 100,
+          "config": {
+            "min": 0,
+            "max": 10,
+            "step": 1,
+            "grid": true,
+            "grid_snap": true,
+            "hide_min_max": true,
+            "hide_from_to": true
+          }
+        }
       }
     ]
   }
