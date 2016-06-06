@@ -21,6 +21,9 @@ var exports = (function () {
 
       };
     },
+    props: {
+
+    },
     ready: function() {
       fetchTemplates()
         .then((templates) => {
@@ -75,8 +78,7 @@ var exports = (function () {
               var obj = {
                 id: variable.id,
                 min: _.get(variable, "validators.min"),
-                max: _.get(variable, "validators.max"),
-                unit: variable.units
+                max: _.get(variable, "validators.max")
               };
 
               parameters[variable.id] = obj;
@@ -93,7 +95,6 @@ var exports = (function () {
         // for now we just copy everything
 
         var params = {
-          name: this.name,
           shared: this.shared,
           template: this.selectedTemplates
         };
@@ -132,7 +133,7 @@ var exports = (function () {
         $.ajax(request)
           .then(function(data) {
             // TODO: set this data in the model-list models property
-            console.log("data", data);
+            this.$dispatch("models-found", data);
           })
           .fail(function(err) {
             console.log(err);
