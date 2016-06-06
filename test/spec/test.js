@@ -89,13 +89,15 @@
   var factorToArray = require("../../app/scripts/components/scenariobuilder.js").factorToArray;
   var ScenarioList = require("../../app/scripts/components/scenariolist.js").ScenarioList;
   var SearchDetails = require("../../app/scripts/components/searchdetails.js").SearchDetails;
+  var UserDetails = require("../../app/scripts/components/userdetails.js").UserDetails;
 
   // used by other component
+  global.UserDetails = UserDetails;
   global.SearchDetails = SearchDetails;
+  global.ScenarioList = ScenarioList;
 
+  var FinderColumns = require("../../app/scripts/components/findercolumns.js").FinderColumns;
   var SearchColumns = require("../../app/scripts/components/searchcolumns.js").SearchColumns;
-
-  var HomeView = require("../../app/scripts/components/home.js").HomeView;
 
 
   // why is this necessary....
@@ -484,11 +486,27 @@
       done();
     });
   });
+  describe("Finder columns", function() {
+    it("Is possible to create a three column layout", function(done) {
+      var finderColumns = new FinderColumns();
+
+      assert.isOk(finderColumns);
+      done();
+    });
+  });
   describe("Search details", function() {
     it("Is possible to create a search details", function(done) {
       var searchDetails = new SearchDetails();
 
       assert.isOk(searchDetails);
+      done();
+    });
+  });
+  describe("User details", function() {
+    it("Is possible to create a user details", function(done) {
+      var userDetails = new UserDetails();
+
+      assert.isOk(userDetails);
       done();
     });
   });
@@ -726,7 +744,7 @@
           component: ModelList
         },
         "/": {
-          component: HomeView
+          component: FinderColumns
         }
       });
       router.start(App, "#app");
