@@ -22,12 +22,6 @@ var exports = (function () {
       };
     },
     ready: function() {
-      $(".ion-range").ionRangeSlider({
-        onFinish: () => {
-          // args: data, not used
-          this.search();
-        }
-      });
       fetchTemplates()
         .then((templates) => {
           console.log("loaded templates", templates);
@@ -40,6 +34,12 @@ var exports = (function () {
               $("#template").selectpicker("selectAll");
               $("#model-engine").selectpicker("refresh");
               $("#model-engine").selectpicker("selectAll");
+              $(".ion-range").ionRangeSlider({
+                onFinish: () => {
+                  // args: data, not used
+                  this.search();
+                }
+              });
 
             }
           );
@@ -60,6 +60,25 @@ var exports = (function () {
           return defaultEngines;
 
         }
+      },
+      parameters: {
+        get: function() {
+          var parameters = {};
+          var variables = _.flatMap(_.flatMap(this.templates, "sections"), "variables");
+          variables.forEach(function(variable) {
+            if (_.has(variable, "validators.min") && _.has(variable, "validators.max")) {
+              var obj = {
+                id: variable.id,
+                min: _.get(variable, "validators.min"),
+                max: _.get(variable, "validators.max"),
+                unit: variable.units,
+                value: null
+              };
+              parameters[variable.id] = obj;
+            }
+          });
+          return parameters;
+        }
       }
     },
 
@@ -70,8 +89,7 @@ var exports = (function () {
 
         var params = {
           name: this.name,
-          state: this.state,
-          scenario: this.scenario,
+          shared: this.shared,
           template: this.selectedTemplates
         };
 
@@ -79,13 +97,18 @@ var exports = (function () {
         params.parameters = _.map(
           // loop over all parameters in the template
           this.parameters,
-          function(value, key) {
+          function(parameter, key) {
+            console.log("value", parameter);
             var result = "";
-            if (value.includes(";")) {
-              result = key + "," + _.join(",", value.split(";"));
+            if (_.isString(parameter.value) && parameter.value.includes(";")) {
+              // replace ; by , =>  key,min,max
+              // Breaks if someone uses ; in values (these originate from tags)
+              result = key + "," + _.replace(parameter.value, ';', ',');
             } else {
-              result = "key" + "," + value;
+              // replace ; by , =>  key,value
+              result = key + "," + parameter.value;
             }
+            return result;
           }
         );
         return {
@@ -97,7 +120,9 @@ var exports = (function () {
         };
       },
       search: function() {
-        $.ajax(this.buildRequest())
+        var request = this.buildRequest();
+        console.log("sending request", request);
+        $.ajax(request)
           .then(function(data) {
             // TODO: set this data in the model-list models property
             console.log("data", data);
