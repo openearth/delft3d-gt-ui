@@ -18,7 +18,7 @@
                   <label for="options">Shared with:</label>
                   <!-- break because of the label hack below -->
                   <br />
-                  <select class="select-picker form-control" multiple  id="search-audience" v-model="audience" data-actions-box="true">
+                  <select class="select-picker form-control" multiple  id="search-shared" v-model="shared" data-actions-box="true">
                     <option data-icon="glyphicon-user" selected>private</option>
                     <option data-icon="glyphicon-blackboard" selected>company</option>
                     <option data-icon="glyphicon-globe" selected>public</option>
@@ -67,12 +67,11 @@
                   <select class="select-picker form-control"
                           multiple
                           id="model-engine"
-                          v-model="selectedModelEngines"
+                          v-model="parameters['engines']"
                           data-selected-text-format="count > 3"
                           data-actions-box="true"
-                          disabled
                           >
-                    <option v-for="engine in modelEngines" selected>{{ engine.name }}</option>
+                    <option v-for="engine in modelEngines" selected>{{ engine }}</option>
                   </select>
                 </div>
               </div>
