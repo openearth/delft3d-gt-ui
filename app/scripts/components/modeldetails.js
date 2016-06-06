@@ -43,15 +43,6 @@ var exports = (function () {
 
     },
     computed: {
-
-      ownerfullname: {
-
-        get: function() {
-          // Placeholder of variable in model info.
-          return "first " + " last";
-        }
-      },
-
       id: {
         get: function() {
           // default to -1
