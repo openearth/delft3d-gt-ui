@@ -42,7 +42,10 @@ var exports = (function() {
         scenarioConfig: {},
 
         // the current template
-        template: null
+        template: null,
+
+        dataLoaded: false,
+        componentReady: false
       };
     },
 
@@ -61,9 +64,22 @@ var exports = (function() {
           // set the template, somehow a computed setter was not working...
           this.selectTemplate(template);
 
+          this.dataLoaded = true;
+
+          if (this.componentReady) {
+            this.initAfterDomUpdate();
+          }
+
         });
 
 
+    },
+
+    ready: function() {
+      this.componentReady = true;
+      if (this.dataLoaded) {
+        this.initSliders();
+      }
     },
 
     route: {
@@ -149,6 +165,9 @@ var exports = (function() {
         // First set data, then the template. Order is important!
         this.scenarioConfig = this.prepareScenarioConfig(template);
 
+        // Init sliders if present
+        this.initSliders();
+
         this.updateWithQueryParameters();
 
         // set the selected template
@@ -156,11 +175,10 @@ var exports = (function() {
 
         // Initialize the tooltips:
         // We do this after the DOM update.
-        Vue.nextTick(function () {
+        this.$nextTick(function () {
           $("[data-toggle='tooltip']").tooltip();
           $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
         });
-
       },
 
 
@@ -252,12 +270,69 @@ var exports = (function() {
             variable.value = _.get(variable, "default");
             // Set factor to false
             variable.factor = _.get(variable, "factor", false);
-
+            // Initialise fraction so that vue can use it
+            variable.inputValue = variable.value;
           });
 
         });
 
         return scenario;
+      },
+
+      // Do initializations after the DOM is updated.
+      initAfterDomUpdate: function() {
+        this.$nextTick(function () {
+          this.initSliders();
+        });
+      },
+
+      // Initialize the sliders if present
+      initSliders: function() {
+        var sections = this.scenarioConfig.sections;
+        var that = this;
+
+        _.forEach(sections, function(section) {
+          var containsSlider = false;
+
+          _.forEach(section.variables, function(variable) {
+            if (variable.type === "slider") {
+              containsSlider = true;
+              var sliderConfig = section.slider.config;
+              sliderConfig.from = variable.inputValue;
+              sliderConfig.onChange = function() {
+                that.updateSliders(section);
+              };
+              $("#" + variable.id).ionRangeSlider(sliderConfig);
+            }
+          });
+
+          // Update the sliders for the first time
+          if (containsSlider) {
+            that.updateSliders(section);
+          }
+        });
+
+      },
+
+      // Update the sliders
+      updateSliders: function(section) {
+        var totalParts = 0;
+        var that = this;
+
+        // Compute total parts set
+        _.forEach(section.variables, function(variable) {
+          if (variable.type === "slider") {
+            totalParts += parseInt(variable.inputValue);
+          }
+        });
+        // Compute for each slider the fraction of the total
+        _.forEach(section.variables, function(variable) {
+          if (variable.type === "slider") {
+            var sum = parseInt(section.slider.sum);
+            var fraction = parseInt(variable.inputValue) / totalParts;
+            variable.value = Math.round(sum * fraction * 10) / 10;
+          }
+        });
       }
     }
   });
