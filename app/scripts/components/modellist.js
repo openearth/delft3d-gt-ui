@@ -7,18 +7,19 @@ var exports = (function () {
   var ModelList = Vue.component("model-list", {
 
     template: "#template-model-list",
-    props: ["filter"],
     data: function() {
       return {
         models: []
       };
     },
+    props: ["filter"],
     ready: function() {
       // TODO: this only works if the modellist is active. If you go directly to a model it does not work.
       // Fix fetchmodel (and the server) so it actually fetches 1 model.
       // fetch now
       fetchModels()
         .then((data) => {
+          console.log("fetched models", data);
           this.models = data;
         });
 
@@ -90,8 +91,8 @@ var exports = (function () {
           if (this.filter === "scenarios") {
             // is this the best approach, couldn't get a filterkey to work (no access to routing info)
             var scenario = this.selectedScenarioId;
-
-            result = _.filter(this.models, ["scenario", scenario]);
+            console.log("filter by ", scenario);
+            result = _.filter(this.models, ["scenario.id", scenario]);
 
           }
           return result;
