@@ -1,4 +1,4 @@
-/* global chai , MessageSceneCreate, MessageSceneChangeState, MessageSceneDelete, MessageSceneList */
+/* global chai  */
 
 (function() {
   "use strict";
@@ -153,7 +153,7 @@
           component: ModelList
         },
         "/": {
-          component: HomeView
+          component: FinderColumns
         }
       });
       router.start(App, "#app");
