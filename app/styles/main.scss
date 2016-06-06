@@ -192,7 +192,15 @@ $row-height: 32px;
   border: 0;
   margin: 0;
 
+  // Span over all available width
+  width: 100vw;
+
+  // Shadow below the div
+  box-shadow: 0px 2px 4px $gray;
+
   .navbar-right {
+    /* same make buttons fit in the line so they align properly */
+    line-height: 50px;
     // by default buttons stick all the way to the right
     margin-right: 0;
     // Hack to outline buttons with main text
@@ -696,6 +704,17 @@ section {
     }
 
 
+  }
+}
+
+.user-details {
+  a {
+    color: $white;
+  }
+
+  a:hover {
+    color: $brand-primary;
+    text-decoration: none;
   }
 }
 

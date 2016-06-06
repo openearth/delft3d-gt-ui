@@ -45,7 +45,11 @@ var exports = (function() {
         template: null,
 
         dataLoaded: false,
-        componentReady: false
+        componentReady: false,
+
+        // The DOM elements used for the fixed toolbar event listener
+        navBars: null
+
       };
     },
 
@@ -77,6 +81,12 @@ var exports = (function() {
 
     ready: function() {
       this.componentReady = true;
+      this.navBars = {
+        topBar: document.getElementById("top-bar"),
+        toolBar: document.getElementById("tool-bar"),
+        belowToolBar: document.getElementById("below-tool-bar")
+      };
+      this.initFixedToolbar();
       if (this.dataLoaded) {
         this.initSliders();
       }
@@ -333,6 +343,47 @@ var exports = (function() {
             variable.value = Math.round(sum * fraction * 10) / 10;
           }
         });
+      },
+
+      initFixedToolbar: function() {
+        var that = this;
+
+        if (window.addEventListener) {
+          window.addEventListener("scroll", that.updateFixedToolbarStyle);
+          window.addEventListener("touchmove", that.updateFixedToolbarStyle);
+          window.addEventListener("load", that.updateFixedToolbarStyle);
+        } else if (window.attachEvent) {
+          window.attachEvent("onscroll", that.updateFixedToolbarStyle);
+          window.attachEvent("ontouchmove", that.updateFixedToolbarStyle);
+          window.attachEvent("onload", that.updateFixedToolbarStyle);
+        }
+        this.updateFixedToolbarStyle();
+      },
+
+      updateFixedToolbarStyle: function() {
+        var top = this.getTop();
+
+        if (top > this.navBars.topBar.clientHeight) {
+          this.navBars.belowToolBar.style.paddingTop = this.navBars.toolBar.clientHeight + "px";
+          this.navBars.toolBar.style.position = "fixed";
+          this.navBars.toolBar.style.top = "0";
+        } else {
+          this.navBars.belowToolBar.style.paddingTop = "0px";
+          this.navBars.toolBar.style.position = "relative";
+        }
+      },
+
+      getTop: function() {
+        var top = 0;
+
+        if (typeof (window.pageYOffset) === "number") {
+          top = window.pageYOffset;
+        } else if (document.body && document.body.scrollTop) {
+          top = document.body.scrollTop;
+        } else if (document.documentElement && document.documentElement.scrollTop) {
+          top = document.documentElement.scrollTop;
+        }
+        return top;
       }
     }
   });
