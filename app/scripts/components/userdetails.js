@@ -9,8 +9,10 @@ var exports = (function () {
     data: function() {
       return {
         user: {
+          /*eslint-disable camelcase*/
           first_name: "Unknown",
           last_name: "User"
+          /*eslint-enable camelcase*/
         }
       };
     },
@@ -32,6 +34,7 @@ var exports = (function () {
             return key + ": " + value;
           }
         );
+
         return _.join(parts, "\n");
       }
     },
