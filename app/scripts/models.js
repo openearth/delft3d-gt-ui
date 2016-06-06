@@ -1,3 +1,4 @@
+/* global resolveUrls */
 // Store items in this cache
 var itemsCache = {};
 
@@ -12,20 +13,27 @@ var exports = (function () {
    */
   function fetchModels() {
     return new Promise(function(resolve, reject) {
-
-      $.getJSON("/api/v1/scenes/", {
-        cache: false
-      })
+      console.log("fetching data for models ")
+      $.getJSON("/api/v1/scenes/", {})
         .done(function(json) {
-          console.log("itemsCache", itemsCache);
           itemsCache = {};
-
+          console.log("json data", json);
           // copy object
-          _.each(json, function(model) {
-            itemsCache[model.id] = model;
-          });
-          console.log("json", json);
-          resolve(json);
+          Promise.all(
+            // json is a list of models
+            _.map(json, function(model) {
+              console.log("resolving model", model);
+              // return a promise for when all urls are resolved
+              var promise = resolveUrls(model);
+              return promise;
+            })
+          )
+            .then(function(resolvedModels) {
+              // resolvedModels  is an array of arrays
+              var models = resolvedModels.map(function(arr) {return arr[0];});
+              console.log("all models resolved", models);
+              resolve(models);
+            });
         })
         .fail(function(error) {
           reject(error);
