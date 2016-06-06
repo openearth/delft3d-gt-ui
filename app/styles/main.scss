@@ -190,13 +190,14 @@ $row-height: 32px;
 .navbar-static-top {
   // no borders pls
   border: 0;
+  // Shadow below the div
+  box-shadow: 0 2px 4px $gray;
+
   margin: 0;
 
   // Span over all available width
   width: 100vw;
 
-  // Shadow below the div
-  box-shadow: 0px 2px 4px $gray;
 
   .navbar-right {
     /* same make buttons fit in the line so they align properly */
