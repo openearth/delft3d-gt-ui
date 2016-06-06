@@ -1,4 +1,4 @@
-/* global Vue */
+/* global Vue, fetchTemplates */
 
 var exports = (function () {
   "use strict";
@@ -53,10 +53,13 @@ var exports = (function () {
         get: function () {
           // flatten variables
           var variables = _.flatMap(_.flatMap(this.templates, "sections"), "variables");
+
           // lookup all variables with id engine (convention)
           var engines = _.filter(variables, ["id", "engine"]);
+
           // lookup default values (filter on scenes/scenarios later)
           var defaultEngines = _.uniq(_.map(engines, "default"));
+
           return defaultEngines;
 
         }
@@ -65,8 +68,10 @@ var exports = (function () {
         get: function() {
           var parameters = {};
           var variables = _.flatMap(_.flatMap(this.templates, "sections"), "variables");
+
           variables.forEach(function(variable) {
             if (_.has(variable, "validators.min") && _.has(variable, "validators.max")) {
+              // create parameter info for forms
               var obj = {
                 id: variable.id,
                 min: _.get(variable, "validators.min"),
@@ -74,6 +79,7 @@ var exports = (function () {
                 unit: variable.units,
                 value: null
               };
+
               parameters[variable.id] = obj;
             }
           });
@@ -98,12 +104,12 @@ var exports = (function () {
           // loop over all parameters in the template
           this.parameters,
           function(parameter, key) {
-            console.log("value", parameter);
             var result = "";
+
             if (_.isString(parameter.value) && parameter.value.includes(";")) {
               // replace ; by , =>  key,min,max
               // Breaks if someone uses ; in values (these originate from tags)
-              result = key + "," + _.replace(parameter.value, ';', ',');
+              result = key + "," + _.replace(parameter.value, ";", ",");
             } else {
               // replace ; by , =>  key,value
               result = key + "," + parameter.value;
@@ -120,7 +126,9 @@ var exports = (function () {
         };
       },
       search: function() {
+        // create the url and stuff
         var request = this.buildRequest();
+
         console.log("sending request", request);
         $.ajax(request)
           .then(function(data) {
