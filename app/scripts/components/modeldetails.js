@@ -156,14 +156,6 @@ var exports = (function () {
       }
     },
     methods: {
-
-      /// Publish a model and set it to the new state
-      shareModel: function(model, audience) {
-
-        shareModel(model.id, audience);
-      },
-
-
       updateData: function(id) {
         // update data with id, and if transition is passed transition to it
         // afterwards, pass the log
