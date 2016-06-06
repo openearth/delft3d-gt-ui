@@ -16,7 +16,6 @@ var exports = (function () {
       return {
         timerId: -1,
         model: {
-          id: -1
         }
       };
 
