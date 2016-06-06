@@ -2,7 +2,6 @@
 
 var exports = (function () {
   "use strict";
-  // Our homepage component
   var SearchDetails = Vue.component("search-details", {
     // not much in here.
     template: "#template-search-details",
@@ -52,7 +51,8 @@ var exports = (function () {
 
     ready: function() {
       $(".ion-range").ionRangeSlider({
-        onFinish: (data) => {
+        onFinish: () => {
+          // args: data, not used
           this.search();
         }
       });
@@ -71,7 +71,7 @@ var exports = (function () {
           name: this.name,
           state: this.state,
           scenario: this.scenario,
-          template: this.selectedTemplates,
+          template: this.selectedTemplates
         };
 
         _.forEach(this.parameters, function(value, key) {
@@ -89,19 +89,20 @@ var exports = (function () {
       },
       search: function() {
         $.ajax(this.buildRequest())
-          .then(function(data){
+          .then(function(data) {
+            // TODO: set this data in the model-list models property
             console.log("data", data);
           })
-          .fail(function(err){
+          .fail(function(err) {
             console.log(err);
           });
       }
     }
   });
+
   return {
     SearchDetails: SearchDetails
   };
-
 }());
 
 // If we're in node export to models
