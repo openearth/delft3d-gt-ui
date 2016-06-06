@@ -67,7 +67,7 @@
                   <select class="select-picker form-control"
                           multiple
                           id="model-engine"
-                          v-model="parameters['engines']"
+                          v-model="selectedParameters['engines']"
                           data-selected-text-format="count > 3"
                           data-actions-box="true"
                           >
@@ -97,7 +97,7 @@
                          data-max="{{ parameters['riverwidth'].max }}"
                          data-type="double"
                          class="ion-range"
-                         v-model="parameters['riverwidth'].value"/>
+                         v-model="selectedParameters['riverwidth']"/>
                 </div>
                 <div class="form-group" v-if="parameters['riverdischarge']">
                   <label for="riverdischarge">River discharge [m3/s]</label>
@@ -110,7 +110,7 @@
                      data-max="{{ parameters['riverdischarge'].max }}"
                      data-type="double"
                      class="ion-range"
-                     v-model="parameters['riverdischarge'].value"/>
+                     v-model="selectedParameters['riverdischarge']"/>
 
                 </div>
 

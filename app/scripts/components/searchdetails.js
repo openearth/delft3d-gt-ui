@@ -9,12 +9,12 @@ var exports = (function () {
       return {
         selectedTemplates: [],
         templates: [],
-        parameters: {
-          "river-width": null,
-          "river-discharge": null,
-          "engines": []
-        },
         shared: [],
+        selectedParameters: {
+          riverwidth: null,
+          riverdischarge: null,
+          engines: []
+        },
         startDate: null,
         endDate: null,
         text: ""
@@ -76,8 +76,7 @@ var exports = (function () {
                 id: variable.id,
                 min: _.get(variable, "validators.min"),
                 max: _.get(variable, "validators.max"),
-                unit: variable.units,
-                value: null
+                unit: variable.units
               };
 
               parameters[variable.id] = obj;
@@ -102,17 +101,17 @@ var exports = (function () {
         // serialize parameters corresponding to https://publicwiki.deltares.nl/display/Delft3DGT/Search
         params.parameters = _.map(
           // loop over all parameters in the template
-          this.parameters,
-          function(parameter, key) {
+          this.selectedParameters,
+          function(value, key) {
             var result = "";
 
-            if (_.isString(parameter.value) && parameter.value.includes(";")) {
+            if (_.isString(value) && value.includes(";")) {
               // replace ; by , =>  key,min,max
               // Breaks if someone uses ; in values (these originate from tags)
-              result = key + "," + _.replace(parameter.value, ";", ",");
+              result = key + "," + _.replace(value, ";", ",");
             } else {
               // replace ; by , =>  key,value
-              result = key + "," + parameter.value;
+              result = key + "," + value;
             }
             return result;
           }
