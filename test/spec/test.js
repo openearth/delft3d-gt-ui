@@ -294,6 +294,69 @@
       assert.isOk(searchDetails);
       done();
     });
+    it("Is possible to get modelEngines", function(done) {
+      var searchDetails = new SearchDetails();
+
+      searchDetails.templates = [{
+        sections: [{
+          variables: [{
+            id: "engine",
+            default: "Delft3D"
+          }]
+        }]
+      }];
+
+      assert.deepEqual(searchDetails.modelEngines, ["Delft3D"]);
+      done();
+    });
+    it("Is possible to get parameters", function(done) {
+      var searchDetails = new SearchDetails();
+
+      searchDetails.templates = [{
+        sections: [{
+          variables: [{
+            id: "riverwidth",
+            validators: {
+              min: 3,
+              max: 10
+            }
+          }]
+        }]
+      }];
+
+      var comp = {
+        riverwidth: {
+          id: "riverwidth",
+          min: 3,
+          max: 10
+        }
+      };
+
+      assert.deepEqual(searchDetails.parameters, comp);
+      done();
+    });
+    it("Is possible to build a request", function(done) {
+      var searchDetails = new SearchDetails();
+
+      // no values set
+      var comp = {
+        data: {
+          parameters: [
+            "riverwidth,null",
+            "riverdischarge,null",
+            "engines,"
+          ],
+          shared: [],
+          template: [],
+        },
+        dataType: "json",
+        traditional: true,
+        url: "/api/v1/scenes/"
+      };
+
+      assert.deepEqual(searchDetails.buildRequest(), comp);
+      done();
+    });
   });
   describe("User details", function() {
     it("Is possible to create a user details", function(done) {
