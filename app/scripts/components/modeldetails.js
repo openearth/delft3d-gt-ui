@@ -1,4 +1,4 @@
-/* global ImageAnimation, fetchModel, fetchLog, deleteModel, startModel, stopModel, shareModel, router */
+/* global ImageAnimation, fetchModel, fetchLog, deleteModel, startModel, stopModel, router */
 var exports = (function () {
   "use strict";
 

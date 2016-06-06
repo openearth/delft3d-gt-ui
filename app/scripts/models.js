@@ -73,32 +73,6 @@ var exports = (function () {
     });
   }
 
-  // Publish a model and set it to a new state.
-  function shareModel(id, audience) {
-
-    return new Promise(function(resolve, reject) {
-
-      // add extra options to id
-      var postData = {
-        "audience": audience
-      };
-
-      $.ajax({
-        url: "/api/v1/scenes/" + id,
-        data: postData,
-        method: "PATCH"
-      })
-        .done(function(data) {
-          // no data to return, just call the callback
-          resolve(data);
-        })
-        .fail(function(error) {
-          // we're done
-          reject(error);
-        });
-    });
-  }
-
   function deleteModel(id, options) {
     return new Promise(function(resolve, reject) {
       // add extra options to id
