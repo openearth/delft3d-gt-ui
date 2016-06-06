@@ -1,3 +1,5 @@
+/* globals */
+
 // Store items in this cache
 var itemsCache = {};
 
@@ -61,7 +63,7 @@ var exports = (function () {
               resolve(secondTryModel);
             } else {
               // still not here....
-              reject(new Error("Model not found, even after updating "));
+              reject(new Error("Model not found, even after updating"));
             }
           })
           .catch((error) => {
@@ -93,6 +95,7 @@ var exports = (function () {
     });
 
   }
+
   function startModel(id) {
     return new Promise(function(resolve, reject) {
       $.ajax({
