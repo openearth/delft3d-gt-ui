@@ -11,9 +11,19 @@
     "vue": "^1.0.17",
     "vue-router": "^0.7.13",
     "bootstrap-combobox": "~1.1.6",
-    "font-awesome": "fontawesome#^4.6.3"
+    "font-awesome": "fontawesome#^4.6.3",
+    "bootstrap-tagsinput": "^0.8.0",
+    "vue-validator": "https://github.com/vuejs/vue-validator.git#^2.1.2",
+    "eonasdan-bootstrap-datetimepicker": "bootstrap3-datetimepicker#^4.17.37",
+    "ion.rangeSlider": "ionrangeslider#^2.1.4",
+    "bootstrap-select": "^1.10.0"
   },
   "overrides": {
+    "vue-validator": {
+      "main": [
+        "dist/vue-validator.js"
+      ]
+    },
     "bootstrap-sass": {
       "main": [
         "assets/stylesheets/_bootstrap.scss",
@@ -25,6 +35,13 @@
       "main": [
         "css/bootstrap-combobox.css",
         "js/bootstrap-combobox.js"
+      ]
+    },
+    "font-awesome": {
+      "main": [
+        "less/font-awesome.less",
+        "scss/font-awesome.scss",
+        "fonts/**/*"
       ]
     }
   },

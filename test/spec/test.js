@@ -71,15 +71,33 @@
   // load the application
   var ImageAnimation = require("../../app/scripts/components/imageanimation.js").ImageAnimation;
 
+  // used by other component
   global.ImageAnimation = ImageAnimation;
 
   var ModelDetails = require("../../app/scripts/components/modeldetails.js").ModelDetails;
+
+  // used by other component
+  global.ModelDetails = ModelDetails;
+
   var ModelCreate = require("../../app/scripts/components/modelcreate.js").ModelCreate;
   var ModelList = require("../../app/scripts/components/modellist.js").ModelList;
-  var ScenarioCreate = require("../../app/scripts/components/scenariobuilder.js").ScenarioCreate;
-  var ScenarioList = require("../../app/scripts/components/scenariolist.js").ScenarioList;
 
-  var HomeView = require("../../app/scripts/components/home.js").HomeView;
+  // used by other component
+  global.ModelList = ModelList;
+
+  var ScenarioCreate = require("../../app/scripts/components/scenariobuilder.js").ScenarioCreate;
+  var factorToArray = require("../../app/scripts/components/scenariobuilder.js").factorToArray;
+  var ScenarioList = require("../../app/scripts/components/scenariolist.js").ScenarioList;
+  var SearchDetails = require("../../app/scripts/components/searchdetails.js").SearchDetails;
+  var UserDetails = require("../../app/scripts/components/userdetails.js").UserDetails;
+
+  // used by other component
+  global.UserDetails = UserDetails;
+  global.SearchDetails = SearchDetails;
+  global.ScenarioList = ScenarioList;
+
+  var FinderColumns = require("../../app/scripts/components/findercolumns.js").FinderColumns;
+  var SearchColumns = require("../../app/scripts/components/searchcolumns.js").SearchColumns;
 
 
   // why is this necessary....
@@ -101,7 +119,7 @@
 
     // stuff to test without a browser
     var assert = require("chai").assert;
-
+    var sinon = require("sinon");
 
     //console.log(jsdom);
 
@@ -460,7 +478,149 @@
       done();
     });
   });
+  describe("Search list", function() {
+    it("Is possible to create a search columns", function(done) {
+      var searchColumns = new SearchColumns();
 
+      assert.isOk(searchColumns);
+      done();
+    });
+  });
+  describe("Finder columns", function() {
+    it("Is possible to create a three column layout", function(done) {
+      var finderColumns = new FinderColumns();
+
+      assert.isOk(finderColumns);
+      done();
+    });
+  });
+  describe("Search details", function() {
+    it("Is possible to create a search details", function(done) {
+      var searchDetails = new SearchDetails();
+
+      assert.isOk(searchDetails);
+      done();
+    });
+  });
+  describe("User details", function() {
+    it("Is possible to create a user details", function(done) {
+      var userDetails = new UserDetails();
+
+      assert.isOk(userDetails);
+      done();
+    });
+  });
+  describe("Scenario builder", function() {
+    it("Is possible to create a scenarioBuilder", function(done) {
+      var scenarioCreate = new ScenarioCreate();
+
+      console.log("routing", scenarioCreate.$route);
+      assert.isOk(scenarioCreate);
+      done();
+    });
+    it("Should be possible to convert a single value to a tag array", function(done) {
+      var array = factorToArray({
+        factor: true,
+        value: 0.3,
+        type: "numeric"
+      });
+
+      assert.equal(0.3, array[0]);
+      done();
+    });
+    it("Should be possible to convert a comma separated string to a tag array", function(done) {
+      var array = factorToArray({
+        factor: true,
+        value: "0,2,3",
+        type: "numeric"
+      });
+
+      assert.equal(0, array[0]);
+      done();
+    });
+    it("Should be possible to check a value using the custom max validator", function(done) {
+      var scenarioCreate = new ScenarioCreate();
+
+      // check if we get an invalid error if we pass 0
+      var valid = scenarioCreate.$options.validators.min("0,2,3", 1);
+
+      assert.isFalse(valid);
+      done();
+    });
+    it("Should be possible get the total number of runs", function(done) {
+      var scenarioCreate = new ScenarioCreate();
+
+      // check if we get an invalid error if we pass 0
+      scenarioCreate.scenarioConfig = scenarioCreate.prepareScenarioConfig({
+        "sections": [
+          {
+            "variables": [
+              {
+                id: "var1",
+                value: "0,3",
+                default: "0,3",
+                type: "numeric",
+                factor: true
+              }
+            ]
+          }
+        ]
+      });
+      assert.equal(2, scenarioCreate.totalRuns);
+      done();
+    });
+    it("Should be possible to prepare a scenario", function(done) {
+      var scenarioCreate = new ScenarioCreate();
+
+      // empty template
+      var template = {};
+
+      scenarioCreate.selectTemplate(template);
+
+      assert.isOk(scenarioCreate.scenarioConfig);
+
+      done();
+    });
+    it("Should be possible to updte with query parameters", function(done) {
+      var scenarioCreate = new ScenarioCreate();
+
+      scenarioCreate.updateWithQueryParameters();
+
+      assert.isOk(scenarioCreate.scenarioConfig);
+
+      done();
+    });
+    it("Should be possible to submit a scenario", function(done) {
+      var scenarioCreate = new ScenarioCreate();
+
+      scenarioCreate.submitScenario();
+
+      assert.isOk(scenarioCreate.scenarioConfig);
+
+      done();
+    });
+    it("Should be possible to prepare a scenario", function(done) {
+      var scenarioCreate = new ScenarioCreate();
+
+      scenarioCreate.prepareScenarioConfig({
+        "sections": [
+          {
+            "variables": [
+              {
+                id: "var1",
+                default: 0,
+                factor: true
+              }
+            ]
+          }
+        ]
+      });
+
+      assert.isOk(scenarioCreate.scenarioConfig);
+
+      done();
+    });
+  });
 
   describe("Scenarios", function() {
     it("Is possible to create a scenarioList", function(done) {
@@ -517,25 +677,16 @@
         });
       modelDetails.startModel();
       done();
-
     });
-    it("Should be possible to download files", function(done) {
-      var windowOpenCalled = false;
-      var oldOpen = global.window.open;
 
-      // mock open function
-      global.window.open = function() {
-        windowOpenCalled = true;
-      };
+    it("Should be possible to download files", function(done) {
+      var windowSpy = sinon.spy(window, "open");
 
       // this should open a new window
       modelDetails.downloadFiles();
 
       // did it?
-      assert.equal(true, windowOpenCalled);
-
-      // restore open function
-      global.window.open = oldOpen;
+      sinon.assert.calledOnce(windowSpy);
 
       done();
 
@@ -593,7 +744,7 @@
           component: ModelList
         },
         "/": {
-          component: HomeView
+          component: FinderColumns
         }
       });
       router.start(App, "#app");

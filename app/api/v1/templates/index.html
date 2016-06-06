@@ -1,0 +1,174 @@
+[
+  {
+    "id": 1,
+    "name": "Delta plain",
+    "meta": {
+      "creator": "fedor.baart@deltares.nl",
+      "description": "A river or tide dominated delta (no waves). No specific location. This is a delta like the Mississipi delta or the Mahakam river delta on East Kalimantan."
+    },
+    "sections": [
+      {
+        "name": "Scenario",
+        "variables": [
+          {
+            "name": "Name",
+            "type": "text",
+            "id": "name",
+            "default": "New scenario",
+            "validators": {
+              "required": true
+            }
+          },
+          {
+            "name": "Model Engine",
+            "disabled": true,
+            "type": "text",
+            "id": "engine",
+            "default": "Delft3D Curvilinear",
+            "validators": {
+              "required": true
+            }
+          },
+          {
+            "name": "Version",
+            "disabled": true,
+            "type": "semver",
+            "id": "version",
+            "default": "v0.1",
+            "validators": {
+              "required": true
+            }
+          }
+        ]
+      },
+      {
+        "name": "Parameters",
+        "variables": [
+          {
+            "name": "Stop time",
+            "units": "min",
+            "type": "numeric",
+            "id": "simstoptime",
+            "default": 87840,
+            "validators": {
+              "required": true,
+              "min": 0,
+              "max": 230880
+            }
+          },
+          {
+            "id": "dt",
+            "name": "Timestep",
+            "units": "min",
+            "type": "numeric",
+            "default": 1,
+            "validators": {
+              "required": true,
+              "min": 0.5,
+              "max": 20
+            }
+          },
+          {
+            "id": "outputinterval",
+            "name": "Output timestep",
+            "description": "Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.",
+            "units": "min",
+            "type": "numeric",
+            "default": 1440,
+            "validators": {
+              "required": true,
+              "min": 720,
+              "max": 2880
+            }
+          }
+        ]
+      },
+      {
+        "name": "Geometry",
+        "variables": [
+          {
+            "id": "basinslope",
+            "name": "Basin slope",
+            "default": 0.0143,
+            "units": "deg",
+            "type": "numeric",
+            "factor": true,
+            "validators": {
+              "min": 0.01,
+              "max": 0.3
+            }
+          },
+          {
+            "id": "riverwidth",
+            "name": "River width",
+            "default": 300,
+            "units": "m",
+            "type": "numeric",
+            "factor": true,
+            "validators": {
+              "min": 100,
+              "max": 1000
+            }
+          }
+        ]
+      },
+      {
+        "name": "Forces",
+        "variables": [
+          {
+            "id": "riverdischarge",
+            "name": "River discharge",
+            "units": "m\u00b3/s",
+            "type": "numeric",
+            "factor": true,
+            "default": 1000,
+            "validators": {
+              "min": 0,
+              "max": 2000
+            }
+          },
+          {
+            "id": "tidalamplitude",
+            "name": "Tidal amplitude",
+            "units": "m",
+            "type": "numeric",
+            "factor": true,
+            "default": 1,
+            "validators": {
+              "min": 0,
+              "max": 3
+            }
+          }
+        ]
+      },
+      {
+        "name": "Sediment composition",
+        "variables": [
+          {
+            "id": "sandvolcomposition",
+            "name": "Sand volumetric composition",
+            "default": 50,
+            "units": "%",
+            "type": "numeric",
+            "validators": {
+              "min": 0,
+              "max": 100
+            }
+          },
+          {
+            "id": "clayvolcomposition",
+            "name": "Clay volumetric composition",
+            "disabled": false,
+            "default": 50,
+            "units": "%",
+            "type": "numeric",
+            "validators": {
+              "min": 0,
+              "max": 100
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
