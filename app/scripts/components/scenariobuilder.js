@@ -42,7 +42,10 @@ var exports = (function() {
         scenarioConfig: {},
 
         // the current template
-        template: null
+        template: null,
+
+        // The DOM elements used for the fixed toolbar event listener
+        navBars: null
       };
     },
 
@@ -258,7 +261,56 @@ var exports = (function() {
         });
 
         return scenario;
+      },
+
+      initFixedToolbar: function() {
+        var that = this;
+
+        if (window.addEventListener) {
+          window.addEventListener("scroll", that.updateFixedToolbarStyle);
+          window.addEventListener("touchmove", that.updateFixedToolbarStyle);
+          window.addEventListener("load", that.updateFixedToolbarStyle);
+        } else if (window.attachEvent) {
+          window.attachEvent("onscroll", that.updateFixedToolbarStyle);
+          window.attachEvent("ontouchmove", that.updateFixedToolbarStyle);
+          window.attachEvent("onload", that.updateFixedToolbarStyle);
+        }
+        this.updateFixedToolbarStyle();
+      },
+
+      updateFixedToolbarStyle: function() {
+        var top = this.getTop();
+
+        if (top > this.navBars.topBar.clientHeight) {
+          this.navBars.belowToolBar.style.paddingTop = this.navBars.toolBar.clientHeight + "px";
+          this.navBars.toolBar.style.position = "fixed";
+          this.navBars.toolBar.style.top = "0";
+        } else {
+          this.navBars.belowToolBar.style.paddingTop = "0px";
+          this.navBars.toolBar.style.position = "relative";
+        }
+      },
+
+      getTop: function() {
+        var top = 0;
+
+        if (typeof (window.pageYOffset) === "number") {
+          top = window.pageYOffset;
+        } else if (document.body && document.body.scrollTop) {
+          top = document.body.scrollTop;
+        } else if (document.documentElement && document.documentElement.scrollTop) {
+          top = document.documentElement.scrollTop;
+        }
+        return top;
       }
+    },
+    ready: function() {
+      this.navBars = {
+        topBar: document.getElementById("top-bar"),
+        toolBar: document.getElementById("tool-bar"),
+        belowToolBar: document.getElementById("below-tool-bar")
+      };
+      this.initFixedToolbar();
     }
   });
   return {

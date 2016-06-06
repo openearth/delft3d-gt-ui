@@ -1,7 +1,6 @@
 <template id="template-model-details">
-  <div>
+  <div class="model-details">
     <h3 >Details <span v-if="(model.id !== undefined)">for &ldquo;<strong>{{model.name}}</strong>&rdquo;</span></h3>
-    <div class="column-header"></div>
     <div class="alert alert-info" v-if="(model.id === undefined)">
       No run selected.
     </div>

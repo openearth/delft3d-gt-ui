@@ -60,13 +60,31 @@
   var ImageAnimation = require("../../app/scripts/components/imageanimation.js").ImageAnimation;
 
   // this is needed because this object is used as a global variable
+  // used by other component
   global.ImageAnimation = ImageAnimation;
   var ModelDetails = require("../../app/scripts/components/modeldetails.js").ModelDetails;
+
+  // used by other component
+  global.ModelDetails = ModelDetails;
+
   var ModelCreate = require("../../app/scripts/components/modelcreate.js").ModelCreate;
   var ModelList = require("../../app/scripts/components/modellist.js").ModelList;
+
+  // used by other component
+  global.ModelList = ModelList;
+
   var ScenarioCreate = require("../../app/scripts/components/scenariobuilder.js").ScenarioCreate;
   var ScenarioList = require("../../app/scripts/components/scenariolist.js").ScenarioList;
-  var HomeView = require("../../app/scripts/components/home.js").HomeView;
+  var SearchDetails = require("../../app/scripts/components/searchdetails.js").SearchDetails;
+  var UserDetails = require("../../app/scripts/components/userdetails.js").UserDetails;
+
+  // used by other component
+  global.UserDetails = UserDetails;
+  global.SearchDetails = SearchDetails;
+  global.ScenarioList = ScenarioList;
+
+  var FinderColumns = require("../../app/scripts/components/findercolumns.js").FinderColumns;
+  var SearchColumns = require("../../app/scripts/components/searchcolumns.js").SearchColumns;
 
   // why is this necessary....
   var factorToArray = require("../../app/scripts/components/scenariobuilder.js").factorToArray;
@@ -219,7 +237,38 @@
       done();
     });
   });
+  describe("Search list", function() {
+    it("Is possible to create a search columns", function(done) {
+      var searchColumns = new SearchColumns();
 
+      assert.isOk(searchColumns);
+      done();
+    });
+  });
+  describe("Finder columns", function() {
+    it("Is possible to create a three column layout", function(done) {
+      var finderColumns = new FinderColumns();
+
+      assert.isOk(finderColumns);
+      done();
+    });
+  });
+  describe("Search details", function() {
+    it("Is possible to create a search details", function(done) {
+      var searchDetails = new SearchDetails();
+
+      assert.isOk(searchDetails);
+      done();
+    });
+  });
+  describe("User details", function() {
+    it("Is possible to create a user details", function(done) {
+      var userDetails = new UserDetails();
+
+      assert.isOk(userDetails);
+      done();
+    });
+  });
   describe("Scenario builder", function() {
     it("Is possible to create a scenarioBuilder", function(done) {
       var scenarioCreate = new ScenarioCreate();
@@ -461,7 +510,7 @@
           component: ModelList
         },
         "/": {
-          component: HomeView
+          component: FinderColumns
         }
       });
       router.start(App, "#app");

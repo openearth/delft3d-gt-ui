@@ -1,0 +1,117 @@
+<template id="template-search-details">
+  <div class="search-details">
+    <div>
+      <h3>Search</h3>
+
+
+      <div class="panel-group" id="run-accordion" role="tablist" aria-multiselectable="true">
+        <div class="panel panel-default">
+          <div class="panel-heading list-group-item" role="tab" id="run-heading">
+            <a role="button" data-toggle="collapse" data-parent="#run-accordion" href="#run-collapse" aria-expanded="true" aria-controls="run-collapse">
+              <h3 class="panel-title">Run</h3>
+            </a>
+
+          </div>
+          <div class="panel-collapse collapse in" role="tabpanel" aria-labelledby="run-heading" id="run-collapse">
+            <div class="panel-body" >
+              <div class="form-group">
+                <label for="options">Audience</label>
+                <!-- break because of the label hack below -->
+                <br />
+                <div class="btn-group" data-toggle="buttons">
+                  <label class="btn btn-primary" title="private">
+                    <input type="checkbox" name="options" id="option1" autocomplete="off" checked><i class="fa fa-user " aria-hidden="true"></i>
+                    <br />
+                    private
+                  </label>
+                  <label class="btn btn-primary" title="shared with my company">
+                    <input type="checkbox" name="options" id="option2" autocomplete="off"><i class="fa fa-users" aria-hidden="true"></i>
+                    <br />
+                    company
+                  </label>
+                  <label class="btn btn-primary" title="shared with public">
+                    <input type="checkbox" name="options" id="option3" autocomplete="off"><i class="fa fa-cloud" aria-hidden="true"></i>
+                    <br />
+                    public
+                  </label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="begin-date">Submit date start</label>
+                <!-- use default dateticker, others fail with overflow -->
+                <input type="date" name="begin-date" value="" class="form-control"/>
+                <label for="begin-date">Submit date end</label>
+                <input type="date" name="end-date" value="" class="form-control" />
+              </div>
+              <div class="form-group">
+                <label for="text">Text</label>
+                <input type="text" class="form-control" id="text" placeholder="Text">
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="panel panel-default">
+          <div class="panel-heading list-group-item" role="tab" id="template-heading">
+            <a role="button" data-toggle="collapse" data-parent="#template-accordion" href="#template-collapse" aria-expanded="true" aria-controls="template-collapse">
+              <h3 class="panel-title">Template</h3>
+            </a>
+
+          </div>
+          <div class="panel-collapse collapse" role="tabpanel" aria-labelledby="template-heading" id="template-collapse">
+            <div class="panel-body">
+              <div class="form-group">
+                <label for="template">Template</label>
+                <select class="select-picker form-control" multiple  id="template">
+                  <option>Template a</option>
+                  <option>Template b</option>
+                  <option>Some other template</option>
+                  <option>More templates</option>
+                  <option>Last template</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="model-engine">Model engine</label>
+                <select class="select-picker form-control" multiple id="model-engine">
+                  <option>Delft3D Curvilinear 4</option>
+                  <option>Delft3D Curvilinear 5</option>
+                  <option>Delft3D Flexible Mesh 1</option>
+                  <option>Delft3D Flexible Mesh 2</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading list-group-item" role="tab" id="geometry-heading">
+            <a role="button" data-toggle="collapse" data-parent="#geometry-accordion" href="#geometry-collapse" aria-expanded="true" aria-controls="geometry-collapse">
+              <h3 class="panel-title">Geometry</h3>
+            </a>
+
+          </div>
+          <div class="panel-collapse collapse" role="tabpanel" aria-labelledby="geometry-heading" id="geometry-collapse">
+            <div class="panel-body">
+              <div class="form-group">
+                <label for="river-width">River width [m]</label>
+                <input type="text" id="river-width" name="river width" value="" data-min="1" data-max="1500" data-type="double" class="ion-range"/>
+
+
+              </div>
+              <div class="form-group">
+                <label for="river-discharge">River discharge [m3/s]</label>
+                <input type="text" id="river-width" name="river discharge" value="" data-min="1" data-max="1500" data-type="double" class="ion-range"/>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</template>
