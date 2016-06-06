@@ -16,9 +16,9 @@ var exports = (function () {
     },
 
     ready: function() {
-      $.getJSON("/api/v1/users/me")
+      $.getJSON("/api/v1/users/me/")
         .done((data) => {
-          this.user = data;
+          this.user = _.first(data);
         })
         .fail((e) => {
           console.log("failed to get user info", e);
