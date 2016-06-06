@@ -200,8 +200,7 @@ var exports = (function () {
     createModel: createModel,
     deleteModel: deleteModel,
     startModel: startModel,
-    stopModel: stopModel,
-    shareModel: shareModel
+    stopModel: stopModel
   };
 }());
 
