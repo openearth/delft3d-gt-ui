@@ -9,14 +9,14 @@ var exports = (function () {
     data: function() {
       return {
         user: {
-          name: "Unknown user",
-          company: "Unknown company"
+          first_name: "Unknown",
+          last_name: "User"
         }
       };
     },
 
     ready: function() {
-      $.getJSON("/api/v1/user/")
+      $.getJSON("/api/v1/users/me")
         .done((data) => {
           this.user = data;
         })
@@ -26,11 +26,12 @@ var exports = (function () {
     },
     computed: {
       details: function() {
-        var parts = [
-          "name: " + _.get(this.user, "name"),
-          "company: " + _.get(this.user, "company")
-        ];
-
+        var parts = _.map(
+          this.user,
+          function(value, key) {
+            return key + ": " + value;
+          }
+        );
         return _.join(parts, "\n");
       }
     },
