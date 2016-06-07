@@ -666,17 +666,67 @@
     var modelDetails = new ModelDetails();
 
     it("Should be possible to start a model", function(done) {
+      var correctReply = false;
+
+      modelDetails.$parent = {};
+      modelDetails.$parent.$broadcast = function() {
+      };
+
+      modelDetails.model.id = 4;
+
       nock("http://0.0.0.0")
         .defaultReplyHeaders({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*"
         })
-        .post("/scene/start", {
-        })
-        .reply(200, {
+        .post("/api/v1/scenes/4/start")
+        .reply(200, function() {
+          correctReply = true;
+          return {};
         });
+
       modelDetails.startModel();
-      done();
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
+    });
+
+    it("Should be possible to export a model", function(done) {
+      var correctReply = false;
+
+      modelDetails.model.id = 4;
+
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .post("/api/v1/scenes/4/start", {
+          workflow: "export"
+        })
+        .reply(200, function() {
+          correctReply = true;
+          return {};
+        });
+
+      modelDetails.exportModel();
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
     });
 
     it("Should be possible to download files", function(done) {
