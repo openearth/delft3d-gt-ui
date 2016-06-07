@@ -3,8 +3,9 @@
   "use strict";
 
   // We use a setInterval mock function, otherwise setIntervals will cause Mocha to never stop!
-  global.setInterval = function(callback, time) {
-    console.log("setInterval override " + callback + " time " + time);
+  global.setInterval = function() {
+    // args: callback, time
+    // "setInterval override " + callback + " time " + time
   };
 
 
@@ -14,7 +15,9 @@
   // You might want to do this per test....
   // Create a document
   /* eslint-disable quotes */
-  var document = jsdom('<!doctype html><html><body><div id="app"><div id="image-animation"></div></div><div id="template-container"></div></body></html>', {});
+
+  global.document = jsdom('<!doctype html><html><body><div id="app"><div id="model-create"></div><scenario-builder id="scenario-builder"></scenario-builder><div id="model-details"></div></div><div id="template-container"></div></body></html>', {});
+
   /* eslint-enable quotes */
 
   // Get the corresponding window
@@ -104,7 +107,6 @@
   var sinon = require("sinon");
   var nock = require("nock");
   var assert = require("chai").assert;
-
 
   describe("Testing data exchange with api", function() {
     describe("If we can query the scenario list", function() {
@@ -219,8 +221,130 @@
   });
 
 
-  // Testing MessageSceneList messages
+
+  // Testing App
+  describe("App", function() {
+
+
+    it("can I initialized the application", function(done) {
+      var App = Vue.extend({});
+
+      Vue.use(VueRouter);
+      var router = new VueRouter();
+
+      router.map({
+        "/models/:id": {
+          component: ModelDetails
+        },
+        "/scenarios/create": {
+          component: ScenarioCreate
+        },
+        "/models": {
+          component: ModelList
+        },
+        "/": {
+          component: FinderColumns
+        }
+      });
+      router.start(App, "#app");
+
+      assert(App !== undefined, "app created");
+      done();
+    });
+
+    // This test doesn't work, since it gets stuck when loading the main template.
+    it("App - LoadTemplate - Check if mock template is added to DOM", function(done) {
+
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "text/html",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .get("/templates/templates.html")
+        .reply(200, "<div>template-ok</div>");
+
+      // TODO: put this code in some app level promise
+      $("#template-container").load(
+        "/templates/templates.html",
+        function() {
+          var html = global.$("#template-container").html();
+
+          /* eslint-disable quotes */
+          var check = '<div>template-ok</div>';
+
+          /* eslint-enable quotes */
+
+          // This works better than the assert:
+          try {
+            assert.equal(check, html, "HTML template does not match");
+            done();
+          } catch (e) {
+            done(e);
+          }
+
+        });
+    });
+  });
+
   describe("Components", function() {
+    it("Is possible to instantiate component ModelCreate", function(done) {
+
+      var modelCreate = new ModelCreate({
+      });
+
+      assert.isOk(modelCreate);
+      done();
+    });
+
+    it("Is possible to instantiate component ModelDetails", function(done) {
+      var modelDetails = new ModelDetails({
+      });
+
+      assert.isOk(modelDetails);
+      done();
+    });
+
+    it("Is possible to instantiate component ScenarioList", function(done) {
+      var scenarioList = new ScenarioList({
+      });
+
+      assert.isOk(scenarioList);
+      done();
+    });
+
+    it("Is possible to instantiate component ModelDetails", function(done) {
+      var modelDetails = new ModelDetails({
+      });
+
+      assert.isOk(modelDetails);
+      done();
+    });
+    it("Is possible to instantiate component ScenarioBuilder", function(done) {
+      var scenarioCreate = new ScenarioCreate({
+      });
+
+      assert.isOk(scenarioCreate);
+      done();
+    });
+    it("Is possible to create a search details", function(done) {
+      var searchDetails = new SearchDetails();
+
+      assert.isOk(searchDetails);
+      done();
+    });
+    it("Is possible to create a scenarioBuilder", function(done) {
+      var scenarioCreate = new ScenarioCreate({
+      });
+
+      assert.isOk(scenarioCreate);
+      done();
+    });
+    it("Is possible to create a search columns", function(done) {
+      var searchColumns = new SearchColumns();
+
+      assert.isOk(searchColumns);
+      done();
+    });
     it("Is possible to instantiate component ModelCreate", function(done) {
 
       var modelCreate = new ModelCreate();
@@ -260,6 +384,69 @@
       assert.isOk(searchDetails);
       done();
     });
+    it("Is possible to get modelEngines", function(done) {
+      var searchDetails = new SearchDetails();
+
+      searchDetails.templates = [{
+        sections: [{
+          variables: [{
+            id: "engine",
+            default: "Delft3D"
+          }]
+        }]
+      }];
+
+      assert.deepEqual(searchDetails.modelEngines, ["Delft3D"]);
+      done();
+    });
+    it("Is possible to get parameters", function(done) {
+      var searchDetails = new SearchDetails();
+
+      searchDetails.templates = [{
+        sections: [{
+          variables: [{
+            id: "riverwidth",
+            validators: {
+              min: 3,
+              max: 10
+            }
+          }]
+        }]
+      }];
+
+      var comp = {
+        riverwidth: {
+          id: "riverwidth",
+          min: 3,
+          max: 10
+        }
+      };
+
+      assert.deepEqual(searchDetails.parameters, comp);
+      done();
+    });
+    it("Is possible to build a request", function(done) {
+      var searchDetails = new SearchDetails();
+
+      // no values set
+      var comp = {
+        data: {
+          parameters: [
+            "riverwidth,null",
+            "riverdischarge,null",
+            "engines,"
+          ],
+          shared: [],
+          template: [],
+        },
+        dataType: "json",
+        traditional: true,
+        url: "/api/v1/scenes/"
+      };
+
+      assert.deepEqual(searchDetails.buildRequest(), comp);
+      done();
+    });
   });
   describe("User details", function() {
     it("Is possible to create a user details", function(done) {
@@ -269,14 +456,8 @@
       done();
     });
   });
-  describe("Scenario builder", function() {
-    it("Is possible to create a scenarioBuilder", function(done) {
-      var scenarioCreate = new ScenarioCreate();
 
-      console.log("routing", scenarioCreate.$route);
-      assert.isOk(scenarioCreate);
-      done();
-    });
+  describe("Scenario builder", function() {
     it("Should be possible to convert a single value to a tag array", function(done) {
       var array = factorToArray({
         factor: true,
@@ -298,7 +479,8 @@
       done();
     });
     it("Should be possible to check a value using the custom max validator", function(done) {
-      var scenarioCreate = new ScenarioCreate();
+      var scenarioCreate = new ScenarioCreate({
+      });
 
       // check if we get an invalid error if we pass 0
       var valid = scenarioCreate.$options.validators.min("0,2,3", 1);
@@ -307,7 +489,8 @@
       done();
     });
     it("Should be possible get the total number of runs", function(done) {
-      var scenarioCreate = new ScenarioCreate();
+      var scenarioCreate = new ScenarioCreate({
+      });
 
       // check if we get an invalid error if we pass 0
       scenarioCreate.scenarioConfig = scenarioCreate.prepareScenarioConfig({
@@ -329,7 +512,8 @@
       done();
     });
     it("Should be possible to prepare a scenario", function(done) {
-      var scenarioCreate = new ScenarioCreate();
+      var scenarioCreate = new ScenarioCreate({
+      });
 
       // empty template
       var template = {};
@@ -385,7 +569,6 @@
     it("Is possible to create a scenarioList", function(done) {
       var scenarioList = new ScenarioList();
 
-      console.log("routing", scenarioList.$route);
       assert.isOk(scenarioList);
       done();
     });
@@ -411,7 +594,6 @@
 
       router.start(App, "#app");
       router.go("/scenario/1");
-      console.log("children", App.$children);
       done();
     });
     it("Is possible to clone a scenario", function(done) {
@@ -489,73 +671,44 @@
   });
 
 
-  // Testing App
-  describe("App", function() {
 
 
-    it("can I initialized the application", function(done) {
-      var App = Vue.extend({});
+  // This test doesn't work, since it gets stuck when loading the main template.
+  it("App - LoadTemplate - Check if mock template is added to DOM", function(done) {
 
-      Vue.use(VueRouter);
-      var router = new VueRouter();
+    nock("http://0.0.0.0")
+      .defaultReplyHeaders({
+        "Content-Type": "text/html",
+        "Access-Control-Allow-Origin": "*"
+      })
+      .log(console.log)
+      .get("/templates/templates.html")
+      .reply(200, "<div>template-ok</div>");
 
-      router.map({
-        "/models/:id": {
-          component: ModelDetails
-        },
-        "/scenarios/create": {
-          component: ScenarioCreate
-        },
-        "/models": {
-          component: ModelList
-        },
-        "/": {
-          component: FinderColumns
+    // TODO: put this code in some app level promise
+    $("#template-container").load(
+      "/templates/templates.html",
+      function() {
+        var html = global.$("#template-container").html();
+
+        /* eslint-disable quotes */
+        var check = '<div>template-ok</div>';
+
+        /* eslint-enable quotes */
+
+        // This works better than the assert:
+        try {
+          assert.equal(check, html, "HTML template does not match");
+          done();
+        } catch (e) {
+          done(e);
         }
+
       });
-      router.start(App, "#app");
-
-      assert(App !== undefined, "app created");
-      done();
-    });
-
-    // This test doesn't work, since it gets stuck when loading the main template.
-    it("App - LoadTemplate - Check if mock template is added to DOM", function(done) {
-
-      nock("http://0.0.0.0")
-        .defaultReplyHeaders({
-          "Content-Type": "text/html",
-          "Access-Control-Allow-Origin": "*"
-        })
-        .log(console.log)
-        .get("/templates/templates.html")
-        .reply(200, "<div>template-ok</div>");
-
-      // TODO: put this code in some app level promise
-      $("#template-container").load(
-        "/templates/templates.html",
-        function() {
-          var html = global.$("#template-container").html();
-
-          /* eslint-disable quotes */
-          var check = '<div>template-ok</div>';
-
-          /* eslint-enable quotes */
-
-          // This works better than the assert:
-          try {
-            assert.equal(check, html, "HTML template does not match");
-            done();
-          } catch (e) {
-            done(e);
-          }
-
-        });
-    });
-
-
-
   });
+
+
+
 
 
 })();

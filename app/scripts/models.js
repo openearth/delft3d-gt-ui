@@ -1,4 +1,5 @@
 /* global resolveUrls */
+
 // Store items in this cache
 var itemsCache = {};
 
@@ -13,7 +14,6 @@ var exports = (function () {
    */
   function fetchModels() {
     return new Promise(function(resolve, reject) {
-      console.log("fetching data for models ")
       $.getJSON("/api/v1/scenes/", {})
         .done(function(json) {
           itemsCache = {};
@@ -25,12 +25,16 @@ var exports = (function () {
               console.log("resolving model", model);
               // return a promise for when all urls are resolved
               var promise = resolveUrls(model);
+
               return promise;
             })
           )
             .then(function(resolvedModels) {
               // resolvedModels  is an array of arrays
-              var models = resolvedModels.map(function(arr) {return arr[0];});
+              var models = resolvedModels.map(function(arr) {
+                return arr[0];
+              });
+
               console.log("all models resolved", models);
               resolve(models);
             });
@@ -71,7 +75,7 @@ var exports = (function () {
               resolve(secondTryModel);
             } else {
               // still not here....
-              reject(new Error("Model not found, even after updating "));
+              reject(new Error("Model not found, even after updating"));
             }
           })
           .catch((error) => {
@@ -103,6 +107,7 @@ var exports = (function () {
     });
 
   }
+
   function startModel(id) {
     return new Promise(function(resolve, reject) {
       $.ajax({

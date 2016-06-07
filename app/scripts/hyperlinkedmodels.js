@@ -14,10 +14,14 @@ var exports = (function () {
     var urlFieldNames = _.keys(urlFields);
 
     var promises = urlFieldNames.map(function(key) {
-      var result = new Promise(function(resolve, reject) {
+      var result = new Promise(function(resolve) {
+        // ignored arg: reject
         // by default we just resolve
         resolve();
+
+
       });
+
       if (_.endsWith(key, "_url")) {
         // get the url
         var url = object[key];
@@ -31,7 +35,6 @@ var exports = (function () {
           })
           .then(function(json) {
             object[newKey] = json;
-            console.log("data fetched and set to object", object, "key", newKey);
             return object;
           });
 
@@ -39,6 +42,7 @@ var exports = (function () {
       if (_.endsWith(key, "_set")) {
         // for all urls, we use fetch and promises so we can return a value once everything is resolved and converted
         var urls = object[key];
+
         result = Promise.all(
           urls.map(fetch)
         )
