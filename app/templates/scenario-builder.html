@@ -36,7 +36,7 @@
             <div class="col-sm-12">
               <div class="form-group ">
                 <label for="select-template">Select a template</label>
-                <select class="combobox form-control" v-model="template"  id="select-template" :update="selectTemplate(template)">
+                <select class="combobox form-control" v-model="template"  id="select-template">
                   <option v-for="template in availableTemplates" v-bind:value="template">
                     {{ template.name }}
                   </option>
@@ -58,8 +58,8 @@
                       </div>
                       <div class="panel-body">
                         <div class="form-group" v-for="variable in section.variables" v-bind:class="{
-                            'has-error': ($validation[getId(variable)] ?
-                                            !$validation[getId(variable)].valid :
+                            'has-error': ($validation[variable.id] ?
+                                            !$validation[variable.id].valid :
                                             (section.slider !== undefined ?
                                               !section.slider.valid :
                                               false)) }">
@@ -96,7 +96,7 @@
                                  :data-role="variable.factor ? 'tagsinput' : ''"
                                  v-model="variable.value"
                                  :disabled="variable.disabled"
-                                 :field="getId(variable)"
+                                 :field="variable.id"
                                  v-validate="variable.validators"
                                  aria-describedby="{{ variable.variableid }}status"
                                  />
@@ -109,7 +109,7 @@
                                  class="form-control"
                                  rows="3"
                                  :disabled="variable.disabled"
-                                 :field="getId(variable)"
+                                 :field="variable.id"
                                  v-validate="variable.validators"
                                  >{{ variable.value }}</textarea>
                             </template>
@@ -123,19 +123,19 @@
                             </span>
 
                           </div>
-                          <div v-if="$validation[getId(variable)]">
-                            <p  v-if="$validation[getId(variable)].required"
+                          <div v-if="$validation[variable.id]">
+                            <p  v-if="$validation[variable.id].required"
                                 class="help-block has-error">
                                   This field cannot be left empty.
                             </p>
-                            <p  v-if="$validation[getId(variable)].min
-                                      && !$validation[getId(variable)].required
+                            <p  v-if="$validation[variable.id].min
+                                      && !$validation[variable.id].required
                                       && !isNaN(variable.value)"
                                 class="help-block has-error">
                                   Entered value "{{ variable.value}}" is less than the minimum value "{{ variable.validators.min }}"!
                             </p>
-                            <p  v-if="$validation[getId(variable)].max
-                                      && !$validation[getId(variable)].required
+                            <p  v-if="$validation[variable.id].max
+                                      && !$validation[variable.id].required
                                       && !isNaN(variable.value)"
                                 class="help-block has-error">
                                   Entered value "{{ variable.value}}" is greater than the maximum value "{{ variable.validators.max }}"!
