@@ -1,4 +1,4 @@
-/* global ImageAnimation, fetchModel, fetchLog, deleteModel, startModel, exportModel, stopModel, router */
+/* global ImageAnimation, fetchModel, fetchLog, deleteModel, startModel, exportModel, stopModel, publishModel, router */
 var exports = (function () {
   "use strict";
 
@@ -179,7 +179,7 @@ var exports = (function () {
             }
           )
           .catch(e => {
-            console.log("Failed to get model with id", id, "error", e);
+            //console.log("Failed to get model with id", id, "error", e);
           });
 
       },
@@ -314,7 +314,15 @@ var exports = (function () {
 
       },
 
-
+      publishModel: function(target) {
+        publishModel(this.model.id, target)
+          .then(msg => {
+            console.log(msg);
+          })
+          .catch(e => {
+            console.log(e);
+          });
+      },
 
       downloadOptionsChange: function() {
 
