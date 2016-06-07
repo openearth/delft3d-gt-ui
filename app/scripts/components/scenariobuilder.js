@@ -315,8 +315,16 @@ var exports = (function() {
           _.forEach(section.variables, function(variable) {
             if (variable.type === "slider") {
               containsSlider = true;
-              var sliderConfig = section.slider.config;
-              sliderConfig.from = variable.inputValue;
+              var sliderConfig = {
+                "min": 0,
+                "max": section.slider.steps,
+                "from": variable.inputValue,
+                "step": 1,
+                "grid": true,
+                "grid_snap": true,
+                "hide_min_max": true,
+                "hide_from_to": true
+              };
               sliderConfig.onChange = function() {
                 that.updateSliders(section);
                 that.checkSliderSectionsValid();
