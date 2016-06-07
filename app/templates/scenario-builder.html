@@ -103,9 +103,26 @@
 
                           </div>
                           <div v-if="$validation[variable.id]">
-                            <p v-if="$validation[variable.id].required">required</p>
-                            <p v-if="$validation[variable.id].min">value &lt; min</p>
-                            <p v-if="$validation[variable.id].max">value &gt; max</p>
+                            <p  v-if="$validation[variable.id].required"
+                                class="help-block has-error">
+                                  This field may not be empty!
+                            </p>
+                            <p  v-if="$validation[variable.id].min
+                                      && !$validation[variable.id].required
+                                      && !isNaN(variable.value)"
+                                class="help-block has-error">
+                                  Entered value "{{ variable.value}}" is less than minimum "{{ variable.validators.min }}"!
+                            </p>
+                            <p  v-if="$validation[variable.id].max
+                                      && !$validation[variable.id].required
+                                      && !isNaN(variable.value)"
+                                class="help-block has-error">
+                                  Entered value "{{ variable.value}}" is greater than maximum "{{ variable.validators.max }}"!
+                            </p>
+                            <p  v-if="isNaN(variable.value)"
+                                class="help-block has-error">
+                                  "{{ variable.value}}" is not a number!
+                            </p>
                           </div>
                         </div>
 
