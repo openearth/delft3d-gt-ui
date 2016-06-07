@@ -286,8 +286,12 @@ var exports = (function () {
 
       exportModel: function() {
         exportModel(this.model.id)
-          .then(msg => {
-            console.log(msg);
+          .then(() => {
+            this.$parent.$broadcast("show-alert", {
+              message: "Starting export... It might take a moment before the view is updated.",
+              showTime: 5000,
+              type: "success"
+            });
           })
           .catch(e => {
             console.log(e);
