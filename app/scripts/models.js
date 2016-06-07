@@ -96,8 +96,26 @@ var exports = (function () {
   function startModel(id) {
     return new Promise(function(resolve, reject) {
       $.ajax({
-        url: "/scene/start",
-        data: {id: id},
+        url: "/api/v1/scenes/" + id + "/start",
+        method: "POST"
+      })
+        .done(function() {
+          // no data to return, just call the callback
+          resolve();
+        })
+        .fail(function(error) {
+          // we're done
+          reject(error);
+        });
+
+    });
+  }
+
+  function exportModel(id) {
+    return new Promise(function(resolve, reject) {
+      $.ajax({
+        url: "/api/v1/scenes/" + id + "/start",
+        data: {workflow: "export"},
         method: "POST"
       })
         .done(function() {
@@ -197,6 +215,7 @@ var exports = (function () {
     createModel: createModel,
     deleteModel: deleteModel,
     startModel: startModel,
+    exportModel: exportModel,
     stopModel: stopModel
   };
 }());

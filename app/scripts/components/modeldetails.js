@@ -1,4 +1,4 @@
-/* global ImageAnimation, fetchModel, fetchLog, deleteModel, startModel, stopModel, router */
+/* global ImageAnimation, fetchModel, fetchLog, deleteModel, startModel, exportModel, stopModel, router */
 var exports = (function () {
   "use strict";
 
@@ -317,6 +317,16 @@ var exports = (function () {
         startModel(this.model.id)
           .then(msg => {
             that.$parent.$broadcast("show-alert", { message: "Restarting run... It might take a moment before the view is updated.", showTime: 5000, type: "success"});
+            console.log(msg);
+          })
+          .catch(e => {
+            console.log(e);
+          });
+      },
+
+      exportModel: function() {
+        exportModel(this.model.id)
+          .then(msg => {
             console.log(msg);
           })
           .catch(e => {
