@@ -13,22 +13,21 @@ var exports = (function () {
 
     // Show the details of one model
     data: function() {
-      console.log("loading model details for id", this.id);
-
       return {
         timerId: -1,
         model: {
+          id: -1
         }
       };
 
     },
 
     created: function() {
-      console.log("Model details are created with model", JSON.stringify(this.model));
-      this.updateData(this.model.id);
+      if (this.model.id !== -1) {
+        this.updateData(this.model.id);
+      }
     },
     ready: function() {
-      console.log("model details are ready");
       // enable the tab based menu (only for tabs, keep real links)
       $("#model-details-navigation .nav a[data-toggle='tab']").click(function (e) {
         e.preventDefault();
@@ -39,7 +38,6 @@ var exports = (function () {
       clipboard.on("success", function(e) {
         e.clearSelection();
       });
-      console.log("updating model id");
 
     },
     computed: {
@@ -77,11 +75,6 @@ var exports = (function () {
             this.updateData(modelId);
           }, 5000);
 
-          // Stop any animation if we were animating.
-          //this.stopImageFrame();
-
-          // Reset index:
-          //this.currentAnimationIndex = 0;
         }
 
 
@@ -154,12 +147,10 @@ var exports = (function () {
       data: function(transition) {
         // get model (from a service or parent)
 
-        console.log("data transition", transition, this);
         this.updateData(parseInt(transition.to.params.modelid));
         transition.next();
       },
       activate: function(transition) {
-        console.log("activating transition", transition);
         transition.next();
 
       }
@@ -210,7 +201,6 @@ var exports = (function () {
 
         // keep track of the scenario before deletion
         var scenarioId = this.scenario;
-        var that = this;
 
         $("#dialog-remove-name").html(this.model.name);
         // Do we also remove all the additional files? This is based on the checkmark.
@@ -228,10 +218,12 @@ var exports = (function () {
 
 
           deleteModel(deletedId, options)
-            .then(function(data) {
-              console.log("model deleted from server", deletedId, "data:", data);
-
-              that.$parent.$broadcast("show-alert", { message: "Deleting run... It might take a moment before the view is updated.", showTime: 5000, type: "success"});
+            .then(() => {
+              this.$parent.$broadcast("show-alert", {
+                message: "Deleting run... It might take a moment before the view is updated.",
+                showTime: 5000,
+                type: "success"
+              });
 
             })
             .catch(e => {
@@ -276,50 +268,19 @@ var exports = (function () {
           });
       },
 
-      // Not used anymore?
-      // changeMenuItem: function(event) {
-
-      //   var el = $(event.target);
-
-      //   // Hide all panels except for the target.
-      //   $(".collapse").hide();
-
-      //   // Get target:
-      //   var targetSelector = $(el).attr("data-target");
-      //   var target = $(targetSelector);
-
-      //   target.show();
-
-
-      //   // If there is an animation property, we set this:
-      //   var targetAnimation = $(el).attr("data-animation");
-
-      //   if (targetAnimation !== undefined && targetAnimation.length > 0) {
-      //     this.currentAnimationKey = targetAnimation;
-      //     this.currentAnimationIndex = 0;
-      //     this.stopImageFrame();
-
-      //   } else {
-      //     this.currentAnimationKey = "";
-      //     this.currentAnimationIndex = 0;
-      //   }
-
-
-
-      //   event.stopPropagation();
-      // },
-
       // User wants to start a model. We just do not do anything now, as this needs to be implemented.
       startModel: function() {
-        var that = this;
 
         // We use the runmodel for this.
         startModel(this.model.id)
-          .then(msg => {
-            that.$parent.$broadcast("show-alert", { message: "Restarting run... It might take a moment before the view is updated.", showTime: 5000, type: "success"});
-            console.log(msg);
+          .then(() => {
+            this.$parent.$broadcast("show-alert", {
+              message: "Restarting run... It might take a moment before the view is updated.",
+              showTime: 5000,
+              type: "success"
+            });
           })
-          .catch(e => {
+          .catch((e) => {
             console.log(e);
           });
       },
@@ -338,15 +299,17 @@ var exports = (function () {
       stopModel: function() {
 
         var deletedId = this.model.id;
-        var that = this;
 
         stopModel(deletedId)
-          .then(msg => {
-            console.log(msg);
-            that.$parent.$broadcast("show-alert", { message: "Stopping run... It might take a moment before the view is updated.", showTime: 5000, type: "success"});
+          .then(() => {
+            this.$parent.$broadcast("show-alert", {
+              message: "Stopping run... It might take a moment before the view is updated.",
+              showTime: 5000,
+              type: "success"
+            });
 
           })
-          .catch(e => {
+          .catch((e) => {
             console.log(e);
           });
 

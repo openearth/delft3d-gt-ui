@@ -33,7 +33,7 @@ var exports = (function() {
   // Constructor of our component
   ScenarioCreate = Vue.component("scenario-builder", {
     template: "#template-scenario-builder",
-
+    // el: "#template-scenario-builder",
     data: function() {
       return {
         availableTemplates: [],
@@ -47,10 +47,6 @@ var exports = (function() {
         // The DOM elements used for the fixed toolbar event listener
         navBars: null
       };
-    },
-
-    props: {
-      data: Array
     },
 
     created: function() {

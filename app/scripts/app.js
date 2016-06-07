@@ -23,7 +23,8 @@ var exports = (function() {
 
         // Just an empty main application
         // (selected model is done using routing)
-        var App = Vue.extend({});
+        var App = Vue.extend({
+        });
 
         router = new VueRouter();
 
