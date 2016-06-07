@@ -18,7 +18,7 @@
                   <label for="options">Shared with:</label>
                   <!-- break because of the label hack below -->
                   <br />
-                  <select class="select-picker form-control" multiple  id="search-audience" v-model="audience" data-actions-box="true">
+                  <select class="select-picker form-control" multiple  id="search-shared" v-model="shared" data-actions-box="true">
                     <option data-icon="glyphicon-user" selected>private</option>
                     <option data-icon="glyphicon-blackboard" selected>company</option>
                     <option data-icon="glyphicon-globe" selected>public</option>
@@ -67,12 +67,11 @@
                   <select class="select-picker form-control"
                           multiple
                           id="model-engine"
-                          v-model="selectedModelEngines"
+                          v-model="selectedParameters['engines']"
                           data-selected-text-format="count > 3"
                           data-actions-box="true"
-                          disabled
                           >
-                    <option v-for="engine in modelEngines" selected>{{ engine.name }}</option>
+                    <option v-for="engine in modelEngines" selected>{{ engine }}</option>
                   </select>
                 </div>
               </div>
@@ -80,23 +79,38 @@
           </div>
 
           <div class="panel panel-default">
-            <div class="panel-heading list-group-item" role="tab" id="geometry-heading">
-              <a role="button" data-toggle="collapse" data-parent="#geometry-accordion" href="#geometry-collapse" aria-expanded="true" aria-controls="geometry-collapse">
-                <h3 class="panel-title">Geometry</h3>
+            <div class="panel-heading list-group-item" role="tab">
+              <a role="button" data-toggle="collapse" data-parent="#parameters-accordion" href="#parameters-collapse" aria-expanded="true" aria-controls="parameters-collapse">
+                <h3 class="panel-title">Parameters</h3>
               </a>
 
             </div>
-            <div class="panel-collapse collapse" role="tabpanel" aria-labelledby="geometry-heading" id="geometry-collapse">
+            <div class="panel-collapse collapse" role="tabpanel" aria-labelledby="parameters-heading" id="parameters-collapse">
               <div class="panel-body">
-                <div class="form-group">
-                  <label for="river-width">River width [m]</label>
-                  <input type="text" id="river-width" name="river width" value="" data-min="1" data-max="1500" data-type="double" class="ion-range" v-model="parameters['river-width']"/>
-
-
+                <div class="form-group" v-if="parameters['riverwidth']">
+                  <label for="riverwidth">River width [m]</label>
+                  <input type="text"
+                         id="riverwidth"
+                         name="river width"
+                         value=""
+                         data-min="{{ parameters['riverwidth'].min }}"
+                         data-max="{{ parameters['riverwidth'].max }}"
+                         data-type="double"
+                         class="ion-range"
+                         v-model="selectedParameters['riverwidth']"/>
                 </div>
-                <div class="form-group">
-                  <label for="river-discharge">River discharge [m3/s]</label>
-                  <input type="text" id="river-discharge" name="river discharge" value="" data-min="1" data-max="1500" data-type="double" class="ion-range" v-model="parameters['river-discharge']"/>
+                <div class="form-group" v-if="parameters['riverdischarge']">
+                  <label for="riverdischarge">River discharge [m3/s]</label>
+                  <input
+                     type="text"
+                     id="riverdischarge"
+                     name="river discharge"
+                     value=""
+                     data-min="{{ parameters['riverdischarge'].min }}"
+                     data-max="{{ parameters['riverdischarge'].max }}"
+                     data-type="double"
+                     class="ion-range"
+                     v-model="selectedParameters['riverdischarge']"/>
 
                 </div>
 

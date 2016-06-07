@@ -3,9 +3,11 @@
      class="user-details"
      data-toggle="tooltip"
      data-placement="left"
-     title="{{ details }}">
-    <a href="#">
+     title="{{ details }}"
+     >
+    <a href="#" v-if="user">
       <i class="fa fa-user" aria-hidden="true"></i> {{ user.first_name }} {{ user.last_name }}
     </a>
+    <a href="#" v-else="user">no user</a>
   </div>
 </template>

@@ -1,4 +1,4 @@
-/* global ImageAnimation, fetchModel, fetchLog, deleteModel, startModel, stopModel, router */
+/* global ImageAnimation, fetchModel, fetchLog, deleteModel, startModel, exportModel, stopModel, router */
 var exports = (function () {
   "use strict";
 
@@ -16,7 +16,6 @@ var exports = (function () {
       return {
         timerId: -1,
         model: {
-          id: -1
         }
       };
 
@@ -281,6 +280,16 @@ var exports = (function () {
             });
           })
           .catch((e) => {
+            console.log(e);
+          });
+      },
+
+      exportModel: function() {
+        exportModel(this.model.id)
+          .then(msg => {
+            console.log(msg);
+          })
+          .catch(e => {
             console.log(e);
           });
       },

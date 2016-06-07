@@ -294,6 +294,69 @@
       assert.isOk(searchDetails);
       done();
     });
+    it("Is possible to get modelEngines", function(done) {
+      var searchDetails = new SearchDetails();
+
+      searchDetails.templates = [{
+        sections: [{
+          variables: [{
+            id: "engine",
+            default: "Delft3D"
+          }]
+        }]
+      }];
+
+      assert.deepEqual(searchDetails.modelEngines, ["Delft3D"]);
+      done();
+    });
+    it("Is possible to get parameters", function(done) {
+      var searchDetails = new SearchDetails();
+
+      searchDetails.templates = [{
+        sections: [{
+          variables: [{
+            id: "riverwidth",
+            validators: {
+              min: 3,
+              max: 10
+            }
+          }]
+        }]
+      }];
+
+      var comp = {
+        riverwidth: {
+          id: "riverwidth",
+          min: 3,
+          max: 10
+        }
+      };
+
+      assert.deepEqual(searchDetails.parameters, comp);
+      done();
+    });
+    it("Is possible to build a request", function(done) {
+      var searchDetails = new SearchDetails();
+
+      // no values set
+      var comp = {
+        data: {
+          parameters: [
+            "riverwidth,null",
+            "riverdischarge,null",
+            "engines,"
+          ],
+          shared: [],
+          template: [],
+        },
+        dataType: "json",
+        traditional: true,
+        url: "/api/v1/scenes/"
+      };
+
+      assert.deepEqual(searchDetails.buildRequest(), comp);
+      done();
+    });
   });
   describe("User details", function() {
     it("Is possible to create a user details", function(done) {
@@ -454,17 +517,67 @@
     var modelDetails = new ModelDetails();
 
     it("Should be possible to start a model", function(done) {
+      var correctReply = false;
+
+      modelDetails.$parent = {};
+      modelDetails.$parent.$broadcast = function() {
+      };
+
+      modelDetails.model.id = 4;
+
       nock("http://0.0.0.0")
         .defaultReplyHeaders({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*"
         })
-        .post("/scene/start", {
-        })
-        .reply(200, {
+        .post("/api/v1/scenes/4/start/")
+        .reply(200, function() {
+          correctReply = true;
+          return {};
         });
+
       modelDetails.startModel();
-      done();
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
+    });
+
+    it("Should be possible to export a model", function(done) {
+      var correctReply = false;
+
+      modelDetails.model.id = 4;
+
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .post("/api/v1/scenes/4/start/", {
+          workflow: "export"
+        })
+        .reply(200, function() {
+          correctReply = true;
+          return {};
+        });
+
+      modelDetails.exportModel();
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
     });
 
     it("Should be possible to download files", function(done) {

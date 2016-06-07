@@ -22,7 +22,7 @@
                 <td>{{model.name}} </td>
               </tr>
 
-              <tr>
+              <tr v-if="model.owner">
                 <td>Owner of run</td>
                 <td><a href="mailto:{{model.owner.email}}">{{ model.owner.first_name }} {{ model.owner.last_name }}</a> </td>
               </tr>
@@ -72,6 +72,11 @@
           <button type="button" class="btn btn-labeled btn-success" v-bind:class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE') }" id="simulation-control-start" v-on:click="startModel">
             <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>
             Restart
+          </button>
+
+          <button type="button" class="btn btn-labeled btn-success" v-bind:class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE') }"  v-on:click="exportModel">
+            <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>
+            Start export
           </button>
 
           <button type="button" class="btn btn-labeled btn-warning" v-bind:class="{ 'inputdisabled':  !(model.state === 'PROCESSING') }" id="simulation-control-stop" v-on:click="stopModel">
