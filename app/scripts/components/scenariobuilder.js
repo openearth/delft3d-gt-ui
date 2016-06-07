@@ -44,8 +44,14 @@ var exports = (function() {
         // the current template
         template: null,
 
+        dataLoaded: false,
+        componentReady: false,
+        validSliderSections: {},
+        validSliders: true,
+
         // The DOM elements used for the fixed toolbar event listener
         navBars: null
+
       };
     },
 
@@ -60,9 +66,28 @@ var exports = (function() {
           // set the template, somehow a computed setter was not working...
           this.selectTemplate(template);
 
+          this.dataLoaded = true;
+
+          if (this.componentReady) {
+            this.initAfterDomUpdate();
+          }
+
         });
 
 
+    },
+
+    ready: function() {
+      this.componentReady = true;
+      this.navBars = {
+        topBar: document.getElementById("top-bar"),
+        toolBar: document.getElementById("tool-bar"),
+        belowToolBar: document.getElementById("below-tool-bar")
+      };
+      this.initFixedToolbar();
+      if (this.dataLoaded) {
+        this.initSliders();
+      }
     },
 
     route: {
@@ -139,6 +164,16 @@ var exports = (function() {
           return totalRuns;
 
         }
+      },
+
+      validForm: {
+        cache: false,
+        get: function() {
+          if (this.$validation) {
+            return this.$validation.valid;
+          }
+          return true;
+        }
       }
     },
     methods: {
@@ -148,6 +183,9 @@ var exports = (function() {
         // First set data, then the template. Order is important!
         this.scenarioConfig = this.prepareScenarioConfig(template);
 
+        // Init sliders if present
+        this.initSliders();
+
         this.updateWithQueryParameters();
 
         // set the selected template
@@ -155,11 +193,10 @@ var exports = (function() {
 
         // Initialize the tooltips:
         // We do this after the DOM update.
-        Vue.nextTick(function () {
+        this.$nextTick(function () {
           $("[data-toggle='tooltip']").tooltip();
           $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
         });
-
       },
 
 
@@ -251,12 +288,101 @@ var exports = (function() {
             variable.value = _.get(variable, "default");
             // Set factor to false
             variable.factor = _.get(variable, "factor", false);
-
+            // Initialise fraction so that vue can use it
+            variable.inputValue = variable.value;
           });
 
         });
 
         return scenario;
+      },
+
+      // Do initializations after the DOM is updated.
+      initAfterDomUpdate: function() {
+        this.$nextTick(function () {
+          this.initSliders();
+        });
+      },
+
+      // Initialize the sliders if present
+      initSliders: function() {
+        var sections = this.scenarioConfig.sections;
+        var that = this;
+
+        _.forEach(sections, function(section) {
+          var containsSlider = false;
+
+          _.forEach(section.variables, function(variable) {
+            if (variable.type === "slider") {
+              containsSlider = true;
+              var sliderConfig = {
+                "min": 0,
+                "max": section.slider.steps,
+                "from": variable.inputValue,
+                "step": 1,
+                "grid": true,
+                "grid_snap": true,
+                "hide_min_max": true,
+                "hide_from_to": true
+              };
+
+              sliderConfig.onChange = function() {
+                that.updateSliders(section);
+                that.checkSliderSectionsValid();
+              };
+              $("#" + variable.id).ionRangeSlider(sliderConfig);
+            }
+          });
+
+          // Update the sliders for the first time
+          if (containsSlider) {
+            that.updateSliders(section);
+          }
+        });
+
+      },
+
+      // Update the sliders
+      updateSliders: function(section) {
+        var totalParts = 0;
+
+        // Compute total parts set
+        _.forEach(section.variables, function(variable) {
+          if (variable.type === "slider") {
+            totalParts += parseInt(variable.inputValue);
+          }
+        });
+
+        //Check if the slider section is valid
+        section.slider.valid = totalParts > 0;
+
+        if (!section.slider.valid) {
+          // Set totalParts to 1 to avoid division by zero
+          totalParts = 1;
+        }
+        this.validSliderSections[section.name] = section.slider.valid;
+
+        // Compute for each slider the fraction of the total
+        _.forEach(section.variables, function(variable) {
+          if (variable.type === "slider") {
+            var sum = parseInt(section.slider.sum);
+            var fraction = parseInt(variable.inputValue) / totalParts;
+
+            variable.value = Math.round(sum * fraction * 10) / 10;
+          }
+        });
+      },
+
+      checkSliderSectionsValid: function() {
+        var that = this;
+
+        that.validSliders = true;
+
+        _.forEach(this.validSliderSections, function(value) {
+          if (value === false) {
+            that.validSliders = false;
+          }
+        });
       },
 
       initFixedToolbar: function() {
@@ -299,14 +425,6 @@ var exports = (function() {
         }
         return top;
       }
-    },
-    ready: function() {
-      this.navBars = {
-        topBar: document.getElementById("top-bar"),
-        toolBar: document.getElementById("tool-bar"),
-        belowToolBar: document.getElementById("below-tool-bar")
-      };
-      this.initFixedToolbar();
     }
   });
   return {

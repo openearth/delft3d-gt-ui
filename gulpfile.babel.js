@@ -35,7 +35,7 @@ processOptionalArguments();
 // Proxy paths which we map to a different source, for testing locally or
 // running the actual build.
 var paths = [
-  "api", "static",
+  "api", "static", "login", "logout",
   // old apis
   "runs", "createrun", "deleterun", "dorun", "scene", "files", "scenario", "scenario/template"
 ];
@@ -49,7 +49,7 @@ var proxies = _.map(paths, (path) => {
   var proxyItem = null;
 
   if (apiServer) {
-    proxyItem = proxyMiddleware("/" + path, {target: apiServer});
+    proxyItem = proxyMiddleware("/" + path, {target: apiServer, secure: false});
   }
 
   return proxyItem;

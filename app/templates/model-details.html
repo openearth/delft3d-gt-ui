@@ -74,6 +74,11 @@
             Restart
           </button>
 
+          <button type="button" class="btn btn-labeled btn-success" v-bind:class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE') }"  v-on:click="exportModel">
+            <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>
+            Start export
+          </button>
+
           <button type="button" class="btn btn-labeled btn-warning" v-bind:class="{ 'inputdisabled':  !(model.state === 'PROCESSING') }" id="simulation-control-stop" v-on:click="stopModel">
             <span class="btn-label"><i class="glyphicon glyphicon-stop"></i></span>
             Stop
@@ -99,38 +104,21 @@
           <!-- These are now links, replace by post requests later, otherwise a search engine will start publishing models -->
           <!-- This form-inline is normally applied to a form but in this case we have 3 forms as a form group. -->
           <div class="form-inline">
-            <form method="POST" action="/api/v1/scenes/{{ model.id }}/publish_private/" class="form-group">
-              <button
-                 type="submit"
-                 class="btn btn-labeled btn-default disabled"
-                 href="#">
-                <span class="btn-label"><i class="glyphicon glyphicon-people"></i></span>
-                Private
-              </button>
-            </form>
+            <button
+               class="form-group btn btn-labeled btn-default disabled" v-on:click="publishModel('private')">
+              <span class="btn-label"><i class="glyphicon glyphicon-people"></i></span>
+              Private
+            </button>
 
-            <form method="POST" action="/api/v1/scenes/{{ model.id }}/publish_company/" class="form-group">
-              <button
-                   type="submit"
-                   class="btn btn-labeled btn-default"
-                   >
-                  <span class="btn-label"><i class="glyphicon glyphicon-blackboard"></i></span>
-                  Company
-              </button>
+            <button class="form-group btn btn-labeled btn-default" v-on:click="publishModel('company')">
+                <span class="btn-label"><i class="glyphicon glyphicon-blackboard"></i></span>
+                Company
+            </button>
 
-            </form>
-            <form method="POST" action="/api/v1/scenes/{{ model.id }}/publish_world/" class="form-group">
-              <button
-                 type="submit"
-                 class="btn btn-labeled btn-default"
-                 href="">
-
-                <span class="btn-label"><i class="glyphicon glyphicon-globe"></i></span>
-                Public
-              </button>
-
-            </form>
-
+            <button class="form-group btn btn-labeled btn-default" v-on:click="publishModel('world')">
+              <span class="btn-label"><i class="glyphicon glyphicon-globe"></i></span>
+              Public
+            </button>
           </div>
 
         </div>

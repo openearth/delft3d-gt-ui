@@ -1,4 +1,4 @@
-/* global ImageAnimation, fetchModel, fetchLog, deleteModel, startModel, stopModel, router */
+/* global ImageAnimation, fetchModel, fetchLog, deleteModel, startModel, exportModel, stopModel, publishModel, router */
 var exports = (function () {
   "use strict";
 
@@ -178,8 +178,8 @@ var exports = (function () {
               //   });
             }
           )
-          .catch(e => {
-            console.log("Failed to get model with id", id, "error", e);
+          .catch(() => {
+            //console.log("Failed to get model with id", id, "error", e);
           });
 
       },
@@ -284,6 +284,20 @@ var exports = (function () {
           });
       },
 
+      exportModel: function() {
+        exportModel(this.model.id)
+          .then(() => {
+            this.$parent.$broadcast("show-alert", {
+              message: "Starting export... It might take a moment before the view is updated.",
+              showTime: 5000,
+              type: "success"
+            });
+          })
+          .catch(e => {
+            console.log(e);
+          });
+      },
+
       // Stop a model.
       stopModel: function() {
 
@@ -304,7 +318,15 @@ var exports = (function () {
 
       },
 
-
+      publishModel: function(target) {
+        publishModel(this.model.id, target)
+          .then(msg => {
+            console.log(msg);
+          })
+          .catch(e => {
+            console.log(e);
+          });
+      },
 
       downloadOptionsChange: function() {
 
