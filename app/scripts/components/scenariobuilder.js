@@ -46,6 +46,8 @@ var exports = (function() {
 
         dataLoaded: false,
         componentReady: false,
+        validSliderSections: {},
+        validSliders: true,
 
         // The DOM elements used for the fixed toolbar event listener
         navBars: null
@@ -161,6 +163,16 @@ var exports = (function() {
           }, 1);
           return totalRuns;
 
+        }
+      },
+
+      validForm: {
+        cache: false,
+        get: function() {
+          if (this.$validation) {
+            return this.$validation.valid;
+          }
+          return true;
         }
       }
     },
@@ -307,6 +319,7 @@ var exports = (function() {
               sliderConfig.from = variable.inputValue;
               sliderConfig.onChange = function() {
                 that.updateSliders(section);
+                that.checkSliderSectionsValid();
               };
               $("#" + variable.id).ionRangeSlider(sliderConfig);
             }
@@ -331,12 +344,33 @@ var exports = (function() {
             totalParts += parseInt(variable.inputValue);
           }
         });
+
+        //Check if the slider section is valid
+        section.slider.valid = totalParts > 0;
+
+        if (!section.slider.valid) {
+          // Set totalParts to 1 to avoid division by zero
+          totalParts = 1;
+        }
+        this.validSliderSections[section.name] = section.slider.valid;
+
         // Compute for each slider the fraction of the total
         _.forEach(section.variables, function(variable) {
           if (variable.type === "slider") {
             var sum = parseInt(section.slider.sum);
             var fraction = parseInt(variable.inputValue) / totalParts;
             variable.value = Math.round(sum * fraction * 10) / 10;
+          }
+        });
+      },
+
+      checkSliderSectionsValid: function() {
+        var that = this;
+        that.validSliders = true;
+
+        _.forEach(this.validSliderSections, function(value) {
+          if (value === false) {
+            that.validSliders = false;
           }
         });
       },

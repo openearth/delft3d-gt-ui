@@ -8,7 +8,7 @@
           <div class="col-xs-12">
             <div class="btn-toolbar">
               <!-- mixed button and a tags will be fixed soon! -->
-              <button class=" btn btn-primary" id="scenario-submit" v-on:click="submitScenario" value="" v-bind:class="{ 'inputdisabled': formIsValid == false ||  this.totalRuns > 20}" >
+              <button class=" btn btn-primary" id="scenario-submit" v-on:click="submitScenario" value="" v-bind:class="{ 'inputdisabled': !(validSliders &&  totalRuns <= 20 && validForm) }" >
                 Submit
               </button>
 
@@ -57,7 +57,12 @@
                         <h3 class="panel-title">{{section.name}}</h3>
                       </div>
                       <div class="panel-body">
-                        <div class="form-group" v-for="variable in section.variables" v-bind:class="{'has-error': ($validation[variable.id] ? !$validation[variable.id].valid : false)}">
+                        <div class="form-group" v-for="variable in section.variables" v-bind:class="{
+                            'has-error': ($validation[variable.id] ?
+                                            !$validation[variable.id].valid :
+                                            (section.slider !== undefined ?
+                                              !section.slider.valid :
+                                              false)) }">
                           <label class="control-label" for="{{variable.id}}">
                             {{ variable.name }}
                             <!-- TODO: get rid of this space -->
@@ -121,7 +126,9 @@
                             <p v-if="$validation[variable.id].max">value &gt; max</p>
                           </div>
                         </div>
-
+                        <div v-if="section.slider">
+                          <p v-if="!section.slider.valid" class="help-block has-error">Number of parts may not be 0!</p>
+                        </div>
 
                       </div>
                     </div>
