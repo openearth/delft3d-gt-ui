@@ -97,11 +97,12 @@ var exports = (function () {
   }
 
   function startModel(id) {
+
     return new Promise(function(resolve, reject) {
       $.ajax({
-        url: "/api/v1/scenes/" + id + "/start",
+        url: "/api/v1/scenes/" + id + "/start/",
         method: "POST"
-      })
+     })
         .done(function() {
           // no data to return, just call the callback
           resolve();
@@ -117,7 +118,7 @@ var exports = (function () {
   function exportModel(id) {
     return new Promise(function(resolve, reject) {
       $.ajax({
-        url: "/api/v1/scenes/" + id + "/start",
+        url: "/api/v1/scenes/" + id + "/start/",
         data: {workflow: "export"},
         method: "POST"
       })
