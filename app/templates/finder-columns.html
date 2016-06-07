@@ -1,5 +1,5 @@
 <template id="template-finder-columns">
-  <div>
+  <div class="finder-columns">
     <div class="full-height">
 
       <!-- the grey toolbar for main screen-->
@@ -46,33 +46,15 @@
         <div class="row full-height">
 
 
-          <div class="col-sm-2 column column-scenario-list full-height">
+          <div class="col-sm-2 column full-height">
+            <scenario-list></scenario-list>
 
-            <h3>Scenarios</h3>
-
-
-            <div class="row" id="scenario-list">
-
-              <div class="column-header"></div>
-
-              <!-- scenarios/list -->
-              <scenario-list></scenario-list>
-            </div>
+          </div>
+          <div class="col-sm-3 column full-height">
+            <model-list filter="scenarios"></model-list>
           </div>
 
-          <div class="col-sm-3 column column-runs-list full-height">
-
-            <h3>Runs</h3>
-
-            <div class="row" id="runs-list">
-
-              <div class="column-header"></div>
-
-              <model-list filter="scenarios"></model-list>
-            </div>
-          </div>
-
-          <div class="col-sm-7 column column-details full-height">
+          <div class="col-sm-7 column full-height">
             <model-details></model-details>
           </div>
 

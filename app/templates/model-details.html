@@ -1,7 +1,6 @@
 <template id="template-model-details">
-  <div>
+  <div class="model-details">
     <h3 >Details <span v-if="(model.id !== undefined)">for &ldquo;<strong>{{model.name}}</strong>&rdquo;</span></h3>
-    <div class="column-header"></div>
     <div class="alert alert-info" v-if="(model.id === undefined)">
       No run selected.
     </div>
@@ -21,6 +20,11 @@
               <tr>
                 <td>Name</td>
                 <td>{{model.name}} </td>
+              </tr>
+
+              <tr v-if="model.owner">
+                <td>Owner of run</td>
+                <td><a href="mailto:{{model.owner.email}}">{{ model.owner.first_name }} {{ model.owner.last_name }}</a> </td>
               </tr>
 
               <tr>
@@ -70,6 +74,11 @@
             Restart
           </button>
 
+          <button type="button" class="btn btn-labeled btn-success" v-bind:class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE') }"  v-on:click="exportModel">
+            <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>
+            Start export
+          </button>
+
           <button type="button" class="btn btn-labeled btn-warning" v-bind:class="{ 'inputdisabled':  !(model.state === 'PROCESSING') }" id="simulation-control-stop" v-on:click="stopModel">
             <span class="btn-label"><i class="glyphicon glyphicon-stop"></i></span>
             Stop
@@ -80,12 +89,58 @@
             <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
             Remove run
           </button>
-          <!--
-          Do not give option anymore to remove files. WE will always do this.
-          <input type="checkbox" value="1" id="simulation-control-check-delete-files" /> Also delete all simulation files
-          -->
         </div>
       </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h2 class="panel-title">Publish controls</h2>
+        </div>
+        <div class="panel-body">
+          <p>
+            You can change the rights of your simulation results. You can share them with everybody (default), only your company or keep them private.
+          </p>
+
+          <!-- These are now links, replace by post requests later, otherwise a search engine will start publishing models -->
+          <!-- This form-inline is normally applied to a form but in this case we have 3 forms as a form group. -->
+          <div class="form-inline">
+            <form method="POST" action="/api/v1/scenes/{{ model.id }}/publish_private/" class="form-group">
+              <button
+                 type="submit"
+                 class="btn btn-labeled btn-default disabled"
+                 href="#">
+                <span class="btn-label"><i class="glyphicon glyphicon-people"></i></span>
+                Private
+              </button>
+            </form>
+
+            <form method="POST" action="/api/v1/scenes/{{ model.id }}/publish_company/" class="form-group">
+              <button
+                   type="submit"
+                   class="btn btn-labeled btn-default"
+                   >
+                  <span class="btn-label"><i class="glyphicon glyphicon-blackboard"></i></span>
+                  Company
+              </button>
+
+            </form>
+            <form method="POST" action="/api/v1/scenes/{{ model.id }}/publish_world/" class="form-group">
+              <button
+                 type="submit"
+                 class="btn btn-labeled btn-default"
+                 href="">
+
+                <span class="btn-label"><i class="glyphicon glyphicon-globe"></i></span>
+                Public
+              </button>
+
+            </form>
+
+          </div>
+
+        </div>
+      </div>
+
 
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -146,7 +201,7 @@
 
           <div class="form-group input-group">
             <span class="input-group-addon"><input type="checkbox" class="downloadoption" checked="checked" value="export_images" v-on:change="downloadOptionsChange()"></span>
-            <span class="form-control">Download generated output images</span>
+            <span class="form-control">Download generated output images and movies</span>
           </div>
           <div class="form-group input-group">
             <span class="input-group-addon"><input type="checkbox" class="downloadoption" checked="checked" value="export_thirdparty" v-on:change="downloadOptionsChange()"></span>

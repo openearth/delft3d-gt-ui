@@ -33,7 +33,7 @@ var exports = (function() {
   // Constructor of our component
   ScenarioCreate = Vue.component("scenario-builder", {
     template: "#template-scenario-builder",
-
+    // el: "#template-scenario-builder",
     data: function() {
       return {
         availableTemplates: [],
@@ -42,12 +42,11 @@ var exports = (function() {
         scenarioConfig: {},
 
         // the current template
-        template: null
-      };
-    },
+        template: null,
 
-    props: {
-      data: Array
+        // The DOM elements used for the fixed toolbar event listener
+        navBars: null
+      };
     },
 
     created: function() {
@@ -176,7 +175,7 @@ var exports = (function() {
           // get parameters from query
           var parameters = JSON.parse(this.$route.query.parameters);
 
-          // assign all parameters ot the scenario
+          // assign all parameters of the scenario
           _.assign(this.scenarioConfig, parameters);
         }
         // This is a bit ugly, but if we have a name, add (copy) to it and then use it.
@@ -191,8 +190,32 @@ var exports = (function() {
 
       submitScenario: function() {
 
+        var parameters = {},
+            name = "";
+
+        // map each variable in each section to parameters
+        _.forEach(this.scenarioConfig.sections, function(section) {
+          _.forEach(section.variables, function(variable) {
+            if(variable.id === "name") {
+              name = variable.value;
+            } else {
+
+              var valuearray = _.map(("" + variable.value).split(","), function(d) {
+                return parseFloat(d) || d;
+              });
+
+              parameters[variable.id] = {
+                "values": valuearray,
+                "units": variable.units
+              };
+            }
+          });
+        });
+
         var postdata = {
-          scenario: JSON.stringify(this.scenarioConfig)
+          "name": name,
+          "template": null,
+          "parameters": JSON.stringify(parameters)
         };
 
         $.ajax({
@@ -241,7 +264,56 @@ var exports = (function() {
         });
 
         return scenario;
+      },
+
+      initFixedToolbar: function() {
+        var that = this;
+
+        if (window.addEventListener) {
+          window.addEventListener("scroll", that.updateFixedToolbarStyle);
+          window.addEventListener("touchmove", that.updateFixedToolbarStyle);
+          window.addEventListener("load", that.updateFixedToolbarStyle);
+        } else if (window.attachEvent) {
+          window.attachEvent("onscroll", that.updateFixedToolbarStyle);
+          window.attachEvent("ontouchmove", that.updateFixedToolbarStyle);
+          window.attachEvent("onload", that.updateFixedToolbarStyle);
+        }
+        this.updateFixedToolbarStyle();
+      },
+
+      updateFixedToolbarStyle: function() {
+        var top = this.getTop();
+
+        if (top > this.navBars.topBar.clientHeight) {
+          this.navBars.belowToolBar.style.paddingTop = this.navBars.toolBar.clientHeight + "px";
+          this.navBars.toolBar.style.position = "fixed";
+          this.navBars.toolBar.style.top = "0";
+        } else {
+          this.navBars.belowToolBar.style.paddingTop = "0px";
+          this.navBars.toolBar.style.position = "relative";
+        }
+      },
+
+      getTop: function() {
+        var top = 0;
+
+        if (typeof (window.pageYOffset) === "number") {
+          top = window.pageYOffset;
+        } else if (document.body && document.body.scrollTop) {
+          top = document.body.scrollTop;
+        } else if (document.documentElement && document.documentElement.scrollTop) {
+          top = document.documentElement.scrollTop;
+        }
+        return top;
       }
+    },
+    ready: function() {
+      this.navBars = {
+        topBar: document.getElementById("top-bar"),
+        toolBar: document.getElementById("tool-bar"),
+        belowToolBar: document.getElementById("below-tool-bar")
+      };
+      this.initFixedToolbar();
     }
   });
   return {

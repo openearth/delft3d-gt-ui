@@ -2,14 +2,14 @@
   <div>
 
     <!-- the grey toolbar for scenario builder -->
-    <nav class="navbar navbar-default navbar-static-top tool-bar ">
+    <nav class="navbar navbar-default navbar-static-top tool-bar" id="tool-bar">
       <div class="container-fluid">
         <div class="row" >
           <div class="col-xs-12">
             <div class="btn-toolbar">
               <!-- mixed button and a tags will be fixed soon! -->
               <button class=" btn btn-primary" id="scenario-submit" v-on:click="submitScenario" value="" v-bind:class="{ 'inputdisabled': formIsValid == false ||  this.totalRuns > 20}" >
-                Save
+                Submit
               </button>
 
               <a href="#/" class="btn btn-primary pull-left">Cancel</a>
@@ -21,7 +21,7 @@
 
     <!-- User has to select a template first -->
 
-    <div class="container-fluid">
+    <div class="container-fluid" id="below-tool-bar">
       <div class="row">
         <div class="col-sm-12">
           <h2>Scenario builder</h2>
@@ -102,10 +102,27 @@
                             </span>
 
                           </div>
-                          <div v-if="$validation[getId(variable)]">
-                            <p v-if="$validation[getId(variable)].required" class="help-block has-error">required</p>
-                            <p v-if="$validation[getId(variable)].min" class="help-block has-error">value &lt; min</p>
-                            <p v-if="$validation[getId(variable)].max" class="help-block has-error">value &gt; max</p>
+                          <div v-if="$validation[variable.id]">
+                            <p  v-if="$validation[variable.id].required"
+                                class="help-block has-error">
+                                  This field cannot be left empty.
+                            </p>
+                            <p  v-if="$validation[variable.id].min
+                                      && !$validation[variable.id].required
+                                      && !isNaN(variable.value)"
+                                class="help-block has-error">
+                                  Entered value "{{ variable.value}}" is less than the minimum value "{{ variable.validators.min }}"!
+                            </p>
+                            <p  v-if="$validation[variable.id].max
+                                      && !$validation[variable.id].required
+                                      && !isNaN(variable.value)"
+                                class="help-block has-error">
+                                  Entered value "{{ variable.value}}" is greater than the maximum value "{{ variable.validators.max }}"!
+                            </p>
+                            <p  v-if="isNaN(variable.value)"
+                                class="help-block has-error">
+                                  "{{ variable.value}}" is not a number.
+                            </p>
                           </div>
                         </div>
 

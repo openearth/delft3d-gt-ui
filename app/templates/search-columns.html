@@ -1,0 +1,50 @@
+<template id="template-search-columns">
+  <div class="search-columns">
+    <div class="full-height">
+
+      <!-- the grey toolbar for main screen-->
+      <nav class="navbar navbar-default navbar-static-top tool-bar ">
+        <div class="container-fluid">
+          <div class="row" >
+            <div class="col-xs-3">
+              <div class="btn-toolbar pull-right">
+                <a href="#!/" class="btn btn-primary"><i class="glyphicon glyphicon-home"></i></a>
+              </div>
+            </div>
+
+            <div class="col-xs-3">
+              <div class="btn-toolbar"></div>
+            </div>
+
+            <div class="col-xs-6">
+              <div class="btn-toolbar"></div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+
+      <div class="container-fluid full-height">
+        <div class="row full-height">
+
+
+          <div class="col-sm-3 column  full-height">
+            <search-details></search-details>
+          </div>
+
+          <div class="col-sm-3 column full-height">
+            <model-list filter="scenarios" v-ref:models></model-list>
+          </div>
+
+          <div class="col-sm-6 column full-height">
+            <model-details></model-details>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+</template>

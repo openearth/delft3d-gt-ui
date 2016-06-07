@@ -1,4 +1,4 @@
-/* global chai , MessageSceneCreate, MessageSceneChangeState, MessageSceneDelete, MessageSceneList */
+/* global chai  */
 
 (function() {
   "use strict";
@@ -7,8 +7,9 @@
   var path = require("path");
 
   // We use a setInterval mock function, otherwise setIntervals will cause Mocha to never stop!
-  global.setInterval = function(callback, time) {
-    console.log("setInterval override " + callback + " time " + time);
+  global.setInterval = function() {
+    // args: callback, time
+    // "setInterval override " + callback + " time " + time
   };
 
 
@@ -30,7 +31,7 @@
   // Create a document
 
   /* eslint-disable quotes */
-  global.document = jsdom('<!doctype html><html><body><div id="app"></div><div id="template-container"></div></body></html>', {});
+  global.document = jsdom('<!doctype html><html><body><div id="app"><div id="model-create"></div><scenario-builder id="scenario-builder"></scenario-builder><div id="model-details"></div></div><div id="template-container"></div></body></html>', {});
   /* eslint-enable quotes */
 
   // Get the corresponding window
@@ -44,8 +45,9 @@
   // we also need a history and location for #/urls
   global.history = require("history").createHistory();
   global.location = global.history.createLocation();
-  global.location.replace = function(location) {
-    console.log("ignoring replace, implemented in history >= 3.0", location);
+  global.location.replace = function() {
+    // args: location
+    // "ignoring replace, implemented in history >= 3.0", location
   };
 
   // Load jquery with that window, required for app.js
@@ -71,16 +73,33 @@
   // load the application
   var ImageAnimation = require("../../app/scripts/components/imageanimation.js").ImageAnimation;
 
+  // used by other component
   global.ImageAnimation = ImageAnimation;
 
   var ModelDetails = require("../../app/scripts/components/modeldetails.js").ModelDetails;
+
+  // used by other component
+  global.ModelDetails = ModelDetails;
+
   var ModelCreate = require("../../app/scripts/components/modelcreate.js").ModelCreate;
   var ModelList = require("../../app/scripts/components/modellist.js").ModelList;
+
+  // used by other component
+  global.ModelList = ModelList;
+
   var ScenarioCreate = require("../../app/scripts/components/scenariobuilder.js").ScenarioCreate;
   var factorToArray = require("../../app/scripts/components/scenariobuilder.js").factorToArray;
   var ScenarioList = require("../../app/scripts/components/scenariolist.js").ScenarioList;
+  var SearchDetails = require("../../app/scripts/components/searchdetails.js").SearchDetails;
+  var UserDetails = require("../../app/scripts/components/userdetails.js").UserDetails;
 
-  var HomeView = require("../../app/scripts/components/home.js").HomeView;
+  // used by other component
+  global.UserDetails = UserDetails;
+  global.SearchDetails = SearchDetails;
+  global.ScenarioList = ScenarioList;
+
+  var FinderColumns = require("../../app/scripts/components/findercolumns.js").FinderColumns;
+  var SearchColumns = require("../../app/scripts/components/searchcolumns.js").SearchColumns;
 
 
   // why is this necessary....
@@ -103,9 +122,6 @@
     // stuff to test without a browser
     var assert = require("chai").assert;
     var sinon = require("sinon");
-
-    //console.log(jsdom);
-
     var nock = require("nock");
 
 
@@ -114,337 +130,131 @@
     //fetch = window.fetch;
   }
 
-  describe("Testing data exchange with api", function() {
-    describe("If we can query the scenario list", function() {
 
-      // This test is now working using the filteringPath option.
-      // When testing get request, this seems to be the solution.
-      it("Should be possible list scenarios", function(done) {
-        nock("http://0.0.0.0")
-          .defaultReplyHeaders({
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*"
-          })
-          .log(console.log)
-          .filteringPath(function() {
-            return "/scenario/list";
-          })
-          .get("/scenario/list")
-          .reply(200, {
-          });
 
-        global.fetchScenarios()
-          .then(function(data) {
-            assert.isOk(data, "we have some data");
+  // Testing App
+  describe("App", function() {
+
+
+    it("can I initialized the application", function(done) {
+      var App = Vue.extend({});
+
+      Vue.use(VueRouter);
+      var router = new VueRouter();
+
+      router.map({
+        "/models/:id": {
+          component: ModelDetails
+        },
+        "/scenarios/create": {
+          component: ScenarioCreate
+        },
+        "/models": {
+          component: ModelList
+        },
+        "/": {
+          component: FinderColumns
+        }
+      });
+      router.start(App, "#app");
+
+      assert(App !== undefined, "app created");
+      done();
+    });
+
+    // This test doesn't work, since it gets stuck when loading the main template.
+    it("App - LoadTemplate - Check if mock template is added to DOM", function(done) {
+
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "text/html",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .get("/templates/templates.html")
+        .reply(200, "<div>template-ok</div>");
+
+      // TODO: put this code in some app level promise
+      $("#template-container").load(
+        "/templates/templates.html",
+        function() {
+          var html = global.$("#template-container").html();
+
+          /* eslint-disable quotes */
+          var check = '<div>template-ok</div>';
+
+          /* eslint-enable quotes */
+
+          // This works better than the assert:
+          try {
+            assert.equal(check, html, "HTML template does not match");
             done();
-          })
-          .catch(function(e) {
-            console.log(e);
-            // rethrow error to capture it and avoid time out
-            try {
-              throw new Error("exception from fetching scenarios" + JSON.stringify(e));
-            } catch (exc) {
-              done(exc);
-            }
-          });
-
-      });
-    });
-
-
-    describe("MessageSceneCreate", function() {
-      // Create a MessageSceneCreate without options, we should have an empty options object (null)
-      it("Test scene creation - without name", function() {
-
-        var msc = new MessageSceneCreate({});
-
-        assert(msc.options == null, "MessageSceneCreate should be null");
-      });
-
-
-
-      // Create a MessageSceneCreate without options, we should have an empty options object (null)
-      it("Test scene creation - with name", function() {
-        var options = {
-          name: "Model to create"
-        };
-
-        var msc = new MessageSceneCreate(options);
-
-        assert(msc.options.name === options.name, "MessageSceneCreate name is set");
-      });
-
-
-      it("Test scene creation - check create request - ok", function(done) {
-        var options = {
-          name: "Model to create"
-        };
-
-        nock("http://0.0.0.0")
-          .defaultReplyHeaders({
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*"
-          })
-          .post("/scene/create", {
-            // We have to match these post fields:
-            // If it does not, we get an error in the report (which is what we want then?)
-            name: options.name
-          })
-          .reply(200, {
-            scene: {
-              "info": "",
-              "name": options.name,
-              "simulationtask": null,
-              "workingdir": "",
-              "postprocessingtask": null,
-              "state": "",
-              "processingtask": null,
-              "fileurl": "",
-              "id": 30
-            }
-          });
-
-        var msc = new MessageSceneCreate(options);
-
-        msc.onErrorCallback(function(errorInfo) {
-          // Somehow we need a try catch blog for asserts?
-          try {
-            console.log(errorInfo.status);
-            assert(errorInfo.status !== "error", "Model status is: error - Name does not match?");
-          } catch (x) {
-            done(x);
+          } catch (e) {
+            done(e);
           }
+
         });
-
-        // Execute AJAX call to remote server to get list of models.
-        msc.executeRequest(function(data) {
-          assert(data.scene.name === options.name, "model name is ok");
-          done();
-        });
-      });
-    });
-
-
-    // Testing MessageSceneChangeState messages
-    describe("MessageSceneChangeState", function() {
-
-
-      // Create a MessageSceneCreate without options, we should have an empty options object (nulll)
-      it("MessageSceneChangeState - Create instance without options", function() {
-
-        var mscs = new MessageSceneChangeState();
-
-        assert(mscs.modelid == null, "MessageSceneChangeState modelid should be null");
-      });
-
-      // Create a MessageSceneCreate without options, we should have an empty options object (nulll)
-      it("MessageSceneChangeState - Create instance with string parameter", function() {
-
-        var mscs = new MessageSceneChangeState("notallowed");
-
-        assert(mscs.modelid == null, "MessageSceneChangeState modelid should be null");
-      });
-
-
-      it("MessageSceneChangeState - Check sceneid being sent", function(done) {
-
-        // Id of the scene we will start:
-        var startid = 1;
-        var mscs = new MessageSceneChangeState(startid);
-
-        nock("http://0.0.0.0")
-          .defaultReplyHeaders({
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*"
-          })
-          .post("/scene/start", {
-            // We have to match these post fields:
-            // If it does not, we get an error in the report (which is what we want then?)
-            id: "" + startid
-          })
-          .reply(200, {
-            "status": "started"
-          });
-
-        mscs.onErrorCallback(function(errorInfo) {
-          // Somehow we need a try catch blog for asserts?
-          try {
-            assert(errorInfo.status !== "error", "MessageSceneChangeState did not make correct AJAX call.");
-          } catch (x) {
-            done(x);
-          }
-        });
-
-        // Execute AJAX call to remote server to get list of models.
-        mscs.executeRequest(function(data) {
-          assert(data.status === "started", "MessageSceneChangeState status = started ok");
-          done();
-        });
-      });
-    });
-
-  });
-
-  // Testing MessageSceneChangeState messages
-  describe("MessageSceneDelete", function() {
-
-
-    // Create a MessageSceneCreate without options, we should have an empty options object (null)
-    it("MessageSceneDelete - Create instance without options", function() {
-
-      var msd = new MessageSceneDelete();
-
-      assert(msd.modelid == null, "MessageSceneDelete modelid should be null");
-    });
-
-    // Create a MessageSceneCreate without options, we should have an empty options object (null)
-    it("MessageSceneDelete - Create instance with string parameter", function() {
-
-      var msd = new MessageSceneDelete("notallowed");
-
-      assert(msd.modelid == null, "MessageSceneDelete modelid should be null");
-    });
-
-
-    it("MessageSceneDelete - Check sceneid being sent", function(done) {
-
-      // Id of the scene we will start:
-      var deleteid = 1;
-      var msd = new MessageSceneDelete(deleteid);
-
-      nock("http://0.0.0.0")
-        .defaultReplyHeaders({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*"
-        })
-        .post("/scene/delete", {
-          // We have to match these post fields:
-          // If it does not, we get an error in the report (which is what we want then?)
-          id: "" + deleteid
-        })
-        .reply(200, {
-          "status": "deleted"
-        })
-      // Otherwise we return an 500. The postdata did not match.
-        .post("/scene/delete")
-        .reply(500, {
-          status: "error"
-        });
-
-
-      msd.onErrorCallback(function(errorInfo) {
-        // Somehow we need a try catch blog for asserts?
-        try {
-          assert(errorInfo.status !== "error", "MessageSceneDelete did not make correct AJAX call.");
-        } catch (x) {
-          done(x);
-        }
-      });
-
-      // Execute AJAX call to remote server to get list of models.
-      msd.executeRequest(function(data) {
-        assert(data.status === "deleted", "MessageSceneDelete status = started ok");
-        done();
-      });
     });
   });
 
-
-  // Testing MessageSceneList messages
-  describe("MessageSceneList", function() {
-
-    it("MessageSceneList - Check if request is sent correctly", function(done) {
-
-      var msl = new MessageSceneList();
-
-      nock("http://0.0.0.0")
-
-        .defaultReplyHeaders({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*"
-        })
-        .get("/scene/list")
-        .reply(200, {});
-
-
-
-      msl.onErrorCallback(function() {
-        // Somehow we need a try catch blog for asserts?
-        try {
-          assert(false, "MessageSceneList did not make correct AJAX call.");
-        } catch (x) {
-          done(x);
-        }
-      });
-
-      // Execute AJAX call to remote server to get list of models.
-      msl.executeRequest(function() {
-        //assert(data.status === "deleted", "MessageSceneList status = started ok");
-        done();
-      });
-    });
-
-    // This one is todo!
-    it("MessageSceneList - Check if we get valid scenes", function(done) {
-
-      var msl = new MessageSceneList();
-
-      nock("http://0.0.0.0")
-
-        .defaultReplyHeaders({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*"
-        })
-        .get("/scene/list")
-        .reply(200, {
-          "paginator": null,
-          "scene_list": [{
-            "info": "",
-            "name": "My Scene #1",
-            "simulationtask": {
-              "state": "PENDING",
-              "state_meta": {},
-              "uuid": "2a0bca03-47c2-4f3f-9901-4164261134ff"
-            },
-            "workingdir": "",
-            "postprocessingtask": null,
-            "state": "",
-            "processingtask": {
-              "state": "PENDING",
-              "state_meta": {},
-              "uuid": "af15e2d8-6033-4c09-bfb1-2fc7cb825b80"
-            },
-            "fileurl": "",
-            "id": 29
-          }],
-          "page_obj": null,
-          "is_paginated": false
-        });
-
-
-
-      msl.onErrorCallback(function() {
-        // Somehow we need a try catch blog for asserts?
-        try {
-          assert(false, "MessageSceneList did not make correct AJAX call.");
-        } catch (x) {
-          done(x);
-        }
-      });
-
-      // Execute AJAX call to remote server to get list of models.
-      msl.executeRequest(function(data) {
-        //console.log(data);
-        assert(data.scenes.length === 1, "Scenes has 1 item. OK");
-        assert(data.scenes[0].name === "My Scene #1", "Scene has correct name item. OK");
-        assert(data.scenes[0].id === 29, "Scene has correct id. OK");
-
-        done();
-      });
-    });
-
-  });
   describe("Components", function() {
+    it("Is possible to instantiate component ModelCreate", function(done) {
+
+      var modelCreate = new ModelCreate({
+      });
+
+      assert.isOk(modelCreate);
+      done();
+    });
+
+    it("Is possible to instantiate component ModelDetails", function(done) {
+      var modelDetails = new ModelDetails({
+      });
+
+      assert.isOk(modelDetails);
+      done();
+    });
+
+    it("Is possible to instantiate component ScenarioList", function(done) {
+      var scenarioList = new ScenarioList({
+      });
+
+      assert.isOk(scenarioList);
+      done();
+    });
+
+    it("Is possible to instantiate component ModelDetails", function(done) {
+      var modelDetails = new ModelDetails({
+      });
+
+      assert.isOk(modelDetails);
+      done();
+    });
+    it("Is possible to instantiate component ScenarioBuilder", function(done) {
+      var scenarioCreate = new ScenarioCreate({
+      });
+
+      assert.isOk(scenarioCreate);
+      done();
+    });
+    it("Is possible to create a search details", function(done) {
+      var searchDetails = new SearchDetails();
+
+      assert.isOk(searchDetails);
+      done();
+    });
+    it("Is possible to create a scenarioBuilder", function(done) {
+      var scenarioCreate = new ScenarioCreate({
+      });
+
+      assert.isOk(scenarioCreate);
+      done();
+    });
+    it("Is possible to create a search columns", function(done) {
+      var searchColumns = new SearchColumns();
+
+      assert.isOk(searchColumns);
+      done();
+    });
     it("Is possible to instantiate component ModelCreate", function(done) {
 
       var modelCreate = new ModelCreate();
@@ -461,15 +271,103 @@
       done();
     });
   });
+  describe("Search list", function() {
+    it("Is possible to create a search columns", function(done) {
+      var searchColumns = new SearchColumns();
 
-  describe("Scenario builder", function() {
-    it("Is possible to create a scenarioBuilder", function(done) {
-      var scenarioCreate = new ScenarioCreate();
-
-      console.log("routing", scenarioCreate.$route);
-      assert.isOk(scenarioCreate);
+      assert.isOk(searchColumns);
       done();
     });
+  });
+  describe("Finder columns", function() {
+    it("Is possible to create a three column layout", function(done) {
+      var finderColumns = new FinderColumns();
+
+      assert.isOk(finderColumns);
+      done();
+    });
+  });
+  describe("Search details", function() {
+    it("Is possible to create a search details", function(done) {
+      var searchDetails = new SearchDetails();
+
+      assert.isOk(searchDetails);
+      done();
+    });
+    it("Is possible to get modelEngines", function(done) {
+      var searchDetails = new SearchDetails();
+
+      searchDetails.templates = [{
+        sections: [{
+          variables: [{
+            id: "engine",
+            default: "Delft3D"
+          }]
+        }]
+      }];
+
+      assert.deepEqual(searchDetails.modelEngines, ["Delft3D"]);
+      done();
+    });
+    it("Is possible to get parameters", function(done) {
+      var searchDetails = new SearchDetails();
+
+      searchDetails.templates = [{
+        sections: [{
+          variables: [{
+            id: "riverwidth",
+            validators: {
+              min: 3,
+              max: 10
+            }
+          }]
+        }]
+      }];
+
+      var comp = {
+        riverwidth: {
+          id: "riverwidth",
+          min: 3,
+          max: 10
+        }
+      };
+
+      assert.deepEqual(searchDetails.parameters, comp);
+      done();
+    });
+    it("Is possible to build a request", function(done) {
+      var searchDetails = new SearchDetails();
+
+      // no values set
+      var comp = {
+        data: {
+          parameters: [
+            "riverwidth,null",
+            "riverdischarge,null",
+            "engines,"
+          ],
+          shared: [],
+          template: [],
+        },
+        dataType: "json",
+        traditional: true,
+        url: "/api/v1/scenes/"
+      };
+
+      assert.deepEqual(searchDetails.buildRequest(), comp);
+      done();
+    });
+  });
+  describe("User details", function() {
+    it("Is possible to create a user details", function(done) {
+      var userDetails = new UserDetails();
+
+      assert.isOk(userDetails);
+      done();
+    });
+  });
+
+  describe("Scenario builder", function() {
     it("Should be possible to convert a single value to a tag array", function(done) {
       var array = factorToArray({
         factor: true,
@@ -491,7 +389,8 @@
       done();
     });
     it("Should be possible to check a value using the custom max validator", function(done) {
-      var scenarioCreate = new ScenarioCreate();
+      var scenarioCreate = new ScenarioCreate({
+      });
 
       // check if we get an invalid error if we pass 0
       var valid = scenarioCreate.$options.validators.min("0,2,3", 1);
@@ -500,7 +399,8 @@
       done();
     });
     it("Should be possible get the total number of runs", function(done) {
-      var scenarioCreate = new ScenarioCreate();
+      var scenarioCreate = new ScenarioCreate({
+      });
 
       // check if we get an invalid error if we pass 0
       scenarioCreate.scenarioConfig = scenarioCreate.prepareScenarioConfig({
@@ -522,7 +422,8 @@
       done();
     });
     it("Should be possible to prepare a scenario", function(done) {
-      var scenarioCreate = new ScenarioCreate();
+      var scenarioCreate = new ScenarioCreate({
+      });
 
       // empty template
       var template = {};
@@ -578,7 +479,6 @@
     it("Is possible to create a scenarioList", function(done) {
       var scenarioList = new ScenarioList();
 
-      console.log("routing", scenarioList.$route);
       assert.isOk(scenarioList);
       done();
     });
@@ -604,7 +504,6 @@
 
       router.start(App, "#app");
       router.go("/scenario/1");
-      console.log("children", App.$children);
       done();
     });
     it("Is possible to clone a scenario", function(done) {
@@ -618,17 +517,67 @@
     var modelDetails = new ModelDetails();
 
     it("Should be possible to start a model", function(done) {
+      var correctReply = false;
+
+      modelDetails.$parent = {};
+      modelDetails.$parent.$broadcast = function() {
+      };
+
+      modelDetails.model.id = 4;
+
       nock("http://0.0.0.0")
         .defaultReplyHeaders({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*"
         })
-        .post("/scene/start", {
-        })
-        .reply(200, {
+        .post("/api/v1/scenes/4/start/")
+        .reply(200, function() {
+          correctReply = true;
+          return {};
         });
+
       modelDetails.startModel();
-      done();
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
+    });
+
+    it("Should be possible to export a model", function(done) {
+      var correctReply = false;
+
+      modelDetails.model.id = 4;
+
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .post("/api/v1/scenes/4/start/", {
+          workflow: "export"
+        })
+        .reply(200, function() {
+          correctReply = true;
+          return {};
+        });
+
+      modelDetails.exportModel();
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
     });
 
     it("Should be possible to download files", function(done) {
@@ -675,73 +624,44 @@
   });
 
 
-  // Testing App
-  describe("App", function() {
 
 
-    it("can I initialized the application", function(done) {
-      var App = Vue.extend({});
+  // This test doesn't work, since it gets stuck when loading the main template.
+  it("App - LoadTemplate - Check if mock template is added to DOM", function(done) {
 
-      Vue.use(VueRouter);
-      var router = new VueRouter();
+    nock("http://0.0.0.0")
+      .defaultReplyHeaders({
+        "Content-Type": "text/html",
+        "Access-Control-Allow-Origin": "*"
+      })
+      .log(console.log)
+      .get("/templates/templates.html")
+      .reply(200, "<div>template-ok</div>");
 
-      router.map({
-        "/models/:id": {
-          component: ModelDetails
-        },
-        "/scenarios/create": {
-          component: ScenarioCreate
-        },
-        "/models": {
-          component: ModelList
-        },
-        "/": {
-          component: HomeView
+    // TODO: put this code in some app level promise
+    $("#template-container").load(
+      "/templates/templates.html",
+      function() {
+        var html = global.$("#template-container").html();
+
+        /* eslint-disable quotes */
+        var check = '<div>template-ok</div>';
+
+        /* eslint-enable quotes */
+
+        // This works better than the assert:
+        try {
+          assert.equal(check, html, "HTML template does not match");
+          done();
+        } catch (e) {
+          done(e);
         }
+
       });
-      router.start(App, "#app");
-
-      assert(App !== undefined, "app created");
-      done();
-    });
-
-    // This test doesn't work, since it gets stuck when loading the main template.
-    it("App - LoadTemplate - Check if mock template is added to DOM", function(done) {
-
-      nock("http://0.0.0.0")
-        .defaultReplyHeaders({
-          "Content-Type": "text/html",
-          "Access-Control-Allow-Origin": "*"
-        })
-        .log(console.log)
-        .get("/templates/templates.html")
-        .reply(200, "<div>template-ok</div>");
-
-      // TODO: put this code in some app level promise
-      $("#template-container").load(
-        "/templates/templates.html",
-        function() {
-          var html = global.$("#template-container").html();
-
-          /* eslint-disable quotes */
-          var check = '<div>template-ok</div>';
-
-          /* eslint-enable quotes */
-
-          // This works better than the assert:
-          try {
-            assert.equal(check, html, "HTML template does not match");
-            done();
-          } catch (e) {
-            done(e);
-          }
-
-        });
-    });
-
-
-
   });
+
+
+
 
 
 })();

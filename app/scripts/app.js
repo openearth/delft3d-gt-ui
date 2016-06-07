@@ -1,4 +1,4 @@
-/* global ModelDetails, ScenarioCreate, ModelList,  FinderColumns, DeleteScenario */
+/* global ModelDetails, ScenarioCreate, ModelList,  FinderColumns, DeleteScenario, SearchColumns */
 
 var router;
 
@@ -23,11 +23,16 @@ var exports = (function() {
 
         // Just an empty main application
         // (selected model is done using routing)
-        var App = Vue.extend({});
+        var App = Vue.extend({
+        });
 
         router = new VueRouter();
 
         router.map({
+          "/search": {
+            name: "search",
+            component: SearchColumns
+          },
           "/scenarios/:scenarioid/models/:modelid": {
             name: "finder-columns",
             component: FinderColumns
