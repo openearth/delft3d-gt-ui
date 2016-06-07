@@ -27,7 +27,7 @@
   // Required for JQuery:
   var jsdom = require("jsdom").jsdom;
 
-  // You might want to do this per test....
+  // You might want to do this per test...
   // Create a document
 
   /* eslint-disable quotes */
