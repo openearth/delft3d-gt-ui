@@ -114,7 +114,11 @@
                                  >{{ variable.value }}</textarea>
                             </template>
                             <!-- if we add this to 1 we need to add it to all, bug in bootstrap -->
-                            <span class="input-group-addon" style="min-width: 64px" >
+                            <span v-if="variable.type !== 'slider'"
+                                  class="input-group-addon" style="min-width: 80px" >
+                               {{ variable.units || '-' }}
+                            </span>
+                            <span v-else class="input-group-addon" style="min-width: 80px" >
                                {{ variable.value }} {{ variable.units || '-' }}
                             </span>
 
