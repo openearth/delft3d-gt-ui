@@ -530,7 +530,7 @@
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*"
         })
-        .post("/api/v1/scenes/4/start")
+        .post("/api/v1/scenes/4/start/")
         .reply(200, function() {
           correctReply = true;
           return {};
@@ -559,7 +559,7 @@
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*"
         })
-        .post("/api/v1/scenes/4/start", {
+        .post("/api/v1/scenes/4/start/", {
           workflow: "export"
         })
         .reply(200, function() {
