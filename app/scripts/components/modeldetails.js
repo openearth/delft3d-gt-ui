@@ -178,7 +178,7 @@ var exports = (function () {
               //   });
             }
           )
-          .catch(e => {
+          .catch(() => {
             //console.log("Failed to get model with id", id, "error", e);
           });
 

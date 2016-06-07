@@ -332,6 +332,7 @@ var exports = (function() {
                 "hide_min_max": true,
                 "hide_from_to": true
               };
+
               sliderConfig.onChange = function() {
                 that.updateSliders(section);
                 that.checkSliderSectionsValid();
@@ -351,7 +352,6 @@ var exports = (function() {
       // Update the sliders
       updateSliders: function(section) {
         var totalParts = 0;
-        var that = this;
 
         // Compute total parts set
         _.forEach(section.variables, function(variable) {
@@ -374,6 +374,7 @@ var exports = (function() {
           if (variable.type === "slider") {
             var sum = parseInt(section.slider.sum);
             var fraction = parseInt(variable.inputValue) / totalParts;
+
             variable.value = Math.round(sum * fraction * 10) / 10;
           }
         });
@@ -381,6 +382,7 @@ var exports = (function() {
 
       checkSliderSectionsValid: function() {
         var that = this;
+
         that.validSliders = true;
 
         _.forEach(this.validSliderSections, function(value) {

@@ -46,9 +46,8 @@ var exports = (function () {
 
     return new Promise(function(resolve, reject) {
 
-      if (isNaN(id) === true)
-      {
-        return reject(error);
+      if (isNaN(id) === true) {
+        return reject(new Error("Model id is not a number"));
       }
 
       if (_.has(itemsCache, id)) {
