@@ -23,6 +23,11 @@
               </tr>
 
               <tr>
+                <td>Owner of run</td>
+                <td><a href="mailto:{{model.owner.email}}">{{ model.owner.first_name }} {{ model.owner.last_name }}</a> </td>
+              </tr>
+
+              <tr>
                 <td>Model files</td>
                 <td>View <a href="{{model.fileurl}}">working directory</a></td>
               </tr>
@@ -79,12 +84,58 @@
             <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
             Remove run
           </button>
-          <!--
-          Do not give option anymore to remove files. WE will always do this.
-          <input type="checkbox" value="1" id="simulation-control-check-delete-files" /> Also delete all simulation files
-          -->
         </div>
       </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h2 class="panel-title">Publish controls</h2>
+        </div>
+        <div class="panel-body">
+          <p>
+            You can change the rights of your simulation results. You can share them with everybody (default), only your company or keep them private.
+          </p>
+
+          <!-- These are now links, replace by post requests later, otherwise a search engine will start publishing models -->
+          <!-- This form-inline is normally applied to a form but in this case we have 3 forms as a form group. -->
+          <div class="form-inline">
+            <form method="POST" action="/api/v1/scenes/{{ model.id }}/publish_private/" class="form-group">
+              <button
+                 type="submit"
+                 class="btn btn-labeled btn-default disabled"
+                 href="#">
+                <span class="btn-label"><i class="glyphicon glyphicon-people"></i></span>
+                Private
+              </button>
+            </form>
+
+            <form method="POST" action="/api/v1/scenes/{{ model.id }}/publish_company/" class="form-group">
+              <button
+                   type="submit"
+                   class="btn btn-labeled btn-default"
+                   >
+                  <span class="btn-label"><i class="glyphicon glyphicon-blackboard"></i></span>
+                  Company
+              </button>
+
+            </form>
+            <form method="POST" action="/api/v1/scenes/{{ model.id }}/publish_world/" class="form-group">
+              <button
+                 type="submit"
+                 class="btn btn-labeled btn-default"
+                 href="">
+
+                <span class="btn-label"><i class="glyphicon glyphicon-globe"></i></span>
+                Public
+              </button>
+
+            </form>
+
+          </div>
+
+        </div>
+      </div>
+
 
       <div class="panel panel-default">
         <div class="panel-heading">
