@@ -21,6 +21,7 @@ var exports = (function () {
     events: {
       "models-found": function (models) {
         var modelList = this.$refs.models;
+
         modelList.models = models;
       }
     }
