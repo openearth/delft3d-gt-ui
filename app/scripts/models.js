@@ -102,7 +102,26 @@ var exports = (function () {
       $.ajax({
         url: "/api/v1/scenes/" + id + "/start/",
         method: "POST"
-     })
+      })
+        .done(function() {
+          // no data to return, just call the callback
+          resolve();
+        })
+        .fail(function(error) {
+          // we're done
+          reject(error);
+        });
+
+    });
+  }
+
+  function publishModel(id, target) {
+
+    return new Promise(function(resolve, reject) {
+      $.ajax({
+        url: "/api/v1/scenes/" + id + "/publish_" + target + "/",
+        method: "POST"
+      })
         .done(function() {
           // no data to return, just call the callback
           resolve();
@@ -220,7 +239,8 @@ var exports = (function () {
     deleteModel: deleteModel,
     startModel: startModel,
     exportModel: exportModel,
-    stopModel: stopModel
+    stopModel: stopModel,
+    publishModel: publishModel
   };
 }());
 
