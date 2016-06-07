@@ -41,7 +41,15 @@ var exports = (function () {
    * @return {Promise}
    */
   function fetchModel(id) {
+
+
+
     return new Promise(function(resolve, reject) {
+
+      if (isNaN(id) === true)
+      {
+        return reject(error);
+      }
 
       if (_.has(itemsCache, id)) {
         // we already have the model, return it
