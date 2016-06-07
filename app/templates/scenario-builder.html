@@ -77,18 +77,17 @@
                             <!-- other first -->
                             <template v-if="variable.type !== 'textarea'">
                               <template v-if="variable.type === 'slider'">
+                                <div>
                                 <input
                                   type="text"
-                                  class="form-control ion-range"
+                                  class="ion-range"
                                   id="{{ variable.id }}"
                                   v-model="variable.inputValue"
                                   :disabled="variable.disabled"
                                   :field="variable.id"
                                   aria-describedby="{{ variable.variableid }}status"
                                  />
-                                 <span>
-                                   {{ variable.value }}%
-                                 </span>
+                                </div>
                               </template>
                               <input v-else
                                  type="{{ variable.type }}"
@@ -115,8 +114,8 @@
                                  >{{ variable.value }}</textarea>
                             </template>
                             <!-- if we add this to 1 we need to add it to all, bug in bootstrap -->
-                            <span class="input-group-addon">
-                              {{ variable.units || '-' }}
+                            <span class="input-group-addon" style="min-width: 64px" >
+                               {{ variable.value }} {{ variable.units || '-' }}
                             </span>
 
                           </div>
