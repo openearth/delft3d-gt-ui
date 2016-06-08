@@ -5,7 +5,7 @@
 
       <ul class="list-group checked-list-box" id="scenario-list" v-show="selectedModels.length">
         <li class="list-group-item"  v-for="entry in selectedModels" v-bind:class="{ 'selected': entry.id == selectedModelId}">
-          <a href="#/scenarios/{{ entry.scenario }}/models/{{entry.id}}">{{entry.name}}</a>
+          <a href="#/scenarios/{{ entry.scenario[0].id }}/models/{{entry.id}}">{{entry.name}}</a>
           <span class="model-state label label-default {{ entry.state | lowercase }}">{{entry.state | capitalize }}</span>
         </li>
       </ul>

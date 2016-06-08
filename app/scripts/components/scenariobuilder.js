@@ -258,7 +258,7 @@ var exports = (function() {
 
         var postdata = {
           "name": name,
-          "template": null,
+          "template": this.currentSelectedId,
           "parameters": JSON.stringify(parameters)
         };
 
