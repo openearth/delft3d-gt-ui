@@ -88,7 +88,7 @@ var exports = (function() {
       };
       this.initFixedToolbar();
       if (this.dataLoaded) {
-        this.initSliders();
+        this.initAfterDomUpdate();
       }
     },
 
@@ -192,7 +192,7 @@ var exports = (function() {
         this.scenarioConfig = this.prepareScenarioConfig(template);
 
         // Init sliders if present
-        this.initSliders();
+        this.initAfterDomUpdate();
 
         this.updateWithQueryParameters();
 
