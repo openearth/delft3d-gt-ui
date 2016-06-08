@@ -17,7 +17,6 @@ var exports = (function () {
     return new Promise(function(resolve, reject) {
 
       $.ajax("/api/v1/scenes/", {cache: false})
-      // $.ajax("/scene/list", {cache: false})
         .done(function(json) {
 
           itemsCache = {};
