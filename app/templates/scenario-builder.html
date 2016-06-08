@@ -128,25 +128,39 @@
                                 class="help-block has-error">
                                   This field cannot be left empty.
                             </p>
-                            <p  v-if="$validation[getId(variable)].min
+                            <template  v-if="$validation[getId(variable)].min
                                       && !$validation[getId(variable)].required
-                                      && !isNaN(variable.value)"
-                                class="help-block has-error">
-                                  Entered value "{{ variable.value}}" is less than the minimum value "{{ variable.validators.min }}".
-                            </p>
-                            <p  v-if="$validation[getId(variable)].max
+                                      && variable.type === 'numeric'">
+                              <template
+                                v-for="input in variable.value.split(',')">
+                                <p v-if="!isNaN(input) && input < variable.validators.min"
+                                          class="help-block has-error">
+                                  Entered value "{{ input }}" is less than the minimum value "{{ variable.validators.min }}".
+                                </p>
+                              </template>
+                            </template>
+                            <template  v-if="$validation[getId(variable)].max
                                       && !$validation[getId(variable)].required
-                                      && !isNaN(variable.value)"
-                                class="help-block has-error">
-                                  Entered value "{{ variable.value}}" is greater than the maximum value "{{ variable.validators.max }}".
-                            </p>
-                            <p  v-if="$validation[getId(variable)]
+                                      && variable.type === 'numeric'">
+                              <template
+                                v-for="input in variable.value.split(',')">
+                                <p v-if="!isNaN(input) && input > variable.validators.max"
+                                          class="help-block has-error">
+                                  Entered value "{{ input }}" is greater than the maximum value "{{ variable.validators.max }}".
+                                </p>
+                              </template>
+                            </template>
+                            <template  v-if="$validation[getId(variable)]
                                       && !$validation[getId(variable)].valid
-                                      && isNaN(variable.value)
-                                      && variable.type === 'numeric'"
-                                class="help-block has-error">
-                                  "{{ variable.value}}" is not a number.
-                            </p>
+                                      && variable.type === 'numeric'">
+                              <template
+                                v-for="input in variable.value.split(',')">
+                                <p v-if="isNaN(input)"
+                                          class="help-block has-error">
+                                  "{{ input }}" is not a number.
+                                </p>
+                              </template>
+                            </template>
                           </div>
                         </div>
                         <div v-if="section.slider && !section.slider.valid" class="form-group has-error">
