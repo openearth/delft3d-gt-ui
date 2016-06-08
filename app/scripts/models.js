@@ -48,7 +48,7 @@ var exports = (function () {
 
       if (isNaN(id) === true)
       {
-        return reject(error);
+        return reject(new Error("Model not found, even after updating"));
       }
 
       if (_.has(itemsCache, id)) {
