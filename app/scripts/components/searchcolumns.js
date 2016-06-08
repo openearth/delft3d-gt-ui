@@ -48,10 +48,6 @@ var exports = (function () {
       "models-selected": function(id) {
         var modelDetails = this.getChildByName("model-details"); //this.$children[2]; //
 
-        var newData = {
-          modelid: id
-        };
-
         modelDetails.id = id;
 
       }
