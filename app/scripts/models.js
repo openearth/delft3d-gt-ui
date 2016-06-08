@@ -25,9 +25,13 @@ var exports = (function () {
           // copy object
           _.each(json, function(model) {
 
-            var s = model.scenario_url;
-            var i = s.search(/\/\d\d\//);
-            model.scenario = s.slice(i, i + 3).replace("/","");
+            // TODO: replace the following code
+
+            // retrieves the scenario id from the scenario_url parameter
+            var s = model.scenario_url,
+                i = s.search(/\/\d\d\//);
+
+            model.scenario = s.slice(i, i + 3).replace("/", "");
 
             itemsCache[model.id] = model;
           });
