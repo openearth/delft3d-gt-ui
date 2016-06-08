@@ -133,8 +133,7 @@ var exports = (function () {
         $.ajax(request)
           .then(function(data) {
             // TODO: set this data in the model-list models property
-            if (this.$dispatch !== undefined)
-            {
+            if (this.$dispatch !== undefined) {
               this.$dispatch("models-found", data);
             }
           })
