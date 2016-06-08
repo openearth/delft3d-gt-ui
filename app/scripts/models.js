@@ -47,7 +47,7 @@ var exports = (function () {
     return new Promise(function(resolve, reject) {
 
       if (isNaN(id) === true) {
-        return reject(new Error("Model id is not a number"));
+        return reject(new Error("Model not found, even after updating"));
       }
 
       if (_.has(itemsCache, id)) {
