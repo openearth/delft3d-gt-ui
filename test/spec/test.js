@@ -124,11 +124,10 @@
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*"
           })
-          .log(console.log)
           .filteringPath(function() {
-            return "/scenario/list";
+            return "/api/v1/scenarios/";
           })
-          .get("/scenario/list")
+          .get("/api/v1/scenarios/")
           .reply(200, {
           });
 
@@ -159,10 +158,7 @@
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*"
           })
-          .filteringPath(function() {
-            return "/api/v1/models/";
-          })
-          .get("/api/v1/models/")
+          .get("/api/v1/scenes/")
           .reply(200, [
             {
               id: 1,
@@ -192,24 +188,25 @@
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*"
           })
+          .log(console.log)
           .filteringPath(function() {
-            return "/api/v1/models/";
+            return "/api/v1/scenes/";
           })
-          .get("/api/v1/models/")
+          .get("/api/v1/scenes/")
           .reply(200, [
             {
-              id: 1,
+              id: 405,
               name: "Run 1"
             }
           ]);
 
-        global.fetchModel(1)
+        global.fetchModel(405)
           .then(function(data) {
             assert.isOk(data, "we have some data");
             done();
           })
           .catch(function(e) {
-            console.log(e);
+            console.log("no data returned", e);
             // rethrow error to capture it and avoid time out
             try {
               throw e;

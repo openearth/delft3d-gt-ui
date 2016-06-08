@@ -1,4 +1,4 @@
-/* global resolveUrls */
+/* global  */
 
 // Store items in this cache
 var itemsCache = {};
@@ -16,26 +16,10 @@ var exports = (function () {
     return new Promise(function(resolve, reject) {
       $.getJSON("/api/v1/scenes/", {})
         .done(function(json) {
-          itemsCache = {};
-          // copy object
-          Promise.all(
-            // json is a list of models
-            _.map(json, function(model) {
-              // return a promise for when all urls are resolved
-              var promise = resolveUrls(model);
-
-              return promise;
-            })
-          )
-            .then(function(resolvedModels) {
-              // resolvedModels  is an array of arrays
-              // TODO: check if we need this with the current ids
-              var models = resolvedModels.map(function(arr) {
-                return arr[0];
-              });
-
-              resolve(models);
-            });
+          _.map(json, function(model) {
+            itemsCache[model.id] = model;
+          });
+          resolve(json);
         })
         .fail(function(error) {
           reject(error);
