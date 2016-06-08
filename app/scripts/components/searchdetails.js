@@ -13,7 +13,7 @@ var exports = (function () {
         selectedParameters: {
           riverwidth: null,
           riverdischarge: null,
-          engines: []
+          engine: []
         },
         startDate: null,
         endDate: null,
@@ -24,6 +24,16 @@ var exports = (function () {
     props: {
 
     },
+
+    events: {
+      "model-click": function (id) {
+        console.log("model click:" + id);
+
+        this.$dispatch("models-selected", id);
+      }
+
+    },
+
     ready: function() {
       fetchTemplates()
         .then((templates) => {
@@ -90,7 +100,10 @@ var exports = (function () {
     },
 
 
+
     methods: {
+
+
       buildRequest: function() {
         // for now we just copy everything
 
@@ -100,7 +113,7 @@ var exports = (function () {
         };
 
         // serialize parameters corresponding to https://publicwiki.deltares.nl/display/Delft3DGT/Search
-        params.parameters = _.map(
+        params.parameter = _.map(
           // loop over all parameters in the template
           this.selectedParameters,
           function(value, key) {
@@ -114,6 +127,10 @@ var exports = (function () {
               // replace ; by , =>  key,value
               result = key + "," + value;
             }
+
+            // Remove trailing ,:
+            result = result.replace(/\,$/, '');
+
             return result;
           }
         );
@@ -125,17 +142,20 @@ var exports = (function () {
           dataType: "json"
         };
       },
+
       search: function() {
         // create the url and stuff
         var request = this.buildRequest();
+        var that = this;
 
         console.log("sending request", request);
         $.ajax(request)
           .then(function(data) {
             // TODO: set this data in the model-list models property
-            if (this.$dispatch !== undefined) {
-              this.$dispatch("models-found", data);
-            }
+            //if (this.$dispatch !== undefined) {
+              console.log( "this " + that.$dispatch("models-found", data));
+             // this.$parent.$dispatch("models-found", data);
+           // }
           })
           .fail(function(err) {
             console.log(err);

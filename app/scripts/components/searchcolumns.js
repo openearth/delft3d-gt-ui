@@ -16,13 +16,45 @@ var exports = (function () {
       "model-details": ModelDetails
     },
 
+
     methods: {
+
+      // Get a child by name, such that we do not have a fixed index.
+      getChildByName: function(name) {
+        var that = this;
+
+        for(var i = 0; i < that.$children.length; i++) {
+
+          // Check if name matches:
+          if (that.$children[i].$options.name === name) {
+            return that.$children[i];
+          }
+        }
+
+        return null;
+      }
     },
     events: {
+
+      // Got some search results:
       "models-found": function (models) {
         var modelList = this.$refs.models;
-
+        modelList.filter = "search";
         modelList.models = models;
+      },
+
+      // User clicked on a result item:
+      "models-selected": function(id) {
+console.log("test");
+        var modelDetails = this.getChildByName("model-details"); //this.$children[2]; //
+
+        var newData = {
+          modelid: id
+        };
+
+        modelDetails.id = id;
+        transition.next(newData);
+
       }
     }
   });
