@@ -49,6 +49,8 @@ var exports = (function() {
         validSliderSections: {},
         validSliders: true,
 
+        currentSelectedId: null,
+
         // The DOM elements used for the fixed toolbar event listener
         navBars: null
 
@@ -178,7 +180,13 @@ var exports = (function() {
     },
     methods: {
       selectTemplate: function(template) {
-        console.log("setting template to", template);
+        if (this.currentSelectedId === template.id) {
+          return;
+        }
+
+        this.currentSelectedId = template.id;
+
+        console.log("setting template to id", template.id);
 
         // First set data, then the template. Order is important!
         this.scenarioConfig = this.prepareScenarioConfig(template);
