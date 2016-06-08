@@ -27,7 +27,7 @@ const reload = browserSync.reload;
 var args = require("yargs").argv;
 // Server used for serving remote url"s
 // "http://136.231.10.175:8888";
-var apiServer = "https://delft3dgt-local";
+var apiServer = "";
 
 // Process optional arguments
 processOptionalArguments();
@@ -226,8 +226,7 @@ gulp.task("clean", del.bind(null, [".tmp", "dist"]));
 gulp.task("serve", ["styles", "scripts", "fonts", "images", "templates"], () => {
   var options = {
     notify: false,
-    port: 9443,
-    https: true,
+    port: 9000,
     server: {
       baseDir: [".tmp", "app"],
       routes: {
