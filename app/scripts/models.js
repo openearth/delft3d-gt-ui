@@ -17,12 +17,10 @@ var exports = (function () {
       $.getJSON("/api/v1/scenes/", {})
         .done(function(json) {
           itemsCache = {};
-          console.log("json data", json);
           // copy object
           Promise.all(
             // json is a list of models
             _.map(json, function(model) {
-              console.log("resolving model", model);
               // return a promise for when all urls are resolved
               var promise = resolveUrls(model);
 
@@ -34,8 +32,6 @@ var exports = (function () {
               var models = resolvedModels.map(function(arr) {
                 return arr[0];
               });
-
-              console.log("all models resolved", models);
               resolve(models);
             });
         })

@@ -100,9 +100,8 @@ var exports = (function () {
 
           if (this.filter === "scenarios") {
             // is this the best approach, couldn't get a filterkey to work (no access to routing info)
-            var scenarioId = this.selectedScenarioId;
 
-            result = _.filter(this.models, ["scenario.id", scenarioId]);
+            result = _.filter(this.models, ["scenario[0]", this.selectedScenarioId]);
           }
           return result;
         }
