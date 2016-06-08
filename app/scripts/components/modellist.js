@@ -85,8 +85,11 @@ var exports = (function () {
       },
       selectedScenarioId: {
         get: function() {
-          var id = parseInt(this.$route.params.scenarioid);
-
+          var id = -1;
+          // check if we can get the parameter from the route
+          if (_.has(this.$route, 'params.scenarioid')) {
+            id = parseInt(this.$route.params.scenarioid);
+          }
           return id;
 
         }
@@ -99,8 +102,7 @@ var exports = (function () {
             // is this the best approach, couldn't get a filterkey to work (no access to routing info)
             var scenarioId = this.selectedScenarioId;
 
-            console.log("filter by ", scenario);
-            result = _.filter(this.models, ["scenario.id", scenario]);
+            result = _.filter(this.models, ["scenario.id", scenarioId]);
           }
           return result;
         }
