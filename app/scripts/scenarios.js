@@ -12,7 +12,8 @@ var exports = (function() {
       //Load test template data:
       $.ajax({
         //url: "sampledata/template.json",
-        url: "/scenario/list",
+        url: "/api/v1/scenarios/",
+        // url: "/scenario/list",
         method: "GET",
         cache: false
       })

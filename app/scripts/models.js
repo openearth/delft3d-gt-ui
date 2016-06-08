@@ -13,19 +13,21 @@ var exports = (function () {
    * @return {Promise}
    */
   function fetchModels() {
+
     return new Promise(function(resolve, reject) {
 
-      $.ajax("/scene/list", {cache: false})
+      $.ajax("/api/v1/scenes/", {cache: false})
+      // $.ajax("/scene/list", {cache: false})
         .done(function(json) {
 
           itemsCache = {};
 
           // copy object
-          _.each(json.scene_list, function(model) {
+          _.each(json, function(model) {
             itemsCache[model.id] = model;
           });
 
-          resolve(json.scene_list);
+          resolve(json);
         })
         .fail(function(error) {
           reject(error);
@@ -41,8 +43,6 @@ var exports = (function () {
    * @return {Promise}
    */
   function fetchModel(id) {
-
-
 
     return new Promise(function(resolve, reject) {
 
@@ -81,6 +81,7 @@ var exports = (function () {
   }
 
   function deleteModel(id, options) {
+
     return new Promise(function(resolve, reject) {
       // add extra options to id
       var postData = _.assign({id: id}, options);
@@ -142,6 +143,7 @@ var exports = (function () {
   }
 
   function exportModel(id) {
+
     return new Promise(function(resolve, reject) {
       $.ajax({
         url: "/api/v1/scenes/" + id + "/start/",
@@ -162,6 +164,7 @@ var exports = (function () {
 
   // Stop a model.
   function stopModel(id) {
+
     return new Promise(function(resolve, reject) {
       $.ajax({
         url: "/scene/stop",
@@ -182,6 +185,7 @@ var exports = (function () {
   }
 
   function createModel(model) {
+
     return new Promise(function(resolve, reject) {
       $.ajax({
         url: "/scene/create",
@@ -203,6 +207,7 @@ var exports = (function () {
 
 
   function fetchLog(id) {
+
     return new Promise(function(resolve, reject) {
       try {
         var model = itemsCache[id];
