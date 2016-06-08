@@ -29,6 +29,12 @@
 
                   <div class="col-sm-12 text-center" >
                       <div class="btn-group">
+
+                          <button class="btn btn-primary" v-on:click="gotoFirstFrame()">
+                              <span class="glyphicon glyphicon-fast-backward">
+                              </span>
+                          </button>
+
                           <button class="btn btn-primary" v-on:click="previousImageFrame('channel_network_images')">
                               <span class="glyphicon glyphicon-backward">
                               </span>
@@ -43,6 +49,11 @@
                           </button>
                           <button class="btn btn-primary" v-on:click="nextImageFrame('channel_network_images')">
                               <span class="glyphicon glyphicon-forward">
+                              </span>
+                          </button>
+
+                          <button class="btn btn-primary" v-on:click="gotoLastFrame()">
+                              <span class="glyphicon glyphicon-fast-forward">
                               </span>
                           </button>
                       </div>
