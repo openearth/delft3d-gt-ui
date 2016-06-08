@@ -178,8 +178,8 @@ var exports = (function () {
               //   });
             }
           )
-          .catch(() => {
-            //console.log("Failed to get model with id", id, "error", e);
+          .catch(e => {
+            console.log("Failed to get model with id", id, "error", e);
           });
 
       },
@@ -286,12 +286,8 @@ var exports = (function () {
 
       exportModel: function() {
         exportModel(this.model.id)
-          .then(() => {
-            this.$parent.$broadcast("show-alert", {
-              message: "Starting export... It might take a moment before the view is updated.",
-              showTime: 5000,
-              type: "success"
-            });
+          .then(msg => {
+            console.log(msg);
           })
           .catch(e => {
             console.log(e);

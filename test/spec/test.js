@@ -98,6 +98,11 @@
   global.SearchDetails = SearchDetails;
   global.ScenarioList = ScenarioList;
 
+
+  var SearchList = require("../../app/scripts/components/searchlist.js").SearchList;
+
+  global.SearchList = SearchList;
+
   var FinderColumns = require("../../app/scripts/components/findercolumns.js").FinderColumns;
   var SearchColumns = require("../../app/scripts/components/searchcolumns.js").SearchColumns;
 
@@ -279,6 +284,17 @@
       done();
     });
   });
+
+  describe("Search list", function() {
+    it("Is possible to create a search list", function(done) {
+      var searchList = new SearchList();
+
+      assert.isOk(searchList);
+      done();
+    });
+  });
+
+
   describe("Finder columns", function() {
     it("Is possible to create a three column layout", function(done) {
       var finderColumns = new FinderColumns();
@@ -341,10 +357,10 @@
       // no values set
       var comp = {
         data: {
-          parameters: [
+          parameter: [
             "riverwidth,null",
             "riverdischarge,null",
-            "engines,"
+            "engine"
           ],
           shared: [],
           template: []
