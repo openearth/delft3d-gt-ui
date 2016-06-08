@@ -50,6 +50,10 @@
                 </td>
               </tr>
 
+              <tr class="publish-level">
+                <td>Publish level</td>
+                <td><span>{{ publishLevel }}<span></td>
+              </tr>
 
               <tr>
                 <td>Identification</td>
@@ -69,23 +73,23 @@
             Please select an action to perform on this simulation
           </p>
 
-          <button type="button" class="btn btn-labeled btn-success" v-bind:class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE') }" id="simulation-control-start" v-on:click="startModel">
+          <button type="button" class="btn btn-labeled btn-success" v-bind:class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE') || isReadOnly() }" id="simulation-control-start" v-on:click="startModel">
             <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>
             Restart
           </button>
 
-          <button type="button" class="btn btn-labeled btn-success" v-bind:class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE') }"  v-on:click="exportModel">
+          <button type="button" class="btn btn-labeled btn-success" v-bind:class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE') || isReadOnly() }"  v-on:click="exportModel">
             <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>
             Start export
           </button>
 
-          <button type="button" class="btn btn-labeled btn-warning" v-bind:class="{ 'inputdisabled':  !(model.state === 'PROCESSING') }" id="simulation-control-stop" v-on:click="stopModel">
+          <button type="button" class="btn btn-labeled btn-warning" v-bind:class="{ 'inputdisabled':  !(model.state === 'PROCESSING') || isReadOnly() }" id="simulation-control-stop" v-on:click="stopModel">
             <span class="btn-label"><i class="glyphicon glyphicon-stop"></i></span>
             Stop
           </button>
 
 
-          <button type="button" class="btn btn-labeled btn-danger" v-bind:class="{ 'inputdisabled': !((model.state === 'SUCCESS' || model.state === 'FAILURE') || model.state === 'PENDING') }"  v-on:click="removeModel(model)">
+          <button type="button" class="btn btn-labeled btn-danger" v-bind:class="{ 'inputdisabled': !((model.state === 'SUCCESS' || model.state === 'FAILURE') || model.state === 'PENDING') || isReadOnly() }"  v-on:click="removeModel(model)">
             <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
             Remove run
           </button>
@@ -104,21 +108,18 @@
           <!-- These are now links, replace by post requests later, otherwise a search engine will start publishing models -->
           <!-- This form-inline is normally applied to a form but in this case we have 3 forms as a form group. -->
           <div class="form-inline">
-            <button
-               class="form-group btn btn-labeled btn-default disabled" v-on:click="publishModel('private')">
-              <span class="btn-label"><i class="glyphicon glyphicon-people"></i></span>
-              Private
-            </button>
-
-            <button class="form-group btn btn-labeled btn-default" v-on:click="publishModel('company')">
-                <span class="btn-label"><i class="glyphicon glyphicon-blackboard"></i></span>
-                Company
-            </button>
-
-            <button class="form-group btn btn-labeled btn-default" v-on:click="publishModel('world')">
-              <span class="btn-label"><i class="glyphicon glyphicon-globe"></i></span>
-              Public
-            </button>
+            <template v-for="level in publishLevels">
+              <button
+                 class="form-group btn btn-labeled btn-default"
+                 :class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE') || !isLevelEnabled($index) }"
+                 @click="publishModel($index)">
+                <span class="btn-label">
+                  <i class="glyphicon" :class="publishLevels[$index].iconClass">
+                  </i>
+                </span>
+                {{ publishLevels[$index].description }}
+              </button>
+            </template>
           </div>
 
         </div>
@@ -223,7 +224,7 @@
 
       <!-- MODALS -->
 
-      <div class="modal default-hidden fade " id="dialog-confirm-delete" tabindex="-1" role="dialog">
+      <div class="modal default-hidden fade" id="dialog-confirm-delete" tabindex="-1" role="dialog">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -250,6 +251,34 @@
       </div>
       <!-- REMOVE FROM HERE -->
     </div>
+
+    <div class="modal default-hidden fade" id="dialog-confirm-publish" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Publish model '<span id="dialog-publish-name"></span>'?</h4>
+          </div>
+          <div class="modal-body">
+            <p>
+              Are you sure you want to publish this model as '<span id="dialog-publish-target"></span>'?
+            </p>
+
+            <!-- warning which is shown if user also wants to delete additional files. -->
+            <div class="msg-delete-extra alert alert-info" role="alert">
+              This action cannot be undone.
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-warning" id="dialog-publish-response-accept">Publish</button>
+            <button type="button" class="btn btn-primary" id="dialog-publish-response-cancel" data-dismiss="modal">Cancel</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+    <!-- REMOVE FROM HERE -->
+  </div>
 
   </div>
 </template>

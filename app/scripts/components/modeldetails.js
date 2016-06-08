@@ -16,7 +16,28 @@ var exports = (function () {
       return {
         timerId: -1,
         model: {
-        }
+        },
+        publishLevels: [
+          {
+            "indicator": "p",
+            "url": "private",
+            "iconClass": "glyphicon-people",
+            "description": "Private"
+          },
+          {
+            "indicator": "c",
+            "url": "company",
+            "iconClass": "glyphicon-blackboard",
+            "description": "Company"
+          },
+          {
+            "indicator": "w",
+            "url": "world",
+            "iconClass": "glyphicon-globe",
+            "description": "Public"
+          }
+        ],
+        waitingForUpdate: false
       };
 
     },
@@ -140,6 +161,24 @@ var exports = (function () {
 
           return this.model && this.model.state === "PROCESSING";
         }
+      },
+
+      publishLevel: {
+        cache: false,
+        get: function() {
+          var msg = (this.waitingForUpdate ? "Changing to '" : "");
+
+          var index = this.indexOfPublishLevel();
+
+          if (this.waitingForUpdate) {
+            index++;
+          }
+
+          if (index >= 0 && index <= this.publishLevels.length) {
+            return msg + this.publishLevels[index].description + (this.waitingForUpdate ? "'" : "");
+          }
+          return "Unknown";
+        }
       }
     },
     route: {
@@ -168,6 +207,12 @@ var exports = (function () {
               var data = this.$data;
 
               data.model = json;
+
+              if (this.waitingForUpdate) {
+                this.highlightPublishLevel();
+              }
+
+              this.waitingForUpdate = false;
               // and fetch log afterwards
               // fetchLog(data.model.id)
               //   .then(log => {
@@ -318,14 +363,30 @@ var exports = (function () {
 
       },
 
-      publishModel: function(target) {
-        publishModel(this.model.id, target)
-          .then(msg => {
-            console.log(msg);
-          })
-          .catch(e => {
-            console.log(e);
-          });
+      publishModel: function(index) {
+        $("#dialog-publish-name").html(this.model.name);
+        $("#dialog-publish-target").html(this.publishLevels[index].description);
+        $("#dialog-publish-response-accept").on("click", () => {
+          publishModel(this.model.id, this.publishLevels[index].url)
+            .then(() => {
+              this.$parent.$broadcast("show-alert", {
+                message: "Changing publish level... It might take a moment before the view is updated.",
+                showTime: 5000,
+                type: "success"
+              });
+              this.waitingForUpdate = true;
+              this.highlightPublishLevel();
+            })
+            .catch(e => {
+              console.log(e);
+            });
+
+          // Hide dialog when user presses this accept.:
+          $("#dialog-confirm-publish").modal("hide");
+        });
+
+        // Show the dialog:
+        $("#dialog-confirm-publish").modal({});
       },
 
       downloadOptionsChange: function() {
@@ -334,6 +395,27 @@ var exports = (function () {
         var selectedOptions = $(".downloadoption:checked").length;
 
         $("#download-submit").prop("disabled", selectedOptions === 0);
+      },
+
+      isLevelEnabled: function(level) {
+        return level > this.indexOfPublishLevel();
+      },
+
+      isReadOnly: function() {
+        return !this.isLevelEnabled(1);
+      },
+
+      indexOfPublishLevel: function() {
+        return _.map(this.publishLevels, function(level) {
+          return level.indicator;
+        }).indexOf(this.model.shared);
+      },
+
+      highlightPublishLevel: function() {
+        $(".publish-level").addClass("highlighted");
+        window.setTimeout(function() {
+          $(".publish-level").removeClass("highlighted");
+        }, 1500);
       }
     }
   });
