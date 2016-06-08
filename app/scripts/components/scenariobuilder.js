@@ -88,7 +88,7 @@ var exports = (function() {
       };
       this.initFixedToolbar();
       if (this.dataLoaded) {
-        this.initSliders();
+        this.initAfterDomUpdate();
       }
     },
 
@@ -192,7 +192,7 @@ var exports = (function() {
         this.scenarioConfig = this.prepareScenarioConfig(template);
 
         // Init sliders if present
-        this.initSliders();
+        this.initAfterDomUpdate();
 
         this.updateWithQueryParameters();
 
@@ -207,6 +207,12 @@ var exports = (function() {
         });
       },
 
+      // Return a unique id for the variable that is validated.
+      // When selecting another template, the validator cannot deal
+      // with variable with the same name.
+      getId: function(variable) {
+        return this.scenarioConfig.id + "," + variable.id;
+      },
 
       updateWithQueryParameters: function() {
         if (_.has(this.$route, "query.parameters")) {

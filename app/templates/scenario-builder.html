@@ -58,8 +58,8 @@
                       </div>
                       <div class="panel-body">
                         <div class="form-group" v-for="variable in section.variables" v-bind:class="{
-                            'has-error': ($validation[variable.id] ?
-                                            !$validation[variable.id].valid :
+                            'has-error': ($validation[getId(variable)] ?
+                                            !$validation[getId(variable)].valid :
                                             (section.slider !== undefined ?
                                               !section.slider.valid :
                                               false)) }">
@@ -84,7 +84,7 @@
                                   id="{{ variable.id }}"
                                   v-model="variable.inputValue"
                                   :disabled="variable.disabled"
-                                  :field="variable.id"
+                                  :field="getId(variable)"
                                   aria-describedby="{{ variable.variableid }}status"
                                  />
                                 </div>
@@ -96,7 +96,7 @@
                                  :data-role="variable.factor ? 'tagsinput' : ''"
                                  v-model="variable.value"
                                  :disabled="variable.disabled"
-                                 :field="variable.id"
+                                 :field="getId(variable)"
                                  v-validate="variable.validators"
                                  aria-describedby="{{ variable.variableid }}status"
                                  />
@@ -109,7 +109,7 @@
                                  class="form-control"
                                  rows="3"
                                  :disabled="variable.disabled"
-                                 :field="variable.id"
+                                 :field="getId(variable)"
                                  v-validate="variable.validators"
                                  >{{ variable.value }}</textarea>
                             </template>
@@ -123,31 +123,48 @@
                             </span>
 
                           </div>
-                          <div v-if="$validation[variable.id]">
-                            <p  v-if="$validation[variable.id].required"
+                          <div v-if="$validation[getId(variable)]">
+                            <p  v-if="$validation[getId(variable)].required"
                                 class="help-block has-error">
                                   This field cannot be left empty.
                             </p>
-                            <p  v-if="$validation[variable.id].min
-                                      && !$validation[variable.id].required
-                                      && !isNaN(variable.value)"
-                                class="help-block has-error">
-                                  Entered value "{{ variable.value}}" is less than the minimum value "{{ variable.validators.min }}"!
-                            </p>
-                            <p  v-if="$validation[variable.id].max
-                                      && !$validation[variable.id].required
-                                      && !isNaN(variable.value)"
-                                class="help-block has-error">
-                                  Entered value "{{ variable.value}}" is greater than the maximum value "{{ variable.validators.max }}"!
-                            </p>
-                            <p  v-if="isNaN(variable.value)"
-                                class="help-block has-error">
-                                  "{{ variable.value}}" is not a number.
-                            </p>
+                            <template  v-if="$validation[getId(variable)].min
+                                      && !$validation[getId(variable)].required
+                                      && variable.type === 'numeric'">
+                              <template
+                                v-for="input in variable.value.split(',')">
+                                <p v-if="!isNaN(input) && input < variable.validators.min"
+                                          class="help-block has-error">
+                                  Entered value "{{ input }}" is less than the minimum value "{{ variable.validators.min }}".
+                                </p>
+                              </template>
+                            </template>
+                            <template  v-if="$validation[getId(variable)].max
+                                      && !$validation[getId(variable)].required
+                                      && variable.type === 'numeric'">
+                              <template
+                                v-for="input in variable.value.split(',')">
+                                <p v-if="!isNaN(input) && input > variable.validators.max"
+                                          class="help-block has-error">
+                                  Entered value "{{ input }}" is greater than the maximum value "{{ variable.validators.max }}".
+                                </p>
+                              </template>
+                            </template>
+                            <template  v-if="$validation[getId(variable)]
+                                      && !$validation[getId(variable)].valid
+                                      && variable.type === 'numeric'">
+                              <template
+                                v-for="input in variable.value.split(',')">
+                                <p v-if="isNaN(input)"
+                                          class="help-block has-error">
+                                  "{{ input }}" is not a number.
+                                </p>
+                              </template>
+                            </template>
                           </div>
                         </div>
-                        <div v-if="section.slider">
-                          <p v-if="!section.slider.valid" class="help-block has-error">Number of parts may not be 0!</p>
+                        <div v-if="section.slider && !section.slider.valid" class="form-group has-error">
+                          <p class="help-block has-error">Number of parts cannot be 0.</p>
                         </div>
 
                       </div>
