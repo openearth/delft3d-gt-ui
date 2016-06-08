@@ -207,7 +207,9 @@ var exports = (function () {
         if (imgs !== undefined) {
           // Probably wrap.
           if (this.currentAnimationIndex >= imgs.images.length) {
-            this.currentAnimationIndex = 0;
+            // 2016-06-08 we do not wrap anymore. We just go to the last frame and stop.
+            //this.currentAnimationIndex = 0;
+            this.gotoLastFrame();
           }
         }
       }
