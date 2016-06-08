@@ -1,4 +1,4 @@
-/* global Vue, SearchDetails, ModelList, ModelDetails */
+/* global Vue, SearchDetails, SearchList, ModelDetails */
 
 var exports = (function () {
   "use strict";
@@ -12,17 +12,44 @@ var exports = (function () {
     },
     components: {
       "search-details": SearchDetails,
-      "model-list": ModelList,
+      "search-list": SearchList,
       "model-details": ModelDetails
     },
 
+
     methods: {
+
+      // Get a child by name, such that we do not have a fixed index.
+      getChildByName: function(name) {
+        var that = this;
+
+        for(var i = 0; i < that.$children.length; i++) {
+
+          // Check if name matches:
+          if (that.$children[i].$options.name === name) {
+            return that.$children[i];
+          }
+        }
+
+        return null;
+      }
     },
     events: {
+
+      // Got some search results:
       "models-found": function (models) {
         var modelList = this.$refs.models;
 
+        modelList.filter = "search";
         modelList.models = models;
+      },
+
+      // User clicked on a result item:
+      "models-selected": function(id) {
+        var modelDetails = this.getChildByName("model-details"); //this.$children[2]; //
+
+        modelDetails.id = id;
+
       }
     }
   });

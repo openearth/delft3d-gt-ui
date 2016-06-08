@@ -60,7 +60,14 @@ var exports = (function () {
       // Get the current selected modelid from the routing URL
       selectedModelId: {
         get: function() {
-          var id = parseInt(this.$route.params.modelid);
+
+          var id = -1;
+
+          // If we have a routing var, we use it:
+          if (this.$route !== undefined && this.$route.params.modelid !== undefined) {
+
+            id = parseInt(this.$route.params.modelid);
+          }
 
           if (id === -1) {
             console.log("choose the first from selected models", this.selectedModels);
@@ -100,6 +107,8 @@ var exports = (function () {
       }
     },
     methods: {
+
+
       selectModel: function(id) {
         var params = {
           modelid: id,
@@ -110,7 +119,8 @@ var exports = (function () {
           console.log("no model yet selected");
         }
 
-        console.log("using router", router, "to go to", params, this);
+        console.log("using router", params);
+
         // TODO: keep routing logic in main window
         router.go({
           name: "finder-columns",

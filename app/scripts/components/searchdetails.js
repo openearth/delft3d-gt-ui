@@ -13,7 +13,7 @@ var exports = (function () {
         selectedParameters: {
           riverwidth: null,
           riverdischarge: null,
-          engines: []
+          engine: []
         },
         startDate: null,
         endDate: null,
@@ -24,7 +24,8 @@ var exports = (function () {
     props: {
 
     },
-    ready: function() {
+
+	ready: function() {
       fetchTemplates()
         .then((templates) => {
           console.log("loaded templates", templates);
@@ -90,7 +91,10 @@ var exports = (function () {
     },
 
 
+
     methods: {
+
+
       buildRequest: function() {
         // for now we just copy everything
 
@@ -100,7 +104,7 @@ var exports = (function () {
         };
 
         // serialize parameters corresponding to https://publicwiki.deltares.nl/display/Delft3DGT/Search
-        params.parameters = _.map(
+        params.parameter = _.map(
           // loop over all parameters in the template
           this.selectedParameters,
           function(value, key) {
@@ -114,6 +118,10 @@ var exports = (function () {
               // replace ; by , =>  key,value
               result = key + "," + value;
             }
+
+            // Remove trailing ,:
+            result = result.replace(/\,$/, "");
+
             return result;
           }
         );
@@ -125,17 +133,16 @@ var exports = (function () {
           dataType: "json"
         };
       },
+
       search: function() {
         // create the url and stuff
         var request = this.buildRequest();
+        var that = this;
 
-        console.log("sending request", request);
+        console.log("sending SEARCH request", request);
         $.ajax(request)
           .then(function(data) {
-            // TODO: set this data in the model-list models property
-            if (this.$dispatch !== undefined) {
-              this.$dispatch("models-found", data);
-            }
+            that.$dispatch("models-found", data);
           })
           .fail(function(err) {
             console.log(err);

@@ -685,7 +685,7 @@ section {
     }
 
     // A href becomes block
-    a {
+    a, .search-result {
       @include truncate();
       // hide the selection focus (dotted lines)
       color: $black;
