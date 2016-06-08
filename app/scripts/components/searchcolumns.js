@@ -1,4 +1,4 @@
-/* global Vue, SearchDetails, ModelList, ModelDetails */
+/* global Vue, SearchDetails, SearchList, ModelDetails */
 
 var exports = (function () {
   "use strict";
@@ -12,7 +12,7 @@ var exports = (function () {
     },
     components: {
       "search-details": SearchDetails,
-      "model-list": ModelList,
+      "search-list": SearchList,
       "model-details": ModelDetails
     },
 
@@ -39,13 +39,13 @@ var exports = (function () {
       // Got some search results:
       "models-found": function (models) {
         var modelList = this.$refs.models;
+
         modelList.filter = "search";
         modelList.models = models;
       },
 
       // User clicked on a result item:
       "models-selected": function(id) {
-console.log("test");
         var modelDetails = this.getChildByName("model-details"); //this.$children[2]; //
 
         var newData = {
@@ -53,7 +53,6 @@ console.log("test");
         };
 
         modelDetails.id = id;
-        transition.next(newData);
 
       }
     }

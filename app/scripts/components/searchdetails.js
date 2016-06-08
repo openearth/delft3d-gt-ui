@@ -25,16 +25,7 @@ var exports = (function () {
 
     },
 
-    events: {
-      "model-click": function (id) {
-        console.log("model click:" + id);
-
-        this.$dispatch("models-selected", id);
-      }
-
-    },
-
-    ready: function() {
+	ready: function() {
       fetchTemplates()
         .then((templates) => {
           console.log("loaded templates", templates);
@@ -129,7 +120,7 @@ var exports = (function () {
             }
 
             // Remove trailing ,:
-            result = result.replace(/\,$/, '');
+            result = result.replace(/\,$/, "");
 
             return result;
           }
@@ -148,14 +139,10 @@ var exports = (function () {
         var request = this.buildRequest();
         var that = this;
 
-        console.log("sending request", request);
+        console.log("sending SEARCH request", request);
         $.ajax(request)
           .then(function(data) {
-            // TODO: set this data in the model-list models property
-            //if (this.$dispatch !== undefined) {
-              console.log( "this " + that.$dispatch("models-found", data));
-             // this.$parent.$dispatch("models-found", data);
-           // }
+            that.$dispatch("models-found", data);
           })
           .fail(function(err) {
             console.log(err);

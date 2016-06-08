@@ -1,17 +1,18 @@
-<template id="template-model-list" inline-template>
+<template id="template-search-list" inline-template>
   <div class="model-list">
-    <h3>Runs</h3>
+    <h3>{{selectedModels.length}} Results</h3>
     <div>
 
       <ul class="list-group checked-list-box" id="scenario-list" v-show="selectedModels.length">
-        <li class="list-group-item"  v-for="entry in selectedModels" v-bind:class="{ 'selected': entry.id == selectedModelId}">
-          <a href="#/scenarios/{{ entry.scenario }}/models/{{entry.id}}">{{entry.name}}</a>
+        <li class="list-group-item"  v-for="entry in selectedModels" v-bind:class="{ 'selected': entry.id == selectedResultId}">
+          <div  class="search-result" v-on:click="directSelect(entry.id)">{{entry.name}}</div>
+
           <span class="model-state label label-default {{ entry.state | lowercase }}">{{entry.state | capitalize }}</span>
         </li>
       </ul>
 
       <div class="alert alert-info" v-show="!selectedModels.length">
-        There are no models loaded.
+        There are no results.
       </div>
       <div class="alert alert-warning default-hidden" role="alert" id="alert-connectionfailed">
         Cannot reach model server.

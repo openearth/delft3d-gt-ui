@@ -107,13 +107,6 @@ var exports = (function () {
     },
     methods: {
 
-      directSelect: function(id) {
-console.log("directselect",id)
-        // Directly select the id in the details list. (no routing)
-        this.$dispatch("model-click", id);
-        this.$broadcast("model-click", id);
-        this.$emit("model-click", id);
-      },
 
       selectModel: function(id) {
         var params = {
@@ -128,7 +121,6 @@ console.log("directselect",id)
         console.log("using router", params);
 
         // TODO: keep routing logic in main window
-return;
         router.go({
           name: "finder-columns",
           params: params
