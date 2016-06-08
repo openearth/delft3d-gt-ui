@@ -184,7 +184,9 @@ var exports = (function () {
         }
 
         // Clamp to make sure it does not go below 0
-        if (this.currentAnimationIndex < 0) this.currentAnimationIndex = 0;
+        if (this.currentAnimationIndex < 0) {
+          this.currentAnimationIndex = 0;
+        }
       },
 
       nextImageFrame: function() {
