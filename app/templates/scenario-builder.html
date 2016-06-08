@@ -132,22 +132,25 @@
                                       && !$validation[getId(variable)].required
                                       && !isNaN(variable.value)"
                                 class="help-block has-error">
-                                  Entered value "{{ variable.value}}" is less than the minimum value "{{ variable.validators.min }}"!
+                                  Entered value "{{ variable.value}}" is less than the minimum value "{{ variable.validators.min }}".
                             </p>
                             <p  v-if="$validation[getId(variable)].max
                                       && !$validation[getId(variable)].required
                                       && !isNaN(variable.value)"
                                 class="help-block has-error">
-                                  Entered value "{{ variable.value}}" is greater than the maximum value "{{ variable.validators.max }}"!
+                                  Entered value "{{ variable.value}}" is greater than the maximum value "{{ variable.validators.max }}".
                             </p>
-                            <p  v-if="isNaN(variable.value)"
+                            <p  v-if="$validation[getId(variable)]
+                                      && !$validation[getId(variable)].valid
+                                      && isNaN(variable.value)
+                                      && variable.type === 'numeric'"
                                 class="help-block has-error">
                                   "{{ variable.value}}" is not a number.
                             </p>
                           </div>
                         </div>
-                        <div v-if="section.slider">
-                          <p v-if="!section.slider.valid" class="help-block has-error">Number of parts may not be 0!</p>
+                        <div v-if="section.slider && !section.slider.valid" class="form-group has-error">
+                          <p class="help-block has-error">Number of parts cannot be 0.</p>
                         </div>
 
                       </div>
