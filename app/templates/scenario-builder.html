@@ -36,7 +36,7 @@
             <div class="col-sm-12">
               <div class="form-group ">
                 <label for="select-template">Select a template</label>
-                <select class="combobox form-control" v-model="template"  id="select-template">
+                <select class="combobox form-control" v-model="template"  id="select-template" :onchange="selectTemplate(template)">
                   <option v-for="template in availableTemplates" v-bind:value="template">
                     {{ template.name }}
                   </option>
