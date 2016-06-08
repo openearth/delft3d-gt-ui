@@ -33,7 +33,6 @@ var exports = (function() {
   // Constructor of our component
   ScenarioCreate = Vue.component("scenario-builder", {
     template: "#template-scenario-builder",
-    // el: "#template-scenario-builder",
     data: function() {
       return {
         availableTemplates: [],

@@ -1,4 +1,4 @@
-/* global chai  */
+/* global   */
 (function() {
   "use strict";
 
@@ -16,7 +16,7 @@
   // Create a document
   /* eslint-disable quotes */
 
-  global.document = jsdom('<!doctype html><html><body><div id="app"><div id="model-create"></div><scenario-builder id="scenario-builder"></scenario-builder><div id="model-details"></div></div><div id="template-container"></div></body></html>', {});
+  global.document = jsdom('<!doctype html><html><body><div id="app"><div id="model-create"></div><div id="model-details"></div></div><div id="template-container"></div></body></html>', {});
 
   /* eslint-enable quotes */
 

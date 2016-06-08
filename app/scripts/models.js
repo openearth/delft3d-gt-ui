@@ -29,9 +29,11 @@ var exports = (function () {
           )
             .then(function(resolvedModels) {
               // resolvedModels  is an array of arrays
+              // TODO: check if we need this with the current ids
               var models = resolvedModels.map(function(arr) {
                 return arr[0];
               });
+
               resolve(models);
             });
         })

@@ -86,8 +86,9 @@ var exports = (function () {
       selectedScenarioId: {
         get: function() {
           var id = -1;
+
           // check if we can get the parameter from the route
-          if (_.has(this.$route, 'params.scenarioid')) {
+          if (_.has(this.$route, "params.scenarioid")) {
             id = parseInt(this.$route.params.scenarioid);
           }
           return id;
