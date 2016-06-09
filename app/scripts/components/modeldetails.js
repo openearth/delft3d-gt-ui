@@ -362,7 +362,7 @@ var exports = (function () {
       publishModel: function(index) {
         $("#dialog-publish-name").html(this.model.name);
         $("#dialog-publish-target").html(this.publishLevels[index].description);
-        $("#dialog-publish-response-accept").on("click", () => {
+        $("#dialog-publish-response-accept").on("click", function () {
           publishModel(this.model.id, this.publishLevels[index].url)
             .then(() => {
               this.$parent.$broadcast("show-alert", {
@@ -379,7 +379,7 @@ var exports = (function () {
 
           // Hide dialog when user presses this accept.:
           $("#dialog-confirm-publish").modal("hide");
-        });
+        }.bind(this));
 
         // Show the dialog:
         $("#dialog-confirm-publish").modal({});
