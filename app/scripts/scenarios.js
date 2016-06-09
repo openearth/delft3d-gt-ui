@@ -22,15 +22,14 @@ var exports = (function() {
     });
   }
 
-  function deleteScenario(id, options) {
+  function deleteScenario(id) {
     return new Promise(function(resolve, reject) {
       // add extra options to id
-      var postData = _.assign({id: id}, options);
+      //var postData = _.assign({id: id}, options);
 
       $.ajax({
-        url: "/scenario/delete",
-        data: postData,
-        method: "POST"
+        url: "/api/v1/scenario/" + id + "/",
+        method: "DELETE"
       })
         .done(function(data) {
           // no data to return, just call the callback

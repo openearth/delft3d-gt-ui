@@ -74,17 +74,16 @@ var exports = (function () {
     });
   }
 
-  function deleteModel(id, options) {
+  function deleteModel(id) {
     return new Promise(function(resolve, reject) {
       // add extra options to id
-      var postData = _.assign({id: id}, options);
+      //var postData = _.assign({id: id}, options);
 
       $.ajax({
-        url: "/scene/delete",
-        data: postData,
-        method: "POST"
+        url: "/api/v1/scenes/" + id + "/",
+        method: "DELETE"
       })
-        .done(function(data) {
+      .done(function(data) {
           // no data to return, just call the callback
           resolve(data);
         })
@@ -157,11 +156,12 @@ var exports = (function () {
   // Stop a model.
   function stopModel(id) {
     return new Promise(function(resolve, reject) {
+      // Apperantly this has to stay post, but it seems unnecessary.
       $.ajax({
-        url: "/scene/stop",
+        url: "/api/v1/scenes/" + id + "/stop/",
         data: {id: id},
         method: "POST"
-      })
+        })
         .done(function() {
           // no data to return, just call the callback
           resolve();
@@ -174,27 +174,6 @@ var exports = (function () {
     });
 
   }
-
-  function createModel(model) {
-    return new Promise(function(resolve, reject) {
-      $.ajax({
-        url: "/scene/create",
-        data: model,
-        method: "POST"
-      })
-        .done(function() {
-          // no data to return, just call the callback
-          resolve();
-        })
-        .fail(function(error) {
-          // we're done
-          reject(error);
-        });
-
-    });
-
-  }
-
 
   function fetchLog(id) {
     return new Promise(function(resolve, reject) {
@@ -236,7 +215,6 @@ var exports = (function () {
     fetchModels: fetchModels,
     fetchModel: fetchModel,
     fetchLog: fetchLog,
-    createModel: createModel,
     deleteModel: deleteModel,
     startModel: startModel,
     exportModel: exportModel,
