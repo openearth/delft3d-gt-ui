@@ -26,6 +26,8 @@ var exports = (function() {
         var App = Vue.extend({
         });
 
+        $.ajaxSetup({ cache: false });
+
         router = new VueRouter();
 
         router.map({
