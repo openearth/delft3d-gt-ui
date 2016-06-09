@@ -324,7 +324,8 @@ var exports = (function() {
         _.forEach(sections, (section) => {
           var containsSlider = false;
 
-          _.forEach(section.variables, function (variable) {
+
+          _.forEach(section.variables, (variable) => {
             if (variable.type === "slider") {
               containsSlider = true;
               var sliderConfig = {
@@ -342,7 +343,8 @@ var exports = (function() {
               };
               $("#" + variable.id).ionRangeSlider(sliderConfig);
             }
-          }.bind(this));
+          });
+
 
           // Update the sliders for the first time
           if (containsSlider) {
