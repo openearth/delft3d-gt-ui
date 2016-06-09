@@ -65,6 +65,10 @@
   // this is needed because this object is used as a global variable
   // used by other component
   global.ImageAnimation = ImageAnimation;
+  var ConfirmDialog = require("../../app/scripts/components/confirmdialog.js").ConfirmDialog;
+
+  global.ConfirmDialog = ConfirmDialog;
+
   var ModelDetails = require("../../app/scripts/components/modeldetails.js").ModelDetails;
 
   // used by other component
