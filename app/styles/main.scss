@@ -759,3 +759,13 @@ section {
 .model-list {
   background-color: darken($gray-lighter, 5%);
 }
+
+.publish-level {
+  transition-property: all;
+  transition-duration: 500ms;
+  transition-timing-function: ease-in;
+}
+
+.highlighted {
+  background-color: $deltares-groen !important;
+}
