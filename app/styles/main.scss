@@ -362,6 +362,10 @@ $row-height: 32px;
 
 .animation-frame {
   max-width: 100%;
+
+  // Height should be smaller than max viewport height:
+  // Such that it will fit on smaller screens.
+  max-height: 60vh;
 }
 
 // Based upon btn but without all the hover fx, etc
