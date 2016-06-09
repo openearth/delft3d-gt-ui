@@ -10,7 +10,7 @@ var exports = (function () {
       return {
         onConfirm: null,
         onCancel: null
-      }
+      };
     },
     props: {
       "dialogId": {

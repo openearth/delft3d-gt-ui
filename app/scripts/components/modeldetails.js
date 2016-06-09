@@ -373,7 +373,7 @@ var exports = (function () {
             .catch((e) => {
               console.log(e);
             });
-        }.bind(this);
+        };
 
         this.stopDialog.show();
       },
