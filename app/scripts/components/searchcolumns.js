@@ -33,12 +33,17 @@ var exports = (function () {
 
         return null;
       }
+
     },
     events: {
 
       // Got some search results:
       "models-found": function (models) {
         var modelList = this.$refs.models;
+
+        // Remove items which have double id's.
+        // Otherwise we get multiple runs in the list which share the same scenario.
+        models = _.uniqBy(models, "id");
 
         modelList.filter = "search";
         modelList.models = models;

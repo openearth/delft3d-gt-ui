@@ -159,6 +159,7 @@ $row-height: 32px;
 // Override rounded corners, default bootstrap style
 .input-group-addon {
   @include rectangle-corners();
+  min-width: 80px;
 }
 
 .form-control {
@@ -622,6 +623,29 @@ section {
   }
 }
 
+/* thes only apply to the scenario builder (no labels on bars) */
+.scenario-builder {
+  .slider {
+    .irs {
+      margin-right: 6px;
+      height: 30px;
+    }
+    .irs-line,
+    .irs-bar,
+    .irs-bar-edge {
+      top: 10px;
+    }
+    .irs-slider.single {
+      top: 7px;
+    }
+
+    .input-group-addon {
+      border-left: 1px solid $gray-light;
+    }
+  }
+
+}
+
 .search-details,
 .scenario-builder {
   .panel {
@@ -638,8 +662,16 @@ section {
     background-color: $brand-primary;
   }
 
+  .irs-bar-edge {
+    background-color: $brand-primary;
+  }
+
   .irs-slider,
   .irs-bar {
+    background: $brand-primary;
+  }
+
+  .irs-bar-edge {
     background: $brand-primary;
   }
 
@@ -728,4 +760,14 @@ section {
 
 .model-list {
   background-color: darken($gray-lighter, 5%);
+}
+
+.publish-level {
+  transition-property: all;
+  transition-duration: 500ms;
+  transition-timing-function: ease-in;
+}
+
+.highlighted {
+  background-color: $deltares-groen !important;
 }

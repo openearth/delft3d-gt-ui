@@ -95,14 +95,19 @@ var exports = (function () {
 
         }
       },
+
+
       selectedModels: {
         get: function() {
           var result = this.models;
 
           if (this.filter === "scenarios") {
             // is this the best approach, couldn't get a filterkey to work (no access to routing info)
+            var scenario = this.selectedScenarioId;
 
-            result = _.filter(this.models, ["scenario[0]", this.selectedScenarioId]);
+            result = _.filter(this.models, function(o) {
+              return o.scenario.indexOf(scenario) > -1;
+            });
           }
           return result;
         }

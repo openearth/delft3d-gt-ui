@@ -324,12 +324,12 @@ var exports = (function() {
       // Initialize the sliders if present
       initSliders: function() {
         var sections = this.scenarioConfig.sections;
-        var that = this;
 
-        _.forEach(sections, function(section) {
+        _.forEach(sections, (section) => {
           var containsSlider = false;
 
-          _.forEach(section.variables, function(variable) {
+
+          _.forEach(section.variables, (variable) => {
             if (variable.type === "slider") {
               containsSlider = true;
               var sliderConfig = {
@@ -337,23 +337,22 @@ var exports = (function() {
                 "max": section.slider.steps,
                 "from": variable.inputValue,
                 "step": 1,
-                "grid": true,
-                "grid_snap": true,
                 "hide_min_max": true,
                 "hide_from_to": true
               };
 
-              sliderConfig.onChange = function() {
-                that.updateSliders(section);
-                that.checkSliderSectionsValid();
+              sliderConfig.onChange = () => {
+                this.updateSliders(section);
+                this.checkSliderSectionsValid();
               };
               $("#" + variable.id).ionRangeSlider(sliderConfig);
             }
           });
 
+
           // Update the sliders for the first time
           if (containsSlider) {
-            that.updateSliders(section);
+            this.updateSliders(section);
           }
         });
 
