@@ -1,6 +1,6 @@
 <template id="template-model-details">
   <div class="model-details">
-    <h3 >Details <span v-if="(model.id !== undefined)">for &ldquo;<strong>{{model.name}}</strong>&rdquo;</span></h3>
+    <h3>Details <span v-if="(model.id !== undefined)">for &ldquo;<strong>{{model.name}}</strong>&rdquo;</span></h3>
     <div class="alert alert-info" v-if="(model.id === undefined)">
       No run selected.
     </div>
@@ -11,7 +11,7 @@
 
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h2 class="panel-title">Summary </h2>
+          <h2 class="panel-title">Summary</h2>
         </div>
 
         <div class="panel-body" v-if="model">
@@ -41,7 +41,7 @@
                 <td>Progress</td>
                 <td>
 
-                  <div class="progress progress-incell ">
+                  <div class="progress progress-incell">
                     <div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" v-bind:style="{width: progress + '%'}" data-toggle="tooltip" data-placement="top" title="Progress">
                       <span class="sr-only">{{progress}}% Complete</span>
                       <span class="progress-type">{{progress}}%</span>
@@ -52,7 +52,7 @@
 
               <tr class="publish-level">
                 <td>Publish level</td>
-                <td><span>{{ publishLevel }}<span></td>
+                <td><span>{{ publishLevel }}</span></td>
               </tr>
 
               <tr>
@@ -112,7 +112,7 @@
               <button
                  class="form-group btn btn-labeled btn-default"
                  :class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE') || !isLevelEnabled($index) }"
-                 @click="publishModel($index)">
+                 v-on:click="publishModel($index)">
                 <span class="btn-label">
                   <i class="glyphicon" :class="publishLevels[$index].iconClass">
                   </i>
@@ -250,7 +250,7 @@
         </div><!-- /.modal-dialog -->
       </div>
       <!-- REMOVE FROM HERE -->
-    </div>
+
 
     <div class="modal default-hidden fade" id="dialog-confirm-publish" tabindex="-1" role="dialog">
       <div class="modal-dialog">
@@ -278,7 +278,7 @@
       </div><!-- /.modal-dialog -->
     </div>
     <!-- REMOVE FROM HERE -->
-  </div>
 
   </div>
+
 </template>
