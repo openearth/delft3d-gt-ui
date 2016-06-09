@@ -28,7 +28,7 @@ var exports = (function() {
       //var postData = _.assign({id: id}, options);
 
       $.ajax({
-        url: "/api/v1/scenario/" + id + "/",
+        url: "/api/v1/scenarios/" + id + "/",
         method: "DELETE"
       })
         .done(function(data) {
