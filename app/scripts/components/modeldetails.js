@@ -250,10 +250,10 @@ var exports = (function () {
 
         // Get array of checked download options.
         var downloadOptions = $(".downloadoption:checked").map(function() {
-          return $(this).val();
+          return "options=" + $(this).val();
         }).get(); //
 
-        window.open("/scene/export?id=" + id + "&options=" + downloadOptions.join(";"));
+        window.open("/api/v1/scenes/" + id + "/export/?" + downloadOptions.join("&"));
       },
       // Remove item, based on incoming modelinfo.
       removeModel: function() {
