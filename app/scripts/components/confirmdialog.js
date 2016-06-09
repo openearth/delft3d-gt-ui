@@ -43,6 +43,10 @@ var exports = (function () {
 
       hide: function() {
         $("#" + this.dialogId + "-dialog").modal("hide");
+      },
+
+      showAlert: function(isVisible) {
+        $("#" + this.dialogId + "-dialog-alert").toggle(isVisible);
       }
     }
 

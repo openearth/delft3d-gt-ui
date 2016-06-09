@@ -1,4 +1,4 @@
-/* global ImageAnimation, fetchModel, fetchLog, deleteModel, startModel, exportModel, stopModel, publishModel, router */
+/* global ImageAnimation, ConfirmDialog, getDialog, fetchModel, fetchLog, deleteModel, startModel, exportModel, stopModel, publishModel, router */
 var exports = (function () {
   "use strict";
 
@@ -7,8 +7,8 @@ var exports = (function () {
 
     components: {
       // <my-component> will only be available in Parent's template
-      "image-animation": ImageAnimation
-
+      "image-animation": ImageAnimation,
+      "confirm-dialog": ConfirmDialog
     },
 
     // Show the details of one model
@@ -37,7 +37,10 @@ var exports = (function () {
             "description": "Public"
           }
         ],
-        waitingForUpdate: false
+        waitingForUpdate: false,
+        publishDialog: null,
+        deleteDialog: null,
+        stopDialog: null
       };
 
     },
@@ -179,6 +182,18 @@ var exports = (function () {
           }
           return "Unknown";
         }
+      },
+
+      nextPublishLevel: {
+        cache: false,
+        get: function() {
+          var index = this.indexOfPublishLevel() + 1;
+
+          if (index >= 0 && index < this.publishLevels.length) {
+            return this.publishLevels[index].description;
+          }
+          return "Unknown";
+        }
       }
     },
     route: {
@@ -246,20 +261,21 @@ var exports = (function () {
         // keep track of the scenario before deletion
         var scenarioId = this.scenario;
 
-        $("#dialog-remove-name").html(this.model.name);
         // Do we also remove all the additional files? This is based on the checkmark.
         // if deletefiles is true, we will tell the server that we want to remove these files.
-        var deletefiles = true; // We do not provide this option anymore. LEaving it here shortly if someone changes his or her mind: $("#simulation-control-check-delete-files").is(":checked");
+        var deletefiles = false; // We do not provide this option anymore. LEaving it here shortly if someone changes his or her mind: $("#simulation-control-check-delete-files").is(":checked");
 
 
         var options = {
           "deletefiles": deletefiles
         };
 
-        // User accepts deletion:
-        $("#dialog-remove-response-accept").on("click", () => {
-          var deletedId = this.model.id;
+        if (!this.deleteDialog) {
+          this.deleteDialog = getDialog(this, "confirm-dialog", "delete");
+        }
 
+        this.deleteDialog.onConfirm = function() {
+          var deletedId = this.model.id;
 
           deleteModel(deletedId, options)
             .then(() => {
@@ -274,9 +290,6 @@ var exports = (function () {
               console.log("model deletion failed", e);
             });
 
-          // Hide dialog when user presses this accept.:
-          $("#dialog-confirm-delete").modal("hide");
-
           // key values correspond to url parameters which are lowercase
           var params = {
             modelid: -1,
@@ -289,13 +302,13 @@ var exports = (function () {
             params: params
           });
 
-        });
+        }.bind(this);
 
         // We also show an extra warning in the dialog, if user chooses to remove additional files.
-        $("#dialog-confirm-delete .msg-delete-extra").toggle(deletefiles);
+        this.deleteDialog.showAlert(deletefiles);
 
         // Show the dialog:
-        $("#dialog-confirm-delete").modal({});
+        this.deleteDialog.show();
 
 
       },
@@ -341,28 +354,36 @@ var exports = (function () {
 
       // Stop a model.
       stopModel: function() {
-
         var deletedId = this.model.id;
 
-        stopModel(deletedId)
-          .then(() => {
-            this.$parent.$broadcast("show-alert", {
-              message: "Stopping run... It might take a moment before the view is updated.",
-              showTime: 5000,
-              type: "success"
+        if (!this.stopDialog) {
+          this.stopDialog = getDialog(this, "confirm-dialog", "stop");
+        }
+
+        this.stopDialog.onConfirm = function() {
+          stopModel(deletedId)
+            .then(() => {
+              this.$parent.$broadcast("show-alert", {
+                message: "Stopping run... It might take a moment before the view is updated.",
+                showTime: 5000,
+                type: "success"
+              });
+
+            })
+            .catch((e) => {
+              console.log(e);
             });
+        }.bind(this);
 
-          })
-          .catch((e) => {
-            console.log(e);
-          });
-
+        this.stopDialog.show();
       },
 
       publishModel: function(index) {
-        $("#dialog-publish-name").html(this.model.name);
-        $("#dialog-publish-target").html(this.publishLevels[index].description);
-        $("#dialog-publish-response-accept").on("click", () => {
+        if (!this.publishDialog) {
+          this.publishDialog = getDialog(this, "confirm-dialog", "publish");
+        }
+
+        this.publishDialog.onConfirm = function() {
           publishModel(this.model.id, this.publishLevels[index].url)
             .then(() => {
               this.$parent.$broadcast("show-alert", {
@@ -376,13 +397,10 @@ var exports = (function () {
             .catch(e => {
               console.log(e);
             });
+        }.bind(this);
 
-          // Hide dialog when user presses this accept.:
-          $("#dialog-confirm-publish").modal("hide");
-        });
-
-        // Show the dialog:
-        $("#dialog-confirm-publish").modal({});
+        // Show the dialog
+        this.publishDialog.show();
       },
 
       downloadOptionsChange: function() {
