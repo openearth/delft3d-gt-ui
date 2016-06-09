@@ -7,18 +7,19 @@ var exports = (function () {
   var ModelList = Vue.component("model-list", {
 
     template: "#template-model-list",
-    props: ["filter"],
     data: function() {
       return {
         models: []
       };
     },
+    props: ["filter"],
     ready: function() {
       // TODO: this only works if the modellist is active. If you go directly to a model it does not work.
       // Fix fetchmodel (and the server) so it actually fetches 1 model.
       // fetch now
       fetchModels()
         .then((data) => {
+          console.log("fetched models", data);
           this.models = data;
         });
 
@@ -84,8 +85,12 @@ var exports = (function () {
       },
       selectedScenarioId: {
         get: function() {
-          var id = parseInt(this.$route.params.scenarioid);
+          var id = -1;
 
+          // check if we can get the parameter from the route
+          if (_.has(this.$route, "params.scenarioid")) {
+            id = parseInt(this.$route.params.scenarioid);
+          }
           return id;
 
         }
@@ -96,14 +101,8 @@ var exports = (function () {
 
           if (this.filter === "scenarios") {
             // is this the best approach, couldn't get a filterkey to work (no access to routing info)
-            var scenarioId = this.selectedScenarioId;
 
-            result = _.filter(this.models, function(o) {
-              return _.find(o.scenario, function(b) {
-                return b.id === scenarioId;
-              });
-            });
-
+            result = _.filter(this.models, ["scenario[0]", this.selectedScenarioId]);
           }
           return result;
         }

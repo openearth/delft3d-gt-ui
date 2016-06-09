@@ -7,7 +7,7 @@
     <title>Delft3D-GT Dashboard</title>
 
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <!-- Place favicon.ico in the root directory -->
+    <link rel="icon" type="image/png" href="apple-touch-icon.png" />
 
     <!-- build:css styles/vendor.css -->
     <!-- bower:css -->
@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
     <link rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
     <link rel="stylesheet" href="/bower_components/ion.rangeSlider/css/ion.rangeSlider.css" />
-    <link rel="stylesheet" href="/bower_components/ion.rangeSlider/css/ion.rangeSlider.skinHTML5.css" />
+    <link rel="stylesheet" href="/bower_components/ion.rangeSlider/css/ion.rangeSlider.skinFlat.css" />
     <link rel="stylesheet" href="/bower_components/bootstrap-select/dist/css/bootstrap-select.css" />
     <!-- endbower -->
     <!-- endbuild -->
@@ -111,9 +111,8 @@
     <!-- First the functions that we use to exchange data and validate it  -->
     <!-- these should have corresponding tests -->
     <!-- no vue code in here.... -->
-    <!-- validate data -->
-    <script src="scripts/inputvalidation.js"></script>
     <!-- data scripts: these should fetch data and allow to retrieve it from the components (see store docs in vue)-->
+    <script src="scripts/hyperlinkedmodels.js"></script>
     <script src="scripts/models.js"></script>
     <script src="scripts/templates.js"></script>
     <script src="scripts/scenarios.js"></script>
@@ -126,8 +125,9 @@
     <script src="scripts/components/modeldetails.js"></script>
     <script src="scripts/components/modellist.js"></script>
     <script src="scripts/components/scenariolist.js"></script>
+    <script src="scripts/components/searchdetails.js"></script>
+    <script src="scripts/components/scenariodelete.js"></script>
     <script src="scripts/components/searchlist.js"></script>
-	<script src="scripts/components/searchdetails.js"></script>
     <script src="scripts/components/searchcolumns.js"></script>
     <script src="scripts/components/findercolumns.js"></script>
     <script src="scripts/components/scenariobuilder.js"></script>
@@ -141,12 +141,5 @@
     <!-- this can be very vue specific vuex, vue-router etc... -->
     <script src="scripts/app.js"></script>
 
-    <!-- These can be merged to models.js and components -->
-    <script src="scripts/ui.js"></script>
-    <script src="scripts/data/message-scene-list.js"></script>
-    <script src="scripts/data/message-scene-delete.js"></script>
-    <script src="scripts/data/message-scene-create.js"></script>
-    <script src="scripts/data/message-scene-changestate.js"></script>
-    <!-- endbuild -->
   </body>
 </html>

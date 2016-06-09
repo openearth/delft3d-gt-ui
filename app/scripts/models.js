@@ -1,4 +1,4 @@
-/* globals */
+/* global  */
 
 // Store items in this cache
 var itemsCache = {};
@@ -14,18 +14,12 @@ var exports = (function () {
    */
   function fetchModels() {
     return new Promise(function(resolve, reject) {
-
-      $.ajax("/scene/list", {cache: false})
+      $.getJSON("/api/v1/scenes/", {})
         .done(function(json) {
-
-          itemsCache = {};
-
-          // copy object
-          _.each(json.scene_list, function(model) {
+          _.map(json, function(model) {
             itemsCache[model.id] = model;
           });
-
-          resolve(json.scene_list);
+          resolve(json);
         })
         .fail(function(error) {
           reject(error);

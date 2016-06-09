@@ -32,7 +32,7 @@ var exports = (function () {
       data: function(transition) {
         fetchScenarios()
           .then((data) => {
-            this.scenarios = data.scenario_list;
+            this.scenarios = data;
             transition.next();
           });
       }
@@ -69,7 +69,7 @@ var exports = (function () {
       updateScenarios: function() {
         fetchScenarios()
           .then((data) => {
-            this.scenarios = data.scenario_list;
+            this.scenarios = data;
           });
 
 

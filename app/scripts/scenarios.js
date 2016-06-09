@@ -10,13 +10,9 @@ var exports = (function() {
     return new Promise(function(resolve, reject) {
 
       //Load test template data:
-      $.ajax({
-        //url: "sampledata/template.json",
-        url: "/scenario/list",
-        method: "GET",
-        cache: false
-      })
+      $.getJSON("/api/v1/scenarios/")
         .done(function(data) {
+          console.log("scenarios", data);
           resolve(data);
         })
         .fail(function(error) {
