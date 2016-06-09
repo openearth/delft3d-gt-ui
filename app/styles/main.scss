@@ -623,6 +623,7 @@ section {
   }
 }
 
+/* thes only apply to the scenario builder (no labels on bars) */
 .scenario-builder {
   .slider {
     .irs {
@@ -718,7 +719,8 @@ section {
     }
 
     // A href becomes block
-    a, .search-result {
+    a,
+    .search-result {
       @include truncate();
       // hide the selection focus (dotted lines)
       color: $black;

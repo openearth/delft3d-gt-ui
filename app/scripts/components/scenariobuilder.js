@@ -248,8 +248,12 @@ var exports = (function() {
               });
 
               parameters[variable.id] = {
-                "values": valuearray,
-                "units": variable.units
+                values: valuearray,
+                // we need these in the table
+                // if they are not available they should drop during submission
+                units: variable.units,
+                name: variable.name,
+                description: variable.description
               };
             }
           });
