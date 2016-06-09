@@ -622,7 +622,8 @@ section {
   }
 }
 
-.search-details, .scenario-builder {
+.search-details,
+.scenario-builder {
   .panel {
     margin: 0 6px;
   }
@@ -686,7 +687,8 @@ section {
     }
 
     // A href becomes block
-    a, .search-result {
+    a,
+    .search-result {
       @include truncate();
       // hide the selection focus (dotted lines)
       color: $black;
