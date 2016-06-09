@@ -72,7 +72,7 @@
                               [{{ variable.validators.min }} - {{ variable.validators.max }}]
                             </span>
                           </label>
-                          <div class="input-group">
+                          <div class="input-group" :class="{slider: variable.type === 'slider'}">
                             <!-- two types of input for now: textarea and other -->
                             <!-- other first -->
                             <template v-if="variable.type !== 'textarea'">
@@ -115,11 +115,11 @@
                             </template>
                             <!-- if we add this to 1 we need to add it to all, bug in bootstrap -->
                             <span v-if="variable.type !== 'slider'"
-                                  class="input-group-addon" style="min-width: 80px" >
+                                  class="input-group-addon" >
                                {{ variable.units || '-' }}
                             </span>
-                            <span v-else class="input-group-addon" style="min-width: 80px" >
-                               {{ variable.value }} {{ variable.units || '-' }}
+                            <span v-else class="input-group-addon" >
+                               {{ variable.value }}{{ variable.units || '-' }}
                             </span>
 
                           </div>
