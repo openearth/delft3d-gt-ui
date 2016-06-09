@@ -136,7 +136,6 @@
               <tr>
                 <th>Parameter</th>
                 <th>Value</th>
-                <th>Multiple runs</th>
                 <th>Units</th>
               </tr>
             </thead>
@@ -144,10 +143,6 @@
               <tr v-for="(key, param) in model.parameters">
                 <td>{{ (param.name || key) }}</td>
                 <td>{{param.value}}</td>
-                <td>
-                  <span v-if="param.useautostep === true">Yes</span>
-                  <span v-else>No</span>
-                </td>
                 <td>
                   <!-- we add this as we might have some older models not having the units var yet. -->
                   <span v-if="param.units !== undefined">
