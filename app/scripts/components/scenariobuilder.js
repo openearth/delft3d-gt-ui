@@ -106,6 +106,7 @@ var exports = (function() {
           var templateId = parseInt(this.$route.query.template);
 
           var template = _.first(_.filter(this.availableTemplates, ["id", templateId]));
+
           console.log("setting template", template);
           this.selectTemplate(template);
         }
