@@ -179,8 +179,9 @@ var exports = (function() {
     },
     methods: {
       selectTemplate: function(template) {
+        var doUpdates = true;
         if (this.currentSelectedId === template.id) {
-          return;
+          doUpdates = false;
         }
 
         this.currentSelectedId = template.id;
@@ -189,19 +190,25 @@ var exports = (function() {
         this.scenarioConfig = this.prepareScenarioConfig(template);
 
         // Init sliders if present
-        this.initAfterDomUpdate();
+        if (doUpdates) {
+          this.initAfterDomUpdate();
+          // don't replace previous input
+          this.updateWithQueryParameters();
+        }
 
-        this.updateWithQueryParameters();
 
         // set the selected template
         this.template = template;
 
         // Initialize the tooltips:
         // We do this after the DOM update.
-        this.$nextTick(function () {
-          $("[data-toggle='tooltip']").tooltip();
-          $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
-        });
+        if (doUpdates) {
+          this.$nextTick(function () {
+            $("[data-toggle='tooltip']").tooltip();
+            $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
+          });
+
+        }
       },
 
       // Return a unique id for the variable that is validated.
