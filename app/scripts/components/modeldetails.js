@@ -258,6 +258,7 @@ var exports = (function () {
       // Remove item, based on incoming modelinfo.
       removeModel: function() {
 
+        console.log("Removemodel");
         // keep track of the scenario before deletion
         var scenarioId = this.scenario;
 
@@ -270,9 +271,10 @@ var exports = (function () {
           "deletefiles": deletefiles
         };
 
-        if (!this.deleteDialog) {
-          this.deleteDialog = getDialog(this, "confirm-dialog", "delete");
-        }
+        // This if statement caused thge delete to only work once:
+        //if (!this.deleteDialog) {
+        this.deleteDialog = getDialog(this, "confirm-dialog", "delete");
+        //}
 
         this.deleteDialog.onConfirm = function() {
           var deletedId = this.model.id;

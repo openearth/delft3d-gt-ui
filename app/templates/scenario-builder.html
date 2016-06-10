@@ -185,7 +185,7 @@
             <div class="row" >
               <div class="col-sm-12">
                 <div class="alert alert-info" v-bind:class="{ 'alert-warning': totalRuns > 20}" role="alert">
-                  <p class="lead">Expected runs: <strong>~{{totalRuns}}</strong></p>
+                  <p class="lead">Expected runs: <strong>{{totalRuns}}</strong></p>
                   <p v-if="totalRuns > 20">
                     At the moment you cannot submit more than 20 runs in one scenario.
                   </p>

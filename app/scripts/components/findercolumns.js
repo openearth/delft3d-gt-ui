@@ -21,7 +21,12 @@ var exports = (function () {
       // Get the current selected scenarioid from the routing URL
       selectedScenarioId: {
         get: function() {
-          return parseInt(this.$route.params.scenarioid);
+          // Make sure there is an id, otherwise return -1;
+          if (this.$route.params !== undefined && this.$route.params.scenarioid !== undefined) {
+            return parseInt(this.$route.params.scenarioid);
+          }
+
+          return -1;
 
         }
       },
@@ -95,6 +100,7 @@ var exports = (function () {
           name: "scenarios-create",
           params: {},
           query: {
+            "template": scenario.template,
             "parameters": JSON.stringify(parameters),
             "name": _.get(this.scenarioList.selectedScenario, "name")
           }
