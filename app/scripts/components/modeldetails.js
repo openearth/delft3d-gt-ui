@@ -271,8 +271,9 @@ var exports = (function () {
           "deletefiles": deletefiles
         };
 
+        // This if statement caused thge delete to only work once:
         //if (!this.deleteDialog) {
-          this.deleteDialog = getDialog(this, "confirm-dialog", "delete");
+        this.deleteDialog = getDialog(this, "confirm-dialog", "delete");
         //}
 
         var that = this;

@@ -22,7 +22,7 @@ var exports = (function () {
       selectedScenarioId: {
         get: function() {
           // Make sure there is an id, otherwise return -1;
-         if (this.$route.params !== undefined && this.$route.params.scenarioid !== undefined) {
+          if (this.$route.params !== undefined && this.$route.params.scenarioid !== undefined) {
             return parseInt(this.$route.params.scenarioid);
           }
 
