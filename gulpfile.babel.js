@@ -10,6 +10,9 @@ import concat from "gulp-concat";
 import gulpLoadPlugins from "gulp-load-plugins";
 import istanbul from "gulp-istanbul";
 
+// Use this to debug the contents of a pipe
+// import filelog from 'gulp-filelog';
+
 import mainBowerFiles from "gulp-main-bower-files";
 
 // other stuff
@@ -31,13 +34,22 @@ processOptionalArguments();
 
 // Proxy paths which we map to a different source, for testing locally or
 // running the actual build.
-var paths = ["runs", "createrun", "deleterun", "dorun", "scene", "files", "scenario", "scenario/template"];
+var paths = [
+  "api", "static", "login", "logout",
+  // old apis
+  "runs", "createrun", "deleterun", "dorun", "scene", "files", "scenario", "scenario/template"
+];
+
+if (args.develop) {
+  // if we are running in develop mode use only local files, no proxies;
+  paths = [];
+}
 
 var proxies = _.map(paths, (path) => {
   var proxyItem = null;
 
   if (apiServer) {
-    proxyItem = proxyMiddleware("/" + path, {target: apiServer});
+    proxyItem = proxyMiddleware("/" + path, {target: apiServer, secure: false});
   }
 
   return proxyItem;

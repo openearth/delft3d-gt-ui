@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>delft3d gt ui</title>
+    <title>Delft3D-GT Dashboard</title>
 
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <!-- Place favicon.ico in the root directory -->
@@ -12,6 +12,11 @@
     <!-- build:css styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="/bower_components/bootstrap-combobox/css/bootstrap-combobox.css" />
+    <link rel="stylesheet" href="/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
+    <link rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" href="/bower_components/ion.rangeSlider/css/ion.rangeSlider.css" />
+    <link rel="stylesheet" href="/bower_components/ion.rangeSlider/css/ion.rangeSlider.skinFlat.css" />
+    <link rel="stylesheet" href="/bower_components/bootstrap-select/dist/css/bootstrap-select.css" />
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -30,7 +35,7 @@
         <![endif]-->
 
     <div class="container">
-      <div class="row">
+      <div class="row row-top-margin">
         <div class="col-xs-6 col-xs-offset-3">
           <div class="panel panel-default">
             <div class="panel-heading">
@@ -50,7 +55,6 @@
                 </div>
                 <div class="form-group">
                   <label for="id_password">Password</label>
-                  <div class="pull-right"><a href="/forgot">Forgot password?</a></div>
                   <input type="password" class="form-control" id="id_password" name="password" placeholder="Password">
                 </div>
                 <button type="submit" class="btn btn-success">Sign in</button>
@@ -72,6 +76,13 @@
     <script src="/bower_components/vue/dist/vue.js"></script>
     <script src="/bower_components/vue-router/dist/vue-router.js"></script>
     <script src="/bower_components/bootstrap-combobox/js/bootstrap-combobox.js"></script>
+    <script src="/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.js"></script>
+    <script src="/bower_components/vue-validator/dist/vue-validator.js"></script>
+    <script src="/bower_components/moment/moment.js"></script>
+    <script src="/bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js"></script>
+    <script src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="/bower_components/ion.rangeSlider/js/ion.rangeSlider.js"></script>
+    <script src="/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 

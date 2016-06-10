@@ -165,6 +165,30 @@ var exports = (function () {
 
       },
 
+      gotoFirstFrame: function() {
+
+        this.stopImageFrame();
+        this.currentAnimationIndex = 0;
+
+      },
+
+
+      gotoLastFrame: function() {
+
+        this.stopImageFrame();
+
+        var imgs = this.model.info[this.currentAnimationKey];
+
+        if (imgs !== undefined) {
+          this.currentAnimationIndex = imgs.images.length - 1;
+        }
+
+        // Clamp to make sure it does not go below 0
+        if (this.currentAnimationIndex < 0) {
+          this.currentAnimationIndex = 0;
+        }
+      },
+
       nextImageFrame: function() {
         // Check if an animation key has been set. If not, we bail out.
         if (this.currentAnimationKey.length === 0) {
@@ -183,7 +207,9 @@ var exports = (function () {
         if (imgs !== undefined) {
           // Probably wrap.
           if (this.currentAnimationIndex >= imgs.images.length) {
-            this.currentAnimationIndex = 0;
+            // 2016-06-08 we do not wrap anymore. We just go to the last frame and stop.
+            //this.currentAnimationIndex = 0;
+            this.gotoLastFrame();
           }
         }
       }

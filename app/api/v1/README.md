@@ -1,0 +1,1 @@
+This directory contains a static version of the API for developing purposes. Please keep this directory up to date with the development environment by running curl for the templates in  http://dl-ng004.xtr.deltares.nl/api/v1/?format=json and storing them as the corresponding directory (note the jsons as index.html to keep compatible with django).

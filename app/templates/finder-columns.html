@@ -1,105 +1,94 @@
 <template id="template-finder-columns">
-  <div class="full-height">
+  <div class="finder-columns">
+    <div class="full-height">
 
-    <!-- the grey toolbar for main screen-->
-    <nav class="navbar navbar-default navbar-static-top tool-bar ">
-      <div class="container-fluid">
-        <div class="row" >
-          <div class="col-xs-2">
-            <div class="btn-toolbar">
+      <!-- the grey toolbar for main screen-->
+      <nav class="navbar navbar-default navbar-static-top tool-bar ">
+        <div class="container-fluid">
+          <div class="row" >
+            <div class="col-xs-2">
+              <div class="btn-toolbar">
 
-              <button v-on:click="removeScenario(model)" class="btn btn-primary pull-right" v-bind:class="{ 'inputdisabled': selectedScenarioId === -1 || isNaN(selectedScenarioId) === true || selectedScenarioId === undefined}" >Delete</button>
-              <a href="#/scenarios/create" class="btn btn-primary pull-right" >Add</a>
+                <button title="delete" v-on:click="removeScenario(model)" class="btn btn-primary pull-right" v-bind:class="{ 'inputdisabled': selectedScenarioId === -1 || isNaN(selectedScenarioId) === true || selectedScenarioId === undefined || scenarioList.selectedScenario === undefined}" >
+                  <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </button>
+                <button title="clone"  v-on:click="cloneScenario()" class="btn btn-primary pull-right" v-bind:class="{ 'inputdisabled': selectedScenarioId === -1 || isNaN(selectedScenarioId) === true || selectedScenarioId === undefined || scenarioList.selectedScenario === undefined}" >
+                  <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
+                </button>
+                <a title="create" href="#/scenarios/create" class="btn btn-primary pull-right" >
+                  <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+                </a>
 
-            </div>
-          </div>
-
-          <div class="col-xs-3">
-            <!-- we hide this for now. Please do not remove this comment
-            <div class="btn-toolbar">
-              <button class="btn btn-primary pull-right">Add runs</button>
-              <button class="btn btn-primary pull-right">Delete</button>
-            </div>
-            -->
-          </div>
-
-          <div class="col-xs-7">
-            &nbsp;
-          </div>
-        </div>
-      </div>
-    </nav>
-
-
-
-    <alert-message></alert-message>
-
-    <div class="container-fluid full-height">
-        <div class="row full-height">
-
-
-          <div class="col-sm-2 column column-scenario-list full-height">
-
-            <h3>Scenarios</h3>
-
-
-            <div class="row" id="scenario-list">
-
-              <div class="column-header"></div>
-
-              <!-- scenarios/list -->
-              <scenario-list></scenario-list>
-            </div>
-          </div>
-
-          <div class="col-sm-3 column column-runs-list full-height">
-
-            <h3>Runs</h3>
-
-              <div class="row" id="runs-list">
-
-                <div class="column-header"></div>
-
-                <model-list filter="scenarios"></model-list>
               </div>
             </div>
 
-            <div class="col-sm-7 column column-details full-height">
-              <model-details></model-details>
+            <div class="col-xs-3">
+              <!-- we hide this for now. Please do not remove this comment
+                   <div class="btn-toolbar">
+                     <button class="btn btn-primary pull-right">Add runs</button>
+                     <button class="btn btn-primary pull-right">Delete</button>
+                   </div>
+                   -->
             </div>
 
-           </div>
+            <div class="col-xs-7">
+              &nbsp;
+            </div>
+          </div>
         </div>
+      </nav>
+
+
+
+      <alert-message></alert-message>
+
+      <div class="container-fluid full-height">
+        <div class="row full-height">
+
+
+          <div class="col-sm-2 column full-height">
+            <scenario-list></scenario-list>
+
+          </div>
+          <div class="col-sm-3 column full-height">
+            <model-list filter="scenarios"></model-list>
+          </div>
+
+          <div class="col-sm-7 column full-height">
+            <model-details></model-details>
+          </div>
+
+        </div>
+      </div>
     </div>
 
     <!-- MODALS should be turned into an comopnent?-->
 
-      <div class="modal default-hidden fade" id="dialog-confirm-delete-scenario" tabindex="-1" role="dialog">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title">Remove scenario <!--'<span id="dialog-remove-scenario-name"></span>'-->?</h4>
-            </div>
-            <div class="modal-body">
-              <p>
-                Are you sure you want to remove this scenario?
-              </p>
+    <div class="modal default-hidden fade" id="dialog-confirm-delete-scenario" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Remove scenario <!--'<span id="dialog-remove-scenario-name"></span>'-->?</h4>
+          </div>
+          <div class="modal-body">
+            <p>
+              Are you sure you want to remove this scenario?
+            </p>
 
-              <div class="alert alert-info" role="alert">
-                <strong>All</strong> associated runs will also be removed.
-              </div>
-
+            <div class="alert alert-info" role="alert">
+              <strong>All</strong> associated runs will also be removed.
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-warning" id="dialog-remove-scenario-response-accept">Delete</button>
-              <button type="button" class="btn btn-primary" id="dialog-remove-scenario-response-cancel" data-dismiss="modal">Cancel</button>
-            </div>
-          </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-      </div>
-      <!-- REMOVE FROM HERE -->
 
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-warning" id="dialog-remove-scenario-response-accept">Delete</button>
+            <button type="button" class="btn btn-primary" id="dialog-remove-scenario-response-cancel" data-dismiss="modal">Cancel</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+    <!-- REMOVE FROM HERE -->
 
   </div>
 

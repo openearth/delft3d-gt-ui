@@ -7,18 +7,19 @@ var exports = (function () {
   var ModelList = Vue.component("model-list", {
 
     template: "#template-model-list",
-    props: ["filter"],
     data: function() {
       return {
         models: []
       };
     },
+    props: ["filter"],
     ready: function() {
       // TODO: this only works if the modellist is active. If you go directly to a model it does not work.
       // Fix fetchmodel (and the server) so it actually fetches 1 model.
       // fetch now
       fetchModels()
         .then((data) => {
+          console.log("fetched models", data);
           this.models = data;
         });
 
@@ -59,7 +60,14 @@ var exports = (function () {
       // Get the current selected modelid from the routing URL
       selectedModelId: {
         get: function() {
-          var id = parseInt(this.$route.params.modelid);
+
+          var id = -1;
+
+          // If we have a routing var, we use it:
+          if (this.$route !== undefined && this.$route.params.modelid !== undefined) {
+
+            id = parseInt(this.$route.params.modelid);
+          }
 
           if (id === -1) {
             console.log("choose the first from selected models", this.selectedModels);
@@ -77,12 +85,18 @@ var exports = (function () {
       },
       selectedScenarioId: {
         get: function() {
-          var id = parseInt(this.$route.params.scenarioid);
+          var id = -1;
 
+          // check if we can get the parameter from the route
+          if (_.has(this.$route, "params.scenarioid")) {
+            id = parseInt(this.$route.params.scenarioid);
+          }
           return id;
 
         }
       },
+
+
       selectedModels: {
         get: function() {
           var result = this.models;
@@ -91,14 +105,17 @@ var exports = (function () {
             // is this the best approach, couldn't get a filterkey to work (no access to routing info)
             var scenario = this.selectedScenarioId;
 
-            result = _.filter(this.models, ["scenario", scenario]);
-
+            result = _.filter(this.models, function(o) {
+              return o.scenario.indexOf(scenario) > -1;
+            });
           }
           return result;
         }
       }
     },
     methods: {
+
+
       selectModel: function(id) {
         var params = {
           modelid: id,
@@ -109,7 +126,8 @@ var exports = (function () {
           console.log("no model yet selected");
         }
 
-        console.log("using router", router, "to go to", params, this);
+        console.log("using router", params);
+
         // TODO: keep routing logic in main window
         router.go({
           name: "finder-columns",

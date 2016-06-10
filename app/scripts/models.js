@@ -1,3 +1,5 @@
+/* global  */
+
 // Store items in this cache
 var itemsCache = {};
 
@@ -12,18 +14,12 @@ var exports = (function () {
    */
   function fetchModels() {
     return new Promise(function(resolve, reject) {
-
-      $.ajax("/scene/list", {cache: false})
+      $.getJSON("/api/v1/scenes/", {})
         .done(function(json) {
-
-          itemsCache = {};
-
-          // copy object
-          _.each(json.scene_list, function(model) {
+          _.map(json, function(model) {
             itemsCache[model.id] = model;
           });
-
-          resolve(json.scene_list);
+          resolve(json);
         })
         .fail(function(error) {
           reject(error);
@@ -39,7 +35,14 @@ var exports = (function () {
    * @return {Promise}
    */
   function fetchModel(id) {
+
+
+
     return new Promise(function(resolve, reject) {
+
+      if (isNaN(id) === true) {
+        return reject(new Error("Model not found, even after updating"));
+      }
 
       if (_.has(itemsCache, id)) {
         // we already have the model, return it
@@ -61,7 +64,7 @@ var exports = (function () {
               resolve(secondTryModel);
             } else {
               // still not here....
-              reject(new Error("Model not found, even after updating "));
+              reject(new Error("Model not found, even after updating"));
             }
           })
           .catch((error) => {
@@ -71,17 +74,16 @@ var exports = (function () {
     });
   }
 
-  function deleteModel(id, options) {
+  function deleteModel(id) {
     return new Promise(function(resolve, reject) {
       // add extra options to id
-      var postData = _.assign({id: id}, options);
+      //var postData = _.assign({id: id}, options);
 
       $.ajax({
-        url: "/scene/delete",
-        data: postData,
-        method: "POST"
+        url: "/api/v1/scenes/" + id + "/",
+        method: "DELETE"
       })
-        .done(function(data) {
+      .done(function(data) {
           // no data to return, just call the callback
           resolve(data);
         })
@@ -93,11 +95,50 @@ var exports = (function () {
     });
 
   }
+
   function startModel(id) {
+
     return new Promise(function(resolve, reject) {
       $.ajax({
-        url: "/scene/start",
-        data: {id: id},
+        url: "/api/v1/scenes/" + id + "/start/",
+        method: "POST"
+      })
+        .done(function() {
+          // no data to return, just call the callback
+          resolve();
+        })
+        .fail(function(error) {
+          // we're done
+          reject(error);
+        });
+
+    });
+  }
+
+  function publishModel(id, target) {
+
+    return new Promise(function(resolve, reject) {
+      $.ajax({
+        url: "/api/v1/scenes/" + id + "/publish_" + target + "/",
+        method: "POST"
+      })
+        .done(function() {
+          // no data to return, just call the callback
+          resolve();
+        })
+        .fail(function(error) {
+          // we're done
+          reject(error);
+        });
+
+    });
+  }
+
+  function exportModel(id) {
+    return new Promise(function(resolve, reject) {
+      $.ajax({
+        url: "/api/v1/scenes/" + id + "/start/",
+        data: {workflow: "export"},
         method: "POST"
       })
         .done(function() {
@@ -115,11 +156,12 @@ var exports = (function () {
   // Stop a model.
   function stopModel(id) {
     return new Promise(function(resolve, reject) {
+      // Apperantly this has to stay post, but it seems unnecessary.
       $.ajax({
-        url: "/scene/stop",
+        url: "/api/v1/scenes/" + id + "/stop/",
         data: {id: id},
         method: "POST"
-      })
+        })
         .done(function() {
           // no data to return, just call the callback
           resolve();
@@ -132,27 +174,6 @@ var exports = (function () {
     });
 
   }
-
-  function createModel(model) {
-    return new Promise(function(resolve, reject) {
-      $.ajax({
-        url: "/scene/create",
-        data: model,
-        method: "POST"
-      })
-        .done(function() {
-          // no data to return, just call the callback
-          resolve();
-        })
-        .fail(function(error) {
-          // we're done
-          reject(error);
-        });
-
-    });
-
-  }
-
 
   function fetchLog(id) {
     return new Promise(function(resolve, reject) {
@@ -194,10 +215,11 @@ var exports = (function () {
     fetchModels: fetchModels,
     fetchModel: fetchModel,
     fetchLog: fetchLog,
-    createModel: createModel,
     deleteModel: deleteModel,
     startModel: startModel,
-    stopModel: stopModel
+    exportModel: exportModel,
+    stopModel: stopModel,
+    publishModel: publishModel
   };
 }());
 

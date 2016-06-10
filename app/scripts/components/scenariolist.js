@@ -32,7 +32,7 @@ var exports = (function () {
       data: function(transition) {
         fetchScenarios()
           .then((data) => {
-            this.scenarios = data.scenario_list;
+            this.scenarios = data;
             transition.next();
           });
       }
@@ -42,13 +42,29 @@ var exports = (function () {
       // Get the current selected scenarioid from the routing URL
       selectedScenarioId: {
         get: function() {
-          return this.$route.params.scenarioid;
+
+          // Make sure there is an id, otherwise return -1;
+          if (this.$route.params !== undefined && this.$route.params.scenarioid !== undefined) {
+            return parseInt(this.$route.params.scenarioid);
+          }
+
+          return -1;
 
         }
       },
       defaultRun: {
         get: function() {
           return -1;
+        }
+      },
+      selectedScenario: {
+        get: function() {
+          // Get all scenarios with the current id
+          var scenarios = _.filter(this.scenarios, ["id", this.selectedScenarioId]);
+          // We want the first one
+          var scenario = _.first(scenarios);
+
+          return scenario;
         }
       }
     },
@@ -59,7 +75,7 @@ var exports = (function () {
       updateScenarios: function() {
         fetchScenarios()
           .then((data) => {
-            this.scenarios = data.scenario_list;
+            this.scenarios = data;
           });
 
 

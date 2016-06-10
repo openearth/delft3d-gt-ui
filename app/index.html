@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js" lang="">
+<html class="no-js" lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="description" content="">
@@ -7,11 +7,16 @@
     <title>Delft3D-GT Dashboard</title>
 
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <!-- Place favicon.ico in the root directory -->
+    <link rel="icon" type="image/png" href="apple-touch-icon.png" />
 
     <!-- build:css styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="/bower_components/bootstrap-combobox/css/bootstrap-combobox.css" />
+    <link rel="stylesheet" href="/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" />
+    <link rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" href="/bower_components/ion.rangeSlider/css/ion.rangeSlider.css" />
+    <link rel="stylesheet" href="/bower_components/ion.rangeSlider/css/ion.rangeSlider.skinFlat.css" />
+    <link rel="stylesheet" href="/bower_components/bootstrap-select/dist/css/bootstrap-select.css" />
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -27,33 +32,41 @@
 
 
   </head>
-  <body>
+  <body id="app">
     <!--[if lt IE 10]>
-      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
 
     <!-- black bar on the top -->
-    <nav class="navbar navbar-default navbar-static-top heading-bar">
+    <nav class="navbar navbar-default navbar-static-top navbar-inverse" id="top-bar">
       <div class="container-fluid">
         <div class="navbar-header">
-
-          <a href="/" class="site-title"><img src="images/logo/delft3d-gt.svg" id="site-logo" />Delft3D-GT Dashboard</a></h2>
-
+          <!-- Title -->
+          <a href="/" class="navbar-brand">
+            <img src="images/logo/delft3d-gt.svg" alt="logo"/>
+          </a>
         </div>
+        <div class="collapse navbar-collapse">
+          <!-- Items -->
+          <ul class="navbar-nav nav">
+            <li><a href="#"><h3>Delft3D<br /><small>Geological Tool</small></h3></a></li>
+          </ul>
+          <ul class="navbar-nav nav navbar-right">
+            <li><user-details></user-details></li>
+            <li><a class="btn btn-primary navbar-btn" href="/api/v1/" title="rest api documentation (for developers)"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a></li>
+            <li><a class="btn btn-primary navbar-btn" href="#!/search/" title="search"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a></li>
+            <li><a class="btn btn-primary navbar-btn" href="/logout/">logout</a></li>
+          </ul>
 
-        <div class="navbar-header pull-right">
-          <a class="btn btn-primary btn-logout" href="/logout/">Logout</a>
         </div>
       </div>
     </nav>
 
 
-    <div id="app" class="full-height">
-
+    <div  class="full-height">
       <!-- This will be filled by app.js (vue-router) -->
       <router-view keep-alive></router-view>
       <!-- and no footer. -->
-
     </div>
 
 
@@ -69,6 +82,13 @@
     <script src="/bower_components/vue/dist/vue.js"></script>
     <script src="/bower_components/vue-router/dist/vue-router.js"></script>
     <script src="/bower_components/bootstrap-combobox/js/bootstrap-combobox.js"></script>
+    <script src="/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.js"></script>
+    <script src="/bower_components/vue-validator/dist/vue-validator.js"></script>
+    <script src="/bower_components/moment/moment.js"></script>
+    <script src="/bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js"></script>
+    <script src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="/bower_components/ion.rangeSlider/js/ion.rangeSlider.js"></script>
+    <script src="/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -91,9 +111,8 @@
     <!-- First the functions that we use to exchange data and validate it  -->
     <!-- these should have corresponding tests -->
     <!-- no vue code in here.... -->
-    <!-- validate data -->
-    <script src="scripts/inputvalidation.js"></script>
     <!-- data scripts: these should fetch data and allow to retrieve it from the components (see store docs in vue)-->
+    <script src="scripts/hyperlinkedmodels.js"></script>
     <script src="scripts/models.js"></script>
     <script src="scripts/templates.js"></script>
     <script src="scripts/scenarios.js"></script>
@@ -101,16 +120,22 @@
     <!-- load components, these provide webcomponents (with corresponding templates in app/templates)-->
     <!-- mainly tested using integration tests -->
     <!-- these should be replaceable if someone wants to switch to a different webcomponent platform -->
+
+    <script src="scripts/components/confirmdialog.js"></script>
     <script src="scripts/components/imageanimation.js"></script>
     <script src="scripts/components/modelcreate.js"></script>
     <script src="scripts/components/modeldetails.js"></script>
     <script src="scripts/components/modellist.js"></script>
     <script src="scripts/components/scenariolist.js"></script>
-    <script src="scripts/components/home.js"></script>
+    <script src="scripts/components/searchdetails.js"></script>
+    <script src="scripts/components/scenariodelete.js"></script>
+    <script src="scripts/components/searchlist.js"></script>
+    <script src="scripts/components/searchcolumns.js"></script>
     <script src="scripts/components/findercolumns.js"></script>
     <script src="scripts/components/scenariobuilder.js"></script>
     <script src="scripts/components/scenariodelete.js"></script>
     <script src="scripts/components/alert.js"></script>
+    <script src="scripts/components/userdetails.js"></script>
 
 
     <!-- and the application (router and loading of components goes in here)-->
@@ -118,13 +143,5 @@
     <!-- this can be very vue specific vuex, vue-router etc... -->
     <script src="scripts/app.js"></script>
 
-    <!-- These can be merged to models.js and components -->
-    <script src="scripts/ui.js"></script>
-    <script src="scripts/data/message-scene-list.js"></script>
-    <script src="scripts/data/message-scene-delete.js"></script>
-    <script src="scripts/data/message-scene-create.js"></script>
-    <script src="scripts/data/message-scene-changestate.js"></script>
-    <script src="scripts/main.js"></script>
-    <!-- endbuild -->
   </body>
 </html>

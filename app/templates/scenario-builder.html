@@ -1,246 +1,237 @@
 <template id="template-scenario-builder">
-    <div>
+  <div class="scenario-builder">
 
-        <!-- the grey toolbar for scenario builder -->
-        <nav class="navbar navbar-default navbar-static-top tool-bar ">
-          <div class="container-fluid">
-            <div class="row" >
-              <div class="col-xs-12">
-                <div class="btn-toolbar">
-                  <!-- mixed button and a tags will be fixed soon! -->
-                  <button class=" btn btn-primary" id="scenario-submit" v-on:click="submitScenario" value="" v-bind:class="{ 'inputdisabled': formIsValid == false ||  this.totalRuns > 20}" >
-                    Save
-                  </button>
+    <!-- the grey toolbar for scenario builder -->
+    <nav class="navbar navbar-default navbar-static-top tool-bar" id="tool-bar">
+      <div class="container-fluid">
+        <div class="row" >
+          <div class="col-xs-12">
+            <div class="btn-toolbar">
+              <!-- mixed button and a tags will be fixed soon! -->
+              <button class=" btn btn-primary" id="scenario-submit" v-on:click="submitScenario" value="" v-bind:class="{ 'inputdisabled': !(validSliders &&  totalRuns <= 20 && validForm) }" >
+                Submit
+              </button>
 
-                  <a href="#/" class="btn btn-primary pull-left">Cancel</button>
-                </a>
+              <a href="#/" class="btn btn-primary pull-left">Cancel</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- User has to select a template first -->
+
+    <div class="container-fluid" id="below-tool-bar">
+      <div class="row">
+        <div class="col-sm-12">
+          <h2>Scenario builder</h2>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- 2 column layout, 1st column scenario properties -->
+        <div class="col-sm-5">
+          <!--  -->
+          <div class="row" v-if="availableTemplates.length">
+            <div class="col-sm-12">
+              <div class="form-group ">
+                <label for="select-template">Select a template</label>
+                <select class="combobox form-control" v-model="template"  id="select-template" :onchange="selectTemplate(template)">
+                  <option v-for="template in availableTemplates" v-bind:value="template">
+                    {{ template.name }}
+                  </option>
+                </select>
               </div>
             </div>
           </div>
-        </nav>
 
-        <!-- User has to select a template first -->
-
-        <div class="panel-body column">
-            <div class="row">
-              <div class="col-sm-12">
-                  <div class="header-bar">
-                      <h2>
-                          Scenario builder
-                      </h2>
-                  </div>
-                </div>
-              </div>
-
-            <div class="row">
-              <div class="col-sm-5 ">
-
-                  <!-- User has to select a template first -->
-                  <template v-if="availableTemplates !== null">
-                    <div class="row">
-                      <div class="col-sm-12">
-                        <select class="combobox form-control" v-model="selectedId"  v-on:select="selectScenario()">
-
-
-
-                          <option v-for="option in availableTemplates" v-bind:value="$index">
-                            {{ option.templatename }}
-                          </option>
-
-                        </select>
+          <!-- if user selected something, show GUI -->
+          <div>
+            <div>
+              <!-- the vue validator config, stores form validation result in validation -->
+              <validator name="validation">
+                <form novalidate>
+                  <div v-for="section in scenarioConfig.sections">
+                    <div class="panel panel-default">
+                      <div class="panel-heading">
+                        <h3 class="panel-title">{{section.name}}</h3>
                       </div>
-                    </div>
-                  </template>
+                      <div class="panel-body">
+                        <div class="form-group" v-for="variable in section.variables" v-bind:class="{
+                            'has-error': ($validation[getId(variable)] ?
+                                            !$validation[getId(variable)].valid :
+                                            (section.slider !== undefined ?
+                                              !section.slider.valid :
+                                              false)) }">
+                          <label class="control-label" for="{{variable.id}}">
+                            {{ variable.name }}
+                            <!-- TODO: get rid of this space -->
+                            <span v-if="variable.description" class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="{{variable.description}}"></span>
 
-                <!-- if user selected something, show GUI -->
-                  <template v-if="selectedTemplate !== null ">
+                            <span v-if="variable.validators.min !== undefined">
+                              [{{ variable.validators.min }} - {{ variable.validators.max }}]
+                            </span>
+                          </label>
+                          <div class="input-group" :class="{slider: variable.type === 'slider'}">
+                            <!-- two types of input for now: textarea and other -->
+                            <!-- other first -->
+                            <template v-if="variable.type !== 'textarea'">
+                              <template v-if="variable.type === 'slider'">
+                                <div>
+                                <input
+                                  type="text"
+                                  class="ion-range"
+                                  id="{{ variable.id }}"
+                                  v-model="variable.inputValue"
+                                  :disabled="variable.disabled"
+                                  :field="getId(variable)"
+                                  aria-describedby="{{ variable.variableid }}status"
+                                 />
+                                </div>
+                              </template>
+                              <input v-else
+                                 type="{{ variable.type }}"
+                                 class="form-control"
+                                 id="{{ variable.id }}"
+                                 :data-role="variable.factor ? 'tagsinput' : ''"
+                                 v-model="variable.value"
+                                 :disabled="variable.disabled"
+                                 :field="getId(variable)"
+                                 v-validate="variable.validators"
+                                 aria-describedby="{{ variable.variableid }}status"
+                                 />
+                            </template>
+                            <!-- text area -->
+                            <template
+                               v-if="variable.type === 'textarea'"
+                               >
+                              <textarea
+                                 class="form-control"
+                                 rows="3"
+                                 :disabled="variable.disabled"
+                                 :field="getId(variable)"
+                                 v-validate="variable.validators"
+                                 >{{ variable.value }}</textarea>
+                            </template>
+                            <!-- if we add this to 1 we need to add it to all, bug in bootstrap -->
+                            <span v-if="variable.type !== 'slider'"
+                                  class="input-group-addon" >
+                               {{ variable.units || '-' }}
+                            </span>
+                            <span v-else class="input-group-addon" >
+                               {{ variable.value }}{{ variable.units || '-' }}
+                            </span>
 
-                    <h3>
-                        Template: {{selectedTemplate.templatename}} <span class="label label-default">version {{selectedTemplate.version}}</span>
-                    </h3>
-
-                    <!-- categories -->
-                    <div id="scenariobuilder-input">
-                      <div v-for="item in selectedTemplate.variables">
-                          <h3>
-                              {{item.label}}
-                          </h3>
-
-                              <!--
-                                The color of this entire row is determined automatically by the valid state in the scenarioConfig variable.
-                                The class is applied when a condition is true
-                              -->
-
-                              <div v-for="value in item['variables']" v-bind:class="{ 'error': scenarioConfig[value.variableid].valid == false}" class="scenario-builder-var">
-
-                              <table class="scenario-builder-table">
-                                <tr>
-                                  <td class="variable-name" >
-                                      <label for="{{value.variableid}}" class="label-variable">
-                                          {{value['label']}}
-                                          <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="{{value.description}}"></span>
-                                      </label>
-                                  </td>
-
-                                    <td>
-
-
-
-                                        <!-- Auto step options -->
-<!--
-
-                                      Not sure where to put this,.
--->
-
-                                          <div class="centered">
-                                            <table class="centered max-width">
-
-                                              <tr>
-                                                <td class="no-padding">
-                                                  <!-- this input is disabled when autostep is enabled -->
-                                                  <span v-if="value.type == 'numeric'" class="input-group-addon no-background">Default:</span>
-                                                </td>
-
-                                                <template v-if="value.stepoptions.defaultstep !== 0">
-
-                                                  <td class="no-padding">
-                                                    <!-- enable autostep? -->
-                                                   <span class="input-group-addon no-background">Vary:</span>
-
-                                                  </td>
-
-                                                  <td class="no-padding">
-                                                     <span class="input-group-addon no-background">Min [{{value.min}}]:</span>
-                                                  </td>
-
-                                                  <td class="no-padding">
-                                                    <span class="input-group-addon  no-background">Max <template v-if="value.max !== 0">[{{value.max}}]:</template></span>
-                                                  </td>
-
-                                                  <td class="no-padding">
-                                                     <span class="input-group-addon  no-background">Step
-                                                    <div v-if="value.stepoptions.multipleof != 0">
-                                                      <small>[Multiple of {{value.stepoptions.multipleof}}]</small>
-                                                    </div>
-                                                    </span>
-                                                  </td>
-
-                                                  <td  class="no-padding" rowspan="1" style="vertical-align: top">
-                                                      <!-- only show units if type is numeric -->
-                                                    <span class="input-group-addon  no-background">Unit:</span>
-
-                                                  </td>
-
-                                                </template>
-
-                                                <!-- also show unit when there is not a step value -->
-                                                <template v-if="value.stepoptions.defaultstep === 0 && value.units.length > 0">
-                                                  <td colspan="5" class="no-padding">&nbsp;</td>
-                                                  <!-- only show units if type is numeric -->
-                                                  <td  class="no-padding" rowspan="1" style="vertical-align: top">
-                                                    <span class="input-group-addon no-background unit-label">Unit:</span>
-
-                                                  </td>
-                                                </template>
-
-
-                                              </tr>
-                                              <tr>
-
-                                                <td class="no-padding" >
-                                                  <!-- [TODO] improve these inputs on a later moment (proper type selection) -->
-                                                  <input  v-if="value.type == 'numeric'" v-model="scenarioConfig[value.variableid].value" v-bind:class="{ 'inputdisabled': scenarioConfig[value.variableid].useautostep == true}" class="form-control" data-max="{{value.max}}" data-min="{{value.min}}" name="{{value['variableid']}}" number type="number" v-on:keyup="validateField(value, $event)" v-on:change="validateField(value, $event)" />
-                                                  <input  v-if="value.type == 'text'" v-model="scenarioConfig[value.variableid].value" v-bind:class="{ 'inputdisabled': scenarioConfig[value.variableid].useautostep == true}" class="form-control" data-max="{{value.max}}" data-min="{{value.min}}" name="{{value['variableid']}}" type="text" v-on:keyup="validateField(value, $event)" v-on:change="validateField(value, $event)" />
-                                                </td>
-
-                                                <template v-if="value.stepoptions.defaultstep !== 0">
-                                                  <td class="no-padding">
-                                                    <div class="input-group no-margin">
-                                                        <span class="input-group-addon  no-background">
-                                                          <input type="checkbox" aria-label="autostep" v-model="scenarioConfig[value.variableid].useautostep" v-on:change="toggleAutoStep(value, $event)">
-                                                        </span>
-                                                    </div>
-                                                  </td>
-
-                                                  <td class="no-padding  input-number">
-                                                     <input type="number" v-bind:class="{ 'inputdisabled': scenarioConfig[value.variableid].useautostep == false}" class="form-control" name="step{{value['variableid']}}-min" v-model="scenarioConfig[value.variableid].minstep" v-on:keyup="validateField(value, $event)" v-on:change="validateField(value, $event)" />
-                                                  </td>
-
-                                                  <td class="no-padding  input-number">
-                                                    <input type="number" v-bind:class="{ 'inputdisabled': scenarioConfig[value.variableid].useautostep == false}" class="form-control"  name="step{{value['variableid']}}-max"  v-model="scenarioConfig[value.variableid].maxstep" v-on:keyup="validateField(value, $event)" v-on:change="validateField(value, $event)" />
-                                                  </td>
-
-                                                  <td class="no-padding  input-number">
-                                                    <input type="number" v-bind:class="{ 'inputdisabled': scenarioConfig[value.variableid].useautostep == false}" class="form-control" name="step{{value['variableid']}}-interval" v-model="scenarioConfig[value.variableid].stepinterval" v-on:keyup="validateField(value, $event)" v-on:change="validateField(value, $event)" />
-                                                  </td>
-
-
-                                                  <td class="no-padding  text-center">{{value.units}}</td>
-
-                                                </template>
-
-
-                                                <!-- also show unit when there is not a step value -->
-                                                <template v-if="value.stepoptions.defaultstep === 0 && value.units.length > 0">
-                                                  <td colspan="5" class="no-padding">&nbsp;</td>
-                                                  <td class="no-padding text-center unit-label" >{{value.units}}</td>
-                                                </template>
-
-
-                                              </tr>
-                                            </table>
-                                          </div>
-                                    <!--    </template>-->
-
-                                        <!-- End auto step -->
-
-                                       </td>
-
-                              </tr>
-                          </table>
                           </div>
-                      </div>
-
-
-
-                      <!-- expected runs indicator. It becomes a different color if the totalRuns exceed 20 -->
-                      <div class="row" >
-                          <div class="col-sm-12">
-                            <div class="alert alert-info" v-bind:class="{ 'alert-warning': totalRuns > 20}" role="alert">
-                              <p class="lead">Expected runs: <strong>~{{totalRuns}}</strong></p>
-                              <p v-if="totalRuns > 20">
-                                At the moment you cannot submit more than 20 runs in one scenario.
-                              </p>
-
-                            </div>
+                          <div v-if="$validation[getId(variable)]">
+                            <p  v-if="$validation[getId(variable)].required"
+                                class="help-block has-error">
+                                  This field cannot be left empty.
+                            </p>
+                            <template  v-if="$validation[getId(variable)].min
+                                      && !$validation[getId(variable)].required
+                                      && variable.type === 'numeric'">
+                              <template
+                                v-for="input in variable.value.split(',')">
+                                <p v-if="!isNaN(input) && input < variable.validators.min"
+                                          class="help-block has-error">
+                                  Entered value "{{ input }}" is less than the minimum value "{{ variable.validators.min }}".
+                                </p>
+                              </template>
+                            </template>
+                            <template  v-if="$validation[getId(variable)].max
+                                      && !$validation[getId(variable)].required
+                                      && variable.type === 'numeric'">
+                              <template
+                                v-for="input in variable.value.split(',')">
+                                <p v-if="!isNaN(input) && input > variable.validators.max"
+                                          class="help-block has-error">
+                                  Entered value "{{ input }}" is greater than the maximum value "{{ variable.validators.max }}".
+                                </p>
+                              </template>
+                            </template>
+                            <template  v-if="$validation[getId(variable)]
+                                      && !$validation[getId(variable)].valid
+                                      && variable.type === 'numeric'">
+                              <template
+                                v-for="input in variable.value.split(',')">
+                                <p v-if="isNaN(input)"
+                                          class="help-block has-error">
+                                  "{{ input }}" is not a number.
+                                </p>
+                              </template>
+                            </template>
                           </div>
-                      </div>
+                        </div>
+                        <div v-if="section.slider && !section.slider.valid" class="form-group has-error">
+                          <p class="help-block has-error">Number of parts cannot be 0.</p>
+                        </div>
 
-                    </div>
-                </template>
-
-
-
-                </div>
-                <div class="col-sm-7 text-center">
-                  <img src="images/schematic.svg" class="scenariobuilder-schematic" />
-                </div>
-              </div>
-
-
-             <template v-else="">
-
-            <div class="row">
-              <div class="col-sm-5">
-
-                  <div class="row row-top-margin">
-                    <div class="col-sm-12">
-                      <div class="alert alert-info"  role="alert">
-                        <p class="lead">Please select a template</p>
                       </div>
                     </div>
+
+
                   </div>
+                </form>
+                <!-- <pre> -->
+                <!--   {{ $validation | json }} -->
+                <!-- </pre> -->
+
+              </validator>
             </div>
+
+
+            <!-- expected runs indicator. It becomes a different color if the totalRuns exceed 20 -->
+            <div class="row" >
+              <div class="col-sm-12">
+                <div class="alert alert-info" v-bind:class="{ 'alert-warning': totalRuns > 20}" role="alert">
+                  <p class="lead">Expected runs: <strong>{{totalRuns}}</strong></p>
+                  <p v-if="totalRuns > 20">
+                    At the moment you cannot submit more than 20 runs in one scenario.
+                  </p>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
+
         </div>
+
+
+        <div class="col-sm-7">
+          <div v-if="template">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Details for {{ template.name }} <small>id: {{ template.id }}</small></h3>
+              </div>
+              <!-- template details -->
+              <div class="panel-body">
+                <dl class="dl-horizontal">
+                  <template v-for="(key, val) in template.meta">
+                    <dt>{{ key }}</dt>
+                    <dd>{{ val }}</dd>
+                  </template>
+                </dl>
+              </div>
+            </div>
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Schematic</h3>
+              </div>
+              <!-- template details -->
+              <div class="panel-body  text-center">
+                <img src="images/schematic.svg" class="scenariobuilder-schematic" />
+              </div>
+            </div>
+          </div>
+
+
+
+        </div>
+      </div>
     </div>
+  </div>
 </template>
