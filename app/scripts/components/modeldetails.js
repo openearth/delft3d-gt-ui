@@ -304,6 +304,7 @@ var exports = (function () {
             params: params
           });
 
+        }.bind(this);
 
         // We also show an extra warning in the dialog, if user chooses to remove additional files.
         this.deleteDialog.showAlert(deletefiles);
