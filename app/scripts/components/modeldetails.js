@@ -258,6 +258,7 @@ var exports = (function () {
       // Remove item, based on incoming modelinfo.
       removeModel: function() {
 
+        console.log("Removemodel");
         // keep track of the scenario before deletion
         var scenarioId = this.scenario;
 
@@ -270,16 +271,18 @@ var exports = (function () {
           "deletefiles": deletefiles
         };
 
-        if (!this.deleteDialog) {
+        //if (!this.deleteDialog) {
           this.deleteDialog = getDialog(this, "confirm-dialog", "delete");
-        }
+        //}
+
+        var that = this;
 
         this.deleteDialog.onConfirm = function() {
-          var deletedId = this.model.id;
+          var deletedId = that.model.id;
 
           deleteModel(deletedId, options)
             .then(() => {
-              this.$parent.$broadcast("show-alert", {
+              that.$parent.$broadcast("show-alert", {
                 message: "Deleting run... It might take a moment before the view is updated.",
                 showTime: 5000,
                 type: "success"
@@ -302,7 +305,7 @@ var exports = (function () {
             params: params
           });
 
-        }.bind(this);
+        };
 
         // We also show an extra warning in the dialog, if user chooses to remove additional files.
         this.deleteDialog.showAlert(deletefiles);
