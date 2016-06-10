@@ -276,14 +276,12 @@ var exports = (function () {
         this.deleteDialog = getDialog(this, "confirm-dialog", "delete");
         //}
 
-        var that = this;
-
         this.deleteDialog.onConfirm = function() {
-          var deletedId = that.model.id;
+          var deletedId = this.model.id;
 
           deleteModel(deletedId, options)
             .then(() => {
-              that.$parent.$broadcast("show-alert", {
+              this.$parent.$broadcast("show-alert", {
                 message: "Deleting run... It might take a moment before the view is updated.",
                 showTime: 5000,
                 type: "success"
@@ -306,7 +304,6 @@ var exports = (function () {
             params: params
           });
 
-        };
 
         // We also show an extra warning in the dialog, if user chooses to remove additional files.
         this.deleteDialog.showAlert(deletefiles);
