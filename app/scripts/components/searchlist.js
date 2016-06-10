@@ -1,6 +1,6 @@
 var exports = (function () {
   "use strict";
-  /* global Vue */
+  /* global Vue fetchModels */
 
   // register the grid component
   var SearchList = Vue.component("search-list", {
