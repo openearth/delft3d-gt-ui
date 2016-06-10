@@ -64,6 +64,14 @@ var exports = (function() {
           // Select the first template automatic:
           var template = _.get(this.availableTemplates, 0);
 
+          // if we have a template in the request, select that one
+          if (_.has(this, "$route.query.template")) {
+            var templateId = parseInt(this.$route.query.template);
+
+            template = _.first(_.filter(this.availableTemplates, ["id", templateId]));
+            console.log("setting template", template);
+          }
+
           // set the template, somehow a computed setter was not working...
           this.selectTemplate(template);
 
@@ -93,6 +101,15 @@ var exports = (function() {
 
     route: {
       data: function(transition) {
+        // if we have a template in the request, select that one
+        if (_.has(this, "$route.query.template")) {
+          var templateId = parseInt(this.$route.query.template);
+
+          var template = _.first(_.filter(this.availableTemplates, ["id", templateId]));
+          console.log("setting template", template);
+          this.selectTemplate(template);
+        }
+
         transition.next();
       }
     },
@@ -214,6 +231,7 @@ var exports = (function() {
       },
 
       updateWithQueryParameters: function() {
+
         if (_.has(this.$route, "query.parameters")) {
           // get parameters from query
           var parameters = JSON.parse(this.$route.query.parameters);
