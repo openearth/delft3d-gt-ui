@@ -580,6 +580,51 @@
 
       done();
     });
+    it("Should be possible to update with query parameters", function(done) {
+      var scenarioCreate = new ScenarioCreate({
+      });
+
+
+      // fake the router
+      scenarioCreate.$route = {};
+      console.log("route", scenarioCreate.$route);
+      scenarioCreate.$route.query = {
+        name: "test"
+      };
+
+      // encoded in url
+
+      /* eslint-disable quotes */
+      scenarioCreate.$route.query.parameters = '{"engine":{"values":["Delft3D Curvilinear"],"name":"Model Engine"},"simstoptime":{"units":"days","values":[5],"name":"Stop time"},"clayvolcomposition":{"units":"%","values":[50],"name":"Clay volumetric composition"},"riverdischarge":{"units":"m³/s","values":[1000,1200,1400],"name":"River discharge"}}';
+      /* eslint-enable quotes */
+
+      // {
+      //   "engine": {
+      //     "values": ["Delft3D Curvilinear"],
+      //     "name": "Model Engine"
+      //   },
+      //   "simstoptime": {
+      //     "units": "days",
+      //     "values": [5],
+      //     "name": "Stop time"
+      //   },
+      //   "clayvolcomposition": {
+      //     "units": "%",
+      //     "values": [50],
+      //     "name": "Clay volumetric composition"
+      //   },
+      //   "riverdischarge": {
+      //     "units": "m³/s",
+      //     "values": [1000, 1200, 1400],
+      //     "name": "River discharge"
+      //   }
+      // }
+
+      // check if we get an invalid error if we pass 0
+      scenarioCreate.updateWithQueryParameters();
+      assert.isOk(scenarioCreate);
+      done();
+    });
   });
 
   describe("Scenarios", function() {
@@ -847,7 +892,6 @@
         "Content-Type": "text/html",
         "Access-Control-Allow-Origin": "*"
       })
-      .log(console.log)
       .get("/templates/templates.html")
       .reply(200, "<div>template-ok</div>");
 
