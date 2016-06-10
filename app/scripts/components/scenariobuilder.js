@@ -1,4 +1,4 @@
-/* global Vue,  fetchTemplates */
+/* global Vue,  fetchTemplates, router */
 
 // Exported globals
 var ScenarioCreate;
@@ -44,7 +44,6 @@ var exports = (function() {
         template: null,
 
         dataLoaded: false,
-        componentReady: false,
         validSliderSections: {},
         validSliders: true,
 
@@ -57,8 +56,10 @@ var exports = (function() {
     },
 
     created: function() {
+      // if the component is created we can start fetching data
       fetchTemplates()
         .then((templates) => {
+          console.log("new template data");
           this.availableTemplates = templates;
 
           // Select the first template automatic:
@@ -69,17 +70,16 @@ var exports = (function() {
             var templateId = parseInt(this.$route.query.template);
 
             template = _.first(_.filter(this.availableTemplates, ["id", templateId]));
-            console.log("setting template", template);
           }
 
           // set the template, somehow a computed setter was not working...
-          this.selectTemplate(template);
+          this.template = template;
+          this.selectTemplate();
 
-          this.dataLoaded = true;
-
-          if (this.componentReady) {
-            this.initAfterDomUpdate();
-          }
+          // after the dom is updated with the data, we have to initialize the components again
+          this.$nextTick(function () {
+            this.initJqueryComponents();
+          });
 
         });
 
@@ -87,30 +87,37 @@ var exports = (function() {
     },
 
     ready: function() {
-      this.componentReady = true;
+      // if the data is filled we can start initializing components on the next tick
       this.navBars = {
         topBar: document.getElementById("top-bar"),
         toolBar: document.getElementById("tool-bar"),
         belowToolBar: document.getElementById("below-tool-bar")
       };
       this.initFixedToolbar();
-      if (this.dataLoaded) {
-        this.initAfterDomUpdate();
-      }
+      this.$nextTick(function () {
+        this.initJqueryComponents();
+      });
     },
 
     route: {
       data: function(transition) {
+        console.log("route data of", this)
         // if we have a template in the request, select that one
         if (_.has(this, "$route.query.template")) {
           var templateId = parseInt(this.$route.query.template);
 
           var template = _.first(_.filter(this.availableTemplates, ["id", templateId]));
 
-          console.log("setting template", template);
-          this.selectTemplate(template);
-        }
 
+          if (template) {
+            this.template = template;
+            this.selectTemplate();
+          } else {
+            console.log("Could not find template with id", templateId, "in", this.availableTemplates);
+          }
+
+
+        }
         transition.next();
       }
     },
@@ -196,39 +203,36 @@ var exports = (function() {
       }
     },
     methods: {
-      selectTemplate: function(template) {
-        // do we need to update sliders and stuff
-        var doUpdates = true;
+      selectTemplate: function() {
 
-        if (this.currentSelectedId === template.id) {
-          doUpdates = false;
+        console.log("selecting template", this.template);
+        var templateChanged = false;
+
+        console.log("updating query parameters");
+        if (this.currentSelectedId !== this.template.id) {
+          templateChanged = true;
         }
 
-        this.currentSelectedId = template.id;
+        this.currentSelectedId = this.template.id;
+
+        console.log("updating query parameters");
 
         // First set data, then the template. Order is important!
-        this.scenarioConfig = this.prepareScenarioConfig(template);
+        this.scenarioConfig = this.prepareScenarioConfig(this.template);
 
-        // Init sliders if present
-        if (doUpdates) {
-          this.initAfterDomUpdate();
-        }
+        console.log("updating query parameters");
         // don't replace previous input
         this.updateWithQueryParameters();
 
-
-        // set the selected template
-        this.template = template;
-
-        // Initialize the tooltips:
-        // We do this after the DOM update.
-        if (doUpdates) {
+        if (templateChanged) {
+          // Reinitialize tooltips, tags and sliders
           this.$nextTick(function () {
-            $("[data-toggle='tooltip']").tooltip();
-            $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
+            this.initJqueryComponents();
           });
 
         }
+
+
       },
 
       // Return a unique id for the variable that is validated.
@@ -239,20 +243,28 @@ var exports = (function() {
       },
 
       updateWithQueryParameters: function() {
+        console.log("update with query parameters");
         if (_.has(this, "$route.query.parameters")) {
           // get parameters from query
           var parameters = JSON.parse(this.$route.query.parameters);
 
         }
 
-
         // the request has parameters in the form of {"variable": {"values": value}}
 
         // the scenarioConfig also has sections {"sections": [{"variables": [{"variable": {"value": []}}]}]}
 
-        // let's create a flat list of variables
-        var variables = _.flatMap(this.scenarioConfig.sections, "variables");
+        return;
 
+        // let's create a flat list of variables
+        var variables = [];
+        this.scenarioConfig.sections.forEach(function(section) {
+          section.variables.forEach(function(variable) {
+            variables.push(variable);
+          });
+        });
+
+        return;
         // loop over all variables in the filled in template
         _.each(
           variables,
@@ -270,6 +282,7 @@ var exports = (function() {
             }
           }
         );
+        console.log("variables", variables);
         // This is a bit ugly, but if we have a name, add (copy) to it and then use it.
         if (_.has(this, "$route.query.name") && _.has(this.scenarioConfig, "name")) {
           // we also have a name
@@ -345,7 +358,10 @@ var exports = (function() {
 
           });
       },
-
+      cancelScenario: function() {
+        // TODO: cleanup values
+        this.$router.go({name: "home"});
+      },
 
       // We have to prepare the scenario config
       prepareScenarioConfig: function(data) {
@@ -375,15 +391,11 @@ var exports = (function() {
         return scenario;
       },
 
-      // Do initializations after the DOM is updated.
-      initAfterDomUpdate: function() {
-        this.$nextTick(function () {
-          this.initSliders();
-        });
-      },
-
       // Initialize the sliders if present
-      initSliders: function() {
+      initJqueryComponents: function() {
+        $("[data-toggle='tooltip']").tooltip();
+        $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
+
         var sections = this.scenarioConfig.sections;
 
         _.forEach(sections, (section) => {
