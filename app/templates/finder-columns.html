@@ -9,10 +9,10 @@
             <div class="col-xs-2">
               <div class="btn-toolbar">
 
-                <button title="delete" v-on:click="removeScenario(model)" class="btn btn-primary pull-right" v-bind:class="{ 'inputdisabled': selectedScenarioId === -1 || isNaN(selectedScenarioId) === true || selectedScenarioId === undefined}" >
+                <button title="delete" v-on:click="removeScenario(model)" class="btn btn-primary pull-right" v-bind:class="{ 'inputdisabled': selectedScenarioId === -1 || isNaN(selectedScenarioId) === true || selectedScenarioId === undefined || scenarioList.selectedScenario === undefined}" >
                   <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                 </button>
-                <button title="clone"  v-on:click="cloneScenario()" class="btn btn-primary pull-right" v-bind:class="{ 'inputdisabled': selectedScenarioId === -1 || isNaN(selectedScenarioId) === true || selectedScenarioId === undefined}" >
+                <button title="clone"  v-on:click="cloneScenario()" class="btn btn-primary pull-right" v-bind:class="{ 'inputdisabled': selectedScenarioId === -1 || isNaN(selectedScenarioId) === true || selectedScenarioId === undefined || scenarioList.selectedScenario === undefined}" >
                   <span class="glyphicon glyphicon-duplicate" aria-hidden="true"></span>
                 </button>
                 <a title="create" href="#/scenarios/create" class="btn btn-primary pull-right" >
