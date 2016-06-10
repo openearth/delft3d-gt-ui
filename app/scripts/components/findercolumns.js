@@ -80,12 +80,13 @@ var exports = (function () {
 
         // TODO: this should be in the scenario, but the button is in finder-columns
         var scenario = this.scenarioList.selectedScenario;
+
         var parameters = _.assign(
           // create a new object (no data binding)
           {},
           // fill it with the parameters
           // TODO: replace by object parameters instead of list of parameters
-          _.get(scenario.parameters, 0)
+          scenario.parameters
         );
 
         // These parameters are passed to the other view
