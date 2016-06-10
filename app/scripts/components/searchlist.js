@@ -14,27 +14,27 @@ var exports = (function () {
       };
     },
     ready: function() {
-      // TODO: this only works if the modellist is active. If you go directly to a model it does not work.
-      // Fix fetchmodel (and the server) so it actually fetches 1 model.
-      // fetch now
-      // fetchModels()
-      //   .then((data) => {
-      //     this.models = data;
-      //   });
+      //TODO: this only works if the modellist is active. If you go directly to a model it does not work.
+      //Fix fetchmodel (and the server) so it actually fetches 1 model.
+      //fetch now
+      fetchModels()
+        .then((data) => {
+          this.models = data;
+        });
 
-      // // and fetch on every 10 seconds
-      // setInterval(
-      //   // create a callback for every second
-      //   () => {
-      //     // fetch the models
-      //     fetchModels()
-      //       .then((data) => {
-      //         this.models = data;
-      //       });
-      //   },
-      //   // every 10 seconds
-      //   10000
-      // );
+      // and fetch on every 10 seconds
+      setInterval(
+        // create a callback for every second
+        () => {
+          // fetch the models
+          fetchModels()
+            .then((data) => {
+              this.models = data;
+            });
+        },
+        // every 10 seconds
+        10000
+      );
 
     },
 
