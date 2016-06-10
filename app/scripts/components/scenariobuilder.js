@@ -212,9 +212,9 @@ var exports = (function() {
         // Init sliders if present
         if (doUpdates) {
           this.initAfterDomUpdate();
-          // don't replace previous input
-          this.updateWithQueryParameters();
         }
+        // don't replace previous input
+        this.updateWithQueryParameters();
 
 
         // set the selected template
