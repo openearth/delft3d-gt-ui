@@ -197,7 +197,9 @@ var exports = (function() {
     },
     methods: {
       selectTemplate: function(template) {
+        // do we need to update sliders and stuff
         var doUpdates = true;
+
         if (this.currentSelectedId === template.id) {
           doUpdates = false;
         }
