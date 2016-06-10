@@ -100,6 +100,7 @@ var exports = (function () {
           name: "scenarios-create",
           params: {},
           query: {
+            "template": scenario.template,
             "parameters": JSON.stringify(parameters),
             "name": _.get(this.scenarioList.selectedScenario, "name")
           }
