@@ -164,7 +164,13 @@ $row-height: 32px;
 
 .form-control {
   @include rectangle-corners();
+
+  &.no-fixed-height
+  {
+    height: auto;
+  }
 }
+
 
 
 .footer {
