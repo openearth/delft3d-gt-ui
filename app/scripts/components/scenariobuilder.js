@@ -202,8 +202,6 @@ var exports = (function() {
 
         this.currentSelectedId = template.id;
 
-        console.log("setting template to id", template.id);
-
         // First set data, then the template. Order is important!
         this.scenarioConfig = this.prepareScenarioConfig(template);
 
@@ -231,21 +229,56 @@ var exports = (function() {
       },
 
       updateWithQueryParameters: function() {
-
-        if (_.has(this.$route, "query.parameters")) {
+        if (_.has(this, "$route.query.parameters")) {
           // get parameters from query
           var parameters = JSON.parse(this.$route.query.parameters);
 
-          // assign all parameters of the scenario
-          _.assign(this.scenarioConfig, parameters);
         }
+
+
+        // the request has parameters in the form of {"variable": {"values": value}}
+
+        // the scenarioConfig also has sections {"sections": [{"variables": [{"variable": {"value": []}}]}]}
+
+        // let's create a flat list of variables
+        var variables = _.flatMap(this.scenarioConfig.sections, "variables");
+
+        // loop over all variables in the filled in template
+        _.each(
+          variables,
+          function(variable) {
+            // does this template variable have a corresponding variable in the request parameters
+            if (_.has(parameters, variable.id)) {
+              if (variable.factor) {
+                // join by columns for tag input
+                variable.value = _.join(parameters[variable.id].values, ",");
+              } else {
+                // just set it (first item)
+                variable.value = _.get(parameters[variable.id].values, 0);
+              }
+
+            }
+          }
+        );
         // This is a bit ugly, but if we have a name, add (copy) to it and then use it.
-        if (_.has(this.$route, "query.name") && _.has(this.scenarioConfig, "scenarioname.value")) {
+        if (_.has(this, "$route.query.name") && _.has(this.scenarioConfig, "name")) {
           // we also have a name
           var name = this.$route.query.name;
 
           // reuse it and create (copy) (copy) (over) (roger)
-          this.scenarioConfig.scenarioname.value = name + " (copy)";
+          this.scenarioConfig.name = name + " (copy)";
+
+
+          // the name variable is special, because it's duplicated
+          var nameVariable = _.first(_.filter(variables, ["id", "name"]));
+
+          if (nameVariable) {
+            // also set the name to the variable
+            nameVariable.value = this.scenarioConfig.name;
+          }
+
+
+
         }
       },
 

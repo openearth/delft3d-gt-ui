@@ -70,7 +70,7 @@
         </div>
         <div class="panel-body">
           <p>
-            Please select an action to perform on this simulation
+            Please select an action to perform on this simulation.
           </p>
 
           <button type="button" class="btn btn-labeled btn-success" v-bind:class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE') || isReadOnly() }" id="simulation-control-start" v-on:click="startModel">
@@ -89,10 +89,13 @@
           </button>
 
 
-          <button type="button" class="btn btn-labeled btn-danger" v-bind:class="{ 'inputdisabled': !((model.state === 'SUCCESS' || model.state === 'FAILURE') || model.state === 'PENDING') || isReadOnly() }"  v-on:click="removeModel(model)">
+          <button type="button" class="btn btn-labeled btn-danger" v-bind:class="{ 'inputdisabled': !((model.state === 'SUCCESS' || model.state === 'ABORTED' || model.state === 'FAILURE') || model.state === 'PENDING') || isReadOnly() }"  v-on:click="removeModel(model)">
             <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
             Remove run
           </button>
+
+         <h5 v-bind:class="{ 'default-hidden': (model.state === 'SUCCESS' || model.state === 'FAILURE') || isReadOnly() }">&ldquo;<i>Start export</i>&rdquo; becomes available after a simulation has finished.</h5>
+
         </div>
       </div>
 
