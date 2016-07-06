@@ -1,23 +1,200 @@
 <template id="template-search-list" inline-template>
   <div class="model-list">
-    <h3>{{selectedModels.length}} Results</h3>
-    <div>
+    <!-- new search block -->
+    <div class="search-results">
 
-      <ul class="list-group checked-list-box" id="scenario-list" v-show="selectedModels.length">
-        <li class="list-group-item"  v-for="entry in selectedModels" v-bind:class="{ 'selected': entry.id == selectedResultId}">
-          <div  class="search-result" v-on:click="directSelect(entry.id)">{{entry.name}}</div>
+      <div class="list-group checked-list-box">
+        <div  class="list-group-item">
+          <div class="scenario">
+            <div class="scenario-info">
+              <span class="scenario-name"><span class=" glyphicon glyphicon-chevron-down" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample"></span> Scenario: Test scenario</span> <div class="share-status private"></div>
 
-          <span class="model-state label label-default {{ entry.state | lowercase }}">{{entry.state | capitalize }}</span>
-        </li>
-      </ul>
+              <div class="progress-holder">
+                <div class="progress">
+                  <div data-percentage="0%" style="width: 50%;" class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <span>Running</span>
+              </div>
 
-      <div class="alert alert-info" v-show="!selectedModels.length">
-        There are no results.
+              <!-- Matched vars on scenario -->
+              <div class="matched-vars">
+               <span class="badge inverted">Template</span> <span class="badge">Model version</span>
+             </div>
+
+             <span class="arrow-right glyphicon glyphicon-chevron-right"></span>
+           </div>
+
+           <div class="scenario-runs collapse" id="collapseExample">
+              <!-- runs under this scenario -->
+              <div class="run selected" >
+                <span class="run-name">Run 1</span> <div class="share-status private"></div>
+
+                <div class="progress-holder">
+                  <div class="progress">
+                    <div data-percentage="0%" style="width: 50%;" class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <span>Running</span>
+                </div>
+
+
+                <div class="matched-vars">
+                  <span class="badge">Template</span> <span class="badge">Model version</span>
+                </div>
+                <span class="arrow-right  glyphicon glyphicon-chevron-right"></span>
+              </div>
+
+
+              <div class="run selected" >
+                <span class="run-name">Run 1</span> <div class="share-status private"></div>
+
+                <div class="progress-holder">
+                  <div class="progress">
+                    <div data-percentage="0%" style="width: 50%;" class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <span>Running</span>
+                </div>
+
+                <div class="matched-vars">
+                  <span class="badge">Template</span> <span class="badge">Model version</span>
+                </div>
+                <span class="arrow-right  glyphicon glyphicon-chevron-right"></span>
+              </div>
+
+              <div class="run">
+                 <span class="run-name">Run 1</span> <div class="share-status private"></div>
+
+                 <div class="progress-holder">
+                  <div class="progress">
+                    <div data-percentage="0%" style="width: 50%;" class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <span>Running</span>
+                 </div>
+
+                <div class="matched-vars">
+                 <span class="badge">Template</span> <span class="badge">Model version</span>
+                </div>
+               <span class="arrow-right glyphicon glyphicon-chevron-right"></span>
+              </div>
+           <!-- end runs -->
+
+            </div>
+
+          </div>
+        </div>
+
       </div>
-      <div class="alert alert-warning default-hidden" role="alert" id="alert-connectionfailed">
-        Cannot reach model server.
+
+
+
+<div class="list-group checked-list-box">
+        <div  class="list-group-item">
+          <div class="scenario ">
+            <div class="scenario-info">
+              <span class="scenario-name"><span class=" glyphicon glyphicon-chevron-down"></span> Scenario: Test scenario</span> <div class="share-status private"></div>
+
+              <div class="progress-holder">
+                <div class="progress">
+                  <div data-percentage="0%" style="width: 50%;" class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <span>Running</span>
+              </div>
+
+              <!-- Matched vars on scenario -->
+              <div class="matched-vars">
+               <span class="badge inverted">Template</span> <span class="badge">Model version</span>
+             </div>
+
+             <span class="arrow-right glyphicon glyphicon-chevron-right"></span>
+           </div>
+
+           <div class="scenario-runs">
+              <!-- runs under this scenario -->
+              <div class="run selected" >
+                <span class="run-name">Run 1</span> <div class="share-status private"></div>
+
+                <div class="progress-holder">
+                  <div class="progress">
+                    <div data-percentage="0%" style="width: 50%;" class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <span>Running</span>
+                </div>
+
+
+                <div class="matched-vars">
+                  <span class="badge">Template</span> <span class="badge">Model version</span>
+                </div>
+                <span class="arrow-right  glyphicon glyphicon-chevron-right"></span>
+              </div>
+
+
+              <div class="run selected" >
+                <span class="run-name">Run 1</span> <div class="share-status private"></div>
+
+                <div class="progress-holder">
+                  <div class="progress">
+                    <div data-percentage="0%" style="width: 50%;" class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <span>Running</span>
+                </div>
+
+                <div class="matched-vars">
+                  <span class="badge">Template</span> <span class="badge">Model version</span>
+                </div>
+                <span class="arrow-right  glyphicon glyphicon-chevron-right"></span>
+              </div>
+
+              <div class="run">
+                 <span class="run-name">Run 1</span> <div class="share-status private"></div>
+
+                 <div class="progress-holder">
+                  <div class="progress">
+                    <div data-percentage="0%" style="width: 50%;" class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                  <span>Running</span>
+                 </div>
+
+                <div class="matched-vars">
+                 <span class="badge">Template</span> <span class="badge">Model version</span>
+                </div>
+               <span class="arrow-right glyphicon glyphicon-chevron-right"></span>
+              </div>
+           <!-- end runs -->
+
+            </div>
+
+          </div>
+        </div>
+
       </div>
+
+
+
     </div>
   </div>
+<!-- end search -->
+
+
+<div>
+  <ul class="list-group checked-list-box" id="scenario-list" v-show="selectedModels.length">
+    <li class="list-group-item"  v-for="entry in selectedModels" v-bind:class="{ 'selected': entry.id == selectedResultId}">
+      <div  class="search-result" v-on:click="directSelect(entry.id)">{{entry.name}}</div>
+
+      <span class="model-state label label-default {{ entry.state | lowercase }}">{{entry.state | capitalize }}</span>
+    </li>
+  </ul>
+
+  <div class="alert alert-info" v-show="!selectedModels.length">
+    There are no results.
+  </div>
+  <div class="alert alert-warning default-hidden" role="alert" id="alert-connectionfailed">
+    Cannot reach model server.
+  </div>
+</div>
+</div>
+
+
+
+
+
 
 </template>

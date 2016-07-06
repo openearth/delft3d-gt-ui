@@ -1,40 +1,51 @@
 <template id="template-search-details">
   <div class="search-details">
     <div>
-      <h3>Search</h3>
-
       <form v-on:change="search" v-on:input="search">
         <div class="panel-group" id="run-accordion" role="tablist" aria-multiselectable="true">
           <div class="panel panel-default">
-            <div class="panel-heading list-group-item" role="tab" id="run-heading">
-              <a role="button" data-toggle="collapse" data-parent="#run-accordion" href="#run-collapse" aria-expanded="true" aria-controls="run-collapse">
-                <h3 class="panel-title">Run</h3>
-              </a>
 
-            </div>
             <div class="panel-collapse collapse in" role="tabpanel" aria-labelledby="run-heading" id="run-collapse">
               <div class="panel-body" >
                 <div class="form-group">
-                  <label for="options">Shared with:</label>
+                  <label for="options">Search domain:</label>
                   <!-- break because of the label hack below -->
                   <br />
-                  <select class="select-picker form-control" multiple  id="search-shared" v-model="shared" data-actions-box="true">
+                  <div class="domain-search-box pull-left domain-private selected">
+                    Private
+                  </div>
+
+                  <div class="domain-search-box pull-left  domain-company">
+                    Company
+                  </div>
+
+                  <div class="domain-search-box pull-left  domain-public">
+                    Public
+                  </div>
+
+
+                <div class="form-group">
+                  <label for="text">Labels:</label>
+                  <input disabled type="text" class="form-control" id="text" placeholder="Type to seach for labels..." v-model="text">
+                </div>
+
+<!--                   <select class="select-picker form-control" multiple  id="search-shared" v-model="shared" data-actions-box="true">
                     <option data-icon="glyphicon-user" selected>private</option>
                     <option data-icon="glyphicon-blackboard" selected>company</option>
                     <option data-icon="glyphicon-globe" selected>public</option>
-                  </select>
+                  </select> -->
                 </div>
                 <div class="form-group">
-                  <label for="begin-date">Submit date start</label>
+                  <label for="begin-date">Search period:</label>
+
                   <!-- use default dateticker, others fail with overflow -->
-                  <input type="date" name="begin-date" value="" class="form-control" v-model="endDate" disabled/>
-                  <label for="begin-date">Submit date end</label>
-                  <input type="date" name="end-date" value="" class="form-control" v-model="startDate" disabled/>
+                  <div>
+                    <input type="date" name="begin-date" value="" class="form-control" v-model="endDate" disabled maxlength="10" style="width:40%; display: inline-block;" />
+                    until
+                    <input type="date" name="end-date" value="" class="form-control" v-model="startDate" disabled maxlength="10"  style="width:40%;display: inline-block;" />
+                  </div>
                 </div>
-                <div class="form-group">
-                  <label for="text">Labels</label>
-                  <input disabled type="text" class="form-control" id="text" placeholder="Label" v-model="text">
-                </div>
+
               </div>
             </div>
           </div>
@@ -44,7 +55,7 @@
           <div class="panel panel-default">
             <div class="panel-heading list-group-item" role="tab" id="template-heading">
               <a role="button" data-toggle="collapse" data-parent="#template-accordion" href="#template-collapse" aria-expanded="true" aria-controls="template-collapse">
-                <h3 class="panel-title">Template</h3>
+                 <h3 class="panel-title"><span class="glyphicon glyphicon-triangle-bottom"></span> Template</h3>
               </a>
 
             </div>

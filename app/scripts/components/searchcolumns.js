@@ -47,6 +47,15 @@ var exports = (function () {
 
         modelList.filter = "search";
         modelList.models = models;
+
+        // Test, for changing arrow when using collapse
+        $('.collapse').on('show.bs.collapse', function(){
+          $(this).parent().find(".glyphicon-chevron-down").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up")
+
+        }).on('hide.bs.collapse', function(){
+         $(this).parent().find(".glyphicon-chevron-up").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down");
+        });
+
       },
 
       // User clicked on a result item:

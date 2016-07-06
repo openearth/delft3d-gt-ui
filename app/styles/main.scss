@@ -63,7 +63,7 @@ $box-shadow-color: rgba(0, 0, 0, .075);
 
 // Do disable round borders on an element
 @mixin rectangle-corners() {
-  border-radius: 0;
+  //border-radius: 0;
 }
 
 // Fill max height.
@@ -135,6 +135,12 @@ $box-shadow-color: rgba(0, 0, 0, .075);
 $cell-padding: 6px;
 $row-height: 32px;
 
+// Default font:
+body {
+  font-family: "Segoe UI";
+}
+
+
 
 .fa-top-right {
   font-size: small;
@@ -169,6 +175,146 @@ $row-height: 32px;
     height: auto;
   }
 }
+
+
+/* Search results list */
+
+.search-results {
+
+  padding: 8px;
+
+
+  .scenario-name  {
+    font-size: 16px;
+    font-weight: 600;
+
+    .glyphicon {
+      font-size: 14px;
+    }
+  }
+
+  .run-name {
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .scenario {
+    background-color: #e5f3f8;
+    border: 2px solid #008bbf;
+    min-height: 64px;
+
+  }
+
+  .scenario-info {
+    padding: 4px 4px 8px 8px;
+  }
+
+  .run {
+    height: 64px;
+    border-bottom: 1px solid $white;
+    color: #000000;
+    background-color: $white;
+    position: relative;
+    padding: 4px 4px 8px 8px;
+  }
+
+  .progress-holder {
+    width: 85px;
+
+    float: right;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 800;
+    margin-right:32px;
+
+    .progress {
+       margin-bottom: 0px;
+       background-color: #cccccc;
+       height: 6px;
+    }
+
+    .progress-bar {
+      -webkit-box-shadow: inset 0 -1px 0 rgba(0,0,0,0.15);
+      box-shadow: inset 0 -1px 0 rgba(0,0,0,0.15);
+      -webkit-transition: width .6s ease;
+      transition: width .6s ease;
+      background-color: #cc4444;
+    }
+  }
+
+  .badge {
+    background-color: transparent;
+
+    border-radius: 8px;
+    font-size: 10px;
+    border: 1px solid #989a9a;
+    color: #989a9a;
+
+    height: 18px;
+    line-height: 10px;
+    vertical-align: middle;
+
+
+  }
+
+  .share-status  {
+
+    height: 21px;
+    width: 21px;
+    text-align: left;
+
+    display: inline-block;
+    margin-left: 4px;
+    vertical-align:  bottom;
+
+
+    background-repeat: no-repeat;
+
+    &.private {
+      background-image: url(../images/ui/sm-private-black.png);
+    }
+  }
+
+
+
+
+  .arrow-right
+  {
+    position: absolute;
+    top:32px;
+    right: 8px;
+  }
+
+
+  // When an item is selected some things change. that happens here
+  .selected {
+
+    background-color: #008bbf;
+    color: #ffffff;
+
+
+    .share-status  {
+      &.private {
+        background-image: url(../images/ui/sm-private-white.png);
+      }
+    }
+
+    .badge {
+      color: $white;
+      border: 1px solid $white;
+    }
+
+  }
+
+
+
+
+}
+
+
+
+/* End */
+
 
 
 
@@ -231,10 +377,17 @@ $row-height: 32px;
 
 }
 
+.heading-bar
+{
+  height: 32px;
+  line-height: 32px;
+  font-weight: 600;
+}
 
 .tool-bar {
   background-color: $gray-light;
-  height: 50px;
+  height: 32px;
+  min-height:32px;
 
   margin-bottom: 0;
 
@@ -513,10 +666,12 @@ nav.sidebar,
     margin-left: 200px;
   }
 
+/*
   nav.sidebar.navbar.sidebar>.container .navbar-brand,
   .navbar>.container-fluid .navbar-brand {
     margin-left: 0;
   }
+*/
 
   nav.sidebar .navbar-brand,
   nav.sidebar .navbar-header {
@@ -655,8 +810,86 @@ section {
 
 }
 
+.search-details {
+
+  background-color: #dfdfda;
+
+  .panel {
+    background-color: #dfdfda;
+  }
+
+
+  .domain-search-box
+  {
+    cursor: pointer;
+    width: 64px;
+    height: 64px;
+    //border: 1px solid #ce0000;
+    margin-right: 8px;
+    margin-bottom: 16px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-color: $white;
+    text-align: center;
+    font-size: 12px;
+    color: $black;
+    padding-top: 44px;
+
+    // Images should be SVG instead!
+    &:hover
+    {
+      background-color: lighten($white, 5%);
+    }
+
+    &.domain-private
+    {
+      background-image: url(../images/ui/private-black.png);
+    }
+
+    &.domain-company
+    {
+      background-image: url(../images/ui/company-black.png);
+    }
+
+    &.domain-public
+    {
+      background-image: url(../images/ui/public-black.png);
+    }
+
+    &.selected {
+
+      background-color: #008bbf;
+      color: $white;
+
+      &:hover {
+        background-color: lighten(#008bbf, 5%);
+      }
+
+      &.domain-private
+      {
+        background-image: url(../images/ui/private-white.png);
+      }
+
+      &.domain-company
+      {
+        background-image: url(../images/ui/company-white.png);
+      }
+
+      &.domain-public
+      {
+        background-image: url(../images/ui/public-white.png);
+      }
+
+
+    }
+  }
+
+
+}
+
 .search-details,
 .scenario-builder {
+
   .panel {
     margin: 0 0 12px 0;
   }
@@ -702,6 +935,7 @@ section {
   min-height: 100%;
   overflow: auto;
   padding: 0;
+
 
   h3 {
     /* pad left and right */
@@ -768,7 +1002,8 @@ section {
 }
 
 .model-list {
-  background-color: darken($gray-lighter, 5%);
+  //background-color: darken($gray-lighter, 5%);
+  background-color: #f1f1ee;
 }
 
 .publish-level {
