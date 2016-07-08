@@ -1,32 +1,48 @@
 <template id="template-search-details">
   <div class="search-details">
+
     <div>
       <form v-on:change="search" v-on:input="search">
         <div class="panel-group" id="run-accordion" role="tablist" aria-multiselectable="true">
           <div class="panel panel-default">
 
             <div class="panel-collapse collapse in" role="tabpanel" aria-labelledby="run-heading" id="run-collapse">
-              <div class="panel-body" >
-                <div class="form-group">
+
+                <div class="form-group domain-search-boxes">
                   <label for="options">Search domain:</label>
+
                   <!-- break because of the label hack below -->
-                  <br />
-                  <div class="domain-search-box pull-left domain-private selected">
-                    Private
-                  </div>
+                  <div class="form-group">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <input type="checkbox" name="domain-private" id="domain-private" />
+                        <label for="domain-private" class="domain-private">Private</label>
+                      </div>
 
-                  <div class="domain-search-box pull-left  domain-company">
-                    Company
-                  </div>
+                      <div class="col-md-4">
+                        <input type="checkbox" name="domain-company" id="domain-company" />
+                        <label for="domain-company" class="domain-company">Company</label>
+                      </div>
 
-                  <div class="domain-search-box pull-left  domain-public">
-                    Public
+                      <div class="col-md-4">
+                        <input type="checkbox" name="domain-public" id="domain-public" />
+                        <label for="domain-public" class="domain-public">Public</label>
+                      </div>
+                    </div>
                   </div>
+                </div>
 
 
                 <div class="form-group">
                   <label for="text">Labels:</label>
-                  <input disabled type="text" class="form-control" id="text" placeholder="Type to seach for labels..." v-model="text">
+                  <div class="input-group stylish-input-group">
+                  <input type="text" class="form-control" id="text" placeholder="Type to seach for labels..." v-model="text">
+                    <span class="input-group-addon">
+                        <button type="submit">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                    </span>
+                  </div>
                 </div>
 
 <!--                   <select class="select-picker form-control" multiple  id="search-shared" v-model="shared" data-actions-box="true">
@@ -34,105 +50,229 @@
                     <option data-icon="glyphicon-blackboard" selected>company</option>
                     <option data-icon="glyphicon-globe" selected>public</option>
                   </select> -->
-                </div>
-                <div class="form-group">
-                  <label for="begin-date">Search period:</label>
 
-                  <!-- use default dateticker, others fail with overflow -->
-                  <div>
-                    <input type="date" name="begin-date" value="" class="form-control" v-model="endDate" disabled maxlength="10" style="width:40%; display: inline-block;" />
-                    until
-                    <input type="date" name="end-date" value="" class="form-control" v-model="startDate" disabled maxlength="10"  style="width:40%;display: inline-block;" />
+
+                  <div class="form-group">
+                    <label for="begin-date">Search period:</label>
+
+                    <!-- use default dateticker, others fail with overflow -->
+                    <div>
+                      <div class="input-group stylish-input-group"  style="width:42%; float:left">
+                        <input type="date" name="begin-date" value="" class="form-control" v-model="endDate" maxlength="10" placeholder="dd-mm-yyyy" />
+                        <span class="input-group-addon">
+                          <button type="submit">
+                              <span class="glyphicon glyphicon-remove"></span>
+                          </button>
+                        </span>
+                      </div>
+
+                      <div style="float: left">until</div>
+
+
+                      <div class="input-group stylish-input-group" style="width:42%; float:left">
+                        <input type="date" name="end-date" value="" class="form-control" v-model="startDate" maxlength="10" placeholder="dd-mm-yyyy" />
+                        <span class="input-group-addon">
+                          <button type="submit">
+                              <span class="glyphicon glyphicon-remove"></span>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                </div>
 
+                 <!-- Templates -->
+                    <div class="form-group">
+                      <label for="template">Template</label>
+                      <select class="select-picker form-control" multiple id="template" v-model="selectedTemplates" data-selected-text-format="count > 3" data-actions-box="true">
+                        <option v-for="template in templates" selected>{{ template.name }}</option>
+                      </select>
+                    </div>
+                <!-- end template list -->
+
+
+
+
+              </div>
+
+
+
+
+            </div>
+
+            <!-- Dynamically generated HTML using incoming template from API -->
+
+
+
+
+            <!-- Variables -->
+
+            <div v-for="section in searchTemplates.sections">
+
+              <div class="panel panel-default">
+                <div class="panel-heading list-group-item" role="tab" >
+                  <a role="button" class="section-collapse-link" data-toggle="collapse" data-parent="#template-{{$index}}" href="#template-{{$index}}" aria-expanded="true" aria-controls="template-collapse">
+                   <h3 class="panel-title"><span class="glyphicon glyphicon-triangle-bottom"></span> {{section.name | uppercase }}</h3>
+                  </a>
+
+                  <div class="panel-collapse collapse" role="tabpanel" aria-labelledby="template-{{$index}}" id="template-{{$index}}">
+
+                  <div class="form-group" v-for="variable in section.variables">
+                    <label class="control-label" for="{{variable.id}}">{{ variable.name }}: <span v-if="variable.units" >({{ variable.units }})</span></label>
+
+
+                    <div :class="{slider: variable.type === 'slider'}">
+                      <!-- two types of input for now: textarea and other -->
+                      <!-- other first -->
+                      <template v-if="variable.type !== 'textarea'">
+                        <template v-if="variable.type === 'slider'">
+                          <div>
+                          <input
+                            type="text"
+                            class="ion-range"
+                            id="{{ variable.id }}"
+                            data-min="{{ variable.validators.min }}"
+                            data-max="{{ variable.validators.max }}"
+                            data-type="double"
+                           />
+                          </div>
+                        </template>
+<!-- this makes the floating point values work -->
+                        <template v-if="variable.type === 'numeric'">
+                          <div>
+                          <input
+                            type="text"
+                            class="ion-range"
+                            id="{{ variable.id }}"
+                            data-step="0.01"
+                            data-min="{{ variable.validators.min }}"
+                            data-max="{{ variable.validators.max }}"
+                            data-type="double"
+
+                           />
+                          </div>
+                        </template>
+
+                         <template v-else>
+                          <div class="input-group stylish-input-group">
+                            <input
+                               type="{{ variable.type }}"
+                               class="form-control"
+                               id="{{ variable.id }}"
+                               value="bla"
+                               />
+                            <span class="input-group-addon">
+                              <button type="submit">
+                                  <span class="glyphicon glyphicon-remove"></span>
+                              </button>
+                            </span>
+                          </div>
+
+                          </template>
+
+                      </template>
+                      <!-- text area -->
+                      <template
+                         v-if="variable.type === 'textarea'"
+                         >
+                        <textarea
+                           class="form-control"
+                           rows="3"
+                           ></textarea>
+                      </template>
+                    </div>
+
+                  </div>
+
+                </div>
               </div>
             </div>
           </div>
 
 
 
-          <div class="panel panel-default">
+<!--
+          <div class="panel panel-default" style="display:none">
             <div class="panel-heading list-group-item" role="tab" id="template-heading">
               <a role="button" data-toggle="collapse" data-parent="#template-accordion" href="#template-collapse" aria-expanded="true" aria-controls="template-collapse">
-                 <h3 class="panel-title"><span class="glyphicon glyphicon-triangle-bottom"></span> Template</h3>
-              </a>
+               <h3 class="panel-title"><span class="glyphicon glyphicon-triangle-bottom"></span> Template</h3>
+             </a>
 
+           </div>
+           <div class="panel-collapse collapse" role="tabpanel" aria-labelledby="template-heading" id="template-collapse">
+            <div class="panel-body">
+              <div class="form-group">
+                <label for="template">Template</label>
+                <select class="select-picker form-control"
+                multiple
+                id="template"
+                v-model="selectedTemplates"
+                data-selected-text-format="count > 3"
+                data-actions-box="true">
+                <option v-for="template in templates" selected>{{ template.name }}</option>
+
+              </select>
             </div>
-            <div class="panel-collapse collapse" role="tabpanel" aria-labelledby="template-heading" id="template-collapse">
-              <div class="panel-body">
-                <div class="form-group">
-                  <label for="template">Template</label>
-                  <select class="select-picker form-control"
-                          multiple
-                          id="template"
-                          v-model="selectedTemplates"
-                          data-selected-text-format="count > 3"
-                          data-actions-box="true">
-                    <option v-for="template in templates" selected>{{ template.name }}</option>
-
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label for="model-engine">Model engine</label>
-                  <select class="select-picker form-control"
-                          multiple
-                          id="model-engine"
-                          v-model="selectedParameters['engine']"
-                          data-selected-text-format="count > 3"
-                          data-actions-box="true"
-                          >
-                    <option v-for="engine in modelEngines" selected>{{ engine }}</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="panel panel-default">
-            <div class="panel-heading list-group-item" role="tab">
-              <a role="button" data-toggle="collapse" data-parent="#parameters-accordion" href="#parameters-collapse" aria-expanded="true" aria-controls="parameters-collapse">
-                <h3 class="panel-title">Parameters</h3>
-              </a>
-
-            </div>
-            <div class="panel-collapse collapse" role="tabpanel" aria-labelledby="parameters-heading" id="parameters-collapse">
-              <div class="panel-body">
-                <div class="form-group" v-if="parameters['riverwidth']">
-                  <label for="riverwidth">River width [m]</label>
-                  <input type="text"
-                         id="riverwidth"
-                         name="river width"
-                         value=""
-                         data-min="{{ parameters['riverwidth'].min }}"
-                         data-max="{{ parameters['riverwidth'].max }}"
-                         data-type="double"
-                         class="ion-range"
-                         v-model="selectedParameters['riverwidth']"/>
-                </div>
-                <div class="form-group" v-if="parameters['riverdischarge']">
-                  <label for="riverdischarge">River discharge [m3/s]</label>
-                  <input
-                     type="text"
-                     id="riverdischarge"
-                     name="river discharge"
-                     value=""
-                     data-min="{{ parameters['riverdischarge'].min }}"
-                     data-max="{{ parameters['riverdischarge'].max }}"
-                     data-type="double"
-                     class="ion-range"
-                     v-model="selectedParameters['riverdischarge']"/>
-
-                </div>
-
-              </div>
-            </div>
+            <div class="form-group">
+              <label for="model-engine">Model engine</label>
+              <select class="select-picker form-control"
+              multiple
+              id="model-engine"
+              v-model="selectedParameters['engine']"
+              data-selected-text-format="count > 3"
+              data-actions-box="true"
+              >
+              <option v-for="engine in modelEngines" selected>{{ engine }}</option>
+            </select>
           </div>
         </div>
-      </form>
+      </div>
+    </div>
 
+    <div class="panel panel-default">
+      <div class="panel-heading list-group-item" role="tab">
+        <a role="button" data-toggle="collapse" data-parent="#parameters-accordion" href="#parameters-collapse" aria-expanded="true" aria-controls="parameters-collapse">
+          <h3 class="panel-title">Parameters</h3>
+        </a>
 
+      </div>
+      <div class="panel-collapse collapse" role="tabpanel" aria-labelledby="parameters-heading" id="parameters-collapse">
+        <div class="panel-body">
+          <div class="form-group" v-if="parameters['riverwidth']">
+            <label for="riverwidth">River width [m]</label>
+            <input type="text"
+            id="riverwidth"
+            name="river width"
+            value=""
+            data-min="{{ parameters['riverwidth'].min }}"
+            data-max="{{ parameters['riverwidth'].max }}"
+            data-type="double"
+            class="ion-range"
+            v-model="selectedParameters['riverwidth']"/>
+          </div>
+          <div class="form-group" v-if="parameters['riverdischarge']">
+            <label for="riverdischarge">River discharge [m3/s]</label>
+            <input
+            type="text"
+            id="riverdischarge"
+            name="river discharge"
+            value=""
+            data-min="{{ parameters['riverdischarge'].min }}"
+            data-max="{{ parameters['riverdischarge'].max }}"
+            data-type="double"
+            class="ion-range"
+            v-model="selectedParameters['riverdischarge']"/>
+
+          </div>
+
+        </div>
+      </div>
     </div>
   </div>
+  -->
+</form>
+
+
+</div>
+</div>
 
 </template>

@@ -63,7 +63,7 @@ $box-shadow-color: rgba(0, 0, 0, .075);
 
 // Do disable round borders on an element
 @mixin rectangle-corners() {
-  //border-radius: 0;
+
 }
 
 // Fill max height.
@@ -79,6 +79,20 @@ $box-shadow-color: rgba(0, 0, 0, .075);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+// Disable text selection of element(s)
+@mixin unselectable {
+   -moz-user-select: none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+
+   /*
+     Introduced in IE 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+   -ms-user-select: none;
+   user-select: none;
 }
 
 
@@ -168,16 +182,25 @@ body {
   min-width: 80px;
 }
 
+
 .form-control {
-  @include rectangle-corners();
+
+  font-size: 11px;
+
+
 
   &.no-fixed-height {
     height: auto;
   }
 }
 
+input[type=date].form-control {
+  padding: 2px 0px 2px 4px;
+}
 
 /* Search results list */
+
+
 
 .search-results {
 
@@ -196,6 +219,7 @@ body {
   .run-name {
     font-size: 12px;
     font-weight: 600;
+
   }
 
   .scenario {
@@ -210,12 +234,19 @@ body {
   }
 
   .run {
-    height: 64px;
+  // height: 64px;
     border-bottom: 1px solid $white;
     color: #000000;
     background-color: $white;
     position: relative;
     padding: 4px 4px 8px 8px;
+
+
+  }
+
+  .matched-vars {
+    margin-top: 14px;
+    margin-bottom: 0px;
   }
 
   .progress-holder {
@@ -390,8 +421,6 @@ body {
   min-height:32px;
 
   margin-bottom: 0;
-
-  overflow: hidden;
 
   .btn {
     font-size: 14px;
@@ -818,46 +847,72 @@ section {
     background-color: #dfdfda;
   }
 
-
-  .domain-search-box
+  .panel-title
   {
-    cursor: pointer;
-    width: 64px;
-    height: 64px;
-    //border: 1px solid #ce0000;
-    margin-right: 8px;
-    margin-bottom: 16px;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-color: $white;
-    text-align: center;
-    font-size: 12px;
-    color: $black;
-    padding-top: 44px;
+    font-size: 11px;
+  }
 
-    // Images should be SVG instead!
-    &:hover
-    {
-      background-color: lighten($white, 5%);
+  .control-label, label {
+
+    font-weight: normal;
+    font-size: 11px;
+
+  }
+
+
+  .panel-heading {
+    background-color: transparent;
+
+  }
+
+  .domain-search-boxes {
+
+    @include unselectable();
+
+     // Hide the actual checkbox.
+    input[type=checkbox] {
+      display: none;
+      width: 64px;
+      height: 64px;
     }
 
-    &.domain-private
-    {
-      background-image: url(../images/ui/private-black.png);
+    // Style when unchecked. Note: Label MUST follow immediately after the input element.
+    input[type=checkbox] + label {
+
+      cursor: pointer;
+      display: block;
+      width: 64px;
+      height: 64px;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-color: $white;
+      text-align: center;
+      font-size: 12px;
+      color: $black;
+      padding-top: 44px;
+
+
+      &:hover {
+        background-color: lighten($white, 5%);
+      }
+
+      // Images should be SVG instead!
+      &.domain-private {
+        background-image: url(../images/ui/private-black.png);
+      }
+
+      &.domain-company {
+        background-image: url(../images/ui/company-black.png);
+      }
+
+      &.domain-public {
+        background-image: url(../images/ui/public-black.png);
+      }
+
     }
 
-    &.domain-company
-    {
-      background-image: url(../images/ui/company-black.png);
-    }
-
-    &.domain-public
-    {
-      background-image: url(../images/ui/public-black.png);
-    }
-
-    &.selected {
-
+    // Style when checked. Note: Label MUST follow immediately after the input element.
+    input[type=checkbox]:checked + label {
       background-color: #008bbf;
       color: $white;
 
@@ -865,27 +920,23 @@ section {
         background-color: lighten(#008bbf, 5%);
       }
 
-      &.domain-private
-      {
+      // Images should be SVG instead!
+      &.domain-private {
         background-image: url(../images/ui/private-white.png);
       }
 
-      &.domain-company
-      {
+      &.domain-company {
         background-image: url(../images/ui/company-white.png);
       }
 
-      &.domain-public
-      {
+      &.domain-public {
         background-image: url(../images/ui/public-white.png);
       }
-
-
     }
   }
-
-
 }
+
+
 
 .search-details,
 .scenario-builder {
@@ -901,7 +952,10 @@ section {
   .irs-from,
   .irs-to,
   .irs-single {
-    background-color: $brand-primary;
+    background-color: $white; //$brand-primary;
+    color: $black;
+    padding: 2px 8px 8px 8px;
+    top: -10px;
   }
 
   .irs-bar-edge {
@@ -920,13 +974,53 @@ section {
   .irs-from::after,
   .irs-to::after,
   .irs-single::after {
-    border-top-color: $brand-primary;
+    border-top-color: $white; //The arrow down part. // $brand-primary;
   }
 
   .irs-slider {
     width: 8px;
   }
+
+  .irs-bar {
+    height: 4px; //Height of horizontal bar
+  }
+
+  // Dimensions of the handles
+  .to, .from  {
+    background-color: $white;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    border: 1px solid #999999;
+    top: 16px;
+  }
+
+  // Horizontal background bar.
+  .irs-line span{
+    height: 4px;
+    background: none;
+    background-color: #cccccc;
+  }
 }
+
+
+.stylish-input-group .input-group-addon {
+    background: white;
+    min-width: initial;
+    padding: 6px 2px 6px 2px;
+    color: #cccccc;
+}
+.stylish-input-group .form-control {
+  border-right:0;
+  box-shadow:0 0 0;
+  border-color:#ccc;
+}
+.stylish-input-group button {
+    border:0;
+    background:transparent;
+}
+
+
 
 .scenario-list,
 .model-list,
@@ -937,9 +1031,21 @@ section {
   padding: 0;
 
 
+
+  // Disable some of the default panel stylings:
+  .panel
+  {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    border: 0px;
+    padding: 4px;
+  }
+
+
   h3 {
     /* pad left and right */
-    padding: 0 10px;
+    //padding: 0 10px;
   }
 
   .alert {
@@ -953,7 +1059,7 @@ section {
 
     &:hover {
 
-      background-color: mix($row-color-even, $white, 50%);
+      //background-color: mix($row-color-even, $white, 50%);
       cursor: pointer;
     }
 
@@ -969,7 +1075,7 @@ section {
       color: $black;
       display: block;
       outline: none;
-      padding: 10px;
+      padding: 4px 0px 4px 0px;
       text-decoration: none;
       width: 80%;
     }

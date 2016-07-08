@@ -17,8 +17,10 @@ var exports = (function () {
         },
         startDate: null,
         endDate: null,
-        text: ""
+        text: "",
 
+        // Template used for searching (probably always one)
+        searchTemplates: []
       };
     },
     props: {
@@ -26,11 +28,15 @@ var exports = (function () {
     },
 
 	ready: function() {
-      fetchTemplates()
-        .then((templates) => {
-          console.log("loaded templates", templates);
-          this.templates = templates;
-          this.$nextTick(
+
+      fetchSearchTemplates().then((templates) => {
+
+        console.log("loading search");
+      //  console.log(templates.sections);
+        this.searchTemplates = templates[0];
+        this.templates = templates[0].templates;
+
+      this.$nextTick(
             function() {
               // once the dom is updated, update the select pickers by hand
               // template data is computed into modelEngine
@@ -48,7 +54,33 @@ var exports = (function () {
             }
           );
 
-        });
+      });
+
+
+      // old code:
+      // fetchTemplates()
+      //   .then((templates) => {
+      //     console.log("loaded templates", templates);
+      //     this.templates = templates;
+      //     this.$nextTick(
+      //       function() {
+      //         // once the dom is updated, update the select pickers by hand
+      //         // template data is computed into modelEngine
+      //         $("#template").selectpicker("refresh");
+      //         $("#template").selectpicker("selectAll");
+      //         $("#model-engine").selectpicker("refresh");
+      //         $("#model-engine").selectpicker("selectAll");
+      //         $(".ion-range").ionRangeSlider({
+      //           onFinish: () => {
+      //             // args: data, not used
+      //             this.search();
+      //           }
+      //         });
+
+      //       }
+      //     );
+
+      //   });
       $(".select-picker").selectpicker();
 
     },

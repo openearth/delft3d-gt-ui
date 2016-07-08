@@ -10,7 +10,7 @@
               <div class="btn-toolbar heading-bar" >
                 Search
 
-                <button type="button" class="btn pull-right" style="height:28px; margin:2px 2px 2px 2px; background-color: #999999; color:white; font-weight: normal;">Reset</button>
+                <button type="button" class="btn pull-right" id="btn-reset-search-form" style="height:28px; margin:2px 2px 2px 2px; background-color: #999999; color:white; font-weight: normal;">Reset</button>
               </div>
             </div>
 
@@ -19,42 +19,57 @@
                Results y runs in x scenario's
 
 
-               <button type="button" class="btn pull-right" style="height:28px; margin:2px 2px 2px 2px; background-color: #666666; color:white; font-weight: normal; ">...</button>
-               <button type="button" class="btn pull-right" style="height:28px; margin:2px 2px 2px 2px; background-color: #666666; color:white; font-weight: normal;">Create scenario</button>
+               <div class="btn-group dropdown pull-right">
+                <button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height:28px; margin:2px 2px 2px 2px; background-color: #666666; color:white; font-weight: normal; ">
+                  ...</span>
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Start</a></li>
+                  <li><a href="#">Stop</a></li>
+                  <li><a href="#">Delete</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">Something else?</a></li>
+                </ul>
               </div>
-            </div>
 
-            <div class="col-xs-5"  style="background-color: #ffffff">
-              <div class="btn-toolbar heading-bar" >
-
-              </div>
+              <a class="btn pull-right" title="Create scenario" href="#/scenarios/create" class="btn btn-primary pull-right"  style="height:28px; margin:2px 2px 2px 2px; background-color: #666666; color:white; font-weight: normal;">Create scenario</a>
             </div>
           </div>
-        </div>
-      </nav>
 
+          <div class="col-xs-5"  style="background-color: #ffffff">
+            <div class="btn-toolbar heading-bar" >
 
-      <div class="container-fluid full-height">
-        <div class="row full-height">
-
-
-          <div class="col-sm-2 column  full-height">
-            <search-details></search-details>
+            </div>
           </div>
-
-          <div class="col-sm-5 column full-height">
-            <search-list filter="" v-ref:models></search-list>
-          </div>
-
-          <div class="col-sm-5 column full-height">
-            <model-details></model-details>
-          </div>
-
         </div>
       </div>
-    </div>
+    </nav>
 
+
+
+
+
+    <div class="container-fluid full-height">
+      <div class="row full-height">
+
+
+        <div class="col-sm-2 column  full-height">
+          <search-details></search-details>
+        </div>
+
+        <div class="col-sm-5 column full-height">
+          <search-list filter="" v-ref:models></search-list>
+        </div>
+
+        <div class="col-sm-5 column full-height">
+          <model-details></model-details>
+        </div>
+
+      </div>
+    </div>
   </div>
+
+</div>
 
 
 </template>
