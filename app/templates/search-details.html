@@ -13,32 +13,31 @@
 
                   <!-- break because of the label hack below -->
                   <div class="form-group">
-                    <div class="row">
-                      <div class="col-md-4">
-                        <input type="checkbox" name="domain-private" id="domain-private" />
-                        <label for="domain-private" class="domain-private">Private</label>
-                      </div>
 
-                      <div class="col-md-4">
-                        <input type="checkbox" name="domain-company" id="domain-company" />
-                        <label for="domain-company" class="domain-company">Company</label>
-                      </div>
+                        <div class="domain-selection-box">
+                          <input type="checkbox" value="private"  v-model="shared"  id="domain-private" />
+                          <label for="domain-private" class="domain-private">Private</label>
+                        </div>
 
-                      <div class="col-md-4">
-                        <input type="checkbox" name="domain-public" id="domain-public" />
-                        <label for="domain-public" class="domain-public">Public</label>
-                      </div>
-                    </div>
+                        <div class="domain-selection-box">
+                          <input type="checkbox" value="company" v-model="shared" id="domain-company" />
+                          <label for="domain-company" class="domain-company">Company</label>
+                        </div>
+
+                        <div class="domain-selection-box">
+                          <input type="checkbox" value="public" v-model="shared" id="domain-public" />
+                          <label for="domain-public" class="domain-public">Public</label>
+                        </div>
+
                   </div>
-                </div>
+              </div>
 
-
-                <div class="form-group">
+                <div class="form-group" style="clear:left">
                   <label for="text">Labels:</label>
                   <div class="input-group stylish-input-group">
                   <input type="text" class="form-control" id="text" placeholder="Type to seach for labels..." v-model="text">
                     <span class="input-group-addon">
-                        <button type="submit">
+                        <button class="button-empty-input-field">
                             <span class="glyphicon glyphicon-remove"></span>
                         </button>
                     </span>
@@ -57,22 +56,22 @@
 
                     <!-- use default dateticker, others fail with overflow -->
                     <div>
-                      <div class="input-group stylish-input-group"  style="width:42%; float:left">
+                      <div class="input-group stylish-input-group search-date-input" >
                         <input type="date" name="begin-date" value="" class="form-control" v-model="endDate" maxlength="10" placeholder="dd-mm-yyyy" />
                         <span class="input-group-addon">
-                          <button type="submit">
+                          <button class="button-empty-input-field">
                               <span class="glyphicon glyphicon-remove"></span>
                           </button>
                         </span>
                       </div>
 
-                      <div style="float: left">until</div>
+                      <div class="search-date-label">until</div>
 
 
-                      <div class="input-group stylish-input-group" style="width:42%; float:left">
+                      <div class="input-group stylish-input-group search-date-input" >
                         <input type="date" name="end-date" value="" class="form-control" v-model="startDate" maxlength="10" placeholder="dd-mm-yyyy" />
                         <span class="input-group-addon">
-                          <button type="submit">
+                          <button class="button-empty-input-field">
                               <span class="glyphicon glyphicon-remove"></span>
                           </button>
                         </span>
@@ -124,6 +123,7 @@
                       <!-- two types of input for now: textarea and other -->
                       <!-- other first -->
                       <template v-if="variable.type !== 'textarea'">
+
                         <template v-if="variable.type === 'slider'">
                           <div>
                           <input
@@ -133,10 +133,12 @@
                             data-min="{{ variable.validators.min }}"
                             data-max="{{ variable.validators.max }}"
                             data-type="double"
+                            v-model="selectedParameters[variable.id]"
                            />
                           </div>
                         </template>
-<!-- this makes the floating point values work -->
+
+                        <!-- the 0.01 makes the floating point values work -->
                         <template v-if="variable.type === 'numeric'">
                           <div>
                           <input
@@ -147,21 +149,22 @@
                             data-min="{{ variable.validators.min }}"
                             data-max="{{ variable.validators.max }}"
                             data-type="double"
-
+                            v-model="selectedParameters[variable.id]"
                            />
                           </div>
                         </template>
 
-                         <template v-else>
+                         <template v-if="variable.type !== 'numeric' && variable.type !== 'slider'">
                           <div class="input-group stylish-input-group">
                             <input
                                type="{{ variable.type }}"
                                class="form-control"
                                id="{{ variable.id }}"
-                               value="bla"
+                               value=""
+                                v-model="selectedParameters[variable.id]"
                                />
                             <span class="input-group-addon">
-                              <button type="submit">
+                              <button class="button-empty-input-field">
                                   <span class="glyphicon glyphicon-remove"></span>
                               </button>
                             </span>
@@ -172,11 +175,12 @@
                       </template>
                       <!-- text area -->
                       <template
-                         v-if="variable.type === 'textarea'"
-                         >
+                         v-if="variable.type === 'textarea'">
                         <textarea
                            class="form-control"
                            rows="3"
+                            v-model="selectedParameters[variable.id]"
+
                            ></textarea>
                       </template>
                     </div>

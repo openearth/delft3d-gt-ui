@@ -876,6 +876,13 @@ section {
       height: 64px;
     }
 
+    .domain-selection-box {
+      display: inline-block;
+      margin-right: 12px;
+      float: left;
+    }
+
+
     // Style when unchecked. Note: Label MUST follow immediately after the input element.
     input[type=checkbox] + label {
 
@@ -936,6 +943,18 @@ section {
   }
 }
 
+.search-date-input {
+
+  width:42%;
+  float:left;
+}
+
+.search-date-label {
+  vertical-align: middle;
+  float: left;
+  line-height: 32px;
+  margin: 0px 4px 0px 4px;
+}
 
 
 .search-details,
@@ -949,13 +968,17 @@ section {
     /* todo lookup variable */
   }
 
+  .irs {
+    margin-top: 10px;
+  }
+
   .irs-from,
   .irs-to,
   .irs-single {
     background-color: $white; //$brand-primary;
     color: $black;
     padding: 2px 8px 8px 8px;
-    top: -10px;
+    top: -14px;
   }
 
   .irs-bar-edge {
@@ -1077,7 +1100,7 @@ section {
       outline: none;
       padding: 4px 0px 4px 0px;
       text-decoration: none;
-      width: 80%;
+     // width: 80%;
     }
 
     .model-state {

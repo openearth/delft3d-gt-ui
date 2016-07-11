@@ -109,7 +109,9 @@
   // In testing we override the URL domain name. Otherwise nock cannot work. Nock does NOT support relative paths.
   // Using this, we can use http://0.0.0.0 in the nock.
   global.$.ajaxPrefilter(function(options) {
+    console.log(options);
     options.url = "http://0.0.0.0" + (options.url);
+
   });
 
   // stuff to test without a browser
@@ -448,11 +450,7 @@
       // no values set
       var comp = {
         data: {
-          parameter: [
-            "riverwidth,null",
-            "riverdischarge,null",
-            "engine"
-          ],
+          parameter: [],
           shared: [],
           template: []
         },
@@ -668,38 +666,6 @@
   describe("ModelDetails", function() {
     var modelDetails = new ModelDetails();
 
-    it("Should be possible to start a model", function(done) {
-      var correctReply = false;
-
-      modelDetails.$parent = {};
-      modelDetails.$parent.$broadcast = function() {
-      };
-
-      modelDetails.model.id = 4;
-
-      nock("http://0.0.0.0")
-        .defaultReplyHeaders({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*"
-        })
-        .post("/api/v1/scenes/4/start/")
-        .reply(200, function() {
-          correctReply = true;
-          return {};
-        });
-
-      modelDetails.startModel();
-
-      // Make sure the nock server had the time to reply
-      window.setTimeout(function() {
-        try {
-          assert(correctReply === true, "Nock server did not reach reply");
-          done();
-        } catch (e) {
-          done(e);
-        }
-      }, 100);
-    });
 
     it("Should be possible to export a model", function(done) {
       var correctReply = false;
@@ -711,6 +677,7 @@
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*"
         })
+        .log(console.log)
         .post("/api/v1/scenes/4/start/", {
           workflow: "export"
         })
@@ -731,6 +698,44 @@
         }
       }, 100);
     });
+
+    it("Should be possible to start a model", function(done) {
+      var correctReply = false;
+
+      modelDetails.$parent = {};
+      modelDetails.$parent.$broadcast = function() {
+      };
+
+      modelDetails.model.id = 4;
+
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .log(console.log)
+        .intercept("/api/v1/scenes/4/start/", "PUT")
+         .reply(200, function() {
+          correctReply = true;
+          return {};
+        });
+
+ // Make sure the nock server had the time to reply
+
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 500);
+
+      modelDetails.startModel();
+
+
+    });
+
 
     xit("Should be possible to publish a model private", function(done) {
       var correctReply = false;

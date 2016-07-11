@@ -6,11 +6,17 @@ var exports = (function () {
   var SearchList = Vue.component("search-list", {
 
     template: "#template-search-list",
-    props: ["filter"],
+    props: {
+      "filter": {
+        type: String,
+        required: true
+      }
+    },
     data: function() {
       return {
         selectedResultId: -1,
-        models: []
+        models: [],
+        filter: ""
       };
     },
     ready: function() {

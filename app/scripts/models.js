@@ -101,7 +101,7 @@ var exports = (function () {
     return new Promise(function(resolve, reject) {
       $.ajax({
         url: "/api/v1/scenes/" + id + "/start/",
-        method: "POST"
+        method: "PUT"
       })
         .done(function() {
           // no data to return, just call the callback
@@ -160,7 +160,7 @@ var exports = (function () {
       $.ajax({
         url: "/api/v1/scenes/" + id + "/stop/",
         data: {id: id},
-        method: "POST"
+        method: "PUT"
         })
         .done(function() {
           // no data to return, just call the callback

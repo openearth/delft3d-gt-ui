@@ -12,7 +12,12 @@ var exports = (function () {
         models: []
       };
     },
-    props: ["filter"],
+    props: {
+      "filter": {
+        type: String,
+        required: true
+      }
+    },
     ready: function() {
       // TODO: this only works if the modellist is active. If you go directly to a model it does not work.
       // Fix fetchmodel (and the server) so it actually fetches 1 model.
