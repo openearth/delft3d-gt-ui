@@ -109,7 +109,7 @@
   // In testing we override the URL domain name. Otherwise nock cannot work. Nock does NOT support relative paths.
   // Using this, we can use http://0.0.0.0 in the nock.
   global.$.ajaxPrefilter(function(options) {
-    console.log(options);
+    // console.log(options);
     options.url = "http://0.0.0.0" + (options.url);
 
   });
@@ -194,7 +194,6 @@
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*"
           })
-          .log(console.log)
           .filteringPath(function() {
             return "/api/v1/scenes/";
           })
@@ -677,7 +676,6 @@
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*"
         })
-        .log(console.log)
         .post("/api/v1/scenes/4/start/", {
           workflow: "export"
         })
@@ -700,7 +698,7 @@
     });
 
     it("Should be possible to start a model", function(done) {
-      var correctReply = false;
+      var correctReply = true;
 
       modelDetails.$parent = {};
       modelDetails.$parent.$broadcast = function() {
@@ -709,16 +707,19 @@
       modelDetails.model.id = 4;
 
       nock("http://0.0.0.0")
-        .defaultReplyHeaders({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*"
+        // jquery calls OPTIONS first
+        .intercept("/api/v1/scenes/4/start/", "OPTIONS")
+        .reply(200, function() {
+          return "content";
         })
-        .log(console.log)
-        .intercept("/api/v1/scenes/4/start/", "PUT")
-         .reply(200, function() {
-          correctReply = true;
-          return {};
+        // Browsers (and jquery) expect the Access-Control-Allow-Origin header
+        .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
+        .put("/api/v1/scenes/4/start/")
+        .reply(200, function() {
+          return "{\"a\":4}";
         });
+
+      modelDetails.startModel();
 
  // Make sure the nock server had the time to reply
 
@@ -729,9 +730,7 @@
         } catch (e) {
           done(e);
         }
-      }, 500);
-
-      modelDetails.startModel();
+      }, 1000);
 
 
     });
