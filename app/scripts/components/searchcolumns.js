@@ -43,17 +43,31 @@ var exports = (function () {
 
         // Remove items which have double id's.
         // Otherwise we get multiple runs in the list which share the same scenario.
-        models = _.uniqBy(models, "id");
+//        models = _.uniqBy(models, "id");
 
         modelList.filter = "search";
+
         modelList.models = models;
+        //modelList.models = Vue.util.extend( models, modelList.models);
 
-        // Test, for changing arrow when using collapse
-        $(".collapse").on("show.bs.collapse", function() {
-          $(this).parent().find(".glyphicon-chevron-down").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-up");
+//var newObject = _.extend({}, models, modelList.models);
+//modelList.$set("models", models);
 
-        }).on("hide.bs.collapse", function() {
-          $(this).parent().find(".glyphicon-chevron-up").removeClass("glyphicon-chevron-up").addClass("glyphicon-chevron-down");
+
+        this.$nextTick(function() {
+
+
+          // Test, for changing arrow when using collapse
+          $(".collapse").on("show.bs.collapse", function() {
+            console.log("collapse");
+            $(this).parent().find(".glyphicon-chevron-right").removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
+
+          });
+
+          $(".collapse").on("hide.bs.collapse", function() {
+            console.log("show");
+            $(this).parent().find(".glyphicon-chevron-down").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
+          });
         });
 
       },
@@ -61,6 +75,8 @@ var exports = (function () {
       // User clicked on a result item:
       "models-selected": function(id) {
         var modelDetails = this.getChildByName("model-details"); //this.$children[2]; //
+
+        console.log("new details:" + id);
 
         modelDetails.id = id;
 

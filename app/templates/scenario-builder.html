@@ -98,6 +98,7 @@
                                  :disabled="variable.disabled"
                                  :field="getId(variable)"
                                  v-validate="variable.validators"
+                                  autocomplete="off"
                                  aria-describedby="{{ variable.variableid }}status"
                                  />
                             </template>

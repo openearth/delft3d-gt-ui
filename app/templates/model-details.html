@@ -51,7 +51,7 @@
               </tr>
 
               <tr class="publish-level">
-                <td>Publish level</td>
+                <td>Share level</td>
                 <td><span>{{ publishLevel }}</span></td>
               </tr>
 
@@ -101,7 +101,7 @@
 
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h2 class="panel-title">Publish controls</h2>
+          <h2 class="panel-title">Share controls</h2>
         </div>
         <div class="panel-body">
           <p>
@@ -228,10 +228,10 @@
       <!-- MODALS -->
       <confirm-dialog dialog-id="publish" confirm-button-title="Publish">
         <template slot="title">
-          Publish model '{{ model.name }}'?
+          Share model '{{ model.name }}'?
         </template>
         <template slot="body">
-          <p>Are you sure you want to publish this model as '{{ nextPublishLevel }}'?</p>
+          <p>Are you sure you want to share this model as '{{ nextPublishLevel }}'?</p>
         </template>
         <template slot="alert">
           This action cannot be undone.

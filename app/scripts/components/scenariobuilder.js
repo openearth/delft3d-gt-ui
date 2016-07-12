@@ -84,6 +84,8 @@ var exports = (function() {
         });
 
 
+      console.log("created");
+
     },
 
     ready: function() {
@@ -101,6 +103,7 @@ var exports = (function() {
 
     route: {
       data: function(transition) {
+
         // if we have a template in the request, select that one
         if (_.has(this, "$route.query.template")) {
           var templateId = parseInt(this.$route.query.template);
@@ -110,6 +113,26 @@ var exports = (function() {
           console.log("setting template", template);
           this.selectTemplate(template);
         }
+    //     } else {
+
+    //       //T his will clear previous input. But it causes the validator not to work anymore.
+    //       // Something to implement later maybe? So now the values are not reset.
+    // console.log("dataloaded: " + this.dataLoaded);
+    // console.log("componentReady: " + this.componentReady);
+    //       if ( this.componentReady === true && this.dataLoaded === true)
+    //       {
+
+    //           // Force update:
+    //           var template = this.availableTemplates[0]; //_.get(this.availableTemplates, 0);
+
+    //           this.currentSelectedId = null;
+    //           //this.scenarioConfig = this.prepareScenarioConfig(template);
+    //           this.selectTemplate(template);
+    //       }
+    //   }
+    //console.log("route!");
+
+
 
         transition.next();
       }
@@ -197,6 +220,8 @@ var exports = (function() {
     },
     methods: {
       selectTemplate: function(template) {
+
+
         if (this.currentSelectedId === template.id) {
           return;
         }

@@ -1,6 +1,6 @@
 var exports = (function () {
   "use strict";
-  /* global Vue fetchModels */
+  /* global Vue */
 
   // register the grid component
   var SearchList = Vue.component("search-list", {
@@ -23,28 +23,22 @@ var exports = (function () {
       //TODO: this only works if the modellist is active. If you go directly to a model it does not work.
       //Fix fetchmodel (and the server) so it actually fetches 1 model.
       //fetch now
-      fetchModels()
-        .then((data) => {
-          this.models = data;
-        });
+      this.updateModels();
 
       // and fetch on every 10 seconds
-      setInterval(
-        // create a callback for every second
-        () => {
-          // fetch the models
-          fetchModels()
-            .then((data) => {
-              this.models = data;
-            });
-        },
-        // every 10 seconds
-        10000
-      );
+      // setInterval(
+      //   // create a callback for every second
+      //   () => {
+      //     this.updateModels();
+      //   },
+      //   // every 10 seconds
+      //   10000
+      // );
 
     },
 
     computed: {
+
       // Get the current selected modelid from the routing URL
       selectedModelId: {
         cache: false,
@@ -55,6 +49,7 @@ var exports = (function () {
       },
 
       selectedModels: {
+
         get: function() {
           var result = this.models;
 
@@ -69,11 +64,52 @@ var exports = (function () {
         }
       }
     },
+
     methods: {
 
+      // Update the scenario/run list.
+      updateModels: function() {
+
+        // fetch the models
+        /*
+		fetchModels()
+          .then((data) => {
+            this.models = data;
+          });
+		  */
+        //this.$dispatch("models-selected", id);
+      },
+
+
+      // A new run is selected from the UI (new search result system)
+      runSelected: function(id, ev) {
+
+        // Toggle selected id.
+        console.log(ev.target);
+        var rundiv = $(ev.target).closest(".run");
+        var checkbox = rundiv.find(".checkbox-run-selected");
+
+        checkbox.prop("checked", !checkbox.prop("checked"));
+        var checkboxState = checkbox.prop("checked");
+
+        rundiv.toggleClass("selected", checkboxState);
+
+
+        // Determine which models have been selected (can be multiple, now we accept one)
+        // Set selected result id:
+        this.selectedResultId = id;
+
+        // Directly select the id in the details list. (no routing)
+        this.$dispatch("models-selected", id);
+
+      },
+
+      // Directly select one item in the result list. This happens from the UI (event)
       directSelect: function(id) {
 
+        // Set selected result id:
         this.selectedResultId = id;
+
         // Directly select the id in the details list. (no routing)
         this.$dispatch("models-selected", id);
       }

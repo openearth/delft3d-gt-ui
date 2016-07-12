@@ -116,7 +116,9 @@ var exports = (function () {
         $("#dialog-remove-scenario-name").empty();
 
         // User accepts deletion:
-        $("#dialog-remove-scenario-response-accept").on("click", () => {
+
+		// Check if user pressed on accept button (to remove any double events we first use 'off')
+        $("#dialog-remove-scenario-response-accept").off("click").on("click", () => {
           var deletedId = this.selectedScenarioId;
 
           var options = {};

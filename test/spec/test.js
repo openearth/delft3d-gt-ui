@@ -339,51 +339,14 @@
       assert.isOk(searchDetails);
       done();
     });
-    it("Is possible to create a scenarioBuilder", function(done) {
-      var scenarioCreate = new ScenarioCreate({
-      });
 
-      assert.isOk(scenarioCreate);
-      done();
-    });
     it("Is possible to create a search columns", function(done) {
       var searchColumns = new SearchColumns();
 
       assert.isOk(searchColumns);
       done();
     });
-    it("Is possible to instantiate component ModelCreate", function(done) {
 
-      var modelCreate = new ModelCreate();
-
-      assert.isOk(modelCreate);
-      done();
-    });
-
-    it("Is possible to instantiate component ModelDetails", function(done) {
-
-      var modelDetails = new ModelDetails();
-
-      assert.isOk(modelDetails);
-      done();
-    });
-  });
-  describe("Search list", function() {
-    it("Is possible to create a search columns", function(done) {
-      var searchColumns = new SearchColumns();
-
-      assert.isOk(searchColumns);
-      done();
-    });
-  });
-
-  describe("Search list", function() {
-    it("Is possible to create a search list", function(done) {
-      var searchList = new SearchList();
-
-      assert.isOk(searchList);
-      done();
-    });
   });
 
 
@@ -395,13 +358,9 @@
       done();
     });
   });
-  describe("Search details", function() {
-    it("Is possible to create a search details", function(done) {
-      var searchDetails = new SearchDetails();
 
-      assert.isOk(searchDetails);
-      done();
-    });
+  describe("Search details", function() {
+
     it("Is possible to get modelEngines", function(done) {
       var searchDetails = new SearchDetails();
 
@@ -730,7 +689,7 @@
         } catch (e) {
           done(e);
         }
-      }, 1000);
+      }, 150);
 
 
     });

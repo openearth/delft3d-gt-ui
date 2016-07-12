@@ -31,10 +31,10 @@ var exports = (function() {
         router = new VueRouter();
 
         router.map({
-          "/search": {
-            name: "search",
-            component: SearchColumns
-          },
+          // "/search": {
+          //   name: "search",
+          //   component: SearchColumns
+          // },
           "/scenarios/:scenarioid/models/:modelid": {
             name: "finder-columns",
             component: FinderColumns
@@ -51,7 +51,7 @@ var exports = (function() {
           },
           "/": {
             name: "home",
-            component: FinderColumns
+            component: SearchColumns
           },
           "/scenarios/delete/:scenarioid": {
             name: "delete-scenario",

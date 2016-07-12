@@ -52,13 +52,17 @@ var exports = (function () {
       } else {
         // TODO: We just need 1 model. Use a unique id (uuid)
         // if we don't have it, reset all the models and see if it is there....
+
+
         fetchModels()
-          .then(models => {
+          .then(mymodels => {
             // search through the list of models
             // The `_.matchesProperty` iteratee shorthand.
             // returns undefined if not found
-            var secondTryModel = _.find(models, ["id", id]);
+            var secondTryModel = _.find(mymodels, ["id", id]);
 
+            console.log("secondtry");
+            console.log(secondTryModel);
             if (secondTryModel) {
               // Ladies and gentlemen, we got him....
               resolve(secondTryModel);

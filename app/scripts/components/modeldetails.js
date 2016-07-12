@@ -80,7 +80,7 @@ var exports = (function () {
         set: function(val) {
           // updating the data
           // clear model data
-          console.log("New model set, replacing model by empty model");
+          console.log("New model set, replacing model by empty model: " + val);
           var modelId = parseInt(val);
 
           this.model = {};
@@ -214,6 +214,8 @@ var exports = (function () {
         // afterwards, pass the log
 
         // make sure id is a number
+        console.log("updateData / fetch model:" + id);
+
         fetchModel(id)
           .then(
             (json) => {
@@ -358,9 +360,7 @@ var exports = (function () {
       stopModel: function() {
         var deletedId = this.model.id;
 
-        if (!this.stopDialog) {
-          this.stopDialog = getDialog(this, "confirm-dialog", "stop");
-        }
+        this.stopDialog = getDialog(this, "confirm-dialog", "stop");
 
         this.stopDialog.onConfirm = function() {
           stopModel(deletedId)
@@ -381,9 +381,8 @@ var exports = (function () {
       },
 
       publishModel: function(index) {
-        if (!this.publishDialog) {
-          this.publishDialog = getDialog(this, "confirm-dialog", "publish");
-        }
+
+        this.publishDialog = getDialog(this, "confirm-dialog", "publish");
 
         this.publishDialog.onConfirm = function() {
           publishModel(this.model.id, this.publishLevels[index].url)

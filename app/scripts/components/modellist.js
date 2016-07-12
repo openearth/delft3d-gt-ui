@@ -1,4 +1,4 @@
-/* globals fetchModels, router */
+/* globals  router */
 var exports = (function () {
   "use strict";
   /* global Vue */
@@ -22,6 +22,10 @@ var exports = (function () {
       // TODO: this only works if the modellist is active. If you go directly to a model it does not work.
       // Fix fetchmodel (and the server) so it actually fetches 1 model.
       // fetch now
+      console.log("skip modellist refresh");
+
+      return;
+      /*
       fetchModels()
         .then((data) => {
           console.log("fetched models", data);
@@ -41,21 +45,23 @@ var exports = (function () {
         // every 10 seconds
         10000
       );
-
+      */
     },
     route: {
       data: function(transition) {
-        fetchModels()
-          .then(
-            (json) => {
-              // copy old data and set model
-              var data = this.$data;
 
-              data.models = json;
-              // transition to this new data;
-              transition.next(data);
-            }
-          );
+
+        // fetchModels()
+        //   .then(
+        //     (json) => {
+        //       // copy old data and set model
+        //       var data = this.$data;
+
+        //       data.models = json;
+        //       // transition to this new data;
+        transition.next();
+        //     }
+        //   );
       }
 
 

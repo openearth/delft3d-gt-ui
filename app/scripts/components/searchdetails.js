@@ -45,7 +45,7 @@ var exports = (function () {
 
     variables.forEach(function(variable) {
 
-      parameters[variable.id] = null;
+      parameters[variable.id] = "";
 
       if (variable.validators.min !== undefined && variable.validators.max !== undefined) {
         parameters[variable.id] = variable.validators.min + "," + variable.validators.max;
@@ -78,8 +78,24 @@ var exports = (function () {
               // Search up to the div, and then find the input child. This is the actual input field.
               $(this).closest("div").find("input").val("");
             });
+
+
+            // Automatic search:
+            setInterval(
+                // create a callback for every second
+                () => {
+                  this.search();
+                },
+                // every 10 seconds
+                10000
+              );
           }
+
+
+
         );
+
+
 
   });
 
@@ -133,6 +149,7 @@ var exports = (function () {
       var params = {
         shared: this.shared,
         template: this.selectedTemplates
+
       };
 
       // serialize parameters corresponding to https://publicwiki.deltares.nl/display/Delft3DGT/Search
@@ -158,6 +175,7 @@ var exports = (function () {
         }
       );
       return {
+        // NEw url:
         url: "/api/v1/scenes/",
         data: params,
         // no [] in params
@@ -171,14 +189,85 @@ var exports = (function () {
       var request = this.buildRequest();
       var that = this;
 
-      console.log("sending SEARCH request", request);
-      $.ajax(request)
-        .then(function(data) {
-          that.$dispatch("models-found", data);
-        })
-        .fail(function(err) {
-          console.log(err);
-        });
+
+      // We have to search in two parts. We need to requests scenarios, and runs.
+
+      // Request scenarios (moidy url here temporarily)
+
+      function dosearch() {
+
+        // Initialize some placeholder vars.
+        var dataScenarios = {};
+        var dataRuns = {};
+
+        var refcount = 0;
+
+        console.log("sending SEARCH request - scenario part", request);
+
+        // Decrease reference count. If 0, we continue with processing data.
+        function decreaseRef() {
+          refcount--;
+
+          if (refcount <= 0) {
+
+            console.log(dataScenarios);
+            console.log(dataRuns);
+
+            // Loop through all scenarios and add the runs that are part of it.
+            dataScenarios.forEach(function(scenario) {
+
+              // Loop through all scene_sets and use the id of each item to get info from the dataRuns list.
+              scenario.scene_set.forEach(function(run, index) {
+
+                scenario.scene_set[index] = _.find(dataRuns, ["id", run]);
+
+              });
+
+            });
+
+            console.log("done");
+            that.$dispatch("models-found", dataScenarios);
+          }
+        }
+
+        refcount++;
+        request.url = "/api/v1/scenarios/";
+        request.data = {}; //override for now.
+        $.ajax(request)
+          .then(function(data) {
+
+            dataScenarios = data;
+
+            decreaseRef();
+          })
+          .fail(function(err) {
+            console.log(err);
+          });
+
+        // Request scenarios (modify url here temporarily)
+        console.log("sending SEARCH request - scenes part", request);
+        refcount++;
+        request.url = "/api/v1/scenes/";
+        request.data = {}; //override for now.
+        $.ajax(request)
+          .then(function(data) {
+
+            dataRuns = data;
+
+            decreaseRef();
+          })
+          .fail(function(err) {
+            console.log(err);
+          });
+
+
+
+
+      }
+
+      dosearch();
+
+
     }
   }
 });
