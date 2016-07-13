@@ -37,7 +37,7 @@
                   <div class="input-group stylish-input-group">
                   <input type="text" class="form-control" id="text" placeholder="Type to seach for labels..." v-model="text">
                     <span class="input-group-addon">
-                        <button class="button-empty-input-field">
+                        <button class="button-empty-input-field" type="button">
                             <span class="glyphicon glyphicon-remove"></span>
                         </button>
                     </span>
@@ -59,7 +59,7 @@
                       <div class="input-group stylish-input-group search-date-input" >
                         <input type="date" name="begin-date" value="" class="form-control" v-model="endDate" maxlength="10" placeholder="dd-mm-yyyy" />
                         <span class="input-group-addon">
-                          <button class="button-empty-input-field">
+                          <button class="button-empty-input-field" type="button">
                               <span class="glyphicon glyphicon-remove"></span>
                           </button>
                         </span>
@@ -71,7 +71,7 @@
                       <div class="input-group stylish-input-group search-date-input" >
                         <input type="date" name="end-date" value="" class="form-control" v-model="startDate" maxlength="10" placeholder="dd-mm-yyyy" />
                         <span class="input-group-addon">
-                          <button class="button-empty-input-field">
+                          <button class="button-empty-input-field" type="button">
                               <span class="glyphicon glyphicon-remove"></span>
                           </button>
                         </span>
@@ -164,7 +164,7 @@
                                 v-model="selectedParameters[variable.id]"
                                />
                             <span class="input-group-addon">
-                              <button class="button-empty-input-field">
+                              <button class="button-empty-input-field" type="button">
                                   <span class="glyphicon glyphicon-remove"></span>
                               </button>
                             </span>
