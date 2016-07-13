@@ -307,9 +307,19 @@ input[type=date].form-control {
 
     background-repeat: no-repeat;
 
+    // Icons as SVG
     &.private {
       background-image: url(../images/ui/sm-private-black.png);
     }
+
+    &.public {
+      background-image: url(../images/ui/sm-public-black.png);
+    }
+
+    &.company {
+      background-image: url(../images/ui/sm-company-black.png);
+    }
+
   }
 
 
@@ -334,6 +344,15 @@ input[type=date].form-control {
       &.private {
         background-image: url(../images/ui/sm-private-white.png);
       }
+
+      &.public {
+        background-image: url(../images/ui/sm-public-white.png);
+      }
+
+      &.company {
+        background-image: url(../images/ui/sm-company-white.png);
+      }
+
     }
 
     .badge {

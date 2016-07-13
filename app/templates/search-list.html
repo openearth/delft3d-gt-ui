@@ -35,7 +35,7 @@ col: {{openScenarios|json}}
               <div class="run" v-on:click="runSelected(run.id, $event)" v-for="run in entry.scene_set" v-bind:class="{ 'selected': this.selectedRuns.indexOf(run.id) !== -1 }">
 
                 <input type="checkbox"  class="checkbox-run-selected hidden"  />
-                <span class="run-name">{{run.name}}</span><div class="share-status" v-bind:class="{ 'private': run.shared === 'p', 'public': run.shared === 'g', 'company': run.shared === 'c'}"></div>
+                <span class="run-name">{{run.name}}</span><div class="share-status" v-bind:class="{ 'private': run.shared === 'p', 'public': run.shared === 'w', 'company': run.shared === 'c'}"></div>
 
                 <div class="progress-holder">
                   <div class="progress">
