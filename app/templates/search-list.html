@@ -2,7 +2,8 @@
   <div class="model-list">
     <!-- new search block -->
     <div class="search-results"  v-show="models.length > 0">
-
+sel: {{selectedRuns|json}}<br />
+col: {{openScenarios|json}}
       <!-- loop through all scenarios -->
       <div class="list-group checked-list-box" v-for="entry in models">
 
@@ -10,8 +11,8 @@
 
           <!-- scenario info -->
           <div class="scenario">
-            <div class="scenario-info"  data-toggle="collapse" data-target="#scenario-{{$index}}" aria-expanded="false" aria-controls="scenario-{{$index}}">
-              <span class="scenario-name"><span class=" glyphicon glyphicon-chevron-right"></span> Scenario: {{entry.name}}</span>
+            <div class="scenario-info"  data-toggle="collapse" data-target="#scenario-{{entry.id}}" aria-expanded="false" aria-controls="scenario-{{$index}}"  v-on:click="this.collapseScenario(entry.id)" data-scenarioid="{{entry.id}}">
+              <span class="scenario-name"><span class=" glyphicon glyphicon-chevron-right"></span> Scenario: {{entry.name}}</span> <small>({{entry.id}})</small>
               <div class="progress-holder">
                 <div class="progress">
                   <div data-percentage="0%" style="width: 50%;" class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
@@ -28,19 +29,19 @@
            </div>
            <!-- end scenario info block -->
 
-           <div class="scenario-runs" id="scenario-{{$index}}" v-bind:class="{collapse: entry.collapsed}">
+           <div class="scenario-runs" id="scenario-{{entry.id}}" data-scenarioid="{{entry.id}}" v-bind:class="{collapse: openScenarios.indexOf(entry.id) === -1 }" >
 
               <!-- LOOP: runs under this scenario -->
-              <div class="run" v-on:click="runSelected(run.id, $event)" v-for="run in entry.scene_set">
+              <div class="run" v-on:click="runSelected(run.id, $event)" v-for="run in entry.scene_set" v-bind:class="{ 'selected': this.selectedRuns.indexOf(run.id) !== -1 }">
 
-                <input type="checkbox"  class="checkbox-run-selected hidden" v-model="selected" />
+                <input type="checkbox"  class="checkbox-run-selected hidden"  />
                 <span class="run-name">{{run.name}}</span><div class="share-status" v-bind:class="{ 'private': run.shared === 'p', 'public': run.shared === 'g', 'company': run.shared === 'c'}"></div>
 
                 <div class="progress-holder">
                   <div class="progress">
                     <div data-percentage="0%" style="width: 50%;" class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
-                  <span>{{run.info.info  | lowercase}}</span>
+                  <span>{{run.state  | lowercase}}</span>
                 </div>
 
 

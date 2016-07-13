@@ -49,7 +49,7 @@ var exports = (function () {
 
       if (variable.validators.min !== undefined && variable.validators.max !== undefined) {
         parameters[variable.id] = variable.validators.min + "," + variable.validators.max;
-        console.log(parameters[variable.id]);
+      //  console.log(parameters[variable.id]);
       }
     });
 
@@ -202,7 +202,7 @@ var exports = (function () {
 
         var refcount = 0;
 
-        console.log("sending SEARCH request - scenario part", request);
+        //console.log("sending SEARCH request - scenario part", request);
 
         // Decrease reference count. If 0, we continue with processing data.
         function decreaseRef() {
@@ -210,8 +210,8 @@ var exports = (function () {
 
           if (refcount <= 0) {
 
-            console.log(dataScenarios);
-            console.log(dataRuns);
+          //  console.log(dataScenarios);
+           // console.log(dataRuns);
 
             // Loop through all scenarios and add the runs that are part of it.
             dataScenarios.forEach(function(scenario) {
@@ -225,7 +225,7 @@ var exports = (function () {
 
             });
 
-            console.log("done");
+           // console.log("done");
             that.$dispatch("models-found", dataScenarios);
           }
         }
@@ -245,7 +245,7 @@ var exports = (function () {
           });
 
         // Request scenarios (modify url here temporarily)
-        console.log("sending SEARCH request - scenes part", request);
+        //console.log("sending SEARCH request - scenes part", request);
         refcount++;
         request.url = "/api/v1/scenes/";
         request.data = {}; //override for now.
@@ -259,9 +259,6 @@ var exports = (function () {
           .fail(function(err) {
             console.log(err);
           });
-
-
-
 
       }
 

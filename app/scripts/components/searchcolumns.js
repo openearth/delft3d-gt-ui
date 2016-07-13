@@ -48,24 +48,30 @@ var exports = (function () {
         modelList.filter = "search";
 
         modelList.models = models;
-        //modelList.models = Vue.util.extend( models, modelList.models);
 
-//var newObject = _.extend({}, models, modelList.models);
-//modelList.$set("models", models);
-
+        var that = this;
 
         this.$nextTick(function() {
 
 
           // Test, for changing arrow when using collapse
-          $(".collapse").on("show.bs.collapse", function() {
-            console.log("collapse");
+          // We also manage the tracking of collapsed scenarios here.
+          // This is not the best place for this - refactor later.
+
+          $(".scenario-runs").on("show.bs.collapse", function() {
+            var dataid = $(this).data("scenarioid");
+            that.$refs.models.openedScenarios.push(dataid )
+
             $(this).parent().find(".glyphicon-chevron-right").removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
 
           });
 
-          $(".collapse").on("hide.bs.collapse", function() {
-            console.log("show");
+          $(".scenario-runs").on("hide.bs.collapse", function() {
+
+            var dataid = $(this).data("scenarioid");
+            that.$refs.models.openedScenarios = _.uniq(_.without( that.$refs.models.openedScenarios, dataid));
+
+
             $(this).parent().find(".glyphicon-chevron-down").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
           });
         });
@@ -75,8 +81,6 @@ var exports = (function () {
       // User clicked on a result item:
       "models-selected": function(id) {
         var modelDetails = this.getChildByName("model-details"); //this.$children[2]; //
-
-        console.log("new details:" + id);
 
         modelDetails.id = id;
 

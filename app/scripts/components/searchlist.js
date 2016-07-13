@@ -16,13 +16,18 @@ var exports = (function () {
       return {
         selectedResultId: -1,
         models: [],
-        filter: ""
+        filter: "",
+
+        selectedRuns: [],
+        openedScenarios: []
       };
     },
     ready: function() {
       //TODO: this only works if the modellist is active. If you go directly to a model it does not work.
       //Fix fetchmodel (and the server) so it actually fetches 1 model.
       //fetch now
+
+
       this.updateModels();
 
       // and fetch on every 10 seconds
@@ -38,6 +43,17 @@ var exports = (function () {
     },
 
     computed: {
+
+
+      openScenarios: {
+        cache: false,
+        get: function() {
+
+
+          return this.openedScenarios;
+
+        }
+      },
 
       // Get the current selected modelid from the routing URL
       selectedModelId: {
@@ -63,9 +79,40 @@ var exports = (function () {
           return result;
         }
       }
+
+
+
     },
 
     methods: {
+
+
+      collapseScenario: function() {
+
+
+
+
+        var collapsed = [];
+
+        var items =  $(".scenario-runs");
+
+        // Add all items which have the "collapse" class. We use this to determine if we need to keep items open/closed upon list refreshes.
+        for(var i = 0; i < items.length; i++)
+        {
+          console.log( $(items[i]).data("scenarioid") + " - " + $(items[i]).hasClass("collapse") + " - " + $(items[i]).hasClass("collapsing"));
+
+          if ( !($(items[i]).hasClass("in") === true || $(items[i]).hasClass("collapsing") === true))
+          {
+          //  collapsed.push($(items[i]).data("scenarioid"))
+          }
+        }
+
+            //   this.openedScenarios = collapsed;
+        console.log(this.openedScenarios);
+
+
+
+      },
 
       // Update the scenario/run list.
       updateModels: function() {
@@ -85,7 +132,6 @@ var exports = (function () {
       runSelected: function(id, ev) {
 
         // Toggle selected id.
-        console.log(ev.target);
         var rundiv = $(ev.target).closest(".run");
         var checkbox = rundiv.find(".checkbox-run-selected");
 
@@ -101,6 +147,22 @@ var exports = (function () {
 
         // Directly select the id in the details list. (no routing)
         this.$dispatch("models-selected", id);
+
+        // Add item to selected array, or remove:
+        if (checkboxState == true)
+        {
+          // Did we already have the item? If not, add it.
+          if (_.findIndex(this.selectedRuns, id) === -1)
+          {
+            // Add item to list of selected runs:
+            this.selectedRuns.push(id);
+          }
+        } else {
+          // Item has been removed... delete it?
+          this.selectedRuns = _.without(this.selectedRuns, id);
+        }
+
+
 
       },
 

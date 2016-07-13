@@ -2,6 +2,11 @@
 
 $icon-font-path: '../fonts/';
 
+// Load Segoe UI font.
+@font-face {
+    font-family: "Segoe UI";
+    src: url("#{$icon-font-path}segoe-ui-webfont.woff") format('woff');
+}
 
 // From: huisstijl.deltares.nl
 
