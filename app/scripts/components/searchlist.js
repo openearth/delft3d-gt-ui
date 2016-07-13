@@ -89,28 +89,21 @@ var exports = (function () {
 
       collapseScenario: function() {
 
+        // var items =  $(".scenario-runs");
 
+        // // Add all items which have the "collapse" class. We use this to determine if we need to keep items open/closed upon list refreshes.
+        // for(var i = 0; i < items.length; i++)
+        // {
+        //   console.log( $(items[i]).data("scenarioid") + " - " + $(items[i]).hasClass("collapse") + " - " + $(items[i]).hasClass("collapsing"));
 
+        //   if ( !($(items[i]).hasClass("in") === true || $(items[i]).hasClass("collapsing") === true))
+        //   {
+        //   //  collapsed.push($(items[i]).data("scenarioid"))
+        //   }
+        // }
 
-        var collapsed = [];
-
-        var items =  $(".scenario-runs");
-
-        // Add all items which have the "collapse" class. We use this to determine if we need to keep items open/closed upon list refreshes.
-        for(var i = 0; i < items.length; i++)
-        {
-          console.log( $(items[i]).data("scenarioid") + " - " + $(items[i]).hasClass("collapse") + " - " + $(items[i]).hasClass("collapsing"));
-
-          if ( !($(items[i]).hasClass("in") === true || $(items[i]).hasClass("collapsing") === true))
-          {
-          //  collapsed.push($(items[i]).data("scenarioid"))
-          }
-        }
-
-            //   this.openedScenarios = collapsed;
-        console.log(this.openedScenarios);
-
-
+        //     //   this.openedScenarios = collapsed;
+        // console.log(this.openedScenarios);
 
       },
 
@@ -149,14 +142,13 @@ var exports = (function () {
         this.$dispatch("models-selected", id);
 
         // Add item to selected array, or remove:
-        if (checkboxState == true)
-        {
+        if (checkboxState === true) {
           // Did we already have the item? If not, add it.
-          if (_.findIndex(this.selectedRuns, id) === -1)
-          {
+          if (_.findIndex(this.selectedRuns, id) === -1) {
             // Add item to list of selected runs:
             this.selectedRuns.push(id);
           }
+
         } else {
           // Item has been removed... delete it?
           this.selectedRuns = _.without(this.selectedRuns, id);

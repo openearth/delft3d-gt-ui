@@ -60,7 +60,8 @@ var exports = (function () {
 
           $(".scenario-runs").on("show.bs.collapse", function() {
             var dataid = $(this).data("scenarioid");
-            that.$refs.models.openedScenarios.push(dataid )
+
+            that.$refs.models.openedScenarios.push(dataid);
 
             $(this).parent().find(".glyphicon-chevron-right").removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
 
@@ -69,7 +70,8 @@ var exports = (function () {
           $(".scenario-runs").on("hide.bs.collapse", function() {
 
             var dataid = $(this).data("scenarioid");
-            that.$refs.models.openedScenarios = _.uniq(_.without( that.$refs.models.openedScenarios, dataid));
+
+            that.$refs.models.openedScenarios = _.uniq(_.without(that.$refs.models.openedScenarios, dataid));
 
 
             $(this).parent().find(".glyphicon-chevron-down").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
