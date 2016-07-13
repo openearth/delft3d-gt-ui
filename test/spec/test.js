@@ -682,13 +682,54 @@
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*"
         })
-        .post("/api/v1/scenes/4/start/")
+        .intercept("/api/v1/scenes/4/start/", "OPTIONS")
+        .reply(200, function() {
+          return {};
+        })
+        .put("/api/v1/scenes/4/start/")
         .reply(200, function() {
           correctReply = true;
           return {};
         });
 
       modelDetails.startModel();
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
+    });
+
+    xit("Should be possible to stop a model", function(done) {
+      var correctReply = false;
+
+      modelDetails.$parent = {};
+      modelDetails.$parent.$broadcast = function() {
+      };
+
+      modelDetails.model.id = 4;
+
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .intercept("/api/v1/scenes/4/stop/", "OPTIONS")
+        .reply(200, function() {
+          return {};
+        })
+        .put("/api/v1/scenes/4/stop/")
+        .reply(200, function() {
+          correctReply = true;
+          return {};
+        });
+
+      modelDetails.stopModel();
 
       // Make sure the nock server had the time to reply
       window.setTimeout(function() {
@@ -711,9 +752,11 @@
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*"
         })
-        .post("/api/v1/scenes/4/start/", {
-          workflow: "export"
+        .intercept("/api/v1/scenes/4/start/", "OPTIONS")
+        .reply(200, function() {
+          return {};
         })
+        .put("/api/v1/scenes/4/start/")
         .reply(200, function() {
           correctReply = true;
           return {};
