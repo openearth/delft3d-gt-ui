@@ -21,6 +21,7 @@
               <a class="btn pull-right nav-bar-button" title="Create scenario" href="#/scenarios/create">Create scenario</a>
 
 
+              <model-control-menu :selected-runs="selectedRuns" :models="models" ></model-control-menu>
             </div>
           </div>
 
@@ -42,13 +43,14 @@
         </div>
 
         <div class="col-sm-5 column full-height">
-          <search-list filter="" v-ref:models>
+        runs: {{selectedRuns|json}}
+        cols: {{openedScenarios|json}}
 
-          </search-list>
+         <search-list v-bind:opened-scenarios.sync="openedScenarios" filter="" :models="models" :selected-runs.sync="selectedRuns"   > </search-list>
         </div>
 
         <div class="col-sm-5 column full-height">
-          <model-details></model-details>
+        <model-details></model-details>
         </div>
 
       </div>

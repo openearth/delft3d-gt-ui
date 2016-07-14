@@ -7,53 +7,47 @@ var exports = (function () {
 
     template: "#template-search-list",
     props: {
-      "filter": {
-        type: String,
+
+      "models": {
+        type: Array,
+        required: true
+      },
+
+      "selectedRuns": {
+        type: Array,
+        required: true
+      },
+
+      "openedScenarios": {
+        type: Array,
         required: true
       }
     },
+
     data: function() {
       return {
         selectedResultId: -1,
-        models: [],
-        filter: "",
 
-        selectedRuns: [],
-        openedScenarios: []
+        keyControlPressed: false
+
       };
     },
     ready: function() {
-      //TODO: this only works if the modellist is active. If you go directly to a model it does not work.
-      //Fix fetchmodel (and the server) so it actually fetches 1 model.
-      //fetch now
+
+      var that = this;
+
+      /// Register changes to the control key:
+      $(document).on("keyup keydown", function (e) {
+        that.keyControlPressed = e.ctrlKey;
+      });
 
 
       this.updateModels();
 
-      // and fetch on every 10 seconds
-      // setInterval(
-      //   // create a callback for every second
-      //   () => {
-      //     this.updateModels();
-      //   },
-      //   // every 10 seconds
-      //   10000
-      // );
 
     },
 
     computed: {
-
-
-      openScenarios: {
-        cache: false,
-        get: function() {
-
-
-          return this.openedScenarios;
-
-        }
-      },
 
       // Get the current selected modelid from the routing URL
       selectedModelId: {
@@ -85,11 +79,11 @@ var exports = (function () {
 
           // Now we remove items from the selectedRuns variable that do NOT exist in the allruns list
           // For example, these have been removed.
-          this.selectedRuns = _.filter(this.selectedRuns, function(id) {
+          var r = _.filter(this.selectedRuns, function(id) {
             return allRuns.indexOf(id) !== -1;
           });
 
-          return this.selectedRuns;
+          return r;
 
           // if (this.filter === "scenarios") {
           //   // is this the best approach, couldn't get a filterkey to work (no access to routing info)
@@ -111,25 +105,9 @@ var exports = (function () {
 
       collapseScenario: function() {
 
-        // var items =  $(".scenario-runs");
-
-        // // Add all items which have the "collapse" class. We use this to determine if we need to keep items open/closed upon list refreshes.
-        // for(var i = 0; i < items.length; i++)
-        // {
-        //   console.log( $(items[i]).data("scenarioid") + " - " + $(items[i]).hasClass("collapse") + " - " + $(items[i]).hasClass("collapsing"));
-
-        //   if ( !($(items[i]).hasClass("in") === true || $(items[i]).hasClass("collapsing") === true))
-        //   {
-        //   //  collapsed.push($(items[i]).data("scenarioid"))
-        //   }
-        // }
-
-        //     //   this.openedScenarios = collapsed;
-        // console.log(this.openedScenarios);
-
       },
 
-      // Update the scenario/run list.
+     // Update the scenario/run list.
       updateModels: function() {
 
         // fetch the models
@@ -146,37 +124,70 @@ var exports = (function () {
       // A new run is selected from the UI (new search result system)
       runSelected: function(id, ev) {
 
+        // Note: this function contains a few things for the detail view to work, until this is updated to the new system.
+
         // Toggle selected id.
         var rundiv = $(ev.target).closest(".run");
         var checkbox = rundiv.find(".checkbox-run-selected");
+        var checkboxState = null;
 
-        checkbox.prop("checked", !checkbox.prop("checked"));
-        var checkboxState = checkbox.prop("checked");
-
-        rundiv.toggleClass("selected", checkboxState);
+        // Is control down? Then we select multiple:
+        if (this.keyControlPressed === true) {
 
 
-        // Determine which models have been selected (can be multiple, now we accept one)
-        // Set selected result id:
-        this.selectedResultId = id;
+          checkbox.prop("checked", !checkbox.prop("checked"));
+          checkboxState = checkbox.prop("checked");
 
-        // Directly select the id in the details list. (no routing)
-        this.$dispatch("models-selected", id);
+          rundiv.toggleClass("selected", checkboxState);
 
-        // Add item to selected array, or remove:
-        if (checkboxState === true) {
-          // Did we already have the item? If not, add it.
-          if (_.findIndex(this.selectedRuns, id) === -1) {
-            // Add item to list of selected runs:
-            this.selectedRuns.push(id);
+
+          // Determine which models have been selected (can be multiple, now we accept one)
+          // Set selected result id:  (for old detail display at the moment)
+          this.selectedResultId = id;
+
+          // Directly select the id in the details list. (no routing)
+          this.$dispatch("models-selected", id);
+
+          // Add item to selected array, or remove:
+          if (checkboxState === true) {
+            // Did we already have the item? If not, add it.
+            if (_.findIndex(this.selectedRuns, id) === -1) {
+              // Add item to list of selected runs:
+              this.selectedRuns.push(id);
+
+
+
+            }
+
+          } else {
+            // Item has been removed... delete it?
+            this.selectedRuns = _.without(this.selectedRuns, id);
           }
 
+          // Make sure list is always unique:
+          this.selectedRuns = _.uniq(this.selectedRuns);
+
+
         } else {
-          // Item has been removed... delete it?
-          this.selectedRuns = _.without(this.selectedRuns, id);
+
+          // Control is not pressed, so we deselect all checkboxes, and only set the one we selected.
+          $("checkbox-run-selected").removeAttr("checked");
+
+          // Set new state
+          checkboxState = checkbox.prop("checked");
+
+          rundiv.toggleClass("selected", checkboxState);
+
+          // Select it:
+          // Set selected result id: (for old detail display at the moment)
+          this.selectedResultId = id;
+
+          // Directly select the id in the details list. (no routing)
+          this.$dispatch("models-selected", id);
+
+          // Only select this run:
+          this.selectedRuns = [id];
         }
-
-
 
       },
 

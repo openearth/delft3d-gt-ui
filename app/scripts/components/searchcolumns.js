@@ -13,7 +13,13 @@ var exports = (function () {
         ScenarioCount: 0,
 
         // How many runs are in these scenarios?
-        RunCount: 0
+        RunCount: 0,
+
+        models: [],
+
+        openedScenarios: [],
+        selectedRuns: []
+
       };
     },
     components: {
@@ -22,7 +28,6 @@ var exports = (function () {
       "model-details": ModelDetails
 
     },
-
 
     methods: {
 
@@ -47,15 +52,15 @@ var exports = (function () {
       // Got some search results:
       // We receive the models, number of scenarios and number of runs.
       "models-found": function (models, numScenarios, numRuns) {
-        var modelList = this.$refs.models;
+        //var modelList = this.$refs.models;
 
         // Remove items which have double id's.
         // Otherwise we get multiple runs in the list which share the same scenario.
 //        models = _.uniqBy(models, "id");
 
-        modelList.filter = "search";
+        //modelList.filter = "search";
 
-        modelList.models = models;
+        this.models = models;
 
         this.ScenarioCount = numScenarios;
         this.RunCount = numRuns;
@@ -66,15 +71,18 @@ var exports = (function () {
 
 
           // Test, for changing arrow when using collapse
-          // We also manage the tracking of collapsed scenarios here.
+          // We also manage the tracking of ios here.
           // This is not the best place for this - refactor later.
 
           $(".scenario-runs").on("show.bs.collapse", function() {
             var dataid = $(this).data("scenarioid");
 
-            that.$refs.models.openedScenarios.push(dataid);
+            that.openedScenarios.push(dataid);
 
             $(this).parent().find(".glyphicon-chevron-right:first-child").removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
+
+            that.openedScenarios = _.uniq(that.openedScenarios);
+            console.log(that.openedScenarios);
 
           });
 
@@ -82,10 +90,14 @@ var exports = (function () {
 
             var dataid = $(this).data("scenarioid");
 
-            that.$refs.models.openedScenarios = _.uniq(_.without(that.$refs.models.openedScenarios, dataid));
+            that.openedScenarios = _.uniq(_.without(that.openedScenarios, dataid));
 
 
             $(this).parent().find(".glyphicon-chevron-down:first-child").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
+
+            that.openedScenarios = _.uniq(that.openedScenarios);
+
+            console.log(that.openedScenarios);
           });
         });
 
@@ -93,7 +105,7 @@ var exports = (function () {
 
       // User clicked on a result item:
       "models-selected": function(id) {
-        var modelDetails = this.getChildByName("model-details"); //this.$children[2]; //
+        var modelDetails = this.getChildByName("model-details");
 
         modelDetails.id = id;
 

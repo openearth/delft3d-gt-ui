@@ -1,14 +1,12 @@
 <template id="template-search-list" inline-template>
 
-  <model-control-menu :selected-runs="selectedModels" :models="models" ></model-control-menu>
-
   <div class="model-list">
 
-
+    sel: {{selectedRuns|json}} / col: {{openedScenarios|json}}
 
     <!-- new search block -->
     <div class="search-results"  v-show="models.length > 0">
-sel: {{selectedRuns|json}} / col: {{openScenarios|json}}
+
       <!-- loop through all scenarios -->
       <div class="list-group checked-list-box" v-for="entry in models">
 
@@ -16,7 +14,7 @@ sel: {{selectedRuns|json}} / col: {{openScenarios|json}}
 
           <!-- scenario info -->
           <div class="scenario">
-            <div class="scenario-info"  data-toggle="collapse" data-target="#scenario-{{entry.id}}" aria-expanded="false" aria-controls="scenario-{{$index}}"  v-on:click="this.collapseScenario(entry.id)" data-scenarioid="{{entry.id}}">
+            <div class="scenario-info"  data-toggle="collapse" data-target="#scenario-{{entry.id}}" aria-expanded="false" aria-controls="scenario-{{$index}}"   data-scenarioid="{{entry.id}}">
               <span class="scenario-name"><span class=" glyphicon glyphicon-chevron-right"></span> Scenario: {{entry.name}}</span> <small>({{entry.id}})</small>
               <div class="progress-holder">
                 <div class="progress">
@@ -34,7 +32,7 @@ sel: {{selectedRuns|json}} / col: {{openScenarios|json}}
            </div>
            <!-- end scenario info block -->
 
-           <div class="scenario-runs" id="scenario-{{entry.id}}" data-scenarioid="{{entry.id}}" v-bind:class="{collapse: openScenarios.indexOf(entry.id) === -1 }" >
+           <div class="scenario-runs" id="scenario-{{entry.id}}" data-scenarioid="{{entry.id}}" v-bind:class="{collapse: openedScenarios.indexOf(entry.id) === -1 }" >
 
               <!-- LOOP: runs under this scenario -->
               <div class="run" v-on:click="runSelected(run.id, $event)" v-for="run in entry.scene_set" v-bind:class="{ 'selected': this.selectedModels.indexOf(run.id) !== -1 }">

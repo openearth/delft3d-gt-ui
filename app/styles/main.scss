@@ -389,7 +389,10 @@ input[type=date].form-control {
 /* End */
 
 
-
+.clear-left
+{
+  clear:left;
+}
 
 .footer {
   margin: 8px 0 0;
@@ -417,7 +420,7 @@ input[type=date].form-control {
   // no borders pls
   border: 0;
   // Shadow below the div
-  box-shadow: 0 2px 4px $gray;
+  //box-shadow: 0 2px 4px $gray;
 
   margin: 0;
 
@@ -461,7 +464,7 @@ input[type=date].form-control {
 }
 
 .tool-bar {
-  background-color: $gray-light;
+ // background-color: $gray-light;
   height: 32px;
   min-height:32px;
 

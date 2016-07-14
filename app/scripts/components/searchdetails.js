@@ -33,6 +33,7 @@ var exports = (function () {
 
   fetchSearchTemplates().then((templates) => {
 
+
     console.log("loading search");
   //  console.log(templates.sections);
     this.searchTemplates = templates[0];
