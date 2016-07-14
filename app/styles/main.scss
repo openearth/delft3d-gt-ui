@@ -61,7 +61,8 @@ $dark-gray: #cccccc;
 $slider-handle-border: #999999;
 $progress-bar-color: #cc4444;
 $badge-color-unselected: #989a9a;
-
+$button-color-nav-bar: #999999;
+$button-color-nav-bar-default: #008bbf;
 
 /* This part is wiredepped
 // bower:scss
@@ -421,7 +422,8 @@ input[type=date].form-control {
   margin: 0;
 
   // Span over all available width
-  width: 100vw;
+  // unit vw gives a h-scrollbar(!)
+  width: 100%;
 
 
   .navbar-right {
@@ -454,6 +456,8 @@ input[type=date].form-control {
   height: 32px;
   line-height: 32px;
   font-weight: 600;
+
+
 }
 
 .tool-bar {
@@ -469,7 +473,23 @@ input[type=date].form-control {
     height: 30px;
     line-height: 1;
     margin-top: 10px;
+
+    &.nav-bar-button
+    {
+      height:28px;
+      margin:2px 2px 2px 2px;
+      background-color: $button-color-nav-bar;
+      color: $white;
+      font-weight: normal;
+      border: 0px;
+    }
+
+    &.default
+    {
+      background-color: $button-color-nav-bar-default;
+    }
   }
+
 
 }
 
