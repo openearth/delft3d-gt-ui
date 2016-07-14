@@ -1,9 +1,14 @@
 <template id="template-search-list" inline-template>
+
+  <model-control-menu :selected-runs="selectedModels" :models="models" ></model-control-menu>
+
   <div class="model-list">
+
+
+
     <!-- new search block -->
     <div class="search-results"  v-show="models.length > 0">
-sel: {{selectedRuns|json}}<br />
-col: {{openScenarios|json}}
+sel: {{selectedRuns|json}} / col: {{openScenarios|json}}
       <!-- loop through all scenarios -->
       <div class="list-group checked-list-box" v-for="entry in models">
 
@@ -32,7 +37,7 @@ col: {{openScenarios|json}}
            <div class="scenario-runs" id="scenario-{{entry.id}}" data-scenarioid="{{entry.id}}" v-bind:class="{collapse: openScenarios.indexOf(entry.id) === -1 }" >
 
               <!-- LOOP: runs under this scenario -->
-              <div class="run" v-on:click="runSelected(run.id, $event)" v-for="run in entry.scene_set" v-bind:class="{ 'selected': this.selectedRuns.indexOf(run.id) !== -1 }">
+              <div class="run" v-on:click="runSelected(run.id, $event)" v-for="run in entry.scene_set" v-bind:class="{ 'selected': this.selectedModels.indexOf(run.id) !== -1 }">
 
                 <input type="checkbox"  class="checkbox-run-selected hidden"  />
                 <span class="run-name">{{run.name}}</span><div class="share-status" v-bind:class="{ 'private': run.shared === 'p', 'public': run.shared === 'w', 'company': run.shared === 'c'}"></div>

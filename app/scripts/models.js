@@ -80,8 +80,6 @@ var exports = (function () {
 
   function deleteModel(id) {
     return new Promise(function(resolve, reject) {
-      // add extra options to id
-      //var postData = _.assign({id: id}, options);
 
       $.ajax({
         url: "/api/v1/scenes/" + id + "/",
@@ -97,7 +95,6 @@ var exports = (function () {
         });
 
     });
-
   }
 
   function startModel(id) {
@@ -179,6 +176,55 @@ var exports = (function () {
 
   }
 
+
+  /// Batch version of deleteModel. We expect an array of items to delete.
+  function deleteModels(ids) {
+    // We expect an array of ids.
+    if (_.isArray(ids) === false) {
+      return false;
+    }
+
+    // We need to determine the result of this somehow. [TODO]
+    // Loop through all ids:
+    for(var i = 0; i < ids.length; i++) {
+      deleteModel(ids[i]);
+    }
+
+    return true;
+  }
+
+  function startModels(ids) {
+    // We expect an array of ids.
+    if (_.isArray(ids) === false) {
+      return false;
+    }
+
+    // We need to determine the result of this somehow. [TODO]
+    // Loop through all ids:
+    for(var i = 0; i < ids.length; i++) {
+      startModel(ids[i]);
+    }
+
+    return true;
+  }
+
+  function stopModels(ids) {
+
+    // We expect an array of ids.
+    if (_.isArray(ids) === false) {
+      return false;
+    }
+
+    // We need to determine the result of this somehow. [TODO]
+    // Loop through all ids:
+    for(var i = 0; i < ids.length; i++) {
+      stopModel(ids[i]);
+    }
+
+    return true;
+  }
+
+
   function fetchLog(id) {
     return new Promise(function(resolve, reject) {
       try {
@@ -223,7 +269,11 @@ var exports = (function () {
     startModel: startModel,
     exportModel: exportModel,
     stopModel: stopModel,
-    publishModel: publishModel
+    publishModel: publishModel,
+
+    startModels: startModels,
+    stopModels: stopModels,
+    deleteModels: deleteModels
   };
 }());
 

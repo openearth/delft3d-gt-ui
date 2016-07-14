@@ -9,7 +9,9 @@ var exports = (function () {
     template: "#template-model-list",
     data: function() {
       return {
-        models: []
+        models: [],
+        ScenarioCount: 0,
+        RunCount: 0
       };
     },
     props: {

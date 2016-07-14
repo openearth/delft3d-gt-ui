@@ -1,0 +1,21 @@
+<template id="template-model-control-menu" inline-template>
+
+  <div class="btn-group dropdown pull-right">
+    <button type="button" class="btn btn-default dropdown-toggle " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height:28px; margin:2px 2px 2px 2px; background-color: #666666; color:white; font-weight: normal; ">...</span></button>
+
+    <ul class="dropdown-menu">
+
+      <!-- clone item, enabled only if one item is selected -->
+      <li><a href="#" v-bind:class="{inputdisabled: selectedRuns.length !== 1 }" v-on:click="cloneScenario()">Clone scenario of selected run</a></li>
+
+      <li role="separator" class="divider"></li>
+
+      <li><a href="#" v-bind:class="{inputdisabled: selectedRuns.length === 0 }" v-on:click="startSelectedModels()">Start</a></li>
+      <li><a href="#" v-bind:class="{inputdisabled: selectedRuns.length === 0 }" v-on:click="stopSelectedModels()">Stop</a></li>
+
+      <li role="separator" class="divider"></li>
+      <li><a href="#" v-bind:class="{inputdisabled: selectedRuns.length === 0 }"  v-on:click="deleteSelectedModels()">Delete</a></li>
+    </ul>
+  </div>
+
+</template>

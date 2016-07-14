@@ -78,10 +78,7 @@
             Restart
           </button>
 
-          <button type="button" class="btn btn-labeled btn-success" v-bind:class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE') || isReadOnly() }"  v-on:click="exportModel">
-            <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>
-            Start export
-          </button>
+
 
           <button type="button" class="btn btn-labeled btn-warning" v-bind:class="{ 'inputdisabled':  !(model.state === 'PROCESSING') || isReadOnly() }" id="simulation-control-stop" v-on:click="stopModel">
             <span class="btn-label"><i class="glyphicon glyphicon-stop"></i></span>
@@ -93,8 +90,6 @@
             <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
             Remove run
           </button>
-
-         <h5 v-bind:class="{ 'default-hidden': (model.state === 'SUCCESS' || model.state === 'FAILURE') || isReadOnly() }">&ldquo;<i>Start export</i>&rdquo; becomes available after a simulation has finished.</h5>
 
         </div>
       </div>
@@ -195,11 +190,17 @@
             <span class="form-control no-fixed-height">Download output movie</span>
           </div>
 
-          <div class="btn-group">
-            <button class="form-control btn btn-primary" id="download-submit" v-on:click="downloadFiles()" value="">
+
+            <button class="btn btn-primary" type="button"  id="download-submit" v-on:click="downloadFiles()" value="">
               Download
             </button>
-          </div>
+
+            <button class="btn btn-primary" type="button" v-bind:class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE') || isReadOnly() }"  v-on:click="exportModel">
+              Start export
+            </button>
+
+          <h5 v-bind:class="{ 'default-hidden': (model.state === 'SUCCESS' || model.state === 'FAILURE') || isReadOnly() }">&ldquo;<i>Start export</i>&rdquo; becomes available after a simulation has finished.</h5>
+
         </div>
       </div>
 

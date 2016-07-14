@@ -8,12 +8,19 @@ var exports = (function () {
     template: "#template-search-columns",
     data: function() {
       return {
+
+        // How many scenarios were found?
+        ScenarioCount: 0,
+
+        // How many runs are in these scenarios?
+        RunCount: 0
       };
     },
     components: {
       "search-details": SearchDetails,
       "search-list": SearchList,
       "model-details": ModelDetails
+
     },
 
 
@@ -38,7 +45,8 @@ var exports = (function () {
     events: {
 
       // Got some search results:
-      "models-found": function (models) {
+      // We receive the models, number of scenarios and number of runs.
+      "models-found": function (models, numScenarios, numRuns) {
         var modelList = this.$refs.models;
 
         // Remove items which have double id's.
@@ -48,6 +56,9 @@ var exports = (function () {
         modelList.filter = "search";
 
         modelList.models = models;
+
+        this.ScenarioCount = numScenarios;
+        this.RunCount = numRuns;
 
         var that = this;
 
@@ -63,7 +74,7 @@ var exports = (function () {
 
             that.$refs.models.openedScenarios.push(dataid);
 
-            $(this).parent().find(".glyphicon-chevron-right").removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
+            $(this).parent().find(".glyphicon-chevron-right:first-child").removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
 
           });
 
@@ -74,7 +85,7 @@ var exports = (function () {
             that.$refs.models.openedScenarios = _.uniq(_.without(that.$refs.models.openedScenarios, dataid));
 
 
-            $(this).parent().find(".glyphicon-chevron-down").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
+            $(this).parent().find(".glyphicon-chevron-down:first-child").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
           });
         });
 

@@ -6,13 +6,13 @@
         <div class="panel-group" id="run-accordion" role="tablist" aria-multiselectable="true">
           <div class="panel panel-default">
 
-            <div class="panel-collapse collapse in" role="tabpanel" aria-labelledby="run-heading" id="run-collapse">
+            <div class="panel-collapse" role="tabpanel">
 
                 <div class="form-group domain-search-boxes">
                   <label for="options">Search domain:</label>
 
                   <!-- break because of the label hack below -->
-                  <div class="form-group">
+                  <div class="form-group col-md-12">
 
                         <div class="domain-selection-box">
                           <input type="checkbox" value="private"  v-model="shared"  id="domain-private"  checked="checked"/>
@@ -32,7 +32,7 @@
                   </div>
               </div>
 
-                <div class="form-group" style="clear:left">
+                <div class="form-group" >
                   <label for="text">Labels:</label>
                   <div class="input-group stylish-input-group">
                   <input type="text" class="form-control" id="text" placeholder="Type to seach for labels..." v-model="text">

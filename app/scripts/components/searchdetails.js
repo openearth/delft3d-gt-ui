@@ -213,26 +213,45 @@ var exports = (function () {
           //  console.log(dataScenarios);
            // console.log(dataRuns);
 
+            var runCount = 0;
+
             // Loop through all scenarios and add the runs that are part of it.
             dataScenarios.forEach(function(scenario) {
 
               // Loop through all scene_sets and use the id of each item to get info from the dataRuns list.
-              scenario.scene_set.forEach(function(run, index) {
+              var matchingRuns = [];
 
-                scenario.scene_set[index] = _.find(dataRuns, ["id", run]);
+              scenario.scene_set.forEach(function(run) {
+
+                var item = _.find(dataRuns, ["id", run]);
+
+                if (item !== undefined) {
+                  matchingRuns.push(item);
+                }
+
+
 
               });
 
+              runCount += matchingRuns.length;
+
+              // Replace array:
+              /*eslint-disable camelcase*/
+              scenario.scene_set = matchingRuns;
+              /*eslint-enable camelcase*/
+
             });
 
+            console.log(dataScenarios.length + " / " + runCount);
+
            // console.log("done");
-            that.$dispatch("models-found", dataScenarios);
+            that.$dispatch("models-found", dataScenarios, dataScenarios.length, runCount);
           }
         }
 
         refcount++;
         request.url = "/api/v1/scenarios/";
-        request.data = {}; //override for now.
+        //request.data = {}; //override for now.
         $.ajax(request)
           .then(function(data) {
 
@@ -248,7 +267,7 @@ var exports = (function () {
         //console.log("sending SEARCH request - scenes part", request);
         refcount++;
         request.url = "/api/v1/scenes/";
-        request.data = {}; //override for now.
+        //request.data = {}; //override for now.
         $.ajax(request)
           .then(function(data) {
 

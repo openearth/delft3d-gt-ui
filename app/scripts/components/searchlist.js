@@ -67,16 +67,38 @@ var exports = (function () {
       selectedModels: {
 
         get: function() {
-          var result = this.models;
 
-          if (this.filter === "scenarios") {
-            // is this the best approach, couldn't get a filterkey to work (no access to routing info)
-            var scenario = this.selectedScenarioId;
+          // Return new array of selectedRuns, remove the ones that do not exist anymore.
+          //console.log
+          // Get all runs from this.models.
+          var allRuns = [];
 
-            result = _.filter(this.models, ["scenario", scenario]);
+          _.find(this.models, function(value) {
 
-          }
-          return result;
+            // Is our id in this
+            if (value.scene_set !== undefined) {
+              for (var i = 0; i < value.scene_set.length; i++) {
+                allRuns.push(value.scene_set[i].id);
+              }
+            }
+          });
+
+          // Now we remove items from the selectedRuns variable that do NOT exist in the allruns list
+          // For example, these have been removed.
+          this.selectedRuns = _.filter(this.selectedRuns, function(id) {
+            return allRuns.indexOf(id) !== -1;
+          });
+
+          return this.selectedRuns;
+
+          // if (this.filter === "scenarios") {
+          //   // is this the best approach, couldn't get a filterkey to work (no access to routing info)
+          //   var scenario = this.selectedScenarioId;
+
+          //   result = _.filter(this.models, ["scenario", scenario]);
+
+          // }
+          // return result;
         }
       }
 

@@ -47,6 +47,22 @@ $state-pending: $gray-light;
 $state-processing: #7facc5;
 $box-shadow-color: rgba(0, 0, 0, .075);
 
+
+// Colors from Bert's design:
+$slightly-white: #f1f1ee;
+
+$slightly-gray: #e5f3f8;
+$scenario-item-background: #e5f3f8;
+$scenario-selected-border: #008bbf;
+$scenario-selected-background: #008bbf;
+$search-domain-selected: #008bbf;
+$panel-gray: #dfdfda;
+$dark-gray: #cccccc;
+$slider-handle-border: #999999;
+$progress-bar-color: #cc4444;
+$badge-color-unselected: #989a9a;
+
+
 /* This part is wiredepped
 // bower:scss
 @import 'bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss';
@@ -228,21 +244,21 @@ input[type=date].form-control {
   }
 
   .scenario {
-    background-color: #e5f3f8;
-    border: 2px solid #008bbf;
+    background-color: $scenario-item-background;
+    border: 2px solid $scenario-selected-border;
     min-height: 64px;
 
   }
 
   .scenario-info {
     padding: 4px 4px 8px 8px;
-    border-bottom: 1px solid #f1f1ee;
+    border-bottom: 1px solid $slightly-white;
   }
 
   .run {
   // height: 64px;
     border-bottom: 1px solid $white;
-    color: #000000;
+    color: $black;
     background-color: $white;
     position: relative;
     padding: 4px 4px 8px 8px;
@@ -266,7 +282,7 @@ input[type=date].form-control {
 
     .progress {
        margin-bottom: 0px;
-       background-color: #cccccc;
+       background-color: $dark-gray;
        height: 6px;
     }
 
@@ -275,7 +291,7 @@ input[type=date].form-control {
       box-shadow: inset 0 -1px 0 rgba(0,0,0,0.15);
       -webkit-transition: width .6s ease;
       transition: width .6s ease;
-      background-color: #cc4444;
+      background-color: $progress-bar-color;
     }
   }
 
@@ -284,8 +300,8 @@ input[type=date].form-control {
 
     border-radius: 8px;
     font-size: 10px;
-    border: 1px solid #989a9a;
-    color: #989a9a;
+    border: 1px solid $badge-color-unselected;
+    color: $badge-color-unselected;
 
     height: 18px;
     line-height: 10px;
@@ -336,8 +352,8 @@ input[type=date].form-control {
   // When an item is selected some things change. that happens here
   .selected {
 
-    background-color: #008bbf;
-    color: #ffffff;
+    background-color: $scenario-selected-background;
+    color: $white;
 
 
     .share-status  {
@@ -866,10 +882,10 @@ section {
 
 .search-details {
 
-  background-color: #dfdfda;
+  background-color: $panel-gray;
 
   .panel {
-    background-color: #dfdfda;
+    background-color: $panel-gray;
   }
 
   .panel-title
@@ -945,11 +961,11 @@ section {
 
     // Style when checked. Note: Label MUST follow immediately after the input element.
     input[type=checkbox]:checked + label {
-      background-color: #008bbf;
+      background-color: $search-domain-selected;
       color: $white;
 
       &:hover {
-        background-color: lighten(#008bbf, 5%);
+        background-color: lighten($search-domain-selected, 5%);
       }
 
       // Images should be SVG instead!
@@ -1039,7 +1055,7 @@ section {
     width: 20px;
     height: 20px;
     border-radius: 10px;
-    border: 1px solid #999999;
+    border: 1px solid $slider-handle-border;
     top: 16px;
   }
 
@@ -1047,7 +1063,7 @@ section {
   .irs-line span{
     height: 4px;
     background: none;
-    background-color: #cccccc;
+    background-color: $dark-gray;
   }
 }
 
@@ -1056,12 +1072,12 @@ section {
     background: white;
     min-width: initial;
     padding: 6px 2px 6px 2px;
-    color: #cccccc;
+    color: $dark-gray;
 }
 .stylish-input-group .form-control {
   border-right:0;
   box-shadow:0 0 0;
-  border-color:#ccc;
+  border-color: $dark-gray;
 }
 .stylish-input-group button {
     border:0;
@@ -1157,7 +1173,7 @@ section {
 
 .model-list {
   //background-color: darken($gray-lighter, 5%);
-  background-color: #f1f1ee;
+  background-color: $slightly-white;
 }
 
 .publish-level {
