@@ -36,9 +36,9 @@ var exports = (function () {
 
       var that = this;
 
-      /// Register changes to the control key:
+      /// Register changes to the control & command key:
       $(document).on("keyup keydown", function (e) {
-        that.keyControlPressed = e.ctrlKey;
+        that.keyControlPressed = e.ctrlKey | e.metaKey;
       });
 
 
@@ -154,8 +154,6 @@ var exports = (function () {
             if (_.findIndex(this.selectedRuns, id) === -1) {
               // Add item to list of selected runs:
               this.selectedRuns.push(id);
-
-
 
             }
 

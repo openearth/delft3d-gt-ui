@@ -31,6 +31,30 @@ var exports = (function () {
 
     methods: {
 
+      // Reset all input fields.
+      resetFields: function() {
+        // Empty all fields:
+        $(".search-details input[type='text'], .search-details input[type=date]").val("");
+
+        // Todo, reset sliders to min/max
+        var sliders = $(".ion-range");
+
+        $.each(sliders, function(key, slider) {
+          var irs = $(slider).data("ionRangeSlider");
+
+          // Reset /from & to to min/max.
+          irs.update({
+            from: irs.options.min,
+            to: irs.options.max
+          });
+        });
+
+        // Domain selection boxes - enable all.
+        $(".domain-selection-box input[type='checkbox']").prop("checked", "checked");
+
+      },
+
+
       // Get a child by name, such that we do not have a fixed index.
       getChildByName: function(name) {
         var that = this;

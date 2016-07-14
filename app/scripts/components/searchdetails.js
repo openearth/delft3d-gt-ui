@@ -34,9 +34,15 @@ var exports = (function () {
   fetchSearchTemplates().then((templates) => {
 
 
+    if (templates === undefined) {
+      return;
+    }
+
     console.log("loading search");
   //  console.log(templates.sections);
     this.searchTemplates = templates[0];
+
+
     this.templates = templates[0].templates;
 
     var parameters = {};
@@ -50,7 +56,6 @@ var exports = (function () {
 
       if (variable.validators.min !== undefined && variable.validators.max !== undefined) {
         parameters[variable.id] = variable.validators.min + "," + variable.validators.max;
-      //  console.log(parameters[variable.id]);
       }
     });
 
@@ -144,6 +149,7 @@ var exports = (function () {
   methods: {
 
 
+
     buildRequest: function() {
       // for now we just copy everything
 
@@ -215,6 +221,7 @@ var exports = (function () {
            // console.log(dataRuns);
 
             var runCount = 0;
+            var visibleScenarios = [];
 
             // Loop through all scenarios and add the runs that are part of it.
             dataScenarios.forEach(function(scenario) {
@@ -230,8 +237,6 @@ var exports = (function () {
                   matchingRuns.push(item);
                 }
 
-
-
               });
 
               runCount += matchingRuns.length;
@@ -241,7 +246,15 @@ var exports = (function () {
               scenario.scene_set = matchingRuns;
               /*eslint-enable camelcase*/
 
+              // We only add scenarios that have atleast one item.
+              if (matchingRuns.length > 0) {
+                visibleScenarios.push(scenario);
+              }
+
             });
+
+            // Store updated scenario array.
+            dataScenarios = visibleScenarios;
 
             console.log(dataScenarios.length + " / " + runCount);
 
