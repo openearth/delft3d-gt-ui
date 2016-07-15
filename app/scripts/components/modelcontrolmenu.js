@@ -97,7 +97,7 @@ var exports = (function () {
           }
         };
 
-        this.$router.go(req);
+        this.router.go(req);
 
 
       }

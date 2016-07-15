@@ -104,62 +104,24 @@ var exports = (function() {
     route: {
       data: function(transition) {
 
-
-        transition.next();
-
-         /*
-
         // if we have a template in the request, select that one
         if (_.has(this, "$route.query.template")) {
 
           // This cannot go into the fetchTemplates, template will always be empty!
           var templateId = parseInt(this.$route.query.template);
 
-          // Fetch templateS:
-         // fetchTemplates()
-        //   .then((templates) => {
-              this.availableTemplates = templates;
+          var template = _.first(_.filter(this.availableTemplates, ["id", templateId]));
 
-              var template = _.first(_.filter(this.availableTemplates, ["id", templateId]));
-
-              console.log(this.availableTemplates);
-              console.log(templateId);
-              console.log(template);
-
-              if (template !== undefined) {
-                this.selectTemplate(template);
-                console.log("next");
-                transition.next(template);
-              } else {
-                transition.next();
-              }
-          //  });
-
-        } else {
-          transition.next();
+          if (template !== undefined) {
+            this.selectTemplate(template);
+            console.log("next");
+            transition.next(template);
+          } else {
+            transition.next();
+          }
         }
-*/
 
-    //     } else {
-
-    //       //T his will clear previous input. But it causes the validator not to work anymore.
-    //       // Something to implement later maybe? So now the values are not reset.
-    // console.log("dataloaded: " + this.dataLoaded);
-    // console.log("componentReady: " + this.componentReady);
-    //       if ( this.componentReady === true && this.dataLoaded === true)
-    //       {
-
-    //           // Force update:
-    //           var template = this.availableTemplates[0]; //_.get(this.availableTemplates, 0);
-
-    //           this.currentSelectedId = null;
-    //           //this.scenarioConfig = this.prepareScenarioConfig(template);
-    //           this.selectTemplate(template);
-    //       }
-    //   }
-    //console.log("route!");
-
-
+        transition.next();
 
 
       }
