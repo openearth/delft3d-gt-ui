@@ -264,7 +264,10 @@ input[type=date].form-control {
     position: relative;
     padding: 4px 4px 8px 8px;
 
-
+    &:hover
+    {
+      background-color: darken($white, 2%);
+    }
   }
 
   .matched-vars {
@@ -375,6 +378,11 @@ input[type=date].form-control {
     .badge {
       color: $white;
       border: 1px solid $white;
+    }
+
+    &:hover
+    {
+      background-color: lighten($scenario-selected-background, 2%);
     }
 
   }
@@ -1009,7 +1017,7 @@ section {
 
 .search-date-input {
 
-  width:42%;
+  width: 80px;
   float:left;
 }
 

@@ -19,6 +19,12 @@ var exports = (function () {
 
 
     props: {
+
+      "selectedScenarios": {
+        type: Array,
+        required: true
+      },
+
       "selectedRuns": {
         type: Array,
         required: true
@@ -53,23 +59,22 @@ var exports = (function () {
 
       cloneScenario: function() {
 
-        // We cannot clone from a run. We need to select a scenario!!
-       // console.log("disabled for a moment");
-        //return;
+        // Get scenario id:
+        var scenarioId = this.selectedScenarios[0];
 
-        // Find selected run
-        // var selectedRunId = this.selectedRuns[0];
-        // var scenario = null;
+        // Find it:
+        var scenario = _.find(this.Models, function(value) {
 
-        // _.find(this.Models, function(value) {
+          // Is our id in this
+          return (value.id === scenarioId);
+        });
 
-        //   // Is our id in this
-        //   return  (_.indexOf(value.scene_set, selectedRunId) !== -1)
-        // });
+        console.log(scenario);
 
-/*
-        // Find scenario that we clone
-        var scenario = this.scenarioList.selectedScenario;
+        // Ignore if we did not find anything.
+        if (scenario === undefined) {
+          return;
+        }
 
         var parameters = _.assign(
           // create a new object (no data binding)
@@ -79,6 +84,7 @@ var exports = (function () {
           scenario.parameters
         );
 
+        console.log("TEMPLATE:" + scenario.template);
         // These parameters are passed to the other view
         // alternative would be to store them in the app or to call an event
         var req = {
@@ -87,13 +93,13 @@ var exports = (function () {
           query: {
             "template": scenario.template,
             "parameters": JSON.stringify(parameters),
-            "name": _.get(this.scenarioList.selectedScenario, "name")
+            "name": _.get(scenario, "name")
           }
         };
 
         this.$router.go(req);
 
-*/
+
       }
     }
 

@@ -20,12 +20,11 @@
 
               <a class="btn pull-right nav-bar-button" title="Create scenario" href="#/scenarios/create">Create scenario</a>
 
-
-              <model-control-menu :selected-runs="selectedRuns" :models="models" ></model-control-menu>
+              <model-control-menu :selected-runs="selectedRuns" :models="models" :selected-scenarios="selectedScenarios" ></model-control-menu>
             </div>
           </div>
 
-          <div class="col-xs-5"  style="background-color: #ffffff">
+          <div class="col-xs-5" style="background-color: #f1f1ee">
             <div class="btn-toolbar heading-bar" >
 
             </div>
@@ -45,8 +44,9 @@
         <div class="col-sm-5 column full-height">
         runs: {{selectedRuns|json}}
         cols: {{openedScenarios|json}}
+        scenarios: {{selectedScenarios|json}}
 
-         <search-list v-bind:opened-scenarios.sync="openedScenarios" filter="" :models="models" :selected-runs.sync="selectedRuns"   > </search-list>
+         <search-list v-bind:opened-scenarios.sync="openedScenarios" filter="" :models="models" :selected-runs.sync="selectedRuns" :selected-scenarios.sync="selectedScenarios"></search-list>
         </div>
 
         <div class="col-sm-5 column full-height">

@@ -6,15 +6,15 @@
     <ul class="dropdown-menu">
 
       <!-- clone item, enabled only if one item is selected -->
-      <li><a href="#" v-bind:class="{inputdisabled: selectedRuns.length !== 1 }" v-on:click="cloneScenario()">Clone scenario of selected run</a> werkt niet(!)</li>
+      <li><a href="#" v-bind:class="{inputdisabled: selectedScenarios.length !== 1 }" v-on:click="cloneScenario()">Clone scenario</a></li>
 
       <li role="separator" class="divider"></li>
 
-      <li><a href="#" v-bind:class="{inputdisabled: selectedRuns.length === 0 }" v-on:click="startSelectedModels()">Start</a></li>
-      <li><a href="#" v-bind:class="{inputdisabled: selectedRuns.length === 0 }" v-on:click="stopSelectedModels()">Stop</a></li>
+      <li><a href="#" v-bind:class="{inputdisabled: selectedRuns.length === 0  && selectedScenarios.length === 0}" v-on:click="startSelectedModels()">Start</a></li>
+      <li><a href="#" v-bind:class="{inputdisabled: selectedRuns.length === 0  && selectedScenarios.length === 0}" v-on:click="stopSelectedModels()">Stop</a></li>
 
       <li role="separator" class="divider"></li>
-      <li><a href="#" v-bind:class="{inputdisabled: selectedRuns.length === 0 }"  v-on:click="deleteSelectedModels()">Delete</a></li>
+      <li><a href="#" v-bind:class="{inputdisabled: selectedRuns.length === 0  && selectedScenarios.length === 0}"  v-on:click="deleteSelectedModels()">Delete</a></li>
     </ul>
   </div>
 

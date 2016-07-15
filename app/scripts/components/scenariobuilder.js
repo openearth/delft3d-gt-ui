@@ -104,15 +104,42 @@ var exports = (function() {
     route: {
       data: function(transition) {
 
+
+        transition.next();
+
+         /*
+
         // if we have a template in the request, select that one
         if (_.has(this, "$route.query.template")) {
+
+          // This cannot go into the fetchTemplates, template will always be empty!
           var templateId = parseInt(this.$route.query.template);
 
-          var template = _.first(_.filter(this.availableTemplates, ["id", templateId]));
+          // Fetch templateS:
+         // fetchTemplates()
+        //   .then((templates) => {
+              this.availableTemplates = templates;
 
-          console.log("setting template", template);
-          this.selectTemplate(template);
+              var template = _.first(_.filter(this.availableTemplates, ["id", templateId]));
+
+              console.log(this.availableTemplates);
+              console.log(templateId);
+              console.log(template);
+
+              if (template !== undefined) {
+                this.selectTemplate(template);
+                console.log("next");
+                transition.next(template);
+              } else {
+                transition.next();
+              }
+          //  });
+
+        } else {
+          transition.next();
         }
+*/
+
     //     } else {
 
     //       //T his will clear previous input. But it causes the validator not to work anymore.
@@ -134,7 +161,7 @@ var exports = (function() {
 
 
 
-        transition.next();
+
       }
     },
 
@@ -309,6 +336,8 @@ var exports = (function() {
       },
 
       submitScenario: function() {
+
+        console.log("submit");
 
         var parameters = {},
             name = "";

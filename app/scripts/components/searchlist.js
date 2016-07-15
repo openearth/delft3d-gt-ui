@@ -18,10 +18,17 @@ var exports = (function () {
         required: true
       },
 
+      "selectedScenarios": {
+        type: Array,
+        required: true
+      },
+
       "openedScenarios": {
         type: Array,
         required: true
       }
+
+
     },
 
     data: function() {
@@ -38,7 +45,7 @@ var exports = (function () {
 
       /// Register changes to the control & command key:
       $(document).on("keyup keydown", function (e) {
-        that.keyControlPressed = e.ctrlKey | e.metaKey;
+        that.keyControlPressed = (e.ctrlKey === true || e.metaKey === true);
       });
 
 
@@ -48,6 +55,8 @@ var exports = (function () {
     },
 
     computed: {
+
+
 
       // Get the current selected modelid from the routing URL
       selectedModelId: {
@@ -120,6 +129,21 @@ var exports = (function () {
         //this.$dispatch("models-selected", id);
       },
 
+      // User wants to select a scenario:
+      scenarioSelect: function(id, ev) {
+        var scenariodiv = $(ev.target).closest(".scenario");
+
+        scenariodiv.toggleClass("selected");
+
+        var selected = $(".scenario.selected");
+        var ids = [];
+
+        selected.each(function(key, value) {
+          ids.push($(value).data("scenarioid"));
+        });
+
+        this.selectedScenarios = ids;
+      },
 
       // A new run is selected from the UI (new search result system)
       runSelected: function(id, ev) {

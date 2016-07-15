@@ -18,8 +18,8 @@ var exports = (function () {
         models: [],
 
         openedScenarios: [],
-        selectedRuns: []
-
+        selectedRuns: [],
+        selectedScenarios: []
       };
     },
     components: {
@@ -29,7 +29,12 @@ var exports = (function () {
 
     },
 
+
+
+
+
     methods: {
+
 
       // Reset all input fields.
       resetFields: function() {
@@ -98,7 +103,7 @@ var exports = (function () {
           // We also manage the tracking of ios here.
           // This is not the best place for this - refactor later.
 
-          $(".scenario-runs").on("show.bs.collapse", function() {
+          $(".scenario-runs").on("hide.bs.collapse", function() {
             var dataid = $(this).data("scenarioid");
 
             that.openedScenarios.push(dataid);
@@ -110,7 +115,7 @@ var exports = (function () {
 
           });
 
-          $(".scenario-runs").on("hide.bs.collapse", function() {
+          $(".scenario-runs").on("show.bs.collapse", function() {
 
             var dataid = $(this).data("scenarioid");
 
