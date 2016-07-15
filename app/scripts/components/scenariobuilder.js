@@ -104,6 +104,7 @@ var exports = (function() {
     route: {
       data: function(transition) {
 
+
         // if we have a template in the request, select that one
         if (_.has(this, "$route.query.template")) {
 
@@ -114,15 +115,10 @@ var exports = (function() {
 
           if (template !== undefined) {
             this.selectTemplate(template);
-            console.log("next");
-            transition.next(template);
-          } else {
-            transition.next();
           }
         }
 
         transition.next();
-
 
       }
     },

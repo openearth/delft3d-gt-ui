@@ -1,4 +1,4 @@
-/* global Vue startModels, stopModels, deleteModels */
+/* global Vue startModels, stopModels, deleteModels, router */
 
 var exports = (function () {
   "use strict";
@@ -97,7 +97,7 @@ var exports = (function () {
           }
         };
 
-        this.router.go(req);
+        router.go(req);
 
 
       }
