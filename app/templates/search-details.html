@@ -2,7 +2,7 @@
 
  <div class="search-details">
     <div>
-      <form v-on:change="search" v-on:input="search">
+      <form v-on:change="startSearch" v-on:input="startSearch">
         <div class="panel-group" id="run-accordion" role="tablist" aria-multiselectable="true">
           <div class="panel panel-default">
 
@@ -33,8 +33,20 @@
               </div>
 
                 <div class="form-group clear-left">
+                 <label for="search">Search on name:</label>
+                  <div class="input-group stylish-input-group">
+                  <input type="text" class="form-control" id="search" placeholder="Type to search..." v-model="search">
+                    <span class="input-group-addon">
+                        <button class="button-empty-input-field" type="button">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                    </span>
+                  </div>
+                </div>
 
-                  <label for="text">Labels:</label>
+<!-- label search is hidden for now, as long a we do not support it.
+                <div class="form-group clear-left">
+                 <label for="text">Labels:</label>
                   <div class="input-group stylish-input-group">
                   <input type="text" class="form-control" id="text" placeholder="Type to seach for labels..." v-model="text">
                     <span class="input-group-addon">
@@ -44,41 +56,36 @@
                     </span>
                   </div>
                 </div>
+-->
 
-<!--                   <select class="select-picker form-control" multiple  id="search-shared" v-model="shared" data-actions-box="true">
-                    <option data-icon="glyphicon-user" selected>private</option>
-                    <option data-icon="glyphicon-blackboard" selected>company</option>
-                    <option data-icon="glyphicon-globe" selected>public</option>
-                  </select> -->
+<!-- date search is hidden for now, as long a we do not support it.
+                <div class="form-group">
+                  <label for="begin-date">Search period:</label>
 
+                  <div>
+                    <div class="input-group stylish-input-group search-date-input" >
+                      <input type="date" name="begin-date" value="" class="form-control" v-model="endDate" maxlength="10" placeholder="dd-mm-yyyy" />
+                      <span class="input-group-addon">
+                        <button class="button-empty-input-field" type="button">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                      </span>
+                    </div>
 
-                  <div class="form-group">
-                    <label for="begin-date">Search period:</label>
-
-                    <!-- use default dateticker, others fail with overflow -->
-                    <div>
-                      <div class="input-group stylish-input-group search-date-input" >
-                        <input type="date" name="begin-date" value="" class="form-control" v-model="endDate" maxlength="10" placeholder="dd-mm-yyyy" />
-                        <span class="input-group-addon">
-                          <button class="button-empty-input-field" type="button">
-                              <span class="glyphicon glyphicon-remove"></span>
-                          </button>
-                        </span>
-                      </div>
-
-                      <div class="search-date-label">until</div>
+                    <div class="search-date-label">until</div>
 
 
-                      <div class="input-group stylish-input-group search-date-input" >
-                        <input type="date" name="end-date" value="" class="form-control" v-model="startDate" maxlength="10" placeholder="dd-mm-yyyy" />
-                        <span class="input-group-addon">
-                          <button class="button-empty-input-field" type="button">
-                              <span class="glyphicon glyphicon-remove"></span>
-                          </button>
-                        </span>
-                      </div>
+                    <div class="input-group stylish-input-group search-date-input" >
+                      <input type="date" name="end-date" value="" class="form-control" v-model="startDate" maxlength="10" placeholder="dd-mm-yyyy" />
+                      <span class="input-group-addon">
+                        <button class="button-empty-input-field" type="button">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </button>
+                      </span>
                     </div>
                   </div>
+                </div>
+-->
 
                  <!-- Templates -->
                     <div class="form-group">
@@ -192,88 +199,6 @@
               </div>
             </div>
           </div>
-
-
-
-<!--
-          <div class="panel panel-default" style="display:none">
-            <div class="panel-heading list-group-item" role="tab" id="template-heading">
-              <a role="button" data-toggle="collapse" data-parent="#template-accordion" href="#template-collapse" aria-expanded="true" aria-controls="template-collapse">
-               <h3 class="panel-title"><span class="glyphicon glyphicon-triangle-bottom"></span> Template</h3>
-             </a>
-
-           </div>
-           <div class="panel-collapse collapse" role="tabpanel" aria-labelledby="template-heading" id="template-collapse">
-            <div class="panel-body">
-              <div class="form-group">
-                <label for="template">Template</label>
-                <select class="select-picker form-control"
-                multiple
-                id="template"
-                v-model="selectedTemplates"
-                data-selected-text-format="count > 3"
-                data-actions-box="true">
-                <option v-for="template in templates" selected>{{ template.name }}</option>
-
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="model-engine">Model engine</label>
-              <select class="select-picker form-control"
-              multiple
-              id="model-engine"
-              v-model="selectedParameters['engine']"
-              data-selected-text-format="count > 3"
-              data-actions-box="true"
-              >
-              <option v-for="engine in modelEngines" selected>{{ engine }}</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel panel-default">
-      <div class="panel-heading list-group-item" role="tab">
-        <a role="button" data-toggle="collapse" data-parent="#parameters-accordion" href="#parameters-collapse" aria-expanded="true" aria-controls="parameters-collapse">
-          <h3 class="panel-title">Parameters</h3>
-        </a>
-
-      </div>
-      <div class="panel-collapse collapse" role="tabpanel" aria-labelledby="parameters-heading" id="parameters-collapse">
-        <div class="panel-body">
-          <div class="form-group" v-if="parameters['riverwidth']">
-            <label for="riverwidth">River width [m]</label>
-            <input type="text"
-            id="riverwidth"
-            name="river width"
-            value=""
-            data-min="{{ parameters['riverwidth'].min }}"
-            data-max="{{ parameters['riverwidth'].max }}"
-            data-type="double"
-            class="ion-range"
-            v-model="selectedParameters['riverwidth']"/>
-          </div>
-          <div class="form-group" v-if="parameters['riverdischarge']">
-            <label for="riverdischarge">River discharge [m3/s]</label>
-            <input
-            type="text"
-            id="riverdischarge"
-            name="river discharge"
-            value=""
-            data-min="{{ parameters['riverdischarge'].min }}"
-            data-max="{{ parameters['riverdischarge'].max }}"
-            data-type="double"
-            class="ion-range"
-            v-model="selectedParameters['riverdischarge']"/>
-
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </div>
-  -->
 </form>
 
 

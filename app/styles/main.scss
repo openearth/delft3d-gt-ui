@@ -22,6 +22,7 @@ $deltares-cyclaam: #eb0073;
 $white: #f3f3f3;
 $gray-light: #ccc;
 $black: #070707;
+$dark-gray: #cccccc;
 
 $color-details-column: $white;
 $color-scenario-column: #ddd;
@@ -32,7 +33,7 @@ $brand-info: $deltares-metallic;
 $brand-success: $deltares-groen;
 $brand-warning: $deltares-oranje;
 $brand-danger: $deltares-cyclaam;
-$body-bg: $white; //lighten($black, 33.5%);
+$body-bg: $white;
 
 // TODO: base on gray and brand colors:
 $row-color-finished: #e5ffca;
@@ -49,20 +50,18 @@ $box-shadow-color: rgba(0, 0, 0, .075);
 
 
 // Colors from Bert's design:
-$slightly-white: #f1f1ee;
-
-$slightly-gray: #e5f3f8;
+$model-list-background: #f1f1ee;
+$scenario-info-border: #f1f1ee;;
 $scenario-item-background: #e5f3f8;
 $scenario-selected-border: #008bbf;
 $scenario-selected-background: #008bbf;
 $search-domain-selected: #008bbf;
-$panel-gray: #dfdfda;
-$dark-gray: #cccccc;
+$panel-background: #dfdfda;
 $slider-handle-border: #999999;
 $progress-bar-color: #cc4444;
 $badge-color-unselected: #989a9a;
-$button-color-nav-bar: #999999;
-$button-color-nav-bar-default: #008bbf;
+$navigation-button-background: #999999;
+$navigation-button-background-default: #008bbf;
 
 /* This part is wiredepped
 // bower:scss
@@ -83,15 +82,10 @@ $button-color-nav-bar-default: #008bbf;
 
 }
 
-// Do disable round borders on an element
-@mixin rectangle-corners() {
 
-}
 
 // Fill max height.
 @mixin fill {
-  //min-height: 100%;
-  //height: 100%;
   height: calc(100vh - 130px);
 }
 
@@ -184,13 +178,8 @@ body {
   top: -1em;
 }
 
-.alert {
-  @include rectangle-corners();
-}
 
 .btn {
-  @include rectangle-corners();
-
   // Give a bit of space when inside a row.
   &.inside-cell {
     margin: 3px;
@@ -200,7 +189,6 @@ body {
 
 // Override rounded corners, default bootstrap style
 .input-group-addon {
-  @include rectangle-corners();
   min-width: 80px;
 }
 
@@ -253,11 +241,10 @@ input[type=date].form-control {
 
   .scenario-info {
     padding: 4px 4px 8px 8px;
-    border-bottom: 1px solid $slightly-white;
+    border-bottom: 1px solid $scenario-info-border;
   }
 
   .run {
-  // height: 64px;
     border-bottom: 1px solid $white;
     color: $black;
     background-color: $white;
@@ -410,10 +397,6 @@ input[type=date].form-control {
   vertical-align: middle;
 }
 
-.panel,
-.panel-group .panel {
-  @include rectangle-corners();
-}
 
 .navbar-brand {
   height: 80px;
@@ -427,8 +410,6 @@ input[type=date].form-control {
 .navbar-static-top {
   // no borders pls
   border: 0;
-  // Shadow below the div
-  //box-shadow: 0 2px 4px $gray;
 
   margin: 0;
 
@@ -451,7 +432,6 @@ input[type=date].form-control {
     margin-left: 6px;
     padding: 6px 12px;
   }
-  // height: 80px;
   .navbar-nav li {
     // 2*15px margin
     h3 {
@@ -472,7 +452,6 @@ input[type=date].form-control {
 }
 
 .tool-bar {
- // background-color: $gray-light;
   height: 32px;
   min-height:32px;
 
@@ -489,7 +468,7 @@ input[type=date].form-control {
     {
       height:28px;
       margin:2px 2px 2px 2px;
-      background-color: $button-color-nav-bar;
+      background-color: $navigation-button-background;
       color: $white;
       font-weight: normal;
       border: 0px;
@@ -497,7 +476,7 @@ input[type=date].form-control {
 
     &.default
     {
-      background-color: $button-color-nav-bar-default;
+      background-color: $navigation-button-background-default;
     }
   }
 
@@ -528,7 +507,6 @@ input[type=date].form-control {
 .column {
   @include fill();
   // Scroll columns (assumes some vertical height set)
-  //  overflow-x: scroll;
   overflow-y: auto;
 }
 
@@ -608,7 +586,6 @@ input[type=date].form-control {
 
     // Progressbars in cell are a bit different than Bootstrap ones:
     .progress-incell {
-      @include rectangle-corners();
       margin: 4px;
     }
   }
@@ -629,7 +606,6 @@ input[type=date].form-control {
 
 // Based upon btn but without all the hover fx, etc
 .animframeindicator {
-  //border: 1px solid $gray-lighter;
   display: inline-block;
   float: left;
   margin-left: 4px;
@@ -707,7 +683,6 @@ input[type=date].form-control {
 }
 
 .message-alert {
-  @include rectangle-corners();
   margin: 0;
 }
 
@@ -715,7 +690,6 @@ input[type=date].form-control {
 
 nav.sidebar,
 .main {
-  @include rectangle-corners();
   margin-top: 12px;
   transition: margin 200ms ease-out;
 }
@@ -766,13 +740,6 @@ nav.sidebar,
   nav.sidebar:hover + .main {
     margin-left: 200px;
   }
-
-/*
-  nav.sidebar.navbar.sidebar>.container .navbar-brand,
-  .navbar>.container-fluid .navbar-brand {
-    margin-left: 0;
-  }
-*/
 
   nav.sidebar .navbar-brand,
   nav.sidebar .navbar-header {
@@ -866,7 +833,6 @@ section {
 
 
 .bootstrap-tagsinput {
-  @include rectangle-corners();
   @include transition(border-color ease-in-out .15s, box-shadow ease-in-out .15s);
   @include box-shadow(inset 0 1px 1px $box-shadow-color);
   border: 1px solid $input-border;
@@ -913,10 +879,10 @@ section {
 
 .search-details {
 
-  background-color: $panel-gray;
+  background-color: $panel-background;
 
   .panel {
-    background-color: $panel-gray;
+    background-color: $panel-background;
   }
 
   .panel-title
@@ -1047,7 +1013,7 @@ section {
   .irs-from,
   .irs-to,
   .irs-single {
-    background-color: $white; //$brand-primary;
+    background-color: $white;
     color: $black;
     padding: 2px 8px 8px 8px;
     top: -14px;
@@ -1069,7 +1035,7 @@ section {
   .irs-from::after,
   .irs-to::after,
   .irs-single::after {
-    border-top-color: $white; //The arrow down part. // $brand-primary;
+    border-top-color: $white; //The arrow down part.
   }
 
   .irs-slider {
@@ -1138,23 +1104,16 @@ section {
   }
 
 
-  h3 {
-    /* pad left and right */
-    //padding: 0 10px;
-  }
 
   .alert {
     margin: 1px;
   }
 
   .list-group-item {
-    @include rectangle-corners();
 
     padding: 0;
 
     &:hover {
-
-      //background-color: mix($row-color-even, $white, 50%);
       cursor: pointer;
     }
 
@@ -1172,7 +1131,6 @@ section {
       outline: none;
       padding: 4px 0px 4px 0px;
       text-decoration: none;
-     // width: 80%;
     }
 
     .model-state {
@@ -1203,8 +1161,7 @@ section {
 }
 
 .model-list {
-  //background-color: darken($gray-lighter, 5%);
-  background-color: $slightly-white;
+  background-color: $model-list-background;
 }
 
 .publish-level {

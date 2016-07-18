@@ -16,7 +16,7 @@
 
             <div class="col-xs-5"  style="background-color: #f1f1ee">
               <div class="btn-toolbar heading-bar">
-               Results {{RunCount}} {{RunCount | pluralize 'run'}} in {{ScenarioCount}} {{ScenarioCount | pluralize 'scenario'}}
+               Results {{numRuns}} {{numRuns | pluralize 'run'}} in {{numScenarios}} {{numScenarios | pluralize 'scenario'}}
 
               <a class="btn pull-right nav-bar-button" title="Create scenario" href="#/scenarios/create">Create scenario</a>
 
@@ -42,9 +42,12 @@
         </div>
 
         <div class="col-sm-5 column full-height">
-        runs: {{selectedRuns|json}}
-        cols: {{openedScenarios|json}}
-        scenarios: {{selectedScenarios|json}}
+
+        <!-- for debugging, please leave for a moment.
+          runs: {{selectedRuns|json}}
+          cols: {{openedScenarios|json}}
+          scenarios: {{selectedScenarios|json}}
+        -->
 
          <search-list v-bind:opened-scenarios.sync="openedScenarios" filter="" :models="models" :selected-runs.sync="selectedRuns" :selected-scenarios.sync="selectedScenarios"></search-list>
         </div>

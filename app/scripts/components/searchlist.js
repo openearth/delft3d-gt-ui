@@ -41,12 +41,13 @@ var exports = (function () {
     },
     ready: function() {
 
-      var that = this;
 
-      /// Register changes to the control & command key:
-      $(document).on("keyup keydown", function (e) {
-        that.keyControlPressed = (e.ctrlKey === true || e.metaKey === true);
-      });
+      // Register changes to the control & command key:
+      // Right now multi select is disabled, as our view at the right does not allow that anyway.
+      // var that = this;
+      // $(document).on("keyup keydown", function (e) {
+      //   that.keyControlPressed = (e.ctrlKey === true || e.metaKey === true);
+      // });
 
 
       this.updateModels();
@@ -93,15 +94,6 @@ var exports = (function () {
           });
 
           return r;
-
-          // if (this.filter === "scenarios") {
-          //   // is this the best approach, couldn't get a filterkey to work (no access to routing info)
-          //   var scenario = this.selectedScenarioId;
-
-          //   result = _.filter(this.models, ["scenario", scenario]);
-
-          // }
-          // return result;
         }
       }
 
@@ -119,14 +111,6 @@ var exports = (function () {
      // Update the scenario/run list.
       updateModels: function() {
 
-        // fetch the models
-        /*
-		fetchModels()
-          .then((data) => {
-            this.models = data;
-          });
-		  */
-        //this.$dispatch("models-selected", id);
       },
 
       // User wants to select a scenario:
@@ -163,7 +147,6 @@ var exports = (function () {
           checkboxState = checkbox.prop("checked");
 
           rundiv.toggleClass("selected", checkboxState);
-
 
           // Determine which models have been selected (can be multiple, now we accept one)
           // Set selected result id:  (for old detail display at the moment)

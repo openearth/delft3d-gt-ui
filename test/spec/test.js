@@ -75,27 +75,21 @@
   global.ModelDetails = ModelDetails;
 
   var ModelCreate = require("../../app/scripts/components/modelcreate.js").ModelCreate;
-  var ModelList = require("../../app/scripts/components/modellist.js").ModelList;
 
   // used by other component
-  global.ModelList = ModelList;
-
   var ScenarioCreate = require("../../app/scripts/components/scenariobuilder.js").ScenarioCreate;
-  var ScenarioList = require("../../app/scripts/components/scenariolist.js").ScenarioList;
   var SearchDetails = require("../../app/scripts/components/searchdetails.js").SearchDetails;
   var UserDetails = require("../../app/scripts/components/userdetails.js").UserDetails;
 
   // used by other component
   global.UserDetails = UserDetails;
   global.SearchDetails = SearchDetails;
-  global.ScenarioList = ScenarioList;
 
 
   var SearchList = require("../../app/scripts/components/searchlist.js").SearchList;
 
   global.SearchList = SearchList;
 
-  var FinderColumns = require("../../app/scripts/components/findercolumns.js").FinderColumns;
   var SearchColumns = require("../../app/scripts/components/searchcolumns.js").SearchColumns;
 
   // why is this necessary....
@@ -245,12 +239,6 @@
         },
         "/scenarios/create": {
           component: ScenarioCreate
-        },
-        "/models": {
-          component: ModelList
-        },
-        "/": {
-          component: FinderColumns
         }
       });
       router.start(App, "#app");
@@ -311,13 +299,6 @@
       done();
     });
 
-    it("Is possible to instantiate component ScenarioList", function(done) {
-      var scenarioList = new ScenarioList({
-      });
-
-      assert.isOk(scenarioList);
-      done();
-    });
 
     it("Is possible to instantiate component ModelDetails", function(done) {
       var modelDetails = new ModelDetails({
@@ -350,14 +331,7 @@
   });
 
 
-  describe("Finder columns", function() {
-    it("Is possible to create a three column layout", function(done) {
-      var finderColumns = new FinderColumns();
 
-      assert.isOk(finderColumns);
-      done();
-    });
-  });
 
   describe("Search details", function() {
 
@@ -410,7 +384,8 @@
         data: {
           parameter: [],
           shared: [],
-          template: []
+          template: [],
+          search: ""
         },
         dataType: "json",
         traditional: true,
@@ -583,43 +558,6 @@
     });
   });
 
-  describe("Scenarios", function() {
-    it("Is possible to create a scenarioList", function(done) {
-      var scenarioList = new ScenarioList();
-
-      assert.isOk(scenarioList);
-      done();
-    });
-    it("Is possible to get a default run", function(done) {
-      var scenarioList = new ScenarioList();
-
-      assert(scenarioList.defaultRun === -1);
-      done();
-    });
-
-    it("Is possible to use the scenario in a router", function(done) {
-      Vue.config.debug = true;
-      Vue.use(VueRouter);
-
-      var App = Vue.extend({});
-      var router = new VueRouter();
-
-      router.map({
-        "/scenarios/:scenarioids": {
-          component: ScenarioList
-        }
-      });
-
-      router.start(App, "#app");
-      router.go("/scenario/1");
-      done();
-    });
-    it("Is possible to clone a scenario", function(done) {
-
-      assert.isOk(true);
-      done();
-    });
-  });
 
   describe("ModelDetails", function() {
     var modelDetails = new ModelDetails();

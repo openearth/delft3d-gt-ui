@@ -15,12 +15,10 @@ var exports = (function () {
         shared: [],
         startDate: null,
         endDate: null,
-        text: "",
+        search: "",
 
         // This object will variables received from the templates.
         selectedParameters: { },
-
-
 
         // Template used for searching (probably always one)
         searchTemplates: []
@@ -74,7 +72,7 @@ var exports = (function () {
             $(".ion-range").ionRangeSlider({
               onFinish: () => {
                 // args: data, not used
-                this.search();
+                this.startSearch();
               }
             });
 
@@ -85,12 +83,11 @@ var exports = (function () {
               $(this).closest("div").find("input").val("");
             });
 
-
             // Automatic search:
             setInterval(
                 // create a callback for every second
                 () => {
-                  this.search();
+                  this.startSearch();
                 },
                 // every 10 seconds
                 10000
@@ -155,8 +152,8 @@ var exports = (function () {
 
       var params = {
         shared: this.shared,
-        template: this.selectedTemplates
-
+        template: this.selectedTemplates,
+        search: this.search
       };
 
       // serialize parameters corresponding to https://publicwiki.deltares.nl/display/Delft3DGT/Search
@@ -191,7 +188,7 @@ var exports = (function () {
       };
     },
 
-    search: function() {
+    startSearch: function() {
       // create the url and stuff
       var request = this.buildRequest();
       var that = this;
@@ -209,16 +206,12 @@ var exports = (function () {
 
         var refcount = 0;
 
-        //console.log("sending SEARCH request - scenario part", request);
 
         // Decrease reference count. If 0, we continue with processing data.
         function decreaseRef() {
           refcount--;
 
           if (refcount <= 0) {
-
-          //  console.log(dataScenarios);
-           // console.log(dataRuns);
 
             var runCount = 0;
             var visibleScenarios = [];
@@ -259,7 +252,7 @@ var exports = (function () {
             console.log(dataScenarios.length + " / " + runCount);
 
            // console.log("done");
-            that.$dispatch("models-found", dataScenarios, dataScenarios.length, runCount);
+            that.$dispatch("modelsFound", dataScenarios, dataScenarios.length, runCount);
           }
         }
 

@@ -248,7 +248,6 @@ var exports = (function() {
 
 
         // the request has parameters in the form of {"variable": {"values": value}}
-
         // the scenarioConfig also has sections {"sections": [{"variables": [{"variable": {"value": []}}]}]}
 
         // let's create a flat list of variables

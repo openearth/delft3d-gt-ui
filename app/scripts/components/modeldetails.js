@@ -230,14 +230,6 @@ var exports = (function () {
               }
 
               this.waitingForUpdate = false;
-              // and fetch log afterwards
-              // fetchLog(data.model.id)
-              //   .then(log => {
-              //     $("#model-log-output").text(log);
-              //   })
-              //   .catch(e => {
-              //     $("#model-log-output").text("Failed to get log: " + e);
-              //   });
             }
           )
           .catch(() => {
@@ -273,10 +265,8 @@ var exports = (function () {
           "deletefiles": deletefiles
         };
 
-        // This if statement caused thge delete to only work once:
-        //if (!this.deleteDialog) {
+
         this.deleteDialog = getDialog(this, "confirm-dialog", "delete");
-        //}
 
         this.deleteDialog.onConfirm = function() {
           var deletedId = this.model.id;

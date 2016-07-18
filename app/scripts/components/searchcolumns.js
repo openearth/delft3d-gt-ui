@@ -10,10 +10,10 @@ var exports = (function () {
       return {
 
         // How many scenarios were found?
-        ScenarioCount: 0,
+        numScenarios: 0,
 
         // How many runs are in these scenarios?
-        RunCount: 0,
+        numRuns: 0,
 
         models: [],
 
@@ -30,11 +30,7 @@ var exports = (function () {
     },
 
 
-
-
-
     methods: {
-
 
       // Reset all input fields.
       resetFields: function() {
@@ -80,19 +76,12 @@ var exports = (function () {
 
       // Got some search results:
       // We receive the models, number of scenarios and number of runs.
-      "models-found": function (models, numScenarios, numRuns) {
-        //var modelList = this.$refs.models;
-
-        // Remove items which have double id's.
-        // Otherwise we get multiple runs in the list which share the same scenario.
-//        models = _.uniqBy(models, "id");
-
-        //modelList.filter = "search";
+      modelsFound: function (models, numScenarios, numRuns) {
 
         this.models = models;
 
-        this.ScenarioCount = numScenarios;
-        this.RunCount = numRuns;
+        this.numScenarios = numScenarios;
+        this.numRuns = numRuns;
 
         var that = this;
 
@@ -111,7 +100,6 @@ var exports = (function () {
             $(this).parent().find(".glyphicon-chevron-right:first-child").removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
 
             that.openedScenarios = _.uniq(that.openedScenarios);
-            console.log(that.openedScenarios);
 
           });
 
@@ -119,14 +107,11 @@ var exports = (function () {
 
             var dataid = $(this).data("scenarioid");
 
+            $(this).parent().find(".glyphicon-chevron-down:first-child").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
+
             that.openedScenarios = _.uniq(_.without(that.openedScenarios, dataid));
 
 
-            $(this).parent().find(".glyphicon-chevron-down:first-child").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
-
-            that.openedScenarios = _.uniq(that.openedScenarios);
-
-            console.log(that.openedScenarios);
           });
         });
 
