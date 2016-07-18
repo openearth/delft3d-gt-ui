@@ -972,11 +972,78 @@
       done();
 
     });
+
     it("Should be possible to change the imageFrame", function(done) {
       imageAnimation.nextImageFrame();
       done();
-
     });
+
+
+    it("Should be possible to check isanimating property", function(done) {
+
+      imageAnimation.stopImageFrame();
+      var isAnimating = imageAnimation.isAnimating;
+
+      assert.isFalse(isAnimating, "Animation is indeed not playing");
+      done();
+    });
+
+    xit("Should be possible to check hasFrames property", function(done) {
+
+      // We should not have any frames in this animation object, but maybe make sure later on?
+      assert.isTrue(imageAnimation.hasFrames === 0, "Animation does not have frames");
+      done();
+    });
+
+    it("Should be possible to check animationIndex property", function(done) {
+
+      // We should not have any frames in this animation object, but maybe make sure later on?
+      imageAnimation.currentAnimationIndex = 0;
+      assert.isTrue(imageAnimation.animationIndex === 0, "Animation frame at 0");
+      done();
+    });
+
+    xit("Should be possible to check animationFrame property", function(done) {
+
+      // Todo.
+      done();
+    });
+
+    xit("Should be possible to check frameCount property", function(done) {
+
+      // We should not have any frames in this animation object, but maybe make sure later on?
+      assert.isTrue(imageAnimation.frameCount === 0, "Animation framecount should be 0");
+      done();
+    });
+
+
+    it("Should be possible to switchAnimation", function(done) {
+
+      // We should not have any frames in this animation object, but maybe make sure later on?
+      imageAnimation.switchAnimation("delta_fringe_images");
+
+      done();
+    });
+
+    it("Should be possible to gotoFirstFrame", function(done) {
+
+      // index should become 0
+      imageAnimation.gotoFirstFrame();
+
+      assert.isTrue(imageAnimation.animationIndex === 0, "Animation frame at 0");
+      done();
+    });
+
+    xit("Should be possible to gotoLastFrame", function(done) {
+
+      // index should become 0.. we do not have any images. Maybe test later using an fake array.
+      imageAnimation.gotoLastFrame();
+
+      assert.isTrue(imageAnimation.animationIndex === 0, "Animation frame at 0");
+      done();
+    });
+
+
 
 
   });
