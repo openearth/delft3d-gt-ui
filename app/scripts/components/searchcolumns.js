@@ -118,10 +118,12 @@ var exports = (function () {
       },
 
       // User clicked on a result item:
-      "models-selected": function(id) {
+      modelsSelected: function(id) {
         var modelDetails = this.getChildByName("model-details");
 
-        modelDetails.id = id;
+        if (modelDetails !== null) {
+          modelDetails.id = id;
+        }
 
       }
     }

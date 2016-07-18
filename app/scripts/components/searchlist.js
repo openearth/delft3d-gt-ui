@@ -50,8 +50,6 @@ var exports = (function () {
       // });
 
 
-      this.updateModels();
-
 
     },
 
@@ -103,16 +101,6 @@ var exports = (function () {
 
     methods: {
 
-
-      collapseScenario: function() {
-
-      },
-
-     // Update the scenario/run list.
-      updateModels: function() {
-
-      },
-
       // User wants to select a scenario:
       scenarioSelect: function(id, ev) {
         var scenariodiv = $(ev.target).closest(".scenario");
@@ -153,7 +141,7 @@ var exports = (function () {
           this.selectedResultId = id;
 
           // Directly select the id in the details list. (no routing)
-          this.$dispatch("models-selected", id);
+          this.$dispatch("modelsSelected", id);
 
           // Add item to selected array, or remove:
           if (checkboxState === true) {
@@ -188,7 +176,7 @@ var exports = (function () {
           this.selectedResultId = id;
 
           // Directly select the id in the details list. (no routing)
-          this.$dispatch("models-selected", id);
+          this.$dispatch("modelsSelected", id);
 
           // Only select this run:
           this.selectedRuns = [id];
@@ -203,7 +191,7 @@ var exports = (function () {
         this.selectedResultId = id;
 
         // Directly select the id in the details list. (no routing)
-        this.$dispatch("models-selected", id);
+        this.$dispatch("modelsSelected", id);
       }
 
   }

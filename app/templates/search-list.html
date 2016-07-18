@@ -27,9 +27,11 @@
               </div>
 
               <!-- Matched vars on scenario -->
+              <!-- we do not support this yet...
               <div class="matched-vars">
                <span class="badge inverted">Template</span> <span class="badge">Model version</span>
              </div>
+             -->
 
              <span class="arrow-right glyphicon glyphicon-chevron-right"></span>
            </div>
@@ -40,7 +42,7 @@
               <!-- LOOP: runs under this scenario -->
               <div class="run" v-on:click="runSelected(run.id, $event)" v-for="run in entry.scene_set" v-bind:class="{ 'selected': this.selectedModels.indexOf(run.id) !== -1 }">
 
-                <input type="checkbox"  class="checkbox-run-selected "  />
+                <input type="checkbox"  class="checkbox-run-selected hidden"  />
                 <span class="run-name">{{run.name}}</span><div class="share-status" v-bind:class="{ 'private': run.shared === 'p', 'public': run.shared === 'w', 'company': run.shared === 'c'}"></div>
 
                 <div class="progress-holder">
@@ -50,11 +52,11 @@
                   <span>{{run.state  | lowercase}}</span>
                 </div>
 
-
+<!-- We do not support this yet :-/
                 <div class="matched-vars">
                   <span class="badge">Template</span> <span class="badge">Model version</span>
                 </div>
-
+-->
                 <span class="arrow-right  glyphicon glyphicon-chevron-right"></span>
 
 

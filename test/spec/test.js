@@ -103,7 +103,7 @@
   // In testing we override the URL domain name. Otherwise nock cannot work. Nock does NOT support relative paths.
   // Using this, we can use http://0.0.0.0 in the nock.
   global.$.ajaxPrefilter(function(options) {
-    // console.log(options);
+    //console.log(options);
     options.url = "http://0.0.0.0" + (options.url);
 
   });
@@ -299,14 +299,6 @@
       done();
     });
 
-
-    it("Is possible to instantiate component ModelDetails", function(done) {
-      var modelDetails = new ModelDetails({
-      });
-
-      assert.isOk(modelDetails);
-      done();
-    });
     it("Is possible to instantiate component ScenarioBuilder", function(done) {
       var scenarioCreate = new ScenarioCreate({
       });
@@ -325,6 +317,13 @@
       var searchColumns = new SearchColumns();
 
       assert.isOk(searchColumns);
+      done();
+    });
+
+    it("Is possible to create a search list", function(done) {
+      var aSearchList = new SearchList();
+
+      assert.isOk(aSearchList);
       done();
     });
 
@@ -780,6 +779,335 @@
     });
 
 
+  });
+
+
+  describe("SearchList class", function() {
+
+
+    it("Should be possible get selected scenarios", function(done) {
+
+      // Add an artificial sene with a model in scene_set with id 1.
+      var aSearchList = new SearchList();
+
+      aSearchList.models = [];
+
+       /*eslint-disable camelcase*/
+      aSearchList.models.push({id: 123, scene_set: [{ id: 1}]});
+       /*eslint-enable camelcase*/
+
+      aSearchList.selectedRuns = [1]; // Assume we test #1
+
+      var models = aSearchList.selectedModels;
+
+      assert.isTrue((models.length === 1 && models[0] === 1), "selectedRun is correct.");
+      done();
+    });
+
+
+    it("Should be possible get selectedModelid", function(done) {
+
+      var aSearchList = new SearchList();
+
+      // Add an artificial sene with a model in scene_set with id 1.
+      aSearchList.selectedResultId = 1;
+
+      assert.isTrue((aSearchList.selectedResultId === aSearchList.selectedModelId), "selectedResultId matches selectedModelid");
+      done();
+    });
+
+    it("Should be possible call directSelect", function(done) {
+
+      var aSearchList = new SearchList();
+      var selectedId = 123;
+
+      // select item
+      aSearchList.directSelect(selectedId);
+
+      assert.isTrue(aSearchList.selectedResultId === selectedId, "selectedResultId matches expected value");
+      done();
+    });
+
+
+    it("Should be possible select an item without control key pressed ", function(done) {
+
+      var aSearchList = new SearchList();
+      var selectedId = 123;
+      var fakeEvent = {};
+
+      aSearchList.keyControlPressed = false;
+
+      fakeEvent.target = "somediv"; // We cannot match html yet?
+
+      // Start a run with the selected id.
+      aSearchList.runSelected(selectedId, fakeEvent);
+
+      // Start another run with the selected id +1;
+      selectedId++;
+      aSearchList.runSelected(selectedId, fakeEvent);
+
+      // Without control key we expect only the last item selected.
+      assert.isTrue(aSearchList.selectedRuns[0] === selectedId, "selectedResultId matches expected value");
+
+      done();
+    });
+
+
+    // Todo, but required DOM.
+    xit("Should be possible select an item WITH control key pressed ", function(done) {
+
+      var aSearchList = new SearchList();
+      var selectedId = 123;
+      var fakeEvent = {};
+
+      aSearchList.keyControlPressed = true;
+
+      fakeEvent.target = "somediv"; // We cannot match html yet?
+
+      // Start a run with the selected id.
+      aSearchList.runSelected(selectedId, fakeEvent);
+
+      // Start another run with the selected id +1;
+      selectedId++;
+      aSearchList.runSelected(selectedId, fakeEvent);
+
+      console.log(aSearchList.selectedRuns);
+
+      // Without control key we expect only the last item selected.
+      assert.isTrue(aSearchList.selectedRuns[0] === (selectedId - 1) && aSearchList.selectedRuns[1] === (selectedId) && aSearchList.selectedRuns.length === 2, "selectedResultId matches expected value (two items with correct id's)");
+
+      done();
+    });
+
+
+  });
+
+
+
+
+
+
+  describe("SearchColumns class", function() {
+
+
+    it("Should be possible to init SearchColumns", function(done) {
+
+      var aSearchColumns = new SearchColumns();
+
+      // Check default values:
+      assert.isTrue(aSearchColumns.numScenarios === 0, "numScenarios matches");
+      assert.isTrue(aSearchColumns.numRuns === 0, "numRuns matches");
+      assert.isTrue(aSearchColumns.openedScenarios.length === 0, "openedScenarios matches");
+      assert.isTrue(aSearchColumns.selectedRuns.length === 0, "selectedRuns matches");
+      assert.isTrue(aSearchColumns.selectedScenarios.length === 0, "selectedScenarios matches");
+      assert.isTrue(aSearchColumns.models.length === 0, "models matches");
+
+
+      done();
+    });
+
+    it("Should be possible to reset the form fields", function(done) {
+
+      var aSearchColumns = new SearchColumns();
+
+      // Create fake input type with search-details class.
+      global.$("body").append("<div class='search-details'><input type='text' name='test' id='test'/></div>");
+
+      // Set some values in our DOM...
+      $(".search-details input[type='text']").val("test");
+
+      var val = $(".search-details input[type='text']").val();
+
+      assert.isTrue(val === "test", "variable is correct.");
+
+      aSearchColumns.resetFields();
+
+      val = $(".search-details input[type='text']").val();
+
+      assert.isTrue(val.length === 0, "textfield has been reset");
+
+      done();
+    });
+
+    it("Should be possible to call modelsFound", function(done) {
+
+      var aSearchColumns = new SearchColumns();
+
+      // A fake model array..
+      var models = [ { id: 123} ];
+      var numScenarios = 1;
+      var numRuns = 2;
+
+      aSearchColumns.$dispatch("modelsFound", models, numScenarios, numRuns);
+
+      assert.isTrue(aSearchColumns.numScenarios === numScenarios, "numScenarios matches");
+      assert.isTrue(aSearchColumns.numRuns === numRuns, "numRuns matches");
+      assert.deepEqual(aSearchColumns.models, models, "models matches");
+
+
+      done();
+    });
+
+
+    it("Should be possible to call event modelsSelected", function(done) {
+
+      var aSearchColumns = new SearchColumns();
+
+      // A fake model array..
+      var selected = 1;
+
+      aSearchColumns.$dispatch("modelsSelected", selected);
+
+      // How to test components?
+      //var details = aSearchColumns.getChildByName("model-details");
+
+      done();
+    });
+
+  });
+
+
+
+  describe("UserDetails", function() {
+
+
+    it("Should be possible to fetch my info", function(done) {
+      var correctReply = false;
+
+      nock("http://0.0.0.0")
+        //.log(console.log)
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .get("/api/v1/users/me/")
+        .reply(200, function() {
+          correctReply = true;
+          return {};
+        });
+
+      var userDetails = new UserDetails();
+
+      assert.isOk(userDetails, "UserDetails created");
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
+
+      userDetails.fetchUserInfo();
+
+    });
+
+    it("Should be possible to receive my first and lastname", function(done) {
+      var correctReply = false;
+
+      // The fake reply we will return.
+      var reply = [{
+        "id": 500,
+        "username": "foo",
+        "first_name": "Foo",
+        "last_name": "User",
+        "email": "foo@bar.com",
+        "groups": [
+            42,
+            500
+        ]
+      }];
+
+      nock("http://0.0.0.0")
+        //.log(console.log)
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .get("/api/v1/users/me/")
+        .reply(200, function() {
+          correctReply = true;
+          return reply;
+        });
+
+      var userDetails = new UserDetails();
+
+      assert.isOk(userDetails, "UserDetails created");
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+
+          // Check if the user info is set correctly.
+          assert.isTrue((userDetails.user.first_name === reply[0].first_name && userDetails.user.last_name === reply[0].last_name), "First and lastname match");
+
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
+
+      userDetails.fetchUserInfo();
+
+    });
+
+
+    it("Should be possible to call the details computed property", function(done) {
+      var correctReply = false;
+
+      // The fake reply we will return.
+      var reply = [{
+        "id": 500,
+        "username": "foo",
+        "first_name": "Foo",
+        "last_name": "User",
+        "email": "foo@bar.com",
+        "groups": [
+            42,
+            500
+        ]
+      }];
+
+      nock("http://0.0.0.0")
+        //.log(console.log)
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .get("/api/v1/users/me/")
+        .reply(200, function() {
+          correctReply = true;
+          return reply;
+        });
+
+      var userDetails = new UserDetails();
+
+      assert.isOk(userDetails, "UserDetails created");
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+
+          var details = userDetails.details;
+
+          var match = "id: 500\nusername: foo\nfirst_name: Foo\nlast_name: User\nemail: foo@bar.com\ngroups: 42,500";
+
+          // Check if the user info is set correctly.
+          assert.isTrue(details === match, "details match");
+
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
+
+      userDetails.fetchUserInfo();
+
+    });
   });
 
 
