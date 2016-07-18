@@ -35,7 +35,7 @@ var exports = (function () {
     methods: {
       fetchUserInfo: function() {
 
-      $.getJSON("/api/v1/users/me/")
+        $.getJSON("/api/v1/users/me/")
         .done((data) => {
           this.user = _.first(data);
         })

@@ -307,6 +307,7 @@ var exports = (function () {
 
       },
       fetchLog: function() {
+
         // Working dir is at: modeldata.fileurl + delf3d + delft3d.log
         fetchLog(this.model.id)
           .then(log => {
@@ -353,6 +354,8 @@ var exports = (function () {
         this.stopDialog = getDialog(this, "confirm-dialog", "stop");
 
         this.stopDialog.onConfirm = function() {
+          console.log("confirm stop");
+
           stopModel(deletedId)
             .then(() => {
               this.$parent.$broadcast("show-alert", {
@@ -368,6 +371,9 @@ var exports = (function () {
         };
 
         this.stopDialog.show();
+
+        // Return the dialog so we can use it from other functions.
+        return this.stopDialog;
       },
 
       publishModel: function(index) {

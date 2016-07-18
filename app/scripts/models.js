@@ -228,7 +228,11 @@ var exports = (function () {
   function fetchLog(id) {
     return new Promise(function(resolve, reject) {
       try {
+        console.log(id);
         var model = itemsCache[id];
+
+        console.log("xd");
+        console.log(itemsCache);
 
       } catch(e) {
         // if we can't find a model reject and bail out

@@ -16,7 +16,7 @@
   // Create a document
   /* eslint-disable quotes */
 
-  global.document = jsdom('<!doctype html><html><body><div id="app"><div id="model-create"></div><div id="model-details"></div></div><div id="template-container"></div></body></html>', {});
+  global.document = jsdom('<!doctype html><html><body><div id="app"><div id="model-create"></div><div id="model-details"></div></div><div id="template-container"></div><div id="dialog-container"></div></body></html>', {});
 
   /* eslint-enable quotes */
 
@@ -68,6 +68,9 @@
   var ConfirmDialog = require("../../app/scripts/components/confirmdialog.js").ConfirmDialog;
 
   global.ConfirmDialog = ConfirmDialog;
+  var getDialog = require("../../app/scripts/components/confirmdialog.js").getDialog;
+
+  global.getDialog = getDialog;
 
   var ModelDetails = require("../../app/scripts/components/modeldetails.js").ModelDetails;
 
@@ -98,6 +101,7 @@
   _.assign(global, require("../../app/scripts/models.js"));
   _.assign(global, require("../../app/scripts/templates.js"));
   _.assign(global, require("../../app/scripts/scenarios.js"));
+
 
 
   // In testing we override the URL domain name. Otherwise nock cannot work. Nock does NOT support relative paths.
@@ -562,6 +566,73 @@
     var modelDetails = new ModelDetails();
 
 
+
+
+
+    xit("Should be possible to fetchLog", function(done) {
+      var correctReply = false;
+
+
+
+      // Test fetch log, result comes from itemsCache
+      var itemsCache = {};
+
+      itemsCache = { "4": {
+        fileurl: "fileurl/",
+        info: {
+          logfile: {
+            location: "location/",
+            file: "file"
+          }
+        }
+      }};
+
+      //modelDetails.itemsCache = itemsCache;
+      modelDetails.model.id = 4;
+
+
+
+      // We refer to this item:
+      var model = itemsCache["4"];
+
+      // Working dir is at: modeldata.fileurl + delf3d + delft3d.log
+      var url = model.fileurl + model.info.logfile.location + model.info.logfile.file;
+
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .get(url)
+        .reply(200, function() {
+          correctReply = true;
+          return {};
+        });
+
+      console.log("x");
+
+      global.itemsCache = itemsCache;
+      //global.models.itemsCache = itemsCache;
+      modelDetails.fetchLog();
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
+    });
+
+
+    xit("Should be possible to delete a model", function(done) {
+
+      // Todo... this is an important one, hence this placeholder.
+      done();
+    });
+
     it("Should be possible to export a model", function(done) {
       var correctReply = false;
 
@@ -617,8 +688,7 @@
 
       modelDetails.startModel();
 
- // Make sure the nock server had the time to reply
-
+      // Make sure the nock server had the time to reply
       window.setTimeout(function() {
         try {
           assert(correctReply === true, "Nock server did not reach reply");
@@ -627,9 +697,139 @@
           done(e);
         }
       }, 150);
-
-
     });
+
+
+    // Cannot get confirm to work..
+    xit("Should be possible to stop a model", function(done) {
+      var correctReply = true;
+
+      modelDetails.$parent = {};
+      modelDetails.$parent.$broadcast = function() {
+      };
+
+      modelDetails.model.id = 4;
+
+      nock("http://0.0.0.0")
+        .log(console.log)
+        // jquery calls OPTIONS first
+        .intercept("/api/v1/scenes/4/stop/", "OPTIONS")
+        .reply(200, function() {
+          console.log("intercept");
+          return "content";
+        })
+        // Browsers (and jquery) expect the Access-Control-Allow-Origin header
+        .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
+        .put("/api/v1/scenes/4/stop/", {id: modelDetails.model.id})
+        .reply(200, function() {
+          return "{\"a\":4}";
+        });
+
+      $("#dialog-container").load("/templates/confirm-dialog.html", function() {
+
+        console.log("dialog template loaded");
+        var stopDialog = modelDetails.stopModel();
+
+        console.log(stopDialog);
+
+        // confirm the dialog:
+        stopDialog.onConfirm();
+
+        // Make sure the nock server had the time to reply
+        window.setTimeout(function() {
+          try {
+            assert(correctReply === true, "Nock server did not reach reply");
+            done();
+          } catch (e) {
+            done(e);
+          }
+        }, 150);
+      });
+    });
+
+
+    it("Should be possible to change download options", function(done) {
+
+      // For now test if the function exists.
+      modelDetails.downloadOptionsChange();
+      done();
+    });
+
+    it("Should be possible to check level enabled", function(done) {
+
+      // For now test if the function exists.
+      modelDetails.isLevelEnabled(1);
+      done();
+    });
+
+
+    it("Should be possible to check if read only", function(done) {
+
+      // For now test if the function exists.
+      modelDetails.isReadOnly();
+      done();
+    });
+
+
+    it("Should be possible to check publish level", function(done) {
+
+      // For now test if the function exists.
+      modelDetails.indexOfPublishLevel();
+      done();
+    });
+
+    it("Should be possible to hilight publish level", function(done) {
+
+      // For now test if the function exists.
+      modelDetails.highlightPublishLevel();
+      done();
+    });
+
+
+    it("Should be possible to get isModelRunning property", function(done) {
+
+      // Make sure the function returns true:
+      var aModelDetails = new ModelDetails();
+
+      // Some state for a fake model.
+      aModelDetails.model = { state: "PROCESSING" };
+
+
+      assert.isTrue(aModelDetails.isModelRunning);
+
+      done();
+    });
+
+    it("Should be possible to get logoutput property", function(done) {
+
+      // Make sure the function returns true:
+      var aModelDetails = new ModelDetails();
+      var logtext = "logtext";
+
+      // Set some logoutput for a fake model.
+      aModelDetails.model = { logoutput: logtext };
+
+
+      assert.isTrue(aModelDetails.logoutput === logtext);
+
+      done();
+    });
+
+
+    it("Should be possible to get scenario property", function(done) {
+
+      var aModelDetails = new ModelDetails();
+
+
+      // Should give -1 as default.
+      assert.isTrue(aModelDetails.scenario === -1);
+
+      done();
+    });
+
+
+
+
 
 
     xit("Should be possible to publish a model private", function(done) {
