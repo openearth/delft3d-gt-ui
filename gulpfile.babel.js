@@ -166,7 +166,10 @@ gulp.task("teamcity", ["scripts", "lint", "lint:test", "lint:scss", "coverage"],
 
 gulp.task("html", ["styles", "scripts"], () => {
   return gulp.src("app/*.html")
+    .pipe($.plumber())
+    .pipe($.debug({title: 'Scanning for references:'}))
     .pipe($.useref({searchPath: [".tmp", "app", "."]}))
+    .pipe($.debug({title: 'Uglifying/nanofying and minifying:'}))
     .pipe($.if("*.js", $.uglify()))
     .pipe($.if("*.css", $.cssnano()))
     .pipe($.if("*.html", $.htmlmin({collapseWhitespace: true})))
