@@ -18,7 +18,8 @@
           <!-- scenario info -->
           <div class="scenario"  data-scenarioid="{{entry.id}}"  v-bind:class="{ 'selected': this.selectedScenarios.indexOf(entry.id) !== -1 }">
             <div class="scenario-info"  v-on:click="scenarioSelect(entry.id, $event)">
-              <span class="scenario-name"><span class=" glyphicon glyphicon-chevron-right" data-toggle="collapse" data-target="#scenario-{{entry.id}}" aria-expanded="false" aria-controls="scenario-{{$index}}"   data-scenarioid="{{entry.id}}"></span> Scenario: {{entry.name}}</span> <small>({{entry.id}})</small>
+
+              <span class="scenario-name"><span class=" glyphicon glyphicon-chevron-right" data-toggle="collapse" data-target="#scenario-{{entry.id}}" aria-controls="scenario-{{$index}}"   data-scenarioid="{{entry.id}}"></span> Scenario: {{entry.name}}</span> <small>({{entry.id}})</small>
               <div class="progress-holder">
                 <div class="progress">
                   <div data-percentage="{{entry.progress}}%" v-bind:style="{ width: entry.progress + 'px'}" class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
@@ -37,12 +38,12 @@
            </div>
            <!-- end scenario info block -->
 
-           <div class="scenario-runs" id="scenario-{{entry.id}}" data-scenarioid="{{entry.id}}" v-bind:class="{collapse: openedScenarios.indexOf(entry.id) !== -1 }" >
+           <div class="scenario-runs collapse" id="scenario-{{entry.id}}" data-scenarioid="{{entry.id}}" v-bind:class="{in: openedScenarios.indexOf(entry.id) === -1 }" >
 
               <!-- LOOP: runs under this scenario -->
               <div class="run" v-on:click="runSelected(run.id, $event)" v-for="run in entry.scene_set" v-bind:class="{ 'selected': this.selectedModels.indexOf(run.id) !== -1 }">
 
-                <input type="checkbox"  class="checkbox-run-selected hidden"  />
+              <!--  <input type="checkbox"  class="checkbox-run-selected hidden"  /> -->
                 <span class="run-name">{{run.name}}</span><div class="share-status" v-bind:class="{ 'private': run.shared === 'p', 'public': run.shared === 'w', 'company': run.shared === 'c'}"></div>
 
                 <div class="progress-holder">

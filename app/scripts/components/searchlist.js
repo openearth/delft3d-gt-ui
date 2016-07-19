@@ -124,17 +124,11 @@ var exports = (function () {
 
         // Toggle selected id.
         var rundiv = $(ev.target).closest(".run");
-        var checkbox = rundiv.find(".checkbox-run-selected");
-        var checkboxState = null;
 
         // Is control down? Then we select multiple:
         if (this.keyControlPressed === true) {
 
-
-          checkbox.prop("checked", !checkbox.prop("checked"));
-          checkboxState = checkbox.prop("checked");
-
-          rundiv.toggleClass("selected", checkboxState);
+          rundiv.toggleClass("selected");
 
           // Determine which models have been selected (can be multiple, now we accept one)
           // Set selected result id:  (for old detail display at the moment)
@@ -144,7 +138,7 @@ var exports = (function () {
           this.$dispatch("modelsSelected", id);
 
           // Add item to selected array, or remove:
-          if (checkboxState === true) {
+          if (rundiv.hasClass("selected") === true) {
             // Did we already have the item? If not, add it.
             if (_.findIndex(this.selectedRuns, id) === -1) {
               // Add item to list of selected runs:
@@ -164,12 +158,7 @@ var exports = (function () {
         } else {
 
           // Control is not pressed, so we deselect all checkboxes, and only set the one we selected.
-          $("checkbox-run-selected").removeAttr("checked");
-
-          // Set new state
-          checkboxState = checkbox.prop("checked");
-
-          rundiv.toggleClass("selected", checkboxState);
+          rundiv.toggleClass("selected");
 
           // Select it:
           // Set selected result id: (for old detail display at the moment)
