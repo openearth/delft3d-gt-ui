@@ -1,4 +1,4 @@
-/* global Vue startModels, stopModels, deleteModels, router */
+/* global Vue startModels, stopModels, deleteModels, router,  deleteScenario */
 
 var exports = (function () {
   "use strict";
@@ -8,7 +8,7 @@ var exports = (function () {
     template: "#template-model-control-menu",
     data: function() {
       return {
-
+        deleteDialog: null
       };
     },
 
@@ -37,6 +37,39 @@ var exports = (function () {
     },
 
     methods: {
+
+      deleteSelectedScenario: function() {
+
+        // Right now we use the old dialog from before. Should be turned into a component.
+
+        // User accepts deletion:
+        $("#dialog-remove-scenario-response-accept").on("click", () => {
+
+          this.selectedScenarios.forEach(function(id) {
+            deleteScenario(id)
+            .then(() => {
+              this.$parent.$broadcast("show-alert", {
+              message: "Deleting scenario... It might take a moment before the view is updated.",
+              showTime: 5000,
+              type: "success"
+              });
+            })
+          .catch(e => {
+            console.log("scenario deletion failed", e);
+          });
+
+            // Hide dialog when user presses this accept.:
+            $("#dialog-confirm-delete-scenario").modal("hide");
+
+          });
+
+        });
+
+        // Show the dialog:
+        $("#dialog-confirm-delete-scenario").modal({});
+
+
+      },
 
       startSelectedModels: function() {
 
