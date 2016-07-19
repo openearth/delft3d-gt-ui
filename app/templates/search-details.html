@@ -162,7 +162,7 @@
                           </div>
                         </template>
 
-                         <template v-if="variable.type !== 'numeric' && variable.type !== 'slider'">
+                         <template v-if="variable.type !== 'numeric' && variable.type !== 'slider' && variable.type !== 'select'">
                           <div class="input-group stylish-input-group">
                             <input
                                type="{{ variable.type }}"
@@ -177,6 +177,26 @@
                               </button>
                             </span>
                           </div>
+                          </template>
+
+                          <template v-if="variable.type === 'select' && !variable.factor">
+                            <div class="form-group">
+                            <select class="select-picker form-control" multiple
+                                   id="{{ variable.id }}"
+                                   v-model="selectedParameters[variable.id]"
+                                   data-selected-text-format="count > 3" data-actions-box="true"
+                                   >
+                              <option
+                                 v-for="option in variable.options"
+                                 v-bind:value="option.text"
+                                  selected="selected"
+
+                                 >
+                                {{ option.text }}
+                              </option>
+                            </select>
+                            </div>
+
 
                           </template>
 

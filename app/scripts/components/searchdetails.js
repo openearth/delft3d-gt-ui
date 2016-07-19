@@ -59,12 +59,14 @@ var exports = (function () {
 
     that.selectedParameters = parameters;
 
+
     this.$nextTick(
           function() {
             // once the dom is updated, update the select pickers by hand
             // template data is computed into modelEngine
-            $("#template").selectpicker("refresh");
-            $("#template").selectpicker("selectAll");
+            $(".select-picker").selectpicker("refresh");
+            $(".select-picker").selectpicker("selectAll");
+
 
             // Model engine should be a list.
             $("#model-engine").selectpicker("refresh");

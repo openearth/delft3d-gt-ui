@@ -8,11 +8,11 @@
           <div class="col-xs-12">
             <div class="btn-toolbar">
               <!-- mixed button and a tags will be fixed soon! -->
-              <button class=" btn btn-primary" id="scenario-submit" v-on:click="submitScenario" value="" v-bind:class="{ 'inputdisabled': !(totalRuns <= 20 && validForm) }" >
+              <button  type="button" class="btn btn-primary nav-bar-button default" id="scenario-submit" v-on:click="submitScenario" value="" v-bind:class="{ 'inputdisabled': !(totalRuns <= 20 && validForm) }" >
                 Submit
               </button>
 
-              <a href="#/" class="btn btn-primary pull-left">Cancel</a>
+              <a class="btn btn-primary pull-left nav-bar-button" v-link="{ path: '/' }">Cancel</a>
             </div>
           </div>
         </div>
