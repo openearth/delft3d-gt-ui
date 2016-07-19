@@ -174,18 +174,7 @@ var exports = (function () {
           this.selectedRuns = [id];
         }
 
-      },
-
-      // Directly select one item in the result list. This happens from the UI (event)
-      directSelect: function(id) {
-
-        // Set selected result id:
-        this.selectedResultId = id;
-
-        // Directly select the id in the details list. (no routing)
-        this.$dispatch("modelsSelected", id);
       }
-
   }
 });
 

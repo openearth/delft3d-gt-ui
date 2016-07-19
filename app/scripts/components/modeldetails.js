@@ -213,6 +213,7 @@ var exports = (function () {
         // update data with id, and if transition is passed transition to it
         // afterwards, pass the log
 
+        var that = this;
         // make sure id is a number
         console.log("updateData / fetch model:" + id);
 
@@ -223,8 +224,8 @@ var exports = (function () {
               // copy old data and set model
               var data = this.$data;
 
-              data.model = json;
-
+              that.model = json;
+console.log("updated");
               if (this.waitingForUpdate) {
                 this.highlightPublishLevel();
               }

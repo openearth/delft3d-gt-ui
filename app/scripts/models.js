@@ -44,37 +44,27 @@ var exports = (function () {
         return reject(new Error("Model not found, even after updating"));
       }
 
-      if (_.has(itemsCache, id)) {
-        // we already have the model, return it
-        var model = itemsCache[id];
+      // There was  a cache check here (if (_.has(itemsCache, id)) ) - but if we always get old data, and it never refreshes.
+      // Maybe there should be a timed removal of cached items. But for now, we do not cache it - as we specifically ask to update one model.
+      fetchModels()
+        .then(mymodels => {
+          // search through the list of models
+          // The `_.matchesProperty` iteratee shorthand.
+          // returns undefined if not found
+          var secondTryModel = _.find(mymodels, ["id", id]);
 
-        resolve(model);
-      } else {
-        // TODO: We just need 1 model. Use a unique id (uuid)
-        // if we don't have it, reset all the models and see if it is there....
+          if (secondTryModel) {
+            // Ladies and gentlemen, we got him....
+            resolve(secondTryModel);
+          } else {
+            // still not here....
+            reject(new Error("Model not found, even after updating"));
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
 
-
-        fetchModels()
-          .then(mymodels => {
-            // search through the list of models
-            // The `_.matchesProperty` iteratee shorthand.
-            // returns undefined if not found
-            var secondTryModel = _.find(mymodels, ["id", id]);
-
-            console.log("secondtry");
-            console.log(secondTryModel);
-            if (secondTryModel) {
-              // Ladies and gentlemen, we got him....
-              resolve(secondTryModel);
-            } else {
-              // still not here....
-              reject(new Error("Model not found, even after updating"));
-            }
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      }
     });
   }
 
