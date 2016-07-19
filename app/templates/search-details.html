@@ -115,10 +115,10 @@
 
             <div v-for="section in searchTemplates.sections" v-show="searchTemplates !== undefined">
 
-              <div class="panel panel-default">
+              <div class="panel panel-default panel-search">
                 <div class="panel-heading list-group-item" role="tab" >
                   <a role="button" class="section-collapse-link" data-toggle="collapse" data-parent="#template-{{$index}}" href="#template-{{$index}}" aria-expanded="true" aria-controls="template-collapse">
-                   <h3 class="panel-title"><span class="glyphicon glyphicon-triangle-bottom"></span> {{section.name | uppercase }}</h3>
+                   <h3 class="panel-title"><span class="glyphicon glyphicon-triangle-right"></span> {{section.name | uppercase }}</h3>
                   </a>
 
                   <div class="panel-collapse collapse" role="tabpanel" aria-labelledby="template-{{$index}}" id="template-{{$index}}">

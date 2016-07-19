@@ -94,11 +94,21 @@ var exports = (function () {
                 // every 10 seconds
                 10000
               );
-          }
+
+            // Set event handlers for search collapsibles.
+            $(".panel-search").on("show.bs.collapse", function() {
+
+              $(this).find(".glyphicon-triangle-right").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
+            });
+
+            $(".panel-search").on("hide.bs.collapse", function() {
+
+              $(this).find(".glyphicon-triangle-bottom").removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
+
+            });
 
 
-
-        );
+          });
 
 
 
