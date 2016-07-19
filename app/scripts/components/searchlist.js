@@ -105,6 +105,9 @@ var exports = (function () {
       scenarioSelect: function(id, ev) {
         var scenariodiv = $(ev.target).closest(".scenario");
 
+        // We remove all "selected" classes from .scenario to unselect all, then we reselect the item we need.
+        $(".scenario").removeClass("selected");
+
         scenariodiv.toggleClass("selected");
 
         var selected = $(".scenario.selected");

@@ -2,13 +2,13 @@
   <div>
     <div class="row">
       <div class="col-sm-12 text-center" >
-        <button class="btn btn-primary" v-bind:class="{ 'btn-success': currentAnimationKey === 'delta_fringe_images' }"  v-on:click="switchAnimation('delta_fringe_images')">
+        <button type="button" class="btn btn-primary" v-bind:class="{ 'btn-success': currentAnimationKey === 'delta_fringe_images' }"  v-on:click="switchAnimation('delta_fringe_images')">
           Delta fringe
         </button>
-        <button class="btn btn-primary" v-bind:class="{ 'btn-success': currentAnimationKey === 'channel_network_images' }" v-on:click="switchAnimation('channel_network_images')">
+        <button type="button" class="btn btn-primary" v-bind:class="{ 'btn-success': currentAnimationKey === 'channel_network_images' }" v-on:click="switchAnimation('channel_network_images')">
           Channel network
         </button>
-        <button class="btn btn-primary" v-bind:class="{ 'btn-success': currentAnimationKey === 'sediment_fraction_images' }" v-on:click="switchAnimation('sediment_fraction_images')">
+        <button type="button" class="btn btn-primary" v-bind:class="{ 'btn-success': currentAnimationKey === 'sediment_fraction_images' }" v-on:click="switchAnimation('sediment_fraction_images')">
           Sediment fraction
         </button>
       </div>
@@ -28,16 +28,16 @@
           <div class="col-sm-12 text-center" >
             <div class="btn-group">
 
-              <button class="btn btn-primary" v-on:click="gotoFirstFrame()">
+              <button type="button" class="btn btn-primary" v-on:click="gotoFirstFrame()">
                 <span class="glyphicon glyphicon-fast-backward">
                 </span>
               </button>
 
-              <button class="btn btn-primary" v-on:click="previousImageFrame('channel_network_images')">
+              <button type="button" class="btn btn-primary" v-on:click="previousImageFrame('channel_network_images')">
                 <span class="glyphicon glyphicon-backward">
                 </span>
               </button>
-              <button class="btn btn-primary" v-if="isAnimating" v-on:click="stopImageFrame('channel_network_images')">
+              <button type="button" class="btn btn-primary" v-if="isAnimating" v-on:click="stopImageFrame('channel_network_images')">
                 <span class="glyphicon glyphicon-stop">
                 </span>
               </button>
@@ -45,12 +45,12 @@
                 <span class="glyphicon glyphicon-play">
                 </span>
               </button>
-              <button class="btn btn-primary" v-on:click="nextImageFrame('channel_network_images')">
+              <button type="button" class="btn btn-primary" v-on:click="nextImageFrame('channel_network_images')">
                 <span class="glyphicon glyphicon-forward">
                 </span>
               </button>
 
-              <button class="btn btn-primary" v-on:click="gotoLastFrame()">
+              <button type="button" class="btn btn-primary" v-on:click="gotoLastFrame()">
                 <span class="glyphicon glyphicon-fast-forward">
                 </span>
               </button>

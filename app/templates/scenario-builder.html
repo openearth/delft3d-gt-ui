@@ -8,7 +8,7 @@
           <div class="col-xs-12">
             <div class="btn-toolbar">
               <!-- mixed button and a tags will be fixed soon! -->
-              <button class="btn btn-primary nav-bar-button default" id="scenario-submit" v-on:click="submitScenario" value="" v-bind:class="{ 'inputdisabled': !(validSliders &&  totalRuns <= 20 && validForm) }" >Submit</button>
+              <button type="button" class="btn btn-primary nav-bar-button default" id="scenario-submit" v-on:click="submitScenario" value="" v-bind:class="{ 'inputdisabled': !(validSliders &&  totalRuns <= 20 && validForm) }" >Submit</button>
 
               <a class="btn btn-primary pull-left nav-bar-button" v-link="{ path: '/' }">Cancel</a>
             </div>
