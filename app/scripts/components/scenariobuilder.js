@@ -213,7 +213,7 @@ var exports = (function() {
             // lookup corresponding variable
             var variables = _.flatMap(this.scenarioConfig.sections, "variables");
             var variable = _.head(_.filter(variables, ["id", el.id]));
-            if (variable.type === 'select') {
+            if (variable.type === "select") {
 
               // TODO: use typeahead for better interaction
               // $(el).tagsinput({
