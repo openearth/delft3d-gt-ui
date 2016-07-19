@@ -29,7 +29,7 @@
 
               <tr>
                 <td>Model files</td>
-                <td>View <a href="{{model.fileurl}}">working directory</a></td>
+                <td>View <a href="{{model.fileurl}}" target="_blank">working directory</a></td>
               </tr>
 
               <tr>
@@ -91,6 +91,11 @@
             <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
             Remove run
           </button>
+
+          <span class="alert alert-info alert-small" role="alert" v-if="isReadOnly()" >
+
+            Simulation control is only available when runs are not published.
+          </span>
 
         </div>
       </div>
@@ -183,7 +188,7 @@
           </div>
           <div class="form-group input-group" v-bind:class="{ 'inputdisabled': model.info.export === false}">
             <span class="input-group-addon"><input type="checkbox" class="downloadoption"  value="export_thirdparty" v-on:change="downloadOptionsChange()" ></span>
-            <span class="form-control no-fixed-height">Include export for RMS / Petrel. <span v-if="model.info.export === false"><small>Please use <strong>"Start export"</strong> first at Simulation controls. After export completes, this option is available.</small></span></span>
+            <span class="form-control no-fixed-height">Include export for RMS / Petrel <span v-if="model.info.export === false">. <small>Please use <strong>"Start export"</strong> first at Simulation controls. After export completes, this option is available.</small></span></span>
           </div>
 
           <div class="form-group input-group">
@@ -192,15 +197,15 @@
           </div>
 
 
-            <button class="btn btn-primary" type="button"  id="download-submit" v-on:click="downloadFiles()" value="">
-              Download
-            </button>
+          <button class="btn btn-primary" type="button"  id="download-submit" v-on:click="downloadFiles()" value="">
+            Download
+          </button>
 
-            <button class="btn btn-primary" type="button" v-bind:class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE') || isReadOnly() }"  v-on:click="exportModel">
-              Start export
-            </button>
+          <button class="btn btn-primary" type="button" v-bind:class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE') || isReadOnly() }"  v-on:click="exportModel">
+            Start export
+          </button>
 
-          <h5 v-bind:class="{ 'default-hidden': (model.state === 'SUCCESS' || model.state === 'FAILURE') || isReadOnly() }">&ldquo;<i>Start export</i>&rdquo; becomes available after a simulation has finished.</h5>
+          <h5 v-bind:class="{ 'default-hidden': (model.state === 'SUCCESS' || model.state === 'FAILURE') || isReadOnly() }">&ldquo;<i>Start export</i>&rdquo; becomes available after a simulation has finished and not published.</h5>
 
         </div>
       </div>

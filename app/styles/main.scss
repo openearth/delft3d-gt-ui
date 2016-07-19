@@ -176,7 +176,6 @@ body {
 }
 
 
-
 .fa-top-right {
   font-size: small;
   left: 1em;
@@ -213,8 +212,9 @@ input[type=date].form-control {
   padding: 2px 0px 2px 4px;
 }
 
-/* Search results list */
 
+
+/* Search results list */
 
 
 .search-results {
@@ -291,7 +291,11 @@ input[type=date].form-control {
       transition: width .6s ease;
       background-color: $progress-bar-color;
     }
+
+
   }
+
+
 
   .badge {
     background-color: transparent;
@@ -602,6 +606,11 @@ input[type=date].form-control {
     .progress-incell {
       margin: 4px;
     }
+
+    .progress-type {
+      color: $white;
+    }
+
   }
 }
 
@@ -1151,6 +1160,12 @@ section {
   .alert {
     margin: 1px;
   }
+
+  .alert-small {
+    display: inline-block;
+    margin-top: 8px;
+  }
+
 
   .list-group-item {
 
