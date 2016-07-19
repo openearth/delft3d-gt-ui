@@ -30,6 +30,36 @@ var exports = (function () {
     },
 
 
+    computed: {
+
+      selectedRunNames: {
+        get: function() {
+
+          // Loop through all selected runs and get the names of these.
+          var names = [];
+          var that = this;
+
+          // We only have scenarios, not a seaprate models (runs) list.. could we improve this somehow?
+          $.each(that.selectedRuns, function(key, value) {
+
+            // Loop through all scenarios.
+            that.models.forEach(function(scenario) {
+
+              var item = _.find(scenario.scene_set, ["id", value]);
+
+              if (item !== undefined) {
+                names.push(item.name);
+              }
+
+            });
+          });
+
+          return names.join(",");
+        }
+      }
+
+    },
+
     methods: {
 
       // Reset all input fields.
@@ -97,7 +127,7 @@ var exports = (function () {
 
             that.openedScenarios.push(dataid);
 
-            $(this).parent().find(".glyphicon-chevron-right:first-child").removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
+            $(this).parent().find(".glyphicon-chevron-down:first-child").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
 
             that.openedScenarios = _.uniq(that.openedScenarios);
 
@@ -108,7 +138,7 @@ var exports = (function () {
 
             var dataid = $(this).data("scenarioid");
 
-            $(this).parent().find(".glyphicon-chevron-down:first-child").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
+            $(this).parent().find(".glyphicon-chevron-right:first-child").removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
 
             that.openedScenarios = _.uniq(_.without(that.openedScenarios, dataid));
 

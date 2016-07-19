@@ -639,11 +639,16 @@
       modelDetails.model.id = 4;
 
       nock("http://0.0.0.0")
+        .log(console.log)
         .defaultReplyHeaders({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*"
         })
-        .post("/api/v1/scenes/4/start/", {
+        .intercept("/api/v1/scenes/4/start/", "OPTIONS")
+        .reply(200, function() {
+          return "content";
+        })
+        .put("/api/v1/scenes/4/start/", {
           workflow: "export"
         })
         .reply(200, function() {

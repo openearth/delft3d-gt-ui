@@ -6,7 +6,7 @@
       <nav class="navbar navbar-default navbar-static-top tool-bar">
         <div class="container-fluid">
           <div class="row" >
-            <div class="col-xs-2" style="background-color: #dfdfda">
+            <div class="col-xs-2" id="column-search-details">
               <div class="btn-toolbar heading-bar" >
                 Search
 
@@ -14,9 +14,9 @@
               </div>
             </div>
 
-            <div class="col-xs-5"  style="background-color: #f1f1ee">
+            <div class="col-xs-5" id="column-search-results">
               <div class="btn-toolbar heading-bar">
-                <span id="results-info">Results {{numRuns}} {{numRuns | pluralize 'run'}} in {{numScenarios}} {{numScenarios | pluralize 'scenario'}}</span>
+                <span id="results-info">Results</span>  <span id="results-info-stats">({{numRuns}} {{numRuns | pluralize 'run'}} in {{numScenarios}} {{numScenarios | pluralize 'scenario'}})</span>
 
                 <a class="btn pull-right nav-bar-button" title="Create scenario" href="#/scenarios/create">Create scenario</a>
 
@@ -24,18 +24,20 @@
             </div>
           </div>
 
-          <div class="col-xs-5" style="background-color: #f1f1ee">
+          <div class="col-xs-5" id="column-run-details">
             <div class="btn-toolbar heading-bar" >
-
+              Details <span v-if="selectedRuns.length > 0">for &ldquo;<strong>{{selectedRunNames}}</strong>&rdquo;</span>
             </div>
           </div>
         </div>
       </div>
     </nav>
 
+    <!-- Alert message component for display of timed messages -->
+    <alert-message></alert-message>
+
     <div class="container-fluid full-height">
       <div class="row full-height">
-
 
         <div class="col-sm-2 column  full-height">
           <search-details></search-details>
@@ -51,6 +53,7 @@
 
          <search-list v-bind:opened-scenarios.sync="openedScenarios" filter="" :models="models" :selected-runs.sync="selectedRuns" :selected-scenarios.sync="selectedScenarios"></search-list>
         </div>
+
 
         <div class="col-sm-5 column full-height">
         <model-details></model-details>

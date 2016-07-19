@@ -91,6 +91,14 @@ var exports = (function () {
             return allRuns.indexOf(id) !== -1;
           });
 
+          this.selectedRuns = r;
+
+          if (r.length === 0) {
+            this.$dispatch("modelsSelected", null);
+          }
+
+
+
           return r;
         }
       }

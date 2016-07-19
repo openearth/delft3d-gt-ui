@@ -19,7 +19,7 @@
           <div class="scenario"  data-scenarioid="{{entry.id}}"  v-bind:class="{ 'selected': this.selectedScenarios.indexOf(entry.id) !== -1 }">
             <div class="scenario-info"  v-on:click="scenarioSelect(entry.id, $event)">
 
-              <span class="scenario-name"><span class=" glyphicon glyphicon-chevron-right" data-toggle="collapse" data-target="#scenario-{{entry.id}}" aria-controls="scenario-{{$index}}"   data-scenarioid="{{entry.id}}"></span> Scenario: {{entry.name}}</span>
+              <span class="scenario-name"><span class=" glyphicon glyphicon-chevron-down" data-toggle="collapse" data-target="#scenario-{{entry.id}}" aria-controls="scenario-{{$index}}"   data-scenarioid="{{entry.id}}"></span> Scenario: {{entry.name}}</span>
               <small style="display:none">({{entry.id}})</small> <!-- = for debugging -->
               <div class="progress-holder">
                 <div class="progress">
@@ -35,7 +35,10 @@
              </div>
              -->
 
-             <span class="arrow-right glyphicon glyphicon-chevron-right"></span>
+            <!-- hiding the arrow to the right, as users think it means something?
+            <span class="arrow-right glyphicon glyphicon-chevron-right"></span>
+            -->
+
            </div>
            <!-- end scenario info block -->
 

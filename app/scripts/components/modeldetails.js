@@ -1,4 +1,4 @@
-/* global ImageAnimation, ConfirmDialog, getDialog, fetchModel, fetchLog, deleteModel, startModel, exportModel, stopModel, publishModel, router */
+/* global ImageAnimation, ConfirmDialog, getDialog, fetchModel, fetchLog, deleteModel, startModel, exportModel, stopModel, publishModel  */
 var exports = (function () {
   "use strict";
 
@@ -232,7 +232,8 @@ var exports = (function () {
 
         console.log("Removemodel");
         // keep track of the scenario before deletion
-        var scenarioId = this.scenario;
+        // Needs to be added soon
+        //var scenarioId = this.scenario;
 
         // Do we also remove all the additional files? This is based on the checkmark.
         // if deletefiles is true, we will tell the server that we want to remove these files.
@@ -262,17 +263,8 @@ var exports = (function () {
               console.log("model deletion failed", e);
             });
 
-          // key values correspond to url parameters which are lowercase
-          var params = {
-            modelid: -1,
-            scenarioid: scenarioId
-          };
 
-          // TODO: keep routing logic in main window
-          router.go({
-            name: "finder-columns",
-            params: params
-          });
+          this.deleteDialog.hide();
 
         }.bind(this);
 

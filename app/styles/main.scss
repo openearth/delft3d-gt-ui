@@ -63,6 +63,10 @@ $badge-color-unselected: #989a9a;
 $navigation-button-background: #999999;
 $navigation-button-background-default: #008bbf;
 
+$color-left-column-background: #dfdfda;
+$color-middle-column-background: #f1f1ee;
+$color-right-column-background: #ffffff;
+
 /* This part is wiredepped
 // bower:scss
 @import 'bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss';
@@ -856,7 +860,25 @@ section {
     padding-right: 0;
   }
 
+  #results-info {
+    font-size: 14px;
+  }
 
+  #results-info-stats {
+    font-size: 12px;
+  }
+
+  #column-search-details {
+    background-color: $color-left-column-background;
+  }
+
+  #column-search-results {
+    background-color: $color-middle-column-background;
+  }
+
+  #column-run-details {
+    background-color: $color-right-column-background;
+  }
 
 }
 
@@ -1092,6 +1114,9 @@ section {
     background:transparent;
 }
 
+.model-details {
+  background-color: $color-right-column-background;
+}
 
 
 .scenario-list,
