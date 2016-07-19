@@ -111,7 +111,7 @@
   // In testing we override the URL domain name. Otherwise nock cannot work. Nock does NOT support relative paths.
   // Using this, we can use http://0.0.0.0 in the nock.
   global.$.ajaxPrefilter(function(options) {
-    //console.log(options);
+   // console.log(options);
     options.url = "http://0.0.0.0" + (options.url);
 
   });
@@ -339,6 +339,60 @@
 
 
 
+  describe("ConfirmDialog", function() {
+
+    it("Is possible to make a confirmdialog", function(done) {
+      var confirmDialog = new ConfirmDialog();
+
+      // Simple test, see if object exists
+      assert.isOk(confirmDialog);
+      done();
+    });
+
+
+    it("Is possible to confirm", function(done) {
+      var confirmDialog = new ConfirmDialog();
+
+      // Simple test, see if object exists
+      assert.isOk(confirmDialog.confirm);
+      done();
+    });
+
+    it("Is possible to cancel", function(done) {
+      var confirmDialog = new ConfirmDialog();
+
+      // Simple test, see if object exists
+      assert.isOk(confirmDialog.cancel);
+      done();
+    });
+
+    it("Is possible to show", function(done) {
+      var confirmDialog = new ConfirmDialog();
+
+      // Simple test, see if object exists
+      assert.isOk(confirmDialog.show);
+      done();
+    });
+
+
+    it("Is possible to hide", function(done) {
+      var confirmDialog = new ConfirmDialog();
+
+      // Simple test, see if object exists
+      assert.isOk(confirmDialog.hide);
+      done();
+    });
+
+
+    it("Is possible to showAlert", function(done) {
+      var confirmDialog = new ConfirmDialog();
+
+      // Simple test, see if object exists
+      assert.isOk(confirmDialog.showAlert);
+      done();
+    });
+
+  });
 
   describe("Search details", function() {
 
@@ -357,6 +411,7 @@
       assert.deepEqual(searchDetails.modelEngines, ["Delft3D"]);
       done();
     });
+
     it("Is possible to get parameters", function(done) {
       var searchDetails = new SearchDetails();
 
@@ -383,6 +438,8 @@
       assert.deepEqual(searchDetails.parameters, comp);
       done();
     });
+
+
     it("Is possible to build a request", function(done) {
       var searchDetails = new SearchDetails();
 
@@ -402,6 +459,61 @@
       assert.deepEqual(searchDetails.buildRequest(), comp);
       done();
     });
+
+
+    it("Is possible to start a search", function(done) {
+      var searchDetails = new SearchDetails();
+      var replyCount = 0;
+
+      nock("http://0.0.0.0")
+        .log(console.log)
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .get("/api/v1/scenarios/")
+        .query({"search": ""})
+        .reply(200, function() {
+          console.log("reply scenarios");
+          replyCount++;
+          return {};
+        });
+
+      nock("http://0.0.0.0")
+        .log(console.log)
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .get("/api/v1/scenes/")
+        .query({"search": ""})
+        .reply(200, function() {
+          console.log("reply scenes");
+          replyCount++;
+          return {};
+        });
+
+      searchDetails.startSearch();
+
+              /* eslint-disable no-process-exit */
+//process.exit(1);
+              /* eslint-enable no-process-exit */
+      // we expect two replies.
+      window.setTimeout(function() {
+        try {
+          assert.isTrue(replyCount === 2, "Nock server did not reach replies");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
+
+    });
+
+
+
+
+
   });
   describe("User details", function() {
     it("Is possible to create a user details", function(done) {
@@ -1162,6 +1274,42 @@
 
       done();
     });
+
+    it("check properties ", function(done) {
+
+      //var aSearchList = new SearchList();
+
+      // Expected properties that should match with actual properties.
+      var expectedProps = {
+        "models": {
+          type: Array,
+          required: true
+        },
+
+        "selectedRuns": {
+          type: Array,
+          required: true
+        },
+
+        "selectedScenarios": {
+          type: Array,
+          required: true
+        },
+
+        "openedScenarios": {
+          type: Array,
+          required: true
+        }
+      };
+
+
+      // Without control key we expect only the last item selected.
+      assert.deepEqual(SearchList.options.props, expectedProps, "Match default properties");
+
+      done();
+    });
+
+
 
 
   });

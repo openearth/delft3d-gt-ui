@@ -133,6 +133,7 @@ var exports = (function () {
 
       }
     },
+
     parameters: {
       get: function() {
         var parameters = {};
@@ -156,8 +157,6 @@ var exports = (function () {
   },
 
   methods: {
-
-
 
     buildRequest: function() {
       // for now we just copy everything
