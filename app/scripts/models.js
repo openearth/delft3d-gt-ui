@@ -130,7 +130,7 @@ var exports = (function () {
       $.ajax({
         url: "/api/v1/scenes/" + id + "/start/",
         data: {workflow: "export"},
-        method: "POST"
+        method: "PUT"
       })
         .done(function() {
           // no data to return, just call the callback
