@@ -988,10 +988,11 @@
       done();
     });
 
-    xit("Should be possible to check hasFrames property", function(done) {
+    it("Should be possible to check hasFrames property", function(done) {
 
       // We should not have any frames in this animation object, but maybe make sure later on?
-      assert.isTrue(imageAnimation.hasFrames === 0, "Animation does not have frames");
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      assert.isTrue(imageAnimation.hasFrames === true, "Animation does not have frames");
       done();
     });
 
@@ -1003,16 +1004,24 @@
       done();
     });
 
-    xit("Should be possible to check animationFrame property", function(done) {
+    it("Should be possible to check animationFrame property", function(done) {
 
       // Todo.
+      imageAnimation.model.info = { delta_fringe_images: { location: "location/", images: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.fileurl = "fileurl/";
+
+      var imgurl = imageAnimation.animationFrame;
+
+      assert.isTrue(imgurl === "fileurl/location/firstframe.jpg", "Animation frame file matches expectation");
+
       done();
     });
 
-    xit("Should be possible to check frameCount property", function(done) {
+    it("Should be possible to check frameCount property", function(done) {
 
       // We should not have any frames in this animation object, but maybe make sure later on?
-      assert.isTrue(imageAnimation.frameCount === 0, "Animation framecount should be 0");
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      assert.isTrue(imageAnimation.frameCount === imageAnimation.model.info.delta_fringe_images.images.length, "Animation framecount should be 0");
       done();
     });
 
@@ -1028,18 +1037,20 @@
     it("Should be possible to gotoFirstFrame", function(done) {
 
       // index should become 0
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
       imageAnimation.gotoFirstFrame();
 
       assert.isTrue(imageAnimation.animationIndex === 0, "Animation frame at 0");
       done();
     });
 
-    xit("Should be possible to gotoLastFrame", function(done) {
+    it("Should be possible to gotoLastFrame", function(done) {
 
       // index should become 0.. we do not have any images. Maybe test later using an fake array.
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
       imageAnimation.gotoLastFrame();
 
-      assert.isTrue(imageAnimation.animationIndex === 0, "Animation frame at 0");
+      assert.isTrue(imageAnimation.animationIndex === imageAnimation.model.info.delta_fringe_images.images.length - 1, "Animation frame at 0");
       done();
     });
 
