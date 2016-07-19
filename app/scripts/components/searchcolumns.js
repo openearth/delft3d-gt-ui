@@ -80,6 +80,10 @@ var exports = (function () {
           });
         });
 
+        // Enable all items in the select pickers chooser.
+        $(".select-picker").selectpicker("refresh");
+        $(".select-picker").selectpicker("selectAll");
+
         // Domain selection boxes - enable all.
         $(".domain-selection-box input[type='checkbox']").prop("checked", "checked");
 

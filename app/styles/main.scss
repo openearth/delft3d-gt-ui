@@ -90,7 +90,7 @@ $color-right-column-background: #ffffff;
 
 // Fill max height.
 @mixin fill {
-  height: calc(100vh - 110px);
+  height: calc(100vh - 116px);
 }
 
 // Truncate a line of text with elli...
@@ -336,9 +336,7 @@ input[type=date].form-control {
 
   }
 
-
-
-
+  // Arrow shown at right of list
   .arrow-right
   {
     position: absolute;
@@ -346,9 +344,13 @@ input[type=date].form-control {
     right: 8px;
   }
 
+  .scenario.selected {
+    background-color: $scenario-selected-background;
+    color: $white;
+  }
 
   // When an item is selected some things change. that happens here
-  .selected {
+  .run.selected {
 
     background-color: $scenario-selected-background;
     color: $white;
@@ -456,6 +458,11 @@ input[type=date].form-control {
   font-weight: 600;
 
 
+}
+
+// Force truncate of long names in right detail panel.
+#column-run-details .heading-bar {
+  @include truncate();
 }
 
 .tool-bar {

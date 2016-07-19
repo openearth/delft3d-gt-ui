@@ -68,15 +68,15 @@ var exports = (function () {
             $(".select-picker").selectpicker("selectAll");
 
 
-            // Model engine should be a list.
-            $("#model-engine").selectpicker("refresh");
-            $("#model-engine").selectpicker("selectAll");
+            /*eslint-disable camelcase*/
             $(".ion-range").ionRangeSlider({
+              force_edges: true,
               onFinish: () => {
                 // args: data, not used
                 this.startSearch();
               }
             });
+            /*eslint-enable camelcase*/
 
             // Add event handler that allows one to use the X next to inputs to clear the input.
             $(".button-empty-input-field").on("click", function() {
