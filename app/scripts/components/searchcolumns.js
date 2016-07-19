@@ -100,8 +100,8 @@ var exports = (function () {
             $(this).parent().find(".glyphicon-chevron-right:first-child").removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
 
             that.openedScenarios = _.uniq(that.openedScenarios);
-			
-			console.log("hide");
+
+
           });
 
           $(".scenario-runs").on("show.bs.collapse", function() {
@@ -112,7 +112,6 @@ var exports = (function () {
 
             that.openedScenarios = _.uniq(_.without(that.openedScenarios, dataid));
 
-			console.log("open");
           });
         });
 

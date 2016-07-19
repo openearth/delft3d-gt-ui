@@ -991,7 +991,9 @@
     it("Should be possible to check hasFrames property", function(done) {
 
       // We should not have any frames in this animation object, but maybe make sure later on?
+      /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      /*eslint-enable camelcase*/
       assert.isTrue(imageAnimation.hasFrames === true, "Animation does not have frames");
       done();
     });
@@ -1006,8 +1008,9 @@
 
     it("Should be possible to check animationFrame property", function(done) {
 
-      // Todo.
+       /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { location: "location/", images: ["firstframe.jpg", "lastframe.jpg"] } };
+      /*eslint-enable camelcase*/
       imageAnimation.model.fileurl = "fileurl/";
 
       var imgurl = imageAnimation.animationFrame;
@@ -1020,7 +1023,9 @@
     it("Should be possible to check frameCount property", function(done) {
 
       // We should not have any frames in this animation object, but maybe make sure later on?
+       /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      /*eslint-enable camelcase*/
       assert.isTrue(imageAnimation.frameCount === imageAnimation.model.info.delta_fringe_images.images.length, "Animation framecount should be 0");
       done();
     });
@@ -1037,7 +1042,9 @@
     it("Should be possible to gotoFirstFrame", function(done) {
 
       // index should become 0
+       /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      /*eslint-enable camelcase*/
       imageAnimation.gotoFirstFrame();
 
       assert.isTrue(imageAnimation.animationIndex === 0, "Animation frame at 0");
@@ -1047,7 +1054,9 @@
     it("Should be possible to gotoLastFrame", function(done) {
 
       // index should become 0.. we do not have any images. Maybe test later using an fake array.
+       /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      /*eslint-enable camelcase*/
       imageAnimation.gotoLastFrame();
 
       assert.isTrue(imageAnimation.animationIndex === imageAnimation.model.info.delta_fringe_images.images.length - 1, "Animation frame at 0");
