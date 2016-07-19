@@ -86,7 +86,7 @@ $navigation-button-background-default: #008bbf;
 
 // Fill max height.
 @mixin fill {
-  height: calc(100vh - 130px);
+  height: calc(100vh - 110px);
 }
 
 // Truncate a line of text with elli...
@@ -168,6 +168,9 @@ $row-height: 32px;
 // Default font:
 body {
   font-family: "Segoe UI";
+
+  // Hide any scrollbars. Not the best approach though.
+  overflow-y: hidden;
 }
 
 
@@ -242,6 +245,7 @@ input[type=date].form-control {
   .scenario-info {
     padding: 4px 4px 8px 8px;
     border-bottom: 1px solid $scenario-info-border;
+    min-height: 64px;
   }
 
   .run {
@@ -250,6 +254,7 @@ input[type=date].form-control {
     background-color: $white;
     position: relative;
     padding: 4px 4px 8px 8px;
+    min-height: 64px;
 
     &:hover
     {
@@ -852,6 +857,9 @@ section {
     padding-left: 0;
     padding-right: 0;
   }
+
+
+
 }
 
 /* thes only apply to the scenario builder (no labels on bars) */
@@ -918,6 +926,11 @@ section {
       display: inline-block;
       margin-right: 12px;
       float: left;
+
+      // Last child does not have any right margin!
+      &:last-child {
+        margin-right: 0px;
+      }
     }
 
 
@@ -1172,4 +1185,45 @@ section {
 
 .highlighted {
   background-color: $deltares-groen !important;
+}
+
+
+
+@media screen and (max-width: 1250px) {
+
+ .search-details .domain-search-boxes .domain-selection-box {
+  margin-right: 2px;
+  }
+
+  .search-details .domain-search-boxes input[type=checkbox] + label {
+     width: 54px;
+     height: 54px;
+   }
+
+  // Hide the label at these screens:
+  .search-details .domain-search-boxes input[type=checkbox] + label span {
+    display:none;
+  }
+}
+
+
+// Smalles screen we take care of.
+@media screen and (max-width: 1024px) {
+
+  body
+  {
+    // Allow scrollbars again.
+    overflow-y: auto;
+  }
+
+  .search-details .domain-search-boxes input[type=checkbox] + label {
+     width: 42px;
+     height: 42px;
+   }
+
+   // Hide the results information screen (how many results we got) - it's fairly big, and removing it makes space for the buttons on the navbar.
+   #results-info {
+    display: none;
+  }
+
 }

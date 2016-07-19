@@ -16,11 +16,11 @@
 
             <div class="col-xs-5"  style="background-color: #f1f1ee">
               <div class="btn-toolbar heading-bar">
-               Results {{numRuns}} {{numRuns | pluralize 'run'}} in {{numScenarios}} {{numScenarios | pluralize 'scenario'}}
+                <span id="results-info">Results {{numRuns}} {{numRuns | pluralize 'run'}} in {{numScenarios}} {{numScenarios | pluralize 'scenario'}}</span>
 
-              <a class="btn pull-right nav-bar-button" title="Create scenario" href="#/scenarios/create">Create scenario</a>
+                <a class="btn pull-right nav-bar-button" title="Create scenario" href="#/scenarios/create">Create scenario</a>
 
-              <model-control-menu :selected-runs="selectedRuns" :models="models" :selected-scenarios="selectedScenarios" ></model-control-menu>
+                <model-control-menu :selected-runs="selectedRuns" :models="models" :selected-scenarios="selectedScenarios" ></model-control-menu>
             </div>
           </div>
 
