@@ -214,6 +214,7 @@ var exports = (function () {
         // afterwards, pass the log
 
         var that = this;
+
         // make sure id is a number
         console.log("updateData / fetch model:" + id);
 
@@ -221,11 +222,8 @@ var exports = (function () {
           .then(
             (json) => {
 
-              // copy old data and set model
-              var data = this.$data;
-
               that.model = json;
-console.log("updated");
+
               if (this.waitingForUpdate) {
                 this.highlightPublishLevel();
               }

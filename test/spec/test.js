@@ -1103,18 +1103,6 @@
       done();
     });
 
-    it("Should be possible call directSelect", function(done) {
-
-      var aSearchList = new SearchList();
-      var selectedId = 123;
-
-      // select item
-      aSearchList.directSelect(selectedId);
-
-      assert.isTrue(aSearchList.selectedResultId === selectedId, "selectedResultId matches expected value");
-      done();
-    });
-
 
     it("Should be possible select an item without control key pressed ", function(done) {
 
