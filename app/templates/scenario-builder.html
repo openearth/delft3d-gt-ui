@@ -96,8 +96,9 @@
                                      v-validate="variable.validators"
                                      >
                                 <option
-                                   v-for="option in variable.options"
-                                   v-bind:value="option">
+                                   v-for="(i, option) in variable.options"
+                                   v-bind:value="option.value"
+                                   >
                                   {{ option.text }}
                                 </option>
                               </select>
