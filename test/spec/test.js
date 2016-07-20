@@ -16,7 +16,7 @@
   // Create a document
   /* eslint-disable quotes */
 
-  global.document = jsdom('<!doctype html><html><body><div id="app"><div id="model-create"></div><div id="model-details"></div></div><div id="template-container"></div><div id="dialog-container"></div></body></html>', {});
+  global.document = jsdom('<!doctype html><html><body><div id="app"><div id="model-create"></div><div id="model-details"></div></div><div id="template-container"></div><div id="dialog-container"></div><div id="scenario-container"></div></body></html>', {});
 
   /* eslint-enable quotes */
 
@@ -257,6 +257,13 @@
           });
 
       });
+
+
+
+
+
+
+
       it("Should be possible get a model by id", function(done) {
         nock("http://0.0.0.0")
           .defaultReplyHeaders({
@@ -288,8 +295,19 @@
               done(exc);
             }
           });
-
       });
+
+      it("Should get an error when requesting model WITHOUT an id", function(done) {
+
+        global.fetchModel()
+          .catch(function(e) {
+            assert.equal(e.message, "Model not found, even after updating");
+
+            done();
+          });
+      });
+
+
     });
 
 
@@ -854,11 +872,42 @@
     });
 
 
-    xit("Should be possible to delete a model", function(done) {
+    it("Should be possible to delete a model", function(done) {
 
-      // Todo... this is an important one, hence this placeholder.
-      done();
+      var correctReply = false;
+
+      var deleteID = 4;
+
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .intercept("/api/v1/scenes/" + deleteID + "/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+        .delete("/api/v1/scenes/" + deleteID + "/")
+        .reply(200, function() {
+          correctReply = true;
+          return {};
+        });
+
+      global.deleteModel(deleteID);
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
     });
+
+
+
 
     it("Should be possible to export a model", function(done) {
       var correctReply = false;
@@ -866,7 +915,6 @@
       modelDetails.model.id = 4;
 
       nock("http://0.0.0.0")
-        .log(console.log)
         .defaultReplyHeaders({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*"
@@ -1064,27 +1112,28 @@
 
 
 
-    xit("Should be possible to publish a model private", function(done) {
+    it("Should be possible to publish a model private", function(done) {
       var correctReply = false;
 
       modelDetails.$parent = {};
       modelDetails.$parent.$broadcast = function() {
       };
 
-      modelDetails.model.id = 4;
+      var modelToPublishId = 4;
+      var target = "private";
 
       nock("http://0.0.0.0")
         .defaultReplyHeaders({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*"
         })
-        .post("/api/v1/scenes/4/publish_private/")
+        .post("/api/v1/scenes/" + modelToPublishId + "/publish_" + target + "/")
         .reply(200, function() {
           correctReply = true;
           return {};
         });
 
-      modelDetails.publishModel(0);
+      global.publishModel(modelToPublishId, target);
 
       // Make sure the nock server had the time to reply
       window.setTimeout(function() {
@@ -1097,27 +1146,28 @@
       }, 100);
     });
 
-    xit("Should be possible to publish a model company", function(done) {
+    it("Should be possible to publish a model company", function(done) {
       var correctReply = false;
 
       modelDetails.$parent = {};
       modelDetails.$parent.$broadcast = function() {
       };
 
-      modelDetails.model.id = 4;
+      var modelToPublishId = 4;
+      var target = "company";
 
       nock("http://0.0.0.0")
         .defaultReplyHeaders({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*"
         })
-        .post("/api/v1/scenes/4/publish_company/")
+        .post("/api/v1/scenes/" + modelToPublishId + "/publish_" + target + "/")
         .reply(200, function() {
           correctReply = true;
           return {};
         });
 
-      modelDetails.publishModel(1);
+      global.publishModel(modelToPublishId, target);
 
       // Make sure the nock server had the time to reply
       window.setTimeout(function() {
@@ -1130,27 +1180,28 @@
       }, 100);
     });
 
-    xit("Should be possible to publish a model world", function(done) {
+    it("Should be possible to publish a world company", function(done) {
       var correctReply = false;
 
       modelDetails.$parent = {};
       modelDetails.$parent.$broadcast = function() {
       };
 
-      modelDetails.model.id = 4;
+      var modelToPublishId = 4;
+      var target = "world";
 
       nock("http://0.0.0.0")
         .defaultReplyHeaders({
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*"
         })
-        .post("/api/v1/scenes/4/publish_world/")
+        .post("/api/v1/scenes/" + modelToPublishId + "/publish_" + target + "/")
         .reply(200, function() {
           correctReply = true;
           return {};
         });
 
-      modelDetails.publishModel(2);
+      global.publishModel(modelToPublishId, target);
 
       // Make sure the nock server had the time to reply
       window.setTimeout(function() {
@@ -1319,6 +1370,43 @@
 
   describe("SearchList class", function() {
 
+
+    it("Should be possible deselect all runs", function(done) {
+
+      // Add an artificial sene with a model in scene_set with id 1.
+      var aSearchList = new SearchList();
+
+      aSearchList.models = [];
+
+       /*eslint-disable camelcase*/
+      aSearchList.models.push({id: 123, scene_set: [{ id: 1}]});
+       /*eslint-enable camelcase*/
+
+      aSearchList.selectedRuns = [1]; // Assume we test #1
+
+      aSearchList.deselectAllRuns();
+
+      assert.isTrue(aSearchList.selectedRuns.length === 0, "selectedRuns are correct.");
+      done();
+    });
+
+
+    it("Should be possible select a scenario", function(done) {
+
+      // Add an artificial sene with a model in scene_set with id 1.
+      var aSearchList = new SearchList();
+
+      // Add some scenario info:
+      $("#scenario-container").html("<div class='scenario' data-scenarioid='354'>");
+
+      // Fake a html event.
+      var ev = { target: $(".scenario") };
+
+      aSearchList.scenarioSelect(354, ev);
+
+      assert.isTrue($(".scenario").hasClass("selected") && aSearchList.selectedScenarios[0] === 354, "selectedRuns are correct.");
+      done();
+    });
 
     it("Should be possible get selected scenarios", function(done) {
 

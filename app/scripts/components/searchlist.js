@@ -126,6 +126,21 @@ var exports = (function () {
         });
 
         this.selectedScenarios = ids;
+
+        this.deselectAllRuns();
+      },
+
+      deselectAllRuns: function() {
+
+        // Remove all selected:
+        $(".run").removeClass("selected");
+
+        // We deselect all runs.
+        // Directly select the id in the details list. (no routing)
+        this.$dispatch("modelsSelected", null);
+
+        // Only select this run:
+        this.selectedRuns = [];
       },
 
       // A new run is selected from the UI (new search result system)

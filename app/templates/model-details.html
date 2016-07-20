@@ -115,7 +115,7 @@
             <template v-for="level in publishLevels">
               <button
                  class="form-group btn btn-labeled btn-default"
-                 :class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE') || !isLevelEnabled($index) }"
+                 :class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE' || model.state === 'ABORTED') || !isLevelEnabled($index) }"
                  v-on:click="publishModel($index)">
                 <span class="btn-label">
                   <i class="glyphicon" :class="publishLevels[$index].iconClass">

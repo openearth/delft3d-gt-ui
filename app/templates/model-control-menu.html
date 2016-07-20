@@ -7,8 +7,9 @@
     <ul class="dropdown-menu">
 
       <!-- clone item, enabled only if one item is selected -->
-      <li><a v-bind:class="{inputdisabled: selectedScenarios.length !== 1 }" v-on:click="cloneScenario()">Clone scenario</a></li>
-      <li><a v-bind:class="{inputdisabled: selectedScenarios.length === 0 }" v-on:click="deleteSelectedScenario()">Delete scenario(s)</a></li>
+      <!-- disabled pointer is on the parent (as pointer events:none disable mouse cursor changes) -->
+      <li v-bind:class="{disabledpointer: selectedScenarios.length !== 1 }"><a v-bind:class="{inputdisabled: selectedScenarios.length !== 1 }" v-on:click="cloneScenario()">Clone scenario</a></li>
+      <li v-bind:class="{disabledpointer: selectedScenarios.length === 0 }"><a v-bind:class="{inputdisabled: selectedScenarios.length === 0 }" v-on:click="deleteSelectedScenario()">Delete scenario(s)</a></li>
 <!--
     Hidden for a moment, as we disable multiselect
 
