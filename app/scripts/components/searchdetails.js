@@ -282,13 +282,15 @@ var exports = (function () {
 
             console.log(dataScenarios.length + " / " + runCount);
 
-           // console.log("done");
+            console.log("done");
+            console.log("disp: " + that.$dispatch);
             that.$dispatch("modelsFound", dataScenarios, dataScenarios.length, runCount);
           }
         }
 
         refcount++;
         request.url = "/api/v1/scenarios/";
+
         //request.data = {}; //override for now.
         $.ajax(request)
           .then(function(data) {
