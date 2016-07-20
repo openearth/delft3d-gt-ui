@@ -245,14 +245,19 @@ var exports = (function () {
 
               runCount += matchingRuns.length;
 
+              // Sort  array by name of run.
+              var sorted = _.sortBy(matchingRuns, 'id');
+
               // Replace array:
               /*eslint-disable camelcase*/
-              scenario.scene_set = matchingRuns;
+              scenario.scene_set = sorted;
               /*eslint-enable camelcase*/
+
 
               // We only add scenarios that have atleast one item.
               if (matchingRuns.length > 0) {
                 visibleScenarios.push(scenario);
+
               }
 
             });
