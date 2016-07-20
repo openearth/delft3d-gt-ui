@@ -193,8 +193,7 @@ var exports = (function() {
 
             this.dataLoaded = true;
 
-
-        });
+          });
       },
 
       selectTemplate: function(template) {

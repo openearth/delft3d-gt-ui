@@ -201,11 +201,11 @@
             Download
           </button>
 
-          <button class="btn btn-primary" type="button" v-bind:class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE') || isReadOnly() }"  v-on:click="exportModel">
+          <button class="btn btn-primary" type="button" v-bind:class="{ 'inputdisabled': model.state === 'PROCESSING' }"  v-on:click="exportModel">
             Start export
           </button>
 
-          <h5 v-bind:class="{ 'default-hidden': (model.state === 'SUCCESS' || model.state === 'FAILURE') || isReadOnly() }">&ldquo;<i>Start export</i>&rdquo; becomes available after a simulation has finished and not published.</h5>
+          <h5 v-bind:class="{ 'default-hidden': model.state === 'PROCESSING' }">&ldquo;<i>Start export</i>&rdquo; becomes available after a simulation has finished and not published.</h5>
 
         </div>
       </div>

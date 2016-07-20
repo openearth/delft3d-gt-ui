@@ -92,6 +92,8 @@ var exports = (function () {
         // Domain selection boxes - enable all.
         $(".domain-selection-box input[type='checkbox']").prop("checked", "checked");
 
+        this.$broadcast("clearSearch");
+
       },
 
 

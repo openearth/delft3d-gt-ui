@@ -58,7 +58,7 @@ $scenario-selected-background: #008bbf;
 $search-domain-selected: #008bbf;
 $panel-background: #dfdfda;
 $slider-handle-border: #999;
-$progress-bar-color: #cc4444;
+$progress-bar-color: #c44;
 $badge-color-unselected: #989a9a;
 $navigation-button-background: #999;
 $navigation-button-background-default: #008bbf;
@@ -259,8 +259,7 @@ input[type=date].form-control {
     padding: 4px 4px 8px 8px;
     min-height: 64px;
 
-    &:hover
-   {
+    &:hover {
       background-color: darken($white, 2%);
     }
   }
@@ -277,7 +276,7 @@ input[type=date].form-control {
     text-align: left;
     font-size: 10px;
     font-weight: 800;
-    margin-right:32px;
+    margin-right: 32px;
 
     .progress {
       margin-bottom: 0;
@@ -286,9 +285,9 @@ input[type=date].form-control {
     }
 
     .progress-bar {
-      -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
+      //-webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
       box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
-      -webkit-transition: width .6s ease;
+      //-webkit-transition: width .6s ease;
       transition: width .6s ease;
       background-color: $progress-bar-color;
     }
@@ -309,8 +308,6 @@ input[type=date].form-control {
     height: 18px;
     line-height: 10px;
     vertical-align: middle;
-
-
   }
 
   .share-status {
@@ -342,8 +339,7 @@ input[type=date].form-control {
   }
 
   // Arrow shown at right of list
-  .arrow-right
- {
+  .arrow-right {
     position: absolute;
     top:32px;
     right: 8px;
@@ -382,7 +378,7 @@ input[type=date].form-control {
     }
 
     &:hover
-   {
+    {
       background-color: lighten($scenario-selected-background, 2%);
     }
 
@@ -398,8 +394,7 @@ input[type=date].form-control {
 /* End */
 
 
-.clear-left
-{
+.clear-left {
   clear:left;
 }
 
@@ -456,13 +451,10 @@ input[type=date].form-control {
 
 }
 
-.heading-bar
-{
+.heading-bar {
   height: 32px;
   line-height: 32px;
   font-weight: 600;
-
-
 }
 
 // Force truncate of long names in right detail panel.
@@ -494,7 +486,7 @@ input[type=date].form-control {
     }
 
     &.default
-   {
+    {
       background-color: $navigation-button-background-default;
     }
   }
@@ -976,13 +968,13 @@ section {
      // Hide the actual checkbox.
     input[type=checkbox] {
       display: none;
-      width: 64px;
-      height: 64px;
+      width: 62px;
+      height: 62px;
     }
 
     .domain-selection-box {
       display: inline-block;
-      margin-right: 12px;
+      margin-right: 6px;
       float: left;
 
       // Last child does not have any right margin!
@@ -997,8 +989,8 @@ section {
 
       cursor: pointer;
       display: block;
-      width: 64px;
-      height: 64px;
+      width: 62px;
+      height: 62px;
       background-position: center center;
       background-repeat: no-repeat;
       background-color: $white;
@@ -1142,11 +1134,13 @@ section {
   padding: 6px 2px 6px 2px;
   color: $dark-gray;
 }
+
 .stylish-input-group .form-control {
   border-right:0;
   box-shadow: 0 0 0;
   border-color: $dark-gray;
 }
+
 .stylish-input-group button {
   border: 0;
   background: transparent;
@@ -1166,10 +1160,8 @@ section {
   padding: 0;
 
 
-
   // Disable some of the default panel stylings:
-  .panel
- {
+  .panel {
     //-webkit-box-shadow: none;
     //-moz-box-shadow: none;
     box-shadow: none;

@@ -109,9 +109,6 @@ var exports = (function () {
 
 
           });
-
-
-
   });
 
   $(".select-picker").selectpicker();
@@ -154,6 +151,24 @@ var exports = (function () {
         return parameters;
       }
     }
+  },
+
+  events: {
+
+    // Clear the variables that use data binding.
+    clearSearch: function() {
+      this.search = "";
+      this.startDate = null;
+      this.endDate = null;
+
+      this.startSearch();
+    },
+
+    updateSearch: function() {
+      console.log("update");
+      this.startSearch();
+    }
+
   },
 
   methods: {
