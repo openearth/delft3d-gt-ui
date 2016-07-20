@@ -282,7 +282,7 @@ var exports = (function () {
         fetchLog(this.model.id)
           .then(log => {
             // don't do this with jquery, too slow
-            document.getElementById("model-log-output").textContent = log;
+            $("#model-log-output").text(log);
           })
           .catch(e => {
             console.log(e);

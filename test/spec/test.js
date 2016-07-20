@@ -764,63 +764,82 @@
 
 
 
-
-
-    xit("Should be possible to fetchLog", function(done) {
+    it("Should be possible to fetchLog", function(done) {
       var correctReply = false;
+      var id = 405;
+
+        // We fake to get a model.
+        nock("http://0.0.0.0")
+          .defaultReplyHeaders({
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          })
+          .filteringPath(function() {
+            return "/api/v1/scenes/";
+          })
+          .get("/api/v1/scenes/")
+          .reply(200, [
+            {
+              id: 405,
+              name: "Run 1",
+              fileurl: "/fileurl/",
+                info: {
+                  logfile: {
+                    location: "location/",
+                    file: "file"
+                  }
+                }
+              }
+          ]);
+
+        global.fetchModel(id)
+          .then(function(data) {
+
+              // Now test the log
+              modelDetails.model.id = id;
+
+              // We refer to this item:
+              //var model = itemsCache["4"];
+
+              // Working dir is at: modeldata.fileurl + delf3d + delft3d.log
+              var url = data.fileurl + data.info.logfile.location + data.info.logfile.file;
+
+              nock("http://0.0.0.0")
+                .log(console.log)
+                .defaultReplyHeaders({
+                  "Content-Type": "application/json",
+                  "Access-Control-Allow-Origin": "*"
+                })
+                .get(url)
+                .reply(200, function() {
+                  correctReply = true;
+                  return {};
+                });
+
+              modelDetails.fetchLog();
+
+              // Make sure the nock server had the time to reply
+              window.setTimeout(function() {
+                try {
+                  assert(correctReply === true, "Nock server did not reach reply");
+                  done();
+                } catch (e) {
+                  done(e);
+                }
+              }, 100);
 
 
+          })
+          .catch(function(e) {
+            console.log("no data returned", e);
+            // rethrow error to capture it and avoid time out
+            try {
+              throw e;
+            } catch (exc) {
+              done(exc);
+            }
+          });
 
-      // Test fetch log, result comes from itemsCache
-      var itemsCache = {};
-
-      itemsCache = { "4": {
-        fileurl: "fileurl/",
-        info: {
-          logfile: {
-            location: "location/",
-            file: "file"
-          }
-        }
-      }};
-
-      //modelDetails.itemsCache = itemsCache;
-      modelDetails.model.id = 4;
-
-
-
-      // We refer to this item:
-      var model = itemsCache["4"];
-
-      // Working dir is at: modeldata.fileurl + delf3d + delft3d.log
-      var url = model.fileurl + model.info.logfile.location + model.info.logfile.file;
-
-      nock("http://0.0.0.0")
-        .defaultReplyHeaders({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*"
-        })
-        .get(url)
-        .reply(200, function() {
-          correctReply = true;
-          return {};
-        });
-
-      console.log("x");
-
-      global.itemsCache = itemsCache;
-      //global.models.itemsCache = itemsCache;
-      modelDetails.fetchLog();
-
-      // Make sure the nock server had the time to reply
-      window.setTimeout(function() {
-        try {
-          assert(correctReply === true, "Nock server did not reach reply");
-          done();
-        } catch (e) {
-          done(e);
-        }
-      }, 100);
     });
 
 
