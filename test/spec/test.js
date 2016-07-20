@@ -1215,6 +1215,40 @@
     });
 
     it("Should be possible to download files", function(done) {
+
+      var publishLevels = [
+        {
+          "indicator": "p",
+          "url": "private",
+          "iconClass": "glyphicon-people",
+          "description": "Private"
+        },
+        {
+          "indicator": "c",
+          "url": "company",
+          "iconClass": "glyphicon-blackboard",
+          "description": "Company"
+        },
+        {
+          "indicator": "w",
+          "url": "world",
+          "iconClass": "glyphicon-globe",
+          "description": "Public"
+        }
+      ];
+
+      var aModelDetails = new ModelDetails();
+
+      /*eslint-disable no-underscore-dangle*/
+      assert.deepEqual(aModelDetails._data.publishLevels, publishLevels, "Match publishlevels");
+      /*eslint-enable no-underscore-dangle*/
+
+      done();
+
+    });
+
+
+    it("Check publishlevel config", function(done) {
       var windowSpy = sinon.spy(window, "open");
 
       // this should open a new window
@@ -1226,6 +1260,7 @@
       done();
 
     });
+
 
 
   });

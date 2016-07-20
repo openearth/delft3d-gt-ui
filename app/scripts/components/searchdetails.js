@@ -246,7 +246,7 @@ var exports = (function () {
               runCount += matchingRuns.length;
 
               // Sort  array by name of run.
-              var sorted = _.sortBy(matchingRuns, 'id');
+              var sorted = _.sortBy(matchingRuns, "id");
 
               // Replace array:
               /*eslint-disable camelcase*/

@@ -58,7 +58,7 @@ $scenario-selected-background: #008bbf;
 $search-domain-selected: #008bbf;
 $panel-background: #dfdfda;
 $slider-handle-border: #999;
-$progress-bar-color: #cc44;
+$progress-bar-color: #cc4444;
 $badge-color-unselected: #989a9a;
 $navigation-button-background: #999;
 $navigation-button-background-default: #008bbf;
@@ -103,15 +103,16 @@ $color-right-column-background: #fff;
 
 // Disable text selection of element(s)
 @mixin unselectable {
-  -moz-user-select: none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
+  // Disabling prefixes, but leaving them for a moment to see if all goes well.
+  //-moz-user-select: none;
+  //-khtml-user-select: none;
+  //-webkit-user-select: none;
 
   /*
   Introduced in IE 10.
   See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
   */
-  -ms-user-select: none;
+  //-ms-user-select: none;
   user-select: none;
 }
 
@@ -222,7 +223,7 @@ input[type=date].form-control {
   padding: 8px;
 
 
-  .scenario-name  {
+  .scenario-name {
     font-size: 16px;
     font-weight: 600;
 
@@ -259,7 +260,7 @@ input[type=date].form-control {
     min-height: 64px;
 
     &:hover
-    {
+   {
       background-color: darken($white, 2%);
     }
   }
@@ -279,9 +280,9 @@ input[type=date].form-control {
     margin-right:32px;
 
     .progress {
-       margin-bottom: 0;
-       background-color: $dark-gray;
-       height: 6px;
+      margin-bottom: 0;
+      background-color: $dark-gray;
+      height: 6px;
     }
 
     .progress-bar {
@@ -312,7 +313,7 @@ input[type=date].form-control {
 
   }
 
-  .share-status  {
+  .share-status {
 
     height: 21px;
     width: 21px;
@@ -342,7 +343,7 @@ input[type=date].form-control {
 
   // Arrow shown at right of list
   .arrow-right
-  {
+ {
     position: absolute;
     top:32px;
     right: 8px;
@@ -360,7 +361,7 @@ input[type=date].form-control {
     color: $white;
 
 
-    .share-status  {
+    .share-status {
       &.private {
         background-image: url('../images/ui/sm-private-white.png');
       }
@@ -381,7 +382,7 @@ input[type=date].form-control {
     }
 
     &:hover
-    {
+   {
       background-color: lighten($scenario-selected-background, 2%);
     }
 
@@ -493,7 +494,7 @@ input[type=date].form-control {
     }
 
     &.default
-    {
+   {
       background-color: $navigation-button-background-default;
     }
   }
@@ -920,15 +921,18 @@ section {
 /* thes only apply to the scenario builder (no labels on bars) */
 .scenario-builder {
   .slider {
+
     .irs {
       margin-right: 6px;
       height: 30px;
     }
+
     .irs-line,
     .irs-bar,
     .irs-bar-edge {
       top: 10px;
     }
+
     .irs-slider.single {
       top: 7px;
     }
@@ -948,8 +952,7 @@ section {
     background-color: $panel-background;
   }
 
-  .panel-title
-  {
+  .panel-title {
     font-size: 11px;
   }
 
@@ -1115,7 +1118,7 @@ section {
   }
 
   // Dimensions of the handles
-  .to, .from  {
+  .to, .from {
     background-color: $white;
     width: 20px;
     height: 20px;
@@ -1166,7 +1169,7 @@ section {
 
   // Disable some of the default panel stylings:
   .panel
-  {
+ {
     //-webkit-box-shadow: none;
     //-moz-box-shadow: none;
     box-shadow: none;
@@ -1260,8 +1263,8 @@ section {
   }
 
   .search-details .domain-search-boxes input[type=checkbox] + label {
-     width: 54px;
-     height: 54px;
+   width: 54px;
+   height: 54px;
    }
 
   // Hide the label at these screens:
