@@ -753,6 +753,72 @@
     });
 
 
+    // Check if we can call the init fixed toolbar
+    it("Should be possible to call initFixedToolbar", function(done) {
+      var scenarioCreate = new ScenarioCreate({
+      });
+
+
+      scenarioCreate.initFixedToolbar();
+
+      assert.isOk(scenarioCreate.initFixedToolbar);
+
+      done();
+    });
+
+    it("Should be possible to updateFixedToolbarStyle", function(done) {
+      var scenarioCreate = new ScenarioCreate({
+      });
+
+
+      scenarioCreate.updateFixedToolbarStyle();
+
+      assert.isOk(scenarioCreate.updateFixedToolbarStyle);
+
+      done();
+    });
+
+    it("Should be possible to call GetTop", function(done) {
+      var scenarioCreate = new ScenarioCreate({
+      });
+
+
+      var top = scenarioCreate.getTop();
+
+      // We do not have a window, so assume 0.
+      assert.isTrue(top === 0);
+
+      done();
+    });
+
+
+    it("Should be possible to call validform - TRUE", function(done) {
+      var scenarioCreate = new ScenarioCreate({
+      });
+
+      scenarioCreate.$validation = {
+        valid: true
+      };
+
+      assert.isTrue(scenarioCreate.validForm);
+
+      done();
+    });
+
+    it("Should be possible to call validform - FALSE", function(done) {
+      var scenarioCreate = new ScenarioCreate({
+      });
+
+      scenarioCreate.$validation = {
+        valid: false
+      };
+
+      assert.isFalse(scenarioCreate.validForm);
+
+      done();
+    });
+
+
     it("Should be possible to prepare a scenario", function(done) {
       var scenarioCreate = new ScenarioCreate({
       });

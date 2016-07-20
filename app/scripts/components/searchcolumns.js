@@ -29,6 +29,15 @@ var exports = (function () {
 
     },
 
+    route: {
+      data: function(transition) {
+
+        // Refresh data immediatly if user gets here.
+        this.$broadcast("updateSearch");
+        transition.next();
+
+      }
+    },
 
     computed: {
 

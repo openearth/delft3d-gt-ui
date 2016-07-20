@@ -280,10 +280,6 @@ var exports = (function () {
             // Store updated scenario array.
             dataScenarios = visibleScenarios;
 
-            console.log(dataScenarios.length + " / " + runCount);
-
-            console.log("done");
-            console.log("disp: " + that.$dispatch);
             that.$dispatch("modelsFound", dataScenarios, dataScenarios.length, runCount);
           }
         }

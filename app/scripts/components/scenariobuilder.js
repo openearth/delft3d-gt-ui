@@ -358,6 +358,7 @@ var exports = (function() {
               params: params
             });
 
+
           });
       },
 
@@ -409,6 +410,10 @@ var exports = (function() {
 
       updateFixedToolbarStyle: function() {
         var top = this.getTop();
+
+        if (this.navBars === null) {
+          return 0;
+        }
 
         if (top > this.navBars.topBar.clientHeight) {
           this.navBars.belowToolBar.style.paddingTop = this.navBars.toolBar.clientHeight + "px";
