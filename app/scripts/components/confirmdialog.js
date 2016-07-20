@@ -38,15 +38,28 @@ var exports = (function () {
       },
 
       show: function() {
-        $("#" + this.dialogId + "-dialog").modal({});
+
+        var el = $("#" + this.dialogId + "-dialog");
+
+        if (el.modal !== undefined) {
+          el.modal({});
+        }
+
       },
 
       hide: function() {
-        $("#" + this.dialogId + "-dialog").modal("hide");
+
+        var el = $("#" + this.dialogId + "-dialog");
+
+        if (el.modal !== undefined) {
+          el.modal("hide");
+        }
       },
 
       showAlert: function(isVisible) {
+
         $("#" + this.dialogId + "-dialog-alert").toggle(isVisible);
+
       }
     }
 
@@ -55,6 +68,7 @@ var exports = (function () {
   var getDialog = function(element, component, dialogId) {
     for(var i = 0; i < element.$children.length; i++) {
 
+      console.log("name: " + element.$children[i].$options.name);
       // Check if name matches:
       if (element.$children[i].$options.name === component) {
         var dialog = element.$children[i];

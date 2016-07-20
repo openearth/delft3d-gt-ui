@@ -54,32 +54,7 @@ var exports = (function() {
     },
 
     created: function() {
-      fetchTemplates()
-        .then((templates) => {
-          this.availableTemplates = templates;
-
-          // Select the first template automatic:
-          var template = _.get(this.availableTemplates, 0);
-
-          // if we have a template in the request, select that one
-          if (_.has(this, "$route.query.template")) {
-            var templateId = parseInt(this.$route.query.template);
-
-            template = _.first(_.filter(this.availableTemplates, ["id", templateId]));
-            console.log("setting template", template);
-          }
-
-          // set the template, somehow a computed setter was not working...
-          this.selectTemplate(template);
-
-          this.dataLoaded = true;
-
-
-        });
-
-
-      console.log("created");
-
+      this.fetchTemplateList();
     },
 
     ready: function() {
@@ -194,6 +169,34 @@ var exports = (function() {
       }
     },
     methods: {
+
+      // Moved so that we can test it better.
+      fetchTemplateList: function() {
+
+        fetchTemplates()
+          .then((templates) => {
+            this.availableTemplates = templates;
+
+            // Select the first template automatic:
+            var template = _.get(this.availableTemplates, 0);
+
+            // if we have a template in the request, select that one
+            if (_.has(this, "$route.query.template")) {
+              var templateId = parseInt(this.$route.query.template);
+
+              template = _.first(_.filter(this.availableTemplates, ["id", templateId]));
+              console.log("setting template", template);
+            }
+
+            // set the template, somehow a computed setter was not working...
+            this.selectTemplate(template);
+
+            this.dataLoaded = true;
+
+
+        });
+      },
+
       selectTemplate: function(template) {
 
 

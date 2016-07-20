@@ -1137,10 +1137,10 @@ section {
 
 
 .stylish-input-group .input-group-addon {
-    background: white;
-    min-width: initial;
-    padding: 6px 2px 6px 2px;
-    color: $dark-gray;
+  background: white;
+  min-width: initial;
+  padding: 6px 2px 6px 2px;
+  color: $dark-gray;
 }
 .stylish-input-group .form-control {
   border-right:0;
@@ -1148,8 +1148,8 @@ section {
   border-color: $dark-gray;
 }
 .stylish-input-group button {
-    border: 0;
-    background: transparent;
+  border: 0;
+  background: transparent;
 }
 
 .model-details {
@@ -1258,13 +1258,13 @@ section {
 
 @media screen and (max-width: 1250px) {
 
- .search-details .domain-search-boxes .domain-selection-box {
+  .search-details .domain-search-boxes .domain-selection-box {
     margin-right: 2px;
   }
 
   .search-details .domain-search-boxes input[type=checkbox] + label {
-   width: 54px;
-   height: 54px;
+    width: 54px;
+    height: 54px;
    }
 
   // Hide the label at these screens:
@@ -1283,8 +1283,8 @@ section {
   }
 
   .search-details .domain-search-boxes input[type=checkbox] + label {
-     width: 42px;
-     height: 42px;
+    width: 42px;
+    height: 42px;
    }
 
    // Hide the results information screen (how many results we got) - it's fairly big, and removing it makes space for the buttons on the navbar.

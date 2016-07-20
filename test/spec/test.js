@@ -447,6 +447,7 @@
     it("Is possible to make a confirmdialog", function(done) {
       var confirmDialog = new ConfirmDialog();
 
+
       // Simple test, see if object exists
       assert.isOk(confirmDialog);
       done();
@@ -456,17 +457,24 @@
     it("Is possible to confirm", function(done) {
       var confirmDialog = new ConfirmDialog();
 
-      // Simple test, see if object exists
-      assert.isOk(confirmDialog.confirm);
-      done();
+      // Call confirm,
+      confirmDialog.onConfirm = function() {
+        done();
+      };
+
+      confirmDialog.confirm();
+
     });
 
     it("Is possible to cancel", function(done) {
       var confirmDialog = new ConfirmDialog();
 
       // Simple test, see if object exists
-      assert.isOk(confirmDialog.cancel);
-      done();
+      confirmDialog.onCancel = function() {
+        done();
+      };
+
+      confirmDialog.cancel();
     });
 
     it("Is possible to show", function(done) {
@@ -635,6 +643,7 @@
   });
 
   describe("Scenario builder", function() {
+
     it("Should be possible to convert a single value to a tag array", function(done) {
       var array = factorToArray({
         factor: true,
@@ -645,6 +654,8 @@
       assert.equal(0.3, array[0]);
       done();
     });
+
+
     it("Should be possible to convert a comma separated string to a tag array", function(done) {
       var array = factorToArray({
         factor: true,
@@ -655,6 +666,8 @@
       assert.equal(0, array[0]);
       done();
     });
+
+
     it("Should be possible to check a value using the custom max validator", function(done) {
       var scenarioCreate = new ScenarioCreate({
       });
@@ -665,6 +678,8 @@
       assert.isFalse(valid);
       done();
     });
+
+
     it("Should be possible get the total number of runs", function(done) {
       var scenarioCreate = new ScenarioCreate({
       });
@@ -688,6 +703,8 @@
       assert.equal(2, scenarioCreate.totalRuns);
       done();
     });
+
+
     it("Should be possible to prepare a scenario", function(done) {
       var scenarioCreate = new ScenarioCreate({
       });
@@ -701,6 +718,8 @@
 
       done();
     });
+
+
     it("Should be possible to updte with query parameters", function(done) {
       var scenarioCreate = new ScenarioCreate();
 
@@ -710,6 +729,8 @@
 
       done();
     });
+
+
     it("Should be possible to submit a scenario", function(done) {
       var scenarioCreate = new ScenarioCreate();
 
@@ -719,6 +740,8 @@
 
       done();
     });
+
+
     it("Should be possible to prepare a scenario", function(done) {
       var scenarioCreate = new ScenarioCreate();
 
@@ -740,6 +763,29 @@
 
       done();
     });
+
+
+    it("Should be possible to use getId ", function(done) {
+      var scenarioCreate = new ScenarioCreate({
+      });
+
+      var variable = {
+        id: "testvar"
+      };
+
+      scenarioCreate.scenarioConfig = {
+        id: 1
+      };
+
+      var result = scenarioCreate.getId(variable);
+      var expected = 1 + "," + variable.id;
+
+      assert.isTrue(result === expected, "getId matches");
+
+      done();
+
+    });
+
     it("Should be possible to update with query parameters", function(done) {
       var scenarioCreate = new ScenarioCreate({
       });
@@ -785,6 +831,38 @@
       assert.isOk(scenarioCreate);
       done();
     });
+
+    // Test if we can fetc htemplates through scenario builder
+    // Later on it should maybe really use fake JSON to build scenarios.
+    it("Should be possible to fetch templates", function(done) {
+      var scenarioCreate = new ScenarioCreate();
+      var correctReply = false;
+
+
+      nock("http://0.0.0.0")
+      .defaultReplyHeaders({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
+      })
+      .get("/api/v1/templates/")
+      .reply(200, function() {
+        correctReply = true;
+        return {};
+      });
+
+      scenarioCreate.fetchTemplateList();
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
+    });
+
   });
 
 
@@ -1096,7 +1174,7 @@
     });
 
 
-    it("Should be possible to get scenario property", function(done) {
+    it("Should be possible to get scenario property (calculated)", function(done) {
 
       var aModelDetails = new ModelDetails();
 
@@ -1214,7 +1292,7 @@
       }, 100);
     });
 
-    it("Should be possible to download files", function(done) {
+    it("Check publishlevel config", function(done) {
 
       var publishLevels = [
         {
@@ -1248,7 +1326,10 @@
     });
 
 
-    it("Check publishlevel config", function(done) {
+
+
+
+    it("Should be possible to download files", function(done) {
       var windowSpy = sinon.spy(window, "open");
 
       // this should open a new window
@@ -1256,6 +1337,161 @@
 
       // did it?
       sinon.assert.calledOnce(windowSpy);
+
+      done();
+    });
+
+    it("Should be possible to GET id (calculated)", function(done) {
+
+      var aModelDetails = new ModelDetails();
+
+      // Set an id:
+      aModelDetails.$route = {
+        params: {
+          modelid: 4
+        }
+      };
+
+      assert.isTrue(aModelDetails.id === aModelDetails.$route.params.modelid, "Match id");
+
+      done();
+
+    });
+
+
+    it("Should be possible to SET id (calculated)", function(done) {
+
+      var aModelDetails = new ModelDetails();
+      var idToSet = 4;
+
+      aModelDetails.id = idToSet;
+
+      // Apperantly, we always use the router for the get function. So we expect -1 right now (no route params)
+      assert.isTrue(aModelDetails.id === -1, "Match id");
+
+      done();
+
+    });
+
+
+    it("Should be possible to GET progress (calculated)", function(done) {
+
+      var aModelDetails = new ModelDetails();
+      var progressToSet = 55;
+
+      // Set a fake progress
+      aModelDetails.model = { progress: progressToSet };
+
+      // Does the progress match?
+      assert.isTrue(aModelDetails.progress === progressToSet, "Match progress");
+
+      done();
+
+    });
+
+
+    it("Should be possible to GET scenario (calculated after model set)", function(done) {
+
+      var aModelDetails = new ModelDetails();
+      var scenarioToSet = 123;
+
+      // Set a fake progress
+      aModelDetails.model = { scenario: scenarioToSet };
+
+      // Does the progress match?
+      assert.isTrue(aModelDetails.scenario === scenarioToSet, "Match scenario");
+
+      done();
+
+    });
+
+
+    it("Should be possible to GET current publishlevel - unknown", function(done) {
+
+      var aModelDetails = new ModelDetails();
+
+      var publishLevel = aModelDetails.publishLevel;
+
+      // When nothing is set, should return "unknown"
+      assert.isTrue(publishLevel === "Unknown", "Match unknown");
+
+      done();
+
+    });
+
+    it("Should be possible to GET current publishlevel - public", function(done) {
+
+      var aModelDetails = new ModelDetails();
+
+      // We set a share state of a fake model.
+      aModelDetails.model = {
+        shared: "w" // w means "Public"
+      };
+
+      var publishLevel = aModelDetails.publishLevel;
+
+      // We expect public
+      assert.isTrue(publishLevel === "Public", "Match wtih public");
+
+      done();
+
+    });
+
+    it("Should be possible to GET next publishlevel", function(done) {
+
+      var aModelDetails = new ModelDetails();
+
+      // We set a share state of a fake model.
+      aModelDetails.model = {
+        shared: "c" // c means "company"
+      };
+
+      // Now we go to the 'next level'
+      var publishLevel = aModelDetails.nextPublishLevel;
+
+      // We expect public (private->company->public)
+      assert.isTrue(publishLevel === "Public", "Match wtih public");
+
+      done();
+
+    });
+
+
+    xit("Should be possible to REMOVE a model", function(done) {
+
+      var aModelDetails = new ModelDetails();
+
+      // Try to remove this:
+      aModelDetails.model.id = 1;
+
+
+      $("#dialog-container").load("/templates/confirm-dialog.html", function() {
+        aModelDetails.removeModel();
+      });
+
+
+      var componentName = "confirm-dialog";
+      var dialogId = "delete";
+
+      // Find created dialog:
+      function getConfirmDialog() {
+
+        for(var i = 0; i < aModelDetails.$children.length; i++) {
+          // Check if name matches:
+          if (aModelDetails.$children[i].$options.name === componentName) {
+            var dialog = aModelDetails.$children[i];
+
+            if (dialog.dialogId === dialogId) {
+              return aModelDetails.$children[i];
+            }
+          }
+        }
+      }
+
+      var confirm = getConfirmDialog();
+
+      confirm.onConfirm();
+
 
       done();
 

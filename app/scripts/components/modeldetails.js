@@ -102,6 +102,7 @@ var exports = (function () {
 
 
       },
+
       scenario: {
         get: function() {
           if (_.has(this, "model.scenario")) {
@@ -195,7 +196,6 @@ var exports = (function () {
         var that = this;
 
         // make sure id is a number
-        console.log("updateData / fetch model:" + id);
 
         fetchModel(id)
           .then(
@@ -274,8 +274,8 @@ var exports = (function () {
         // Show the dialog:
         this.deleteDialog.show();
 
-
       },
+
       fetchLog: function() {
 
         // Working dir is at: modeldata.fileurl + delf3d + delft3d.log
