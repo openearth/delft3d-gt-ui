@@ -12,7 +12,6 @@ var exports = (function() {
       //Load test template data:
       $.getJSON("/api/v1/scenarios/")
         .done(function(data) {
-          //console.log("scenarios", data);
           resolve(data);
         })
         .fail(function(error) {
