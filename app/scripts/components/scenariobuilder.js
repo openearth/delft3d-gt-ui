@@ -44,9 +44,6 @@ var exports = (function() {
         template: null,
 
         dataLoaded: false,
-        componentReady: false,
-        validSliderSections: {},
-        validSliders: true,
 
         currentSelectedId: null,
 
@@ -57,61 +54,37 @@ var exports = (function() {
     },
 
     created: function() {
-      fetchTemplates()
-        .then((templates) => {
-          this.availableTemplates = templates;
-
-          // Select the first template automatic:
-          var template = _.get(this.availableTemplates, 0);
-
-          // if we have a template in the request, select that one
-          if (_.has(this, "$route.query.template")) {
-            var templateId = parseInt(this.$route.query.template);
-
-            template = _.first(_.filter(this.availableTemplates, ["id", templateId]));
-            console.log("setting template", template);
-          }
-
-          // set the template, somehow a computed setter was not working...
-          this.selectTemplate(template);
-
-          this.dataLoaded = true;
-
-          if (this.componentReady) {
-            this.initAfterDomUpdate();
-          }
-
-        });
-
-
+      this.fetchTemplateList();
     },
 
     ready: function() {
-      this.componentReady = true;
       this.navBars = {
         topBar: document.getElementById("top-bar"),
         toolBar: document.getElementById("tool-bar"),
         belowToolBar: document.getElementById("below-tool-bar")
       };
       this.initFixedToolbar();
-      if (this.dataLoaded) {
-        this.initAfterDomUpdate();
-      }
     },
 
     route: {
       data: function(transition) {
+
+
         // if we have a template in the request, select that one
         if (_.has(this, "$route.query.template")) {
+
+          // This cannot go into the fetchTemplates, template will always be empty!
           var templateId = parseInt(this.$route.query.template);
 
           var template = _.first(_.filter(this.availableTemplates, ["id", templateId]));
 
-          console.log("setting template", template);
-          this.selectTemplate(template);
+          if (template !== undefined) {
+            this.selectTemplate(template);
+          }
         }
 
         transition.next();
+
       }
     },
 
@@ -196,7 +169,36 @@ var exports = (function() {
       }
     },
     methods: {
+
+      // Moved so that we can test it better.
+      fetchTemplateList: function() {
+
+        fetchTemplates()
+          .then((templates) => {
+            this.availableTemplates = templates;
+
+            // Select the first template automatic:
+            var template = _.get(this.availableTemplates, 0);
+
+            // if we have a template in the request, select that one
+            if (_.has(this, "$route.query.template")) {
+              var templateId = parseInt(this.$route.query.template);
+
+              template = _.first(_.filter(this.availableTemplates, ["id", templateId]));
+              console.log("setting template", template);
+            }
+
+            // set the template, somehow a computed setter was not working...
+            this.selectTemplate(template);
+
+            this.dataLoaded = true;
+
+          });
+      },
+
       selectTemplate: function(template) {
+
+
         if (this.currentSelectedId === template.id) {
           return;
         }
@@ -206,9 +208,6 @@ var exports = (function() {
         // First set data, then the template. Order is important!
         this.scenarioConfig = this.prepareScenarioConfig(template);
 
-        // Init sliders if present
-        this.initAfterDomUpdate();
-
         this.updateWithQueryParameters();
 
         // set the selected template
@@ -217,8 +216,32 @@ var exports = (function() {
         // Initialize the tooltips:
         // We do this after the DOM update.
         this.$nextTick(function () {
-          $("[data-toggle='tooltip']").tooltip();
-          $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
+          $("[data-toggle='tooltip']").tooltip({
+            html: true,
+            // hover activation annoys some people
+            trigger: "click"
+          });
+          $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").each((i, el) => {
+            // lookup corresponding variable
+            var variables = _.flatMap(this.scenarioConfig.sections, "variables");
+            var variable = _.head(_.filter(variables, ["id", el.id]));
+
+            if (variable.type === "select") {
+
+              // TODO: use typeahead for better interaction
+              // $(el).tagsinput({
+              //   itemValue: "value",
+              //   itemText: "text"
+              // });
+              // add options
+              // _.each(variable.options, (option) => {
+              //   $(el).tagsinput('add', {"text": option.text, "value": option.value});
+              // });
+              $(el).tagsinput();
+            } else {
+              $(el).tagsinput();
+            }
+          });
         });
       },
 
@@ -238,7 +261,6 @@ var exports = (function() {
 
 
         // the request has parameters in the form of {"variable": {"values": value}}
-
         // the scenarioConfig also has sections {"sections": [{"variables": [{"variable": {"value": []}}]}]}
 
         // let's create a flat list of variables
@@ -284,6 +306,8 @@ var exports = (function() {
       },
 
       submitScenario: function() {
+
+        console.log("submit");
 
         var parameters = {},
             name = "";
@@ -334,6 +358,7 @@ var exports = (function() {
               params: params
             });
 
+
           });
       },
 
@@ -366,93 +391,8 @@ var exports = (function() {
         return scenario;
       },
 
-      // Do initializations after the DOM is updated.
-      initAfterDomUpdate: function() {
-        this.$nextTick(function () {
-          this.initSliders();
-        });
-      },
-
-      // Initialize the sliders if present
-      initSliders: function() {
-        var sections = this.scenarioConfig.sections;
-
-        _.forEach(sections, (section) => {
-          var containsSlider = false;
-
-
-          _.forEach(section.variables, (variable) => {
-            if (variable.type === "slider") {
-              containsSlider = true;
-              var sliderConfig = {
-                "min": 0,
-                "max": section.slider.steps,
-                "from": variable.inputValue,
-                "step": 1,
-                "hide_min_max": true,
-                "hide_from_to": true
-              };
-
-              sliderConfig.onChange = () => {
-                this.updateSliders(section);
-                this.checkSliderSectionsValid();
-              };
-              $("#" + variable.id).ionRangeSlider(sliderConfig);
-            }
-          });
-
-
-          // Update the sliders for the first time
-          if (containsSlider) {
-            this.updateSliders(section);
-          }
-        });
-
-      },
-
-      // Update the sliders
-      updateSliders: function(section) {
-        var totalParts = 0;
-
-        // Compute total parts set
-        _.forEach(section.variables, function(variable) {
-          if (variable.type === "slider") {
-            totalParts += parseInt(variable.inputValue);
-          }
-        });
-
-        //Check if the slider section is valid
-        section.slider.valid = totalParts > 0;
-
-        if (!section.slider.valid) {
-          // Set totalParts to 1 to avoid division by zero
-          totalParts = 1;
-        }
-        this.validSliderSections[section.name] = section.slider.valid;
-
-        // Compute for each slider the fraction of the total
-        _.forEach(section.variables, function(variable) {
-          if (variable.type === "slider") {
-            var sum = parseInt(section.slider.sum);
-            var fraction = parseInt(variable.inputValue) / totalParts;
-
-            variable.value = Math.round(sum * fraction * 10) / 10;
-          }
-        });
-      },
-
-      checkSliderSectionsValid: function() {
-        var that = this;
-
-        that.validSliders = true;
-
-        _.forEach(this.validSliderSections, function(value) {
-          if (value === false) {
-            that.validSliders = false;
-          }
-        });
-      },
-
+      // Some code to keep the bar on the top.
+      // TODO: replace by css or css framework.
       initFixedToolbar: function() {
         var that = this;
 
@@ -470,6 +410,10 @@ var exports = (function() {
 
       updateFixedToolbarStyle: function() {
         var top = this.getTop();
+
+        if (this.navBars === null) {
+          return 0;
+        }
 
         if (top > this.navBars.topBar.clientHeight) {
           this.navBars.belowToolBar.style.paddingTop = this.navBars.toolBar.clientHeight + "px";

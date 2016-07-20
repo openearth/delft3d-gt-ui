@@ -54,7 +54,6 @@
           <ul class="navbar-nav nav navbar-right">
             <li><user-details></user-details></li>
             <li><a class="btn btn-primary navbar-btn" href="/api/v1/" title="rest api documentation (for developers)"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a></li>
-            <li><a class="btn btn-primary navbar-btn" href="#!/search/" title="search"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></a></li>
             <li><a class="btn btn-primary navbar-btn" href="/logout/">logout</a></li>
           </ul>
 
@@ -82,13 +81,20 @@
     <script src="/bower_components/vue/dist/vue.js"></script>
     <script src="/bower_components/vue-router/dist/vue-router.js"></script>
     <script src="/bower_components/bootstrap-combobox/js/bootstrap-combobox.js"></script>
-    <script src="/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.js"></script>
+
+    <!--
+     we use a modified version as  mentioned here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinput/issues/467
+     AS the issue is still persistent.
+    -->
+    <script src="/bower_components/bootstrap-tagsinput/src/bootstrap-tagsinput.js"></script>
+
     <script src="/bower_components/vue-validator/dist/vue-validator.js"></script>
     <script src="/bower_components/moment/moment.js"></script>
     <script src="/bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js"></script>
     <script src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
     <script src="/bower_components/ion.rangeSlider/js/ion.rangeSlider.js"></script>
     <script src="/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+    <script src="/bower_components/typeahead.js/dist/typeahead.bundle.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -120,18 +126,15 @@
     <!-- load components, these provide webcomponents (with corresponding templates in app/templates)-->
     <!-- mainly tested using integration tests -->
     <!-- these should be replaceable if someone wants to switch to a different webcomponent platform -->
-
+    <script src="scripts/components/modelcontrolmenu.js"></script>
     <script src="scripts/components/confirmdialog.js"></script>
     <script src="scripts/components/imageanimation.js"></script>
     <script src="scripts/components/modelcreate.js"></script>
     <script src="scripts/components/modeldetails.js"></script>
-    <script src="scripts/components/modellist.js"></script>
-    <script src="scripts/components/scenariolist.js"></script>
     <script src="scripts/components/searchdetails.js"></script>
     <script src="scripts/components/scenariodelete.js"></script>
     <script src="scripts/components/searchlist.js"></script>
     <script src="scripts/components/searchcolumns.js"></script>
-    <script src="scripts/components/findercolumns.js"></script>
     <script src="scripts/components/scenariobuilder.js"></script>
     <script src="scripts/components/scenariodelete.js"></script>
     <script src="scripts/components/alert.js"></script>

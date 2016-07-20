@@ -20,8 +20,25 @@ var exports = (function() {
 
     });
   }
+
+  function fetchSearchTemplates() {
+    return new Promise(function(resolve, reject) {
+
+      //Load test template data:
+      $.getJSON("/api/v1/searchforms/")
+        .done(function(data) {
+          resolve(data);
+        })
+        .fail(function(error) {
+          reject(error);
+        });
+
+    });
+  }
+
   return {
-    fetchTemplates: fetchTemplates
+    fetchTemplates: fetchTemplates,
+    fetchSearchTemplates: fetchSearchTemplates
   };
 
 }());

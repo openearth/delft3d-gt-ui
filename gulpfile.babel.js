@@ -241,6 +241,7 @@ gulp.task("serve", ["styles", "scripts", "fonts", "images", "templates"], () => 
   if (apiServer) {
     options.middleware = proxies;
   }
+  options.ghostMode = false; // Disable shared screens.
 
   browserSync(options);
 
