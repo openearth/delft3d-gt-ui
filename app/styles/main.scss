@@ -193,7 +193,7 @@ body {
 
 // Override rounded corners, default bootstrap style
 .input-group-addon {
-  min-width: 80;
+  min-width: 80px;
 }
 
 
@@ -222,7 +222,7 @@ input[type=date].form-control {
   padding: 8px;
 
 
-  .scenario-name {
+  .scenario-name  {
     font-size: 16px;
     font-weight: 600;
 
@@ -258,7 +258,8 @@ input[type=date].form-control {
     padding: 4px 4px 8px 8px;
     min-height: 64px;
 
-    &:hover {
+    &:hover
+    {
       background-color: darken($white, 2%);
     }
   }
@@ -273,20 +274,20 @@ input[type=date].form-control {
 
     float: right;
     text-align: left;
-    font-size: 10;
+    font-size: 10px;
     font-weight: 800;
-    margin-right: 32px;
+    margin-right:32px;
 
     .progress {
-      margin-bottom: 0;
-      background-color: $dark-gray;
-      height: 6px;
+       margin-bottom: 0;
+       background-color: $dark-gray;
+       height: 6px;
     }
 
     .progress-bar {
-      // -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+      -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
       box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
-      // -webkit-transition: width .6s ease;
+      -webkit-transition: width .6s ease;
       transition: width .6s ease;
       background-color: $progress-bar-color;
     }
@@ -300,18 +301,18 @@ input[type=date].form-control {
     background-color: transparent;
 
     border-radius: 8px;
-    font-size: 10;
+    font-size: 10px;
     border: 1px solid $badge-color-unselected;
     color: $badge-color-unselected;
 
     height: 18px;
-    line-height: 10;
+    line-height: 10px;
     vertical-align: middle;
 
 
   }
 
-  .share-status {
+  .share-status  {
 
     height: 21px;
     width: 21px;
@@ -319,7 +320,7 @@ input[type=date].form-control {
 
     display: inline-block;
     margin-left: 4px;
-    vertical-align:  bottom;
+    vertical-align: bottom;
 
 
     background-repeat: no-repeat;
@@ -341,7 +342,7 @@ input[type=date].form-control {
 
   // Arrow shown at right of list
   .arrow-right
- {
+  {
     position: absolute;
     top:32px;
     right: 8px;
@@ -359,7 +360,7 @@ input[type=date].form-control {
     color: $white;
 
 
-    .share-status {
+    .share-status  {
       &.private {
         background-image: url('../images/ui/sm-private-white.png');
       }
@@ -380,7 +381,7 @@ input[type=date].form-control {
     }
 
     &:hover
-   {
+    {
       background-color: lighten($scenario-selected-background, 2%);
     }
 
@@ -411,7 +412,7 @@ input[type=date].form-control {
 
 
 .navbar-brand {
-  height: 80;
+  height: 80px;
   padding: 0;
 
   img {
@@ -432,7 +433,7 @@ input[type=date].form-control {
 
   .navbar-right {
     /* same make buttons fit in the line so they align properly */
-    line-height: 50;
+    line-height: 50px;
     // by default buttons stick all the way to the right
     margin-right: 0;
     // Hack to outline buttons with main text
@@ -470,19 +471,19 @@ input[type=date].form-control {
 
 .tool-bar {
   height: 32px;
-  min-height: 32px;
+  min-height:32px;
 
   margin-bottom: 0;
 
   .btn {
     font-size: 14px;
     font-weight: bold;
-    height: 30;
+    height: 30px;
     line-height: 1;
-    margin-top: 10;
+    margin-top: 10px;
 
-    &.nav-bar-button
-   {
+    &.nav-bar-button {
+
       height: 28px;
       margin: 2px;
       background-color: $navigation-button-background;
@@ -492,7 +493,7 @@ input[type=date].form-control {
     }
 
     &.default
-   {
+    {
       background-color: $navigation-button-background-default;
     }
   }
@@ -658,7 +659,7 @@ input[type=date].form-control {
 
 #model-log-output-wrap {
   border: 1px solid  $gray-lighter;
-  max-height: 400;
+  max-height: 400px;
   overflow: auto;
   padding: 8px;
 
@@ -689,7 +690,7 @@ input[type=date].form-control {
 
 .item-group-title {
   font-weight: bold;
-  min-width: 160;
+  min-width: 160px;
 }
 
 .default-hidden {
@@ -726,7 +727,7 @@ nav.sidebar,
 }
 
 .main {
-  padding: 10 10 0;
+  padding: 10px 10px 0;
 }
 
 // Some helper functions:
@@ -763,13 +764,13 @@ nav.sidebar,
 @media (min-width: 765px) {
   .main {
     float: right;
-    margin-left: 40;
+    margin-left: 40px;
     position: absolute;
-    width: calc(100% - 40);
+    width: calc(100% - 40px);
   }
 
   nav.sidebar:hover + .main {
-    margin-left: 200;
+    margin-left: 200px;
   }
 
   nav.sidebar .navbar-brand,
@@ -828,7 +829,7 @@ nav.sidebar,
     float: left;
     height: 100%;
     margin-bottom: 0;
-    width: 200;
+    width: 200px;
   }
 
   nav.sidebar li {
@@ -841,11 +842,11 @@ nav.sidebar,
 
 }
 
-@media (min-width: 1330) {
+@media (min-width: 1330px) {
 
   .main {
-    margin-left: 200;
-    width: calc(100% - 200);
+    margin-left: 200px;
+    width: calc(100% - 200px);
   }
 
   nav.sidebar {
@@ -921,12 +922,12 @@ section {
   .slider {
     .irs {
       margin-right: 6px;
-      height: 30;
+      height: 30px;
     }
     .irs-line,
     .irs-bar,
     .irs-bar-edge {
-      top: 10;
+      top: 10px;
     }
     .irs-slider.single {
       top: 7px;
@@ -948,7 +949,7 @@ section {
   }
 
   .panel-title
- {
+  {
     font-size: 11px;
   }
 
@@ -1050,7 +1051,7 @@ section {
 
 .search-date-input {
 
-  width: 80;
+  width: 80px;
   float:left;
 }
 
@@ -1074,7 +1075,7 @@ section {
   }
 
   .irs {
-    margin-top: 10;
+    margin-top: 10px;
   }
 
   .irs-from,
@@ -1114,11 +1115,11 @@ section {
   }
 
   // Dimensions of the handles
-  .to, .from {
+  .to, .from  {
     background-color: $white;
-    width: 20;
-    height: 20;
-    border-radius: 10;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
     border: 1px solid $slider-handle-border;
     top: 16px;
   }
@@ -1140,12 +1141,12 @@ section {
 }
 .stylish-input-group .form-control {
   border-right:0;
-  box-shadow:0 0 0;
+  box-shadow: 0 0 0;
   border-color: $dark-gray;
 }
 .stylish-input-group button {
-    border:0;
-    background:transparent;
+    border: 0;
+    background: transparent;
 }
 
 .model-details {
@@ -1165,9 +1166,9 @@ section {
 
   // Disable some of the default panel stylings:
   .panel
- {
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
+  {
+    //-webkit-box-shadow: none;
+    //-moz-box-shadow: none;
     box-shadow: none;
     border: 0;
     padding: 4px;
@@ -1216,6 +1217,8 @@ section {
       position: absolute;
       right: 4px;
     }
+
+
   }
 }
 
@@ -1249,10 +1252,11 @@ section {
 }
 
 
-@media screen and (max-width: 1250) {
+
+@media screen and (max-width: 1250px) {
 
  .search-details .domain-search-boxes .domain-selection-box {
-  margin-right: 2px;
+    margin-right: 2px;
   }
 
   .search-details .domain-search-boxes input[type=checkbox] + label {
@@ -1262,7 +1266,7 @@ section {
 
   // Hide the label at these screens:
   .search-details .domain-search-boxes input[type=checkbox] + label span {
-    display:none;
+    display: none;
   }
 }
 
