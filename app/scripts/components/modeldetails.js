@@ -258,6 +258,9 @@ var exports = (function () {
                 type: "success"
               });
 
+              // Immediatly refresh screen:
+              this.$root.$broadcast("updateSearch");
+
             })
             .catch(e => {
               console.log("model deletion failed", e);
@@ -301,6 +304,9 @@ var exports = (function () {
               showTime: 5000,
               type: "success"
             });
+
+            // Immediatly refresh screen:
+            this.$root.$broadcast("updateSearch");
           })
           .catch((e) => {
             console.log(e);
@@ -334,6 +340,9 @@ var exports = (function () {
                 type: "success"
               });
 
+              // Immediatly refresh screen:
+              this.$root.$broadcast("updateSearch");
+
             })
             .catch((e) => {
               console.log(e);
@@ -360,6 +369,10 @@ var exports = (function () {
               });
               this.waitingForUpdate = true;
               this.highlightPublishLevel();
+
+              // Immediatly refresh screen:
+              this.$root.$broadcast("updateSearch");
+
             })
             .catch(e => {
               console.log(e);

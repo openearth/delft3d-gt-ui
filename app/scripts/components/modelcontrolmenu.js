@@ -41,6 +41,7 @@ var exports = (function () {
       deleteSelectedScenario: function() {
 
         // Right now we use the old dialog from before. Should be turned into a component.
+        var that = this;
 
         // User accepts deletion:
         $("#dialog-remove-scenario-response-accept").on("click", () => {
@@ -48,12 +49,18 @@ var exports = (function () {
           this.selectedScenarios.forEach(function(id) {
             deleteScenario(id)
             .then(() => {
-              this.$parent.$broadcast("show-alert", {
+              that.$parent.$broadcast("show-alert", {
               message: "Deleting scenario... It might take a moment before the view is updated.",
               showTime: 5000,
               type: "success"
               });
+
+              // Immediatly refresh screen:
+              that.$root.$broadcast("updateSearch");
+
             })
+
+
           .catch(e => {
             console.log("scenario deletion failed", e);
           });
