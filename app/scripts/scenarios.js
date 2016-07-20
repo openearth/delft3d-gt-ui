@@ -23,9 +23,13 @@ var exports = (function() {
   }
 
   function deleteScenario(id) {
+
+
     return new Promise(function(resolve, reject) {
       // add extra options to id
       //var postData = _.assign({id: id}, options);
+      if (id === undefined) {
+      }
 
       $.ajax({
         url: "/api/v1/scenarios/" + id + "/",
