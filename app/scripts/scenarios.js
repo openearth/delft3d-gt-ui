@@ -29,6 +29,7 @@ var exports = (function() {
       // add extra options to id
       //var postData = _.assign({id: id}, options);
       if (id === undefined) {
+        reject("No scenario id to delete");
       }
 
       $.ajax({

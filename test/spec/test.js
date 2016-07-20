@@ -105,7 +105,21 @@
   _.assign(global, require("../../app/scripts/templates.js"));
   _.assign(global, require("../../app/scripts/scenarios.js"));
 
-//  _.assign(global, require("../../bower_components/bootstrap-select/dist/js/bootstrap-select.js"));
+
+  // This is all needed to make the select picker object work (in searchdetails)
+  // Will try to get this working later.
+  // function test() {
+
+
+  //   _.assign(global.jQuery, require("../../bower_components/jquery/dist/jquery.js"));
+  //   jQuery = global.jQuery;
+  //   console.log(jQuery);
+  //   _.assign(global, require("../../bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js"));
+  //   _.assign(global, require("../../bower_components/bootstrap-select/dist/js/bootstrap-select.min.js"));
+  // }
+  // test();
+
+
 
 
   // In testing we override the URL domain name. Otherwise nock cannot work. Nock does NOT support relative paths.
@@ -126,7 +140,7 @@
 
       // This test is now working using the filteringPath option.
       // When testing get request, this seems to be the solution.
-      it("Should be possible list scenarios", function(done) {
+      it("Should be possible to LIST scenarios", function(done) {
         nock("http://0.0.0.0")
           .defaultReplyHeaders({
             "Content-Type": "application/json",
@@ -155,7 +169,49 @@
           });
 
       });
+
+    // Can we remove scenarios?
+      it("Should be possible to DELETE scenarios", function(done) {
+
+        var deleteid = 4;
+        var correctReply = false;
+
+        nock("http://0.0.0.0")
+          .log(console.log)
+          .defaultReplyHeaders({
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          })
+          .intercept("/api/v1/scenarios/" + deleteid + "/", "OPTIONS") // We get an "OPTIONS" first.
+          .reply(200, function() {
+            return "";
+          })
+          .delete("/api/v1/scenarios/" + deleteid + "/")
+          .reply(200, function() {
+            correctReply = true;
+            return "";
+          });
+
+        global.deleteScenario(deleteid);
+
+        window.setTimeout(function() {
+          try {
+            assert(correctReply === true, "Nock server did not reach reply");
+            done();
+          } catch (e) {
+            done(e);
+          }
+        }, 100);
+
+
+      });
+
     });
+
+
+
+
+
     describe("If we can query the model list", function() {
 
       // This test is now working using the filteringPath option.
@@ -341,6 +397,24 @@
 
   describe("ConfirmDialog", function() {
 
+    it("Does confirmdialog have right 'props'", function(done) {
+
+      var defaultProps = {
+        "dialogId": {
+          type: String,
+          required: true
+        },
+        "confirmButtonTitle": {
+          type: String,
+          required: true
+        }
+      };
+
+      assert.deepEqual(ConfirmDialog.options.props, defaultProps, "Match default properties");
+
+      done();
+    });
+
     it("Is possible to make a confirmdialog", function(done) {
       var confirmDialog = new ConfirmDialog();
 
@@ -389,6 +463,13 @@
 
       // Simple test, see if object exists
       assert.isOk(confirmDialog.showAlert);
+      done();
+    });
+
+    it("Does getDialog exist", function(done) {
+
+      // Simple test, see if object exists (we do not have al lthe dialog elements and components here ...)
+      assert.isOk(getDialog);
       done();
     });
 
@@ -1081,12 +1162,28 @@
     assert.isOk(app, "app");
     imageAnimation.model = { };
 
+
+    it("Does ImageAnimation have the right default 'props'", function(done) {
+
+
+      // Couldn't match on the function, so we only check if model exists.
+      assert.isOk(ImageAnimation.options.props.model, "Match default properties");
+
+      done();
+
+    });
+
+
+
+
+
     it("Should be possible to stop image frames", function(done) {
 
       imageAnimation.stopImageFrame();
       done();
 
     });
+
     it("Should be possible to play image frames the imageFrame", function(done) {
 
       imageAnimation.playImageFrame();
@@ -1338,8 +1435,36 @@
       done();
     });
 
-    // Disabled, as it requires "selectpicker" which needs many dependencies...
-    xit("Should be possible to reset the form fields", function(done) {
+
+    it("Should be possible to call getChildByName", function(done) {
+
+      var aSearchColumns = new SearchColumns();
+
+
+      var component = aSearchColumns.getChildByName("model-details");
+
+      // We expect null in this case, as the model-details is not loaded.
+      assert.isTrue(component === null);
+
+      done();
+    });
+
+
+    it("Should be possible to get names of selected models", function(done) {
+
+      var aSearchColumns = new SearchColumns();
+
+      // Names should be empty right now.
+      var names = aSearchColumns.selectedRunNames;
+
+      assert.isTrue(names.length === 0, "textfield is not empty");
+
+      done();
+    });
+
+
+    // Ignores the selectpicker though.
+    it("Should be possible to reset the form fields", function(done) {
 
       var aSearchColumns = new SearchColumns();
 
@@ -1400,9 +1525,92 @@
   });
 
 
+  describe("Loading of templates", function() {
+
+    it("Should be possible to load scenariobuilder templates", function(done) {
+      var correctReply = false;
+
+      nock("http://0.0.0.0")
+        //.log(console.log)
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .get("/api/v1/templates/")
+        .reply(200, function() {
+          correctReply = true;
+          return {};
+        });
+
+      global.fetchTemplates();
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
+
+    });
+
+
+    it("Should be possible to load search templates", function(done) {
+      var correctReply = false;
+
+      nock("http://0.0.0.0")
+        //.log(console.log)
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .get("/api/v1/searchforms/")
+        .reply(200, function() {
+          correctReply = true;
+          return {};
+        });
+
+      global.fetchSearchTemplates();
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
+
+    });
+
+
+  });
+
 
   describe("UserDetails", function() {
 
+
+    it("Should have default information", function(done) {
+
+      var userDetails = new UserDetails();
+      var defaultInfo = {
+        user: {
+          /*eslint-disable camelcase*/
+          first_name: "Unknown",
+          last_name: "User"
+          /*eslint-enable camelcase*/
+        }
+      };
+
+      /*eslint-disable no-underscore-dangle*/
+      assert.deepEqual(userDetails._data, defaultInfo, "Match default properties");
+      /*eslint-enable no-underscore-dangle*/
+      done();
+
+    });
 
     it("Should be possible to fetch my info", function(done) {
       var correctReply = false;
