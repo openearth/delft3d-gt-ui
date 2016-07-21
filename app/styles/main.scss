@@ -69,13 +69,13 @@ $color-right-column-background: #fff;
 
 $shadow-color: rgba(0, 0, 0, .15);
 
-$world-scenario-item-background: #c3f6fc;
-$world-scenario-selected-border: #c3f6fc;
-$world-scenario-item-selected-background: #1cb9cc;
+$world-scenario-item-background: $scenario-item-background;
+$world-scenario-selected-border: $scenario-selected-border;
+$world-scenario-item-selected-background: $scenario-selected-background;
 
-$company-scenario-item-background: #f0d3a1;
-$company-scenario-selected-border: #f0d3a1;
-$company-scenario-item-selected-background: #df9617;
+$company-scenario-item-background: $scenario-item-background;
+$company-scenario-selected-border: $scenario-selected-border;
+$company-scenario-item-selected-background: $scenario-selected-background;
 
 
 /* This part is wiredepped
@@ -567,7 +567,7 @@ input[type=date].form-control {
 // Generic disabled element
 .inputdisabled {
 
-  color: $gray-light;
+  color: $gray-dark;
   pointer-events: none;
 
   // Textbox gets a gray background and border
@@ -577,6 +577,14 @@ input[type=date].form-control {
   }
 
 }
+
+.btn  {
+  &.inputdisabled {
+    color: $gray-lighter;
+  }
+
+}
+
 
 .disabledpointer {
   cursor: not-allowed;

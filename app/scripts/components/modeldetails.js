@@ -287,7 +287,7 @@ var exports = (function () {
             $("#model-log-output").text(log);
           })
           .catch(e => {
-            console.log(e);
+            console.log("error - fetchlog" + e);
             $("#model-log-output").text("No log available");
           });
       },

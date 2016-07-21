@@ -224,7 +224,7 @@ var exports = (function () {
       } catch(e) {
         // if we can't find a model reject and bail out
         reject(e);
-        console.log("model not found for id", id, "while retrieving log");
+
         return;
       }
 

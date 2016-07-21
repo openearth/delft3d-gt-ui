@@ -58,11 +58,7 @@ var exports = (function() {
     },
 
     ready: function() {
-      this.navBars = {
-        topBar: document.getElementById("top-bar"),
-        toolBar: document.getElementById("tool-bar"),
-        belowToolBar: document.getElementById("below-tool-bar")
-      };
+
       this.initFixedToolbar();
     },
 
@@ -398,6 +394,12 @@ var exports = (function() {
       // TODO: replace by css or css framework.
       initFixedToolbar: function() {
         var that = this;
+
+        this.navBars = {
+          topBar: document.getElementById("top-bar"),
+          toolBar: document.getElementById("tool-bar"),
+          belowToolBar: document.getElementById("below-tool-bar")
+        };
 
         $(window).on("scroll touchmove load", that.updateFixedToolbarStyle);
 
