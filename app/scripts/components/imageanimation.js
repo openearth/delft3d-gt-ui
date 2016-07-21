@@ -131,7 +131,7 @@ var exports = (function () {
       stopImageFrame: function() {
         // Check if an animation key has been set. If not, we bail out.
         if (this.currentAnimationKey.length === 0) {
-          return;
+          return false;
         }
 
 

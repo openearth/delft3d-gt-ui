@@ -42,6 +42,7 @@ var exports = (function () {
         var el = $("#" + this.dialogId + "-dialog");
 
         if (el.modal !== undefined) {
+          console.log("show");
           el.modal({});
         }
 
@@ -52,6 +53,7 @@ var exports = (function () {
         var el = $("#" + this.dialogId + "-dialog");
 
         if (el.modal !== undefined) {
+          console.log("hide");
           el.modal("hide");
         }
       },

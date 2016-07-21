@@ -2437,12 +2437,24 @@
 
 
 
+    it("Should be possible to stop image frames - no anim key", function(done) {
+
+      // Fake a timer interval:
+      imageAnimation.timerAnimation = 0;
+      imageAnimation.currentAnimationKey = "";
+
+      assert.isFalse(imageAnimation.stopImageFrame(), "should have bailed out early");
+
+
+      done();
+
+    });
 
     it("Should be possible to stop image frames", function(done) {
 
       // Fake a timer interval:
       imageAnimation.timerAnimation = 2;
-
+      imageAnimation.currentAnimationKey = "delta_fringe_images";
       imageAnimation.stopImageFrame();
 
       assert.isTrue(imageAnimation.timerAnimation === -1, "timeranimation id should have become -1");
@@ -2477,6 +2489,29 @@
 
       done();
     });
+
+
+    it("Should be possible to change to next imageFrame - stop at end", function(done) {
+
+      /*eslint-disable camelcase*/
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      /*eslint-enable camelcase*/
+
+      imageAnimation.currentAnimationIndex = 0;
+      imageAnimation.currentAnimationKey = "delta_fringe_images";
+
+      // Loop some times, we should end at the last image anyway.
+      for (var i = 0; i < 10; i++) {
+        imageAnimation.nextImageFrame();
+      }
+
+      // Next frame should have brought to the next frame.
+      assert.isTrue(imageAnimation.animationIndex === imageAnimation.model.info.delta_fringe_images.images.length - 1, "Animation frame at end");
+
+      done();
+    });
+
+
 
 
     it("Should be possible to change to next imageFrame - no model info", function(done) {
@@ -2621,6 +2656,21 @@
 
       imageAnimation.switchAnimation("delta_fringe_images");
       imageAnimation.gotoFirstFrame();
+
+      assert.isTrue(imageAnimation.animationIndex === 0, "Animation frame at 0");
+      done();
+    });
+
+    it("Should be possible to gotoLastFrame - number wrap", function(done) {
+
+      // index should become 0.. we do not have any images. Maybe test later using an fake array.
+       /*eslint-disable camelcase*/
+      imageAnimation.model.info = { delta_fringe_images: { images: [] } };
+      /*eslint-enable camelcase*/
+
+      imageAnimation.animationIndex = -10;
+      imageAnimation.switchAnimation("delta_fringe_images");
+      imageAnimation.gotoLastFrame();
 
       assert.isTrue(imageAnimation.animationIndex === 0, "Animation frame at 0");
       done();
