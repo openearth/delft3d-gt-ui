@@ -77,7 +77,6 @@
   // used by other component
   global.ModelDetails = ModelDetails;
 
-  var ModelCreate = require("../../app/scripts/components/modelcreate.js").ModelCreate;
 
   // used by other component
   var ScenarioCreate = require("../../app/scripts/components/scenariobuilder.js").ScenarioCreate;
@@ -375,14 +374,6 @@
   });
 
   describe("Components", function() {
-    it("Is possible to instantiate component ModelCreate", function(done) {
-
-      var modelCreate = new ModelCreate({
-      });
-
-      assert.isOk(modelCreate);
-      done();
-    });
 
     it("Is possible to instantiate component ModelDetails", function(done) {
       var modelDetails = new ModelDetails({
@@ -514,6 +505,69 @@
 
   describe("Search details", function() {
 
+
+    it("Does Searchdetails have the initial values", function(done) {
+
+      var searchDetails = new SearchDetails();
+      var defaultData = {
+        selectedTemplates: [],
+
+        // Fixed properties
+        templates: [],
+        shared: [],
+        startDate: null,
+        endDate: null,
+        search: "",
+
+        // This object will variables received from the templates.
+        selectedParameters: { },
+
+        // Template used for searching (probably always one)
+        searchTemplates: []
+      };
+
+      /*eslint-disable no-underscore-dangle*/
+      assert.deepEqual(searchDetails._data, defaultData, "Match default properties");
+      /*eslint-enable no-underscore-dangle*/
+
+      done();
+
+    });
+
+    it("Searchdetails - loadSearchTemplates", function(done) {
+
+      var searchDetails = new SearchDetails();
+      var expectedTemplates = 2; // Number of templates we expected to load.
+
+      nock("http://0.0.0.0")
+        .log(console.log)
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .get("/api/v1/searchforms/")
+        .reply(200, function() {
+
+          return "[{\"id\":1,\"name\":\"MAIN\",\"sections\":[{\"variables\":[{\"validators\":{},\"type\":\"text\",\"id\":\"name\",\"name\":\"Name\"},{\"disabled\":true,\"type\":\"text\",\"id\":\"engine\",\"name\":\"Model Engine\",\"validators\":{}},{\"disabled\":true,\"type\":\"semver\",\"id\":\"version\",\"name\":\"Version\",\"validators\":{}}],\"name\":\"Scenario\"},{\"variables\":[{\"units\":\"days\",\"type\":\"numeric\",\"id\":\"simstoptime\",\"name\":\"Stop time\",\"validators\":{\"max\":160,\"min\":0}},{\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\",\"validators\":{\"max\":2,\"min\":0.5},\"units\":\"days\",\"type\":\"numeric\",\"id\":\"outputinterval\",\"name\":\"Output timestep\"}],\"name\":\"Parameters\"},{\"variables\":[{\"name\":\"Basin slope\",\"validators\":{\"max\":0.3,\"min\":0.01},\"factor\":true,\"units\":\"deg\",\"type\":\"numeric\",\"id\":\"basinslope\"},{\"name\":\"River width\",\"validators\":{\"max\":1000,\"min\":100},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"riverwidth\"}],\"name\":\"Geometry\"},{\"variables\":[{\"name\":\"River discharge\",\"validators\":{\"max\":2000,\"min\":0},\"factor\":true,\"units\":\"mÂ³/s\",\"type\":\"numeric\",\"id\":\"riverdischarge\"},{\"name\":\"Tidal amplitude\",\"validators\":{\"max\":3,\"min\":0},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"tidalamplitude\"}],\"name\":\"Forces\"},{\"variables\":[{\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\",\"id\":\"composition\",\"validators\":{},\"type\":\"select\",\"options\":[{\"text\":\"coarse-sand\",\"value\":\"coarse-sand\"},{\"text\":\"medium-sand\",\"value\":\"medium-sand\"},{\"text\":\"fine-sand\",\"value\":\"fine-sanday\"},{\"text\":\"coarse-silt\",\"value\":\"coarse-silt\"},{\"text\":\"medium-silt\",\"value\":\"medium-silt\"},{\"text\":\"fine-silt\",\"value\":\"fine-silt\"}],\"name\":\"Sediment classes\"}],\"name\":\"Sediment composition\",\"description\":\"Sediment can consist of a mixture of different classes. Read <a href='more'>more</a> about the sediment composition clasess.\"}],\"templates\":[{\"name\":\"Basin fill\",\"id\":3},{\"name\":\"Basin fill with marine reworking\",\"id\":4}]}]";
+        });
+
+      searchDetails.loadSearchTemplates();
+
+      // we expect two replies.
+      window.setTimeout(function() {
+        try {
+          assert.isTrue(searchDetails.templates.length === expectedTemplates, "Did not get expected templates");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
+
+
+
+    });
+
+
     it("Is possible to get modelEngines", function(done) {
       var searchDetails = new SearchDetails();
 
@@ -591,7 +645,6 @@
         .get("/api/v1/scenarios/")
         .query({"search": ""})
         .reply(200, function() {
-          console.log("reply scenarios");
           replyCount++;
           return "[{'id':357,'name':'New Delta Plain Scenario','owner_url':'http://localhost:9000/api/v1/users/500/','template':1,'parameters':{'engine':{'values':['Delft3D Curvilinear'],'name':'Model Engine'},'simstoptime':{'units':'days','values':[60],'name':'Stop time'},'clayvolcomposition':{'units':'%','values':[1],'name':'Clay volumetric composition'},'sandvolcomposition':{'units':'%','values':[1],'name':'Sand volumetric composition'},'version':{'values':['v0.1'],'name':'Version'},'riverdischarge':{'units':'m³/s','values':[1000],'name':'River discharge'},'riverwidth':{'units':'m','values':[555],'name':'River width'},'dt':{'units':'min','values':[1],'name':'Timestep'},'tidalamplitude':{'units':'m','values':[1],'name':'Tidal amplitude'},'outputinterval':{'units':'days','values':[1],'name':'Output timestep','description':'Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.'},'basinslope':{'units':'deg','values':[0.0143],'name':'Basin slope'}},'progress':0,'scene_set':[897]}]";
         });
@@ -604,7 +657,6 @@
         .get("/api/v1/scenes/")
         .query({"search": ""})
         .reply(200, function() {
-          console.log("reply scenes");
           replyCount++;
           return "[{'id':897,'name':'New Delta Plain Scenario: Run 1','state':'INACTIVE','progress':0,'owner':{'id':500,'username':'foo','first_name':'Foo','last_name':'User','email':'foo@bar.com','groups':[42,500]},'shared':'p','suid':'cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e','scenario':[357],'fileurl':'/files/cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e/','info':{'channel_network_images':{'images':[],'location':'process/'},'logfile':{'location':'simulation/','file':''},'delta_fringe_images':{'images':[],'location':'process/'},'procruns':0,'sediment_fraction_images':{'images':[],'location':'process/'}},'parameters':{'engine':{'name':'Model Engine','value':'Delft3D Curvilinear'},'simstoptime':{'units':'days','name':'Stop time','value':60},'clayvolcomposition':{'units':'%','name':'Clay volumetric composition','value':1},'sandvolcomposition':{'units':'%','name':'Sand volumetric composition','value':1},'version':{'name':'Version','value':'v0.1'},'riverdischarge':{'units':'m³/s','name':'River discharge','value':1000},'riverwidth':{'units':'m','name':'River width','value':555},'dt':{'units':'min','name':'Timestep','value':1},'tidalamplitude':{'units':'m','name':'Tidal amplitude','value':1},'outputinterval':{'units':'days','name':'Output timestep','value':1,'description':'Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.'},'basinslope':{'units':'deg','name':'Basin slope','value':0.0143}},'task_id':'afbc3296-1679-450a-8c5e-5b6431c5cf20','workingdir':'/data/container/files/cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e/'}]";
         });
@@ -636,7 +688,7 @@
         .get("/api/v1/scenarios/")
         .query({"search": ""})
         .reply(200, function() {
-          console.log("reply scenarios");
+
           replyCount++;
           return JSON.parse("[{\"id\":357,\"name\":\"New Delta Plain Scenario\",\"owner_url\":\"http://localhost:9000/api/v1/users/500/\",\"template\":1,\"parameters\":{\"engine\":{\"values\":[\"Delft3D Curvilinear\"],\"name\":\"Model Engine\"},\"simstoptime\":{\"units\":\"days\",\"values\":[60],\"name\":\"Stop time\"},\"clayvolcomposition\":{\"units\":\"%\",\"values\":[1],\"name\":\"Clay volumetric composition\"},\"sandvolcomposition\":{\"units\":\"%\",\"values\":[1],\"name\":\"Sand volumetric composition\"},\"version\":{\"values\":[\"v0.1\"],\"name\":\"Version\"},\"riverdischarge\":{\"units\":\"m³/s\",\"values\":[1000],\"name\":\"River discharge\"},\"riverwidth\":{\"units\":\"m\",\"values\":[555],\"name\":\"River width\"},\"dt\":{\"units\":\"min\",\"values\":[1],\"name\":\"Timestep\"},\"tidalamplitude\":{\"units\":\"m\",\"values\":[1],\"name\":\"Tidal amplitude\"},\"outputinterval\":{\"units\":\"days\",\"values\":[1],\"name\":\"Output timestep\",\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"},\"basinslope\":{\"units\":\"deg\",\"values\":[0.0143],\"name\":\"Basin slope\"}},\"progress\":0,\"scene_set\":[897]}]");
         });
@@ -649,7 +701,7 @@
         .get("/api/v1/scenes/")
         .query({"search": ""})
         .reply(200, function() {
-          console.log("reply scenes");
+
           replyCount++;
           return JSON.parse("[{\"id\":897,\"name\":\"New Delta Plain Scenario: Run 1\",\"state\":\"INACTIVE\",\"progress\":0,\"owner\":{\"id\":500,\"username\":\"foo\",\"first_name\":\"Foo\",\"last_name\":\"User\",\"email\":\"foo@bar.com\",\"groups\":[42,500]},\"shared\":\"p\",\"suid\":\"cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e\",\"scenario\":[357],\"fileurl\":\"/files/cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e/\",\"info\":{\"channel_network_images\":{\"images\":[],\"location\":\"process/\"},\"logfile\":{\"location\":\"simulation/\",\"file\":\"\"},\"delta_fringe_images\":{\"images\":[],\"location\":\"process/\"},\"procruns\":0,\"sediment_fraction_images\":{\"images\":[],\"location\":\"process/\"}},\"parameters\":{\"engine\":{\"name\":\"Model Engine\",\"value\":\"Delft3D Curvilinear\"},\"simstoptime\":{\"units\":\"days\",\"name\":\"Stop time\",\"value\":60},\"clayvolcomposition\":{\"units\":\"%\",\"name\":\"Clay volumetric composition\",\"value\":1},\"sandvolcomposition\":{\"units\":\"%\",\"name\":\"Sand volumetric composition\",\"value\":1},\"version\":{\"name\":\"Version\",\"value\":\"v0.1\"},\"riverdischarge\":{\"units\":\"m³/s\",\"name\":\"River discharge\",\"value\":1000},\"riverwidth\":{\"units\":\"m\",\"name\":\"River width\",\"value\":555},\"dt\":{\"units\":\"min\",\"name\":\"Timestep\",\"value\":1},\"tidalamplitude\":{\"units\":\"m\",\"name\":\"Tidal amplitude\",\"value\":1},\"outputinterval\":{\"units\":\"days\",\"name\":\"Output timestep\",\"value\":1,\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"},\"basinslope\":{\"units\":\"deg\",\"name\":\"Basin slope\",\"value\":0.0143}},\"task_id\":\"afbc3296-1679-450a-8c5e-5b6431c5cf20\",\"workingdir\":\"/data/container/files/cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e/\"}]");
         });
@@ -690,7 +742,7 @@
     });
   });
 
-  describe("Scenario builder", function() {
+  describe("SScenarioCreate - cenario builder", function() {
 
     it("Should be possible to convert a single value to a tag array", function(done) {
       var array = factorToArray({
@@ -834,7 +886,7 @@
     });
 
 
-    it("Should be possible to updte with query parameters", function(done) {
+    it("Should be possible to update with query parameters", function(done) {
       var scenarioCreate = new ScenarioCreate();
 
       scenarioCreate.updateWithQueryParameters();
@@ -848,6 +900,21 @@
     it("Should be possible to submit a scenario", function(done) {
       var scenarioCreate = new ScenarioCreate();
 
+      // Set some vars:
+      scenarioCreate.prepareScenarioConfig({
+        "sections": [
+          {
+            "variables": [
+              {
+                id: "var1",
+                default: 0,
+                factor: true
+              }
+            ]
+          }
+        ]
+      });
+
       scenarioCreate.submitScenario();
 
       assert.isOk(scenarioCreate.scenarioConfig);
@@ -855,6 +922,14 @@
       done();
     });
 
+
+    it("Should be possible to call updateAfterTick", function(done) {
+      var scenarioCreate = new ScenarioCreate();
+
+      assert.isOk(scenarioCreate.updateAfterTick);
+
+      done();
+    });
 
     it("Should be possible to prepare a scenario", function(done) {
       var scenarioCreate = new ScenarioCreate();
@@ -907,7 +982,7 @@
 
       // fake the router
       scenarioCreate.$route = {};
-      console.log("route", scenarioCreate.$route);
+
       scenarioCreate.$route.query = {
         name: "test"
       };
@@ -946,11 +1021,13 @@
       done();
     });
 
+
     // Test if we can fetc htemplates through scenario builder
     // Later on it should maybe really use fake JSON to build scenarios.
     it("Should be possible to fetch templates", function(done) {
       var scenarioCreate = new ScenarioCreate();
       var correctReply = false;
+
 
 
       nock("http://0.0.0.0")
@@ -961,7 +1038,7 @@
       .get("/api/v1/templates/")
       .reply(200, function() {
         correctReply = true;
-        return {};
+        return "[{\"id\":50,\"name\":\"Basin fill\",\"meta\":{\"description\":\"A river dominated and tidal influenced delta (no waves). No specific location. This is a delta like the Mississipi delta or the Mahakam river delta on East Kalimantan.\",\"creator\":\"fedor.baart@deltares.nl\"},\"sections\":[{\"variables\":[{\"default\":\"Basin Fill Scenario\",\"type\":\"text\",\"id\":\"name\",\"name\":\"Name\",\"validators\":{\"required\":true}},{\"name\":\"Model Engine\",\"default\":\"Delft3D Curvilinear\",\"disabled\":true,\"validators\":{\"required\":true},\"type\":\"text\",\"id\":\"engine\"},{\"name\":\"Version\",\"default\":\"v0.1\",\"disabled\":true,\"validators\":{\"required\":true},\"type\":\"semver\",\"id\":\"version\"}],\"name\":\"Scenario\"},{\"variables\":[{\"name\":\"Stop time\",\"default\":60,\"validators\":{\"max\":160,\"required\":true,\"min\":0},\"units\":\"days\",\"type\":\"numeric\",\"id\":\"simstoptime\"},{\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\",\"default\":1,\"validators\":{\"max\":2,\"required\":true,\"min\":0.5},\"units\":\"days\",\"type\":\"numeric\",\"id\":\"outputinterval\",\"name\":\"Output timestep\"}],\"name\":\"Parameters\"},{\"variables\":[{\"name\":\"Basin slope\",\"default\":0.0143,\"validators\":{\"max\":0.3,\"required\":true,\"min\":0.01},\"factor\":true,\"units\":\"deg\",\"type\":\"numeric\",\"id\":\"basinslope\"},{\"name\":\"River width\",\"default\":300,\"validators\":{\"max\":1000,\"required\":true,\"min\":100},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"riverwidth\"}],\"name\":\"Geometry\"},{\"variables\":[{\"name\":\"River discharge\",\"default\":1000,\"validators\":{\"max\":2000,\"required\":true,\"min\":0},\"factor\":true,\"units\":\"mÂ³/s\",\"type\":\"numeric\",\"id\":\"riverdischarge\"},{\"name\":\"Tidal amplitude\",\"default\":1,\"validators\":{\"max\":3,\"required\":true,\"min\":0},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"tidalamplitude\"}],\"name\":\"Forces\"},{\"variables\":[{\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\",\"default\":\"medium-sand\",\"id\":\"composition\",\"validators\":{},\"type\":\"select\",\"options\":[{\"text\":\"coarse-sand\",\"value\":\"coarse-sand\"},{\"text\":\"medium-sand\",\"value\":\"medium-sand\"},{\"text\":\"fine-sand\",\"value\":\"fine-sanday\"},{\"text\":\"coarse-silt\",\"value\":\"coarse-silt\"},{\"text\":\"medium-silt\",\"value\":\"medium-silt\"},{\"text\":\"fine-silt\",\"value\":\"fine-silt\"}],\"name\":\"Sediment classes\"}],\"name\":\"Sediment composition\",\"description\":\"Sediment can consist of a mixture of different classes. Read <a href='more'>more</a> about the sediment composition clasess.\"}]},{\"id\":51,\"name\":\"Basin fill with marine reworking\",\"meta\":{\"description\":\"A river or tide dominated delta with wind waves as a marine reworking force\",\"creator\":\"liang.li@tudelft.nl\"},\"sections\":[{\"variables\":[{\"default\":\"Basin Fill with Marine Reworking Scenario\",\"type\":\"text\",\"id\":\"name\",\"name\":\"Name\",\"validators\":{\"required\":true}},{\"name\":\"Model Engine\",\"default\":\"Delft3D Curvilinear\",\"disabled\":true,\"validators\":{\"required\":true},\"type\":\"text\",\"id\":\"engine\"},{\"name\":\"Version\",\"default\":\"v0.1\",\"disabled\":true,\"validators\":{\"required\":true},\"type\":\"semver\",\"id\":\"version\"}],\"name\":\"Scenario\"},{\"variables\":[{\"name\":\"Stop time\",\"default\":60,\"validators\":{\"max\":160,\"required\":true,\"min\":0},\"units\":\"days\",\"type\":\"numeric\",\"id\":\"simstoptime\"},{\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\",\"default\":1,\"validators\":{\"max\":2,\"required\":true,\"min\":0.5},\"units\":\"days\",\"type\":\"numeric\",\"id\":\"outputinterval\",\"name\":\"Output timestep\"}],\"name\":\"Parameters\"},{\"variables\":[{\"name\":\"Basin slope\",\"default\":0.0143,\"validators\":{\"max\":0.3,\"required\":true,\"min\":0.01},\"factor\":true,\"units\":\"deg\",\"type\":\"numeric\",\"id\":\"basinslope\"},{\"name\":\"River width\",\"default\":300,\"validators\":{\"max\":1000,\"required\":true,\"min\":100},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"riverwidth\"}],\"name\":\"Geometry\"},{\"variables\":[{\"name\":\"River discharge\",\"default\":1000,\"validators\":{\"max\":2000,\"required\":true,\"min\":0},\"factor\":true,\"units\":\"mÂ³/s\",\"type\":\"numeric\",\"id\":\"riverdischarge\"},{\"name\":\"Tidal amplitude\",\"default\":1,\"validators\":{\"max\":3,\"required\":true,\"min\":0},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"tidalamplitude\"}],\"name\":\"Forces\"},{\"variables\":[{\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\",\"default\":\"medium-sand\",\"id\":\"composition\",\"validators\":{},\"type\":\"select\",\"options\":[{\"text\":\"coarse-sand\",\"value\":\"coarse-sand\"},{\"text\":\"medium-sand\",\"value\":\"medium-sand\"},{\"text\":\"fine-sand\",\"value\":\"fine-sanday\"},{\"text\":\"coarse-silt\",\"value\":\"coarse-silt\"},{\"text\":\"medium-silt\",\"value\":\"medium-silt\"},{\"text\":\"fine-silt\",\"value\":\"fine-silt\"}],\"name\":\"Sediment classes\"}],\"name\":\"Sediment composition\",\"description\":\"Sediment can consist of a mixture of different classes. Read <a href='more'>more</a> about the sediment composition clasess.\"}]},{\"id\":52,\"name\":\"Testing template\",\"meta\":{\"description\":\"A river dominated and tidal influenced delta (no waves). No specific location. This is a delta like the Mississipi delta or the Mahakam river delta on East Kalimantan.\",\"creator\":\"fedor.baart@deltares.nl\"},\"sections\":[{\"variables\":[{\"default\":\"Test Basin Fill Scenario\",\"type\":\"text\",\"id\":\"name\",\"name\":\"Name\",\"validators\":{\"required\":true}},{\"name\":\"Timestep\",\"default\":2,\"validators\":{\"max\":20,\"required\":true,\"min\":0.5},\"units\":\"min\",\"type\":\"numeric\",\"id\":\"dt\"},{\"name\":\"Model Engine\",\"default\":\"Delft3D Curvilinear\",\"disabled\":true,\"validators\":{\"required\":true},\"type\":\"text\",\"id\":\"engine\"},{\"name\":\"Version\",\"default\":\"v0.1\",\"disabled\":true,\"validators\":{\"required\":true},\"type\":\"semver\",\"id\":\"version\"}],\"name\":\"Scenario\"},{\"variables\":[{\"name\":\"Stop time\",\"default\":60,\"validators\":{\"max\":160,\"required\":true,\"min\":0},\"units\":\"days\",\"type\":\"numeric\",\"id\":\"simstoptime\"},{\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\",\"default\":1,\"validators\":{\"max\":2,\"required\":true,\"min\":0.5},\"units\":\"days\",\"type\":\"numeric\",\"id\":\"outputinterval\",\"name\":\"Output timestep\"}],\"name\":\"Parameters\"},{\"variables\":[{\"name\":\"Basin slope\",\"default\":0.0143,\"validators\":{\"max\":0.3,\"required\":true,\"min\":0.01},\"factor\":true,\"units\":\"deg\",\"type\":\"numeric\",\"id\":\"basinslope\"},{\"name\":\"River width\",\"default\":300,\"validators\":{\"max\":1000,\"required\":true,\"min\":100},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"riverwidth\"}],\"name\":\"Geometry\"},{\"variables\":[{\"name\":\"River discharge\",\"default\":1000,\"validators\":{\"max\":2000,\"required\":true,\"min\":0},\"factor\":true,\"units\":\"mÂ³/s\",\"type\":\"numeric\",\"id\":\"riverdischarge\"},{\"name\":\"Tidal amplitude\",\"default\":1,\"validators\":{\"max\":3,\"required\":true,\"min\":0},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"tidalamplitude\"}],\"name\":\"Forces\"},{\"variables\":[{\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\",\"default\":\"medium-sand\",\"id\":\"composition\",\"validators\":{},\"type\":\"select\",\"options\":[{\"text\":\"coarse-sand\",\"value\":\"coarse-sand\"},{\"text\":\"medium-sand\",\"value\":\"medium-sand\"},{\"text\":\"fine-sand\",\"value\":\"fine-sanday\"},{\"text\":\"coarse-silt\",\"value\":\"coarse-silt\"},{\"text\":\"medium-silt\",\"value\":\"medium-silt\"},{\"text\":\"fine-silt\",\"value\":\"fine-silt\"}],\"name\":\"Sediment classes\"}],\"name\":\"Sediment composition\",\"description\":\"Sediment can consist of a mixture of different classes. Read <a href='more'>more</a> about the sediment composition clasess.\"}]}]";
       });
 
       scenarioCreate.fetchTemplateList();
@@ -970,6 +1047,8 @@
       window.setTimeout(function() {
         try {
           assert(correctReply === true, "Nock server did not reach reply");
+
+
           done();
         } catch (e) {
           done(e);
@@ -982,7 +1061,6 @@
 
   describe("ModelDetails", function() {
     var modelDetails = new ModelDetails();
-
 
 
     it("Should be possible to fetchLog", function(done) {
@@ -1063,6 +1141,68 @@
 
     });
 
+    // This version sends a invalid reponse to the fetchLog, we have to handle this.
+    // Skip the UI part of this. just direct through global.
+    it("Should be possible to fetchLog - EXPECT INVALID REPONSE", function(done) {
+
+      //var correctReply = false;
+      var id = 405;
+
+      // We fake to get a model.
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .filteringPath(function() {
+          return "/api/v1/scenes/";
+        })
+        .get("/api/v1/scenes/")
+        .reply(200, [
+          {
+            id: 405,
+            name: "Run 1",
+            fileurl: "/fileurl/",
+              info: {
+                logfile: {
+                  location: "location/",
+                  file: "file"
+                }
+              }
+            }
+        ]);
+
+      global.fetchModel(id)
+        .then(function(data) {
+
+          // Now test the log
+          modelDetails.model.id = id;
+
+          // Working dir is at: modeldata.fileurl + delf3d + delft3d.log
+          var url = data.fileurl + data.info.logfile.location + data.info.logfile.file;
+
+          nock("http://0.0.0.0")
+            //.log(console.log)
+            .defaultReplyHeaders({
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*"
+            })
+            .get(url)
+            .reply(400, function() {
+              return {};
+            });
+
+          global.fetchLog(id).catch(function() {
+
+            // We expect an error.
+            done();
+          });
+        });
+
+
+    });
+
+
 
     it("Should be possible to delete a model", function(done) {
 
@@ -1113,7 +1253,7 @@
         })
         .intercept("/api/v1/scenes/4/start/", "OPTIONS")
         .reply(200, function() {
-          return "content";
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
         })
         .put("/api/v1/scenes/4/start/", {
           workflow: "export"
@@ -1149,7 +1289,7 @@
         // jquery calls OPTIONS first
         .intercept("/api/v1/scenes/4/start/", "OPTIONS")
         .reply(200, function() {
-          return "content";
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
         })
         // Browsers (and jquery) expect the Access-Control-Allow-Origin header
         .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
@@ -1172,52 +1312,254 @@
     });
 
 
-    // Cannot get confirm to work..
-    xit("Should be possible to stop a model", function(done) {
-      var correctReply = true;
+    it("Should be possible to stop multiple models (stopruns)", function(done) {
+
+      // When no id's passed, should return false.
+      assert.isFalse(global.stopModels());
+      done();
+    });
+
+    it("hould be possible to start multiple models (startModels)", function(done) {
+
+      // For now check if function is ok.
+      assert.isFalse(global.startModels());
+      done();
+
+    });
+
+    it("Should be possible to delete  multiple models (deleteModels)", function(done) {
+
+      // For now check if function is ok.
+      assert.isFalse(global.deleteModels());
+      done();
+    });
+
+
+
+    it("Should be possible to stop multiple models (stopruns) - also stop runs", function(done) {
+
+      // Process these ids
+      var ids = [1, 2];
+      var correctCount = 0;
+      var expectedCount = ids.length;
+
+      // Mock the three requests:
+      nock("http://0.0.0.0")
+        // jquery calls OPTIONS first
+        .intercept("/api/v1/scenes/" + ids[0] + "/stop/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+        // Browsers (and jquery) expect the Access-Control-Allow-Origin header
+        .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
+        .put("/api/v1/scenes/" + ids[0] + "/stop/")
+        .reply(200, function() {
+
+          // We got the right reply:
+          correctCount++;
+          return {};
+        })
+        .intercept("/api/v1/scenes/" + ids[1] + "/stop/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+        // Browsers (and jquery) expect the Access-Control-Allow-Origin header
+        .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
+        .put("/api/v1/scenes/" + ids[1] + "/stop/")
+        .reply(200, function() {
+
+          // We got the right reply:
+          correctCount++;
+          return {};
+        })
+       ;
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctCount === expectedCount, "Got all expected replies");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 150);
+
+      global.stopModels(ids);
+
+    });
+
+    it("Should be possible to start multiple models (startModels)  - also startModels runs", function(done) {
+
+      // Process these ids
+      var ids = [1, 2];
+      var correctCount = 0;
+      var expectedCount = ids.length;
+
+      // Mock the three requests:
+      nock("http://0.0.0.0")
+        // jquery calls OPTIONS first
+        .intercept("/api/v1/scenes/" + ids[0] + "/start/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+        // Browsers (and jquery) expect the Access-Control-Allow-Origin header
+        .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
+        .put("/api/v1/scenes/" + ids[0] + "/start/")
+        .reply(200, function() {
+
+          // We got the right reply:
+          correctCount++;
+          return {};
+        })
+        .intercept("/api/v1/scenes/" + ids[1] + "/start/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+        // Browsers (and jquery) expect the Access-Control-Allow-Origin header
+        .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
+        .put("/api/v1/scenes/" + ids[1] + "/start/")
+        .reply(200, function() {
+
+          // We got the right reply:
+          correctCount++;
+          return {};
+        })
+       ;
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctCount === expectedCount, "Got all expected replies");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 150);
+
+      global.startModels(ids);
+
+    });
+
+    it("Should be possible to delete  multiple models (deleteModels)  - also deleteModels runs", function(done) {
+
+// Process these ids
+      var ids = [1, 2];
+      var correctCount = 0;
+      var expectedCount = ids.length;
+
+      // Mock the three requests:
+      nock("http://0.0.0.0")
+        // jquery calls OPTIONS first
+        .intercept("/api/v1/scenes/" + ids[0] + "/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+        // Browsers (and jquery) expect the Access-Control-Allow-Origin header
+        .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
+        .delete("/api/v1/scenes/" + ids[0] + "/")
+        .reply(200, function() {
+
+          // We got the right reply:
+          correctCount++;
+          return {};
+        })
+        .intercept("/api/v1/scenes/" + ids[1] + "/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+        // Browsers (and jquery) expect the Access-Control-Allow-Origin header
+        .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
+        .delete("/api/v1/scenes/" + ids[1] + "/")
+        .reply(200, function() {
+
+          // We got the right reply:
+          correctCount++;
+          return {};
+        })
+       ;
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctCount === expectedCount, "Got all expected replies");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 150);
+
+      global.deleteModels(ids);
+
+    });
+
+
+
+
+
+
+    it("Should be possible to stop a model", function(done) {
+      var correctReply = false;
+
+      modelDetails = new ModelDetails();
 
       modelDetails.$parent = {};
       modelDetails.$parent.$broadcast = function() {
       };
 
+      modelDetails.$root = {};
+      modelDetails.$root.$broadcast = function() {
+      };
+
       modelDetails.model.id = 4;
+
+      // To get dialogs, manually have to create and add them to the component. So that is what we do here:
+      var dialog = new ConfirmDialog();
+
+      dialog.dialogId = "stop";
+      modelDetails.$children.push(dialog);
+
+      // End manual dialog.
+
 
       nock("http://0.0.0.0")
         //.log(console.log)
         // jquery calls OPTIONS first
-        .intercept("/api/v1/scenes/4/stop/", "OPTIONS")
+        .intercept("/api/v1/scenes/" + modelDetails.model.id + "/stop/", "OPTIONS")
         .reply(200, function() {
-          console.log("intercept");
-          return "content";
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
         })
         // Browsers (and jquery) expect the Access-Control-Allow-Origin header
         .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
-        .put("/api/v1/scenes/4/stop/", {id: modelDetails.model.id})
+        .put("/api/v1/scenes/" + modelDetails.model.id + "/stop/")
         .reply(200, function() {
-          return "{\"a\":4}";
+
+          // We got the right reply:
+          correctReply = true;
+          return {};
         });
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 150);
 
       $("#dialog-container").load("/templates/confirm-dialog.html", function() {
 
-        console.log("dialog template loaded");
-        var stopDialog = modelDetails.stopModel();
+        modelDetails.stopModel();
 
-        console.log(stopDialog);
+        // Find the dialog:
+        var stopDialog = getDialog(modelDetails, "confirm-dialog", "stop");
 
         // confirm the dialog:
         stopDialog.onConfirm();
-
-        // Make sure the nock server had the time to reply
-        window.setTimeout(function() {
-          try {
-            assert(correctReply === true, "Nock server did not reach reply");
-            done();
-          } catch (e) {
-            done(e);
-          }
-        }, 150);
       });
     });
+
 
 
     it("Should be possible to change download options", function(done) {
@@ -1300,16 +1642,73 @@
     });
 
 
+    it("Should be possible to publish a model private using Confirm", function(done) {
 
-
-
-
-    it("Should be possible to publish a model private", function(done) {
       var correctReply = false;
+
+      modelDetails = new ModelDetails();
 
       modelDetails.$parent = {};
       modelDetails.$parent.$broadcast = function() {
       };
+
+      modelDetails.$root = {};
+      modelDetails.$root.$broadcast = function() {
+      };
+
+      modelDetails.model.id = 4;
+
+      // Publishlevel 2 = world
+
+      var newPublishLevel = 2;
+      var target = "world";
+
+      // To get dialogs, manually have to create and add them to the component. So that is what we do here:
+      var dialog = new ConfirmDialog();
+
+      dialog.dialogId = "publish";
+      modelDetails.$children.push(dialog);
+
+      // End manual dialog.
+
+
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .post("/api/v1/scenes/" + modelDetails.model.id + "/publish_" + target + "/")
+        .reply(200, function() {
+          correctReply = true;
+          return {};
+        });
+
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 150);
+
+      $("#dialog-container").load("/templates/confirm-dialog.html", function() {
+
+        modelDetails.publishModel(newPublishLevel);
+
+        // Find the dialog:
+        var publishDialog = getDialog(modelDetails, "confirm-dialog", "publish");
+
+        // confirm the dialog:
+        publishDialog.onConfirm();
+      });
+    });
+
+
+    it("Should be possible to publish a model private", function(done) {
+      var correctReply = false;
 
       var modelToPublishId = 4;
       var target = "private";
@@ -1571,46 +1970,67 @@
     });
 
 
-    xit("Should be possible to REMOVE a model", function(done) {
+    it("Should be possible to REMOVE a model", function(done) {
+      var correctReply = false;
 
-      var aModelDetails = new ModelDetails();
+      modelDetails = new ModelDetails();
 
-      // Try to remove this:
-      aModelDetails.model.id = 1;
+      modelDetails.$parent = {};
+      modelDetails.$parent.$broadcast = function() {
+      };
+
+      modelDetails.$root = {};
+      modelDetails.$root.$broadcast = function() {
+      };
+
+      modelDetails.model.id = 4;
+
+      // To get dialogs, manually have to create and add them to the component. So that is what we do here:
+      var dialog = new ConfirmDialog();
+
+      dialog.dialogId = "delete";
+      modelDetails.$children.push(dialog);
+
+      // End manual dialog.
+
+
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .intercept("/api/v1/scenes/" + modelDetails.model.id + "/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+        .delete("/api/v1/scenes/" + modelDetails.model.id + "/")
+        .reply(200, function() {
+          correctReply = true;
+          return {};
+        });
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 150);
 
 
       $("#dialog-container").load("/templates/confirm-dialog.html", function() {
-        aModelDetails.removeModel();
+
+        var deleteDialog = getDialog(modelDetails, "confirm-dialog", "delete");
+
+
+        modelDetails.removeModel();
+
+        // confirm the dialog:
+        deleteDialog.onConfirm();
       });
-
-
-      var componentName = "confirm-dialog";
-      var dialogId = "delete";
-
-      // Find created dialog:
-      function getConfirmDialog() {
-
-        for(var i = 0; i < aModelDetails.$children.length; i++) {
-          // Check if name matches:
-          if (aModelDetails.$children[i].$options.name === componentName) {
-            var dialog = aModelDetails.$children[i];
-
-            if (dialog.dialogId === dialogId) {
-              return aModelDetails.$children[i];
-            }
-          }
-        }
-      }
-
-      var confirm = getConfirmDialog();
-
-      confirm.onConfirm();
-
-
-      done();
-
     });
-
 
 
   });
@@ -1629,6 +2049,31 @@
     imageAnimation.model = { };
 
 
+
+    it("Does ImageAnimation have the initial values", function(done) {
+
+      var defaultData = {
+        // Current animation frame:
+        currentAnimationIndex: 0,
+
+        // timer id for animation.
+        timerAnimation: -1,
+
+        // Which imagelist are we currently watching?
+        currentAnimationKey: "delta_fringe_images",
+
+        isAnimating: false
+      };
+
+      /*eslint-disable no-underscore-dangle*/
+      assert.deepEqual(imageAnimation._data, defaultData, "Match default properties");
+      /*eslint-enable no-underscore-dangle*/
+
+      done();
+
+    });
+
+
     it("Does ImageAnimation have the right default 'props'", function(done) {
 
 
@@ -1642,10 +2087,15 @@
 
 
 
-
     it("Should be possible to stop image frames", function(done) {
 
+      // Fake a timer interval:
+      imageAnimation.timerAnimation = 2;
+
       imageAnimation.stopImageFrame();
+
+      assert.isTrue(imageAnimation.timerAnimation === -1, "timeranimation id should have become -1");
+
       done();
 
     });
@@ -1653,12 +2103,27 @@
     it("Should be possible to play image frames the imageFrame", function(done) {
 
       imageAnimation.playImageFrame();
+
+      assert.isTrue(imageAnimation.timerAnimation !== -1, "timeranimation id should not be -1");
+
       done();
 
     });
 
-    it("Should be possible to change the imageFrame", function(done) {
+    it("Should be possible to change to next imageFrame", function(done) {
+
+      /*eslint-disable camelcase*/
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      /*eslint-enable camelcase*/
+
+      imageAnimation.currentAnimationIndex = 0;
+      imageAnimation.currentAnimationKey = "delta_fringe_images";
+
       imageAnimation.nextImageFrame();
+
+      // Next frame should have brought to the next frame.
+      assert.isTrue(imageAnimation.animationIndex === 1, "Animation frame at 1");
+
       done();
     });
 
@@ -1704,13 +2169,30 @@
       done();
     });
 
+    it("Should be possible to check animationFrame property - empty", function(done) {
+
+       /*eslint-disable camelcase*/
+      imageAnimation.model.info = { delta_fringe_images: { location: "location/", images: ["firstframe.jpg", "lastframe.jpg"] } };
+      /*eslint-enable camelcase*/
+      imageAnimation.model.fileurl = "fileurl/";
+      imageAnimation.currentAnimationKey = "";
+
+      var imgurl = imageAnimation.animationFrame;
+
+      assert.isTrue(imgurl === "", "Animation frame file matches expectation");
+
+      done();
+    });
+
+
     it("Should be possible to check frameCount property", function(done) {
 
       // We should not have any frames in this animation object, but maybe make sure later on?
        /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
-      assert.isTrue(imageAnimation.frameCount === imageAnimation.model.info.delta_fringe_images.images.length, "Animation framecount should be 0");
+      imageAnimation.currentAnimationKey = "delta_fringe_images";
+      assert.isTrue(imageAnimation.frameCount === imageAnimation.model.info.delta_fringe_images.images.length, "Animation framecount should not be 0");
       done();
     });
 
@@ -1723,12 +2205,29 @@
       done();
     });
 
+    it("Should be possible to previousImageFrame", function(done) {
+
+      // index should become 0
+       /*eslint-disable camelcase*/
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      /*eslint-enable camelcase*/
+      imageAnimation.switchAnimation("delta_fringe_images");
+      imageAnimation.animationIndex = 0;
+      imageAnimation.previousImageFrame();
+
+      // We started at 0, so we expect image to go to length -1.
+      assert.isTrue(imageAnimation.animationIndex === imageAnimation.model.info.delta_fringe_images.images.length - 1, "Animation frame should have wrapped");
+      done();
+    });
+
     it("Should be possible to gotoFirstFrame", function(done) {
 
       // index should become 0
        /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
+
+      imageAnimation.switchAnimation("delta_fringe_images");
       imageAnimation.gotoFirstFrame();
 
       assert.isTrue(imageAnimation.animationIndex === 0, "Animation frame at 0");
@@ -1741,6 +2240,8 @@
        /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
+
+      imageAnimation.switchAnimation("delta_fringe_images");
       imageAnimation.gotoLastFrame();
 
       assert.isTrue(imageAnimation.animationIndex === imageAnimation.model.info.delta_fringe_images.images.length - 1, "Animation frame at 0");
@@ -1793,7 +2294,7 @@
       done();
     });
 
-    it("Should be possible get selected scenarios", function(done) {
+    it("Should be possible get selected runs", function(done) {
 
       // Add an artificial sene with a model in scene_set with id 1.
       var aSearchList = new SearchList();
@@ -1812,6 +2313,24 @@
       done();
     });
 
+    it("Should be possible get selected runs - none selected", function(done) {
+
+      // Add an artificial sene with a model in scene_set with id 1.
+      var aSearchList = new SearchList();
+
+      aSearchList.models = [];
+
+       /*eslint-disable camelcase*/
+      aSearchList.models.push({id: 123, scene_set: [{ id: 1}]});
+       /*eslint-enable camelcase*/
+
+      aSearchList.selectedRuns = []; // Assume we test #1
+
+      var models = aSearchList.selectedModels;
+
+      assert.isTrue((models.length === 0), "selectedRun is correct.");
+      done();
+    });
 
     it("Should be possible get selectedModelid", function(done) {
 
@@ -1909,7 +2428,21 @@
       done();
     });
 
+    it("Check default data", function(done) {
 
+      var aSearchList = new SearchList();
+
+      var defaultInfo = {
+        selectedResultId: -1,
+        keyControlPressed: false
+      };
+
+      /*eslint-disable no-underscore-dangle*/
+      assert.deepEqual(aSearchList._data, defaultInfo, "Match default properties");
+      /*eslint-enable no-underscore-dangle*/
+
+      done();
+    });
 
 
   });
@@ -1943,17 +2476,30 @@
 
       var aSearchColumns = new SearchColumns();
 
+      // Add fake compnent
+      var modelDetails = new ModelDetails();
+
+      aSearchColumns.$children.push(modelDetails);
 
       var component = aSearchColumns.getChildByName("model-details");
 
-      // We expect null in this case, as the model-details is not loaded.
-      assert.isTrue(component === null);
+      // We expect not null in this case, as the model-details is not loaded.
+      assert.isTrue(component !== null);
 
       done();
     });
 
+    it("Should be possible to call updateCollapsibles", function(done) {
 
-    it("Should be possible to get names of selected models", function(done) {
+      var aSearchColumns = new SearchColumns();
+
+      // We cannot really test the bootstrap events right now.
+      assert.isOk(aSearchColumns.updateCollapsibles, "updateCollapsibles can be called");
+
+      done();
+    });
+
+    it("Should be possible to get names of selected models ", function(done) {
 
       var aSearchColumns = new SearchColumns();
 
@@ -1965,6 +2511,42 @@
       done();
     });
 
+
+    it("Should be possible to get names of selected models with items selected", function(done) {
+
+      var aSearchColumns = new SearchColumns();
+
+      // Names should be empty right now.
+      aSearchColumns.selectedRuns = [1, 2, 3];
+
+
+      aSearchColumns.models = [];
+
+      /*eslint-disable camelcase*/
+      // Add few test items.
+      aSearchColumns.models.push({
+        id: 100,
+        scene_set: [{ id: 1, name: "a"}]
+      });
+
+      aSearchColumns.models.push({
+        id: 101,
+        scene_set: [{ id: 2, name: "b"}]
+      });
+
+      aSearchColumns.models.push({
+        id: 102,
+        scene_set: [{ id: 3, name: "c"}]
+      });
+
+      var names = aSearchColumns.selectedRunNames;
+
+       /*eslint-enable camelcase*/
+
+      assert.isTrue(names === "a,b,c", "selectedrunnames match");
+
+      done();
+    });
 
     // Ignores the selectpicker though.
     it("Should be possible to reset the form fields", function(done) {
@@ -2060,7 +2642,7 @@
     });
 
 
-    it("Should be possible to load search templates", function(done) {
+    it("Should be possible to load search templates - with data", function(done) {
       var correctReply = false;
 
       nock("http://0.0.0.0")
@@ -2072,7 +2654,7 @@
         .get("/api/v1/searchforms/")
         .reply(200, function() {
           correctReply = true;
-          return {};
+          return "[{\"id\":1,\"name\":\"MAIN\",\"sections\":[{\"variables\":[{\"validators\":{},\"type\":\"text\",\"id\":\"name\",\"name\":\"Name\"},{\"disabled\":true,\"type\":\"text\",\"id\":\"engine\",\"name\":\"Model Engine\",\"validators\":{}},{\"disabled\":true,\"type\":\"semver\",\"id\":\"version\",\"name\":\"Version\",\"validators\":{}}],\"name\":\"Scenario\"},{\"variables\":[{\"units\":\"days\",\"type\":\"numeric\",\"id\":\"simstoptime\",\"name\":\"Stop time\",\"validators\":{\"max\":160,\"min\":0}},{\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\",\"validators\":{\"max\":2,\"min\":0.5},\"units\":\"days\",\"type\":\"numeric\",\"id\":\"outputinterval\",\"name\":\"Output timestep\"}],\"name\":\"Parameters\"},{\"variables\":[{\"name\":\"Basin slope\",\"validators\":{\"max\":0.3,\"min\":0.01},\"factor\":true,\"units\":\"deg\",\"type\":\"numeric\",\"id\":\"basinslope\"},{\"name\":\"River width\",\"validators\":{\"max\":1000,\"min\":100},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"riverwidth\"}],\"name\":\"Geometry\"},{\"variables\":[{\"name\":\"River discharge\",\"validators\":{\"max\":2000,\"min\":0},\"factor\":true,\"units\":\"mÂ³/s\",\"type\":\"numeric\",\"id\":\"riverdischarge\"},{\"name\":\"Tidal amplitude\",\"validators\":{\"max\":3,\"min\":0},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"tidalamplitude\"}],\"name\":\"Forces\"},{\"variables\":[{\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\",\"id\":\"composition\",\"validators\":{},\"type\":\"select\",\"options\":[{\"text\":\"coarse-sand\",\"value\":\"coarse-sand\"},{\"text\":\"medium-sand\",\"value\":\"medium-sand\"},{\"text\":\"fine-sand\",\"value\":\"fine-sanday\"},{\"text\":\"coarse-silt\",\"value\":\"coarse-silt\"},{\"text\":\"medium-silt\",\"value\":\"medium-silt\"},{\"text\":\"fine-silt\",\"value\":\"fine-silt\"}],\"name\":\"Sediment classes\"}],\"name\":\"Sediment composition\",\"description\":\"Sediment can consist of a mixture of different classes. Read <a href='more'>more</a> about the sediment composition clasess.\"}],\"templates\":[{\"name\":\"Basin fill\",\"id\":3},{\"name\":\"Basin fill with marine reworking\",\"id\":4}]}]";
         });
 
       global.fetchSearchTemplates();
@@ -2088,6 +2670,37 @@
       }, 100);
 
     });
+
+
+    it("Should be possible to load search templates - no data", function(done) {
+      var correctReply = false;
+
+      nock("http://0.0.0.0")
+        //.log(console.log)
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .get("/api/v1/searchforms/")
+        .reply(200, function() {
+          correctReply = true;
+          return "";
+        });
+
+      global.fetchSearchTemplates();
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
+
+    });
+
 
 
   });
@@ -2148,8 +2761,36 @@
 
     });
 
+
+    it("Should be possible to fetch my info - EXPECT INVALID RESPONSE", function(done) {
+
+      // We return an error this time.
+
+      nock("http://0.0.0.0")
+        //.log(console.log)
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .get("/api/v1/users/me/")
+        .reply(400, function() {
+
+          return {};
+        });
+
+      var userDetails = new UserDetails();
+
+
+      userDetails.fetchUserInfo().catch(function() {
+        // We expect an error.
+        done();
+      });
+
+    });
+
+
     it("Should be possible to receive my first and lastname", function(done) {
-      var correctReply = false;
+
 
       // The fake reply we will return.
       var reply = [{
@@ -2172,35 +2813,23 @@
         })
         .get("/api/v1/users/me/")
         .reply(200, function() {
-          correctReply = true;
           return reply;
         });
 
       var userDetails = new UserDetails();
 
-      assert.isOk(userDetails, "UserDetails created");
+      userDetails.fetchUserInfo().then(function() {
 
-      // Make sure the nock server had the time to reply
-      window.setTimeout(function() {
-        try {
-          assert(correctReply === true, "Nock server did not reach reply");
+        assert.isTrue((userDetails.user.first_name === reply[0].first_name && userDetails.user.last_name === reply[0].last_name), "First and lastname match");
 
-          // Check if the user info is set correctly.
-          assert.isTrue((userDetails.user.first_name === reply[0].first_name && userDetails.user.last_name === reply[0].last_name), "First and lastname match");
+        done();
 
-          done();
-        } catch (e) {
-          done(e);
-        }
-      }, 100);
-
-      userDetails.fetchUserInfo();
+      });
 
     });
 
 
     it("Should be possible to call the details computed property", function(done) {
-      var correctReply = false;
 
       // The fake reply we will return.
       var reply = [{
@@ -2223,7 +2852,6 @@
         })
         .get("/api/v1/users/me/")
         .reply(200, function() {
-          correctReply = true;
           return reply;
         });
 
@@ -2231,25 +2859,19 @@
 
       assert.isOk(userDetails, "UserDetails created");
 
-      // Make sure the nock server had the time to reply
-      window.setTimeout(function() {
-        try {
-          assert(correctReply === true, "Nock server did not reach reply");
+      userDetails.fetchUserInfo().then(function() {
 
-          var details = userDetails.details;
+        var details = userDetails.details;
+        var match = "id: 500\nusername: foo\nfirst_name: Foo\nlast_name: User\nemail: foo@bar.com\ngroups: 42,500";
 
-          var match = "id: 500\nusername: foo\nfirst_name: Foo\nlast_name: User\nemail: foo@bar.com\ngroups: 42,500";
+        // Check if the user info is set correctly.
+        assert.isTrue(details === match, "details match");
 
-          // Check if the user info is set correctly.
-          assert.isTrue(details === match, "details match");
+        done();
+      });
 
-          done();
-        } catch (e) {
-          done(e);
-        }
-      }, 100);
 
-      userDetails.fetchUserInfo();
+
 
     });
   });

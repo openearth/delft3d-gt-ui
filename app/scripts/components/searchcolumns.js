@@ -26,7 +26,6 @@ var exports = (function () {
       "search-details": SearchDetails,
       "search-list": SearchList,
       "model-details": ModelDetails
-
     },
 
     route: {
@@ -119,6 +118,33 @@ var exports = (function () {
         }
 
         return null;
+      },
+
+      // Update the collapsibles.
+      updateCollapsibles: function() {
+
+        var that = this;
+
+
+        $(".scenario-runs").on("hide.bs.collapse", function() {
+
+          that.openedScenarios.push($(this).data("scenarioid"));
+
+          $(this).parent().find(".glyphicon-chevron-down:first-child").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
+
+          that.openedScenarios = _.uniq(that.openedScenarios);
+
+
+        });
+
+        $(".scenario-runs").on("show.bs.collapse", function() {
+
+          $(this).parent().find(".glyphicon-chevron-right:first-child").removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
+
+          that.openedScenarios = _.uniq(_.without(that.openedScenarios, $(this).data("scenarioid")));
+
+        });
+
       }
 
     },
@@ -133,39 +159,18 @@ var exports = (function () {
         this.numScenarios = numScenarios;
         this.numRuns = numRuns;
 
-        var that = this;
-
         this.$nextTick(function() {
-
 
           // Test, for changing arrow when using collapse
           // We also manage the tracking of ios here.
           // This is not the best place for this - refactor later.
 
-          $(".scenario-runs").on("hide.bs.collapse", function() {
-            var dataid = $(this).data("scenarioid");
-
-            that.openedScenarios.push(dataid);
-
-            $(this).parent().find(".glyphicon-chevron-down:first-child").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
-
-            that.openedScenarios = _.uniq(that.openedScenarios);
-
-
-          });
-
-          $(".scenario-runs").on("show.bs.collapse", function() {
-
-            var dataid = $(this).data("scenarioid");
-
-            $(this).parent().find(".glyphicon-chevron-right:first-child").removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
-
-            that.openedScenarios = _.uniq(_.without(that.openedScenarios, dataid));
-
-          });
+          this.updateCollapsibles();
         });
 
       },
+
+
 
       // User clicked on a result item:
       modelsSelected: function(id) {

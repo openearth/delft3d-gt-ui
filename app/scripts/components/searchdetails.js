@@ -27,91 +27,7 @@ var exports = (function () {
 
 	ready: function() {
 
-  var that = this;
-
-  fetchSearchTemplates().then((templates) => {
-
-
-    if (templates === undefined) {
-      return;
-    }
-
-    console.log("loading search");
-  //  console.log(templates.sections);
-    this.searchTemplates = templates[0];
-
-
-    this.templates = templates[0].templates;
-
-    var parameters = {};
-
-    // Build list of all variables and assign them to selectedParameters:
-    var variables = _.flatMap(_.flatMap(templates, "sections"), "variables");
-
-    variables.forEach(function(variable) {
-
-      parameters[variable.id] = "";
-
-      if (variable.validators.min !== undefined && variable.validators.max !== undefined) {
-        parameters[variable.id] = variable.validators.min + "," + variable.validators.max;
-      }
-    });
-
-    that.selectedParameters = parameters;
-
-
-    this.$nextTick(
-          function() {
-            // once the dom is updated, update the select pickers by hand
-            // template data is computed into modelEngine
-            $(".select-picker").selectpicker("refresh");
-            $(".select-picker").selectpicker("selectAll");
-
-
-            /*eslint-disable camelcase*/
-            $(".ion-range").ionRangeSlider({
-              force_edges: true,
-              onFinish: () => {
-                // args: data, not used
-                this.startSearch();
-              }
-            });
-            /*eslint-enable camelcase*/
-
-            // Add event handler that allows one to use the X next to inputs to clear the input.
-            $(".button-empty-input-field").on("click", function() {
-
-              // Search up to the div, and then find the input child. This is the actual input field.
-              $(this).closest("div").find("input").val("");
-            });
-
-            // Automatic search:
-            setInterval(
-                // create a callback for every second
-                () => {
-                  this.startSearch();
-                },
-                // every 10 seconds
-                10000
-              );
-
-            // Set event handlers for search collapsibles.
-            $(".panel-search").on("show.bs.collapse", function() {
-
-              $(this).find(".glyphicon-triangle-right").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
-            });
-
-            $(".panel-search").on("hide.bs.collapse", function() {
-
-              $(this).find(".glyphicon-triangle-bottom").removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
-
-            });
-
-
-          });
-  });
-
-  $(".select-picker").selectpicker();
+  this.loadSearchTemplates();
 
 },
   computed: {
@@ -172,6 +88,102 @@ var exports = (function () {
   },
 
   methods: {
+
+    loadSearchTemplates: function() {
+
+      var that = this;
+
+      fetchSearchTemplates().then((templates) => {
+
+
+        if (templates === undefined) {
+          return;
+        }
+
+
+        this.searchTemplates = templates[0];
+
+        this.templates = templates[0].templates;
+
+        var parameters = {};
+
+        // Build list of all variables and assign them to selectedParameters:
+        var variables = _.flatMap(_.flatMap(templates, "sections"), "variables");
+
+        variables.forEach(function(variable) {
+
+          parameters[variable.id] = "";
+
+          if (variable.validators.min !== undefined && variable.validators.max !== undefined) {
+            parameters[variable.id] = variable.validators.min + "," + variable.validators.max;
+          }
+        });
+
+        that.selectedParameters = parameters;
+
+
+        this.$nextTick(
+          function() {
+            // once the dom is updated, update the select pickers by hand
+            // template data is computed into modelEngine
+            var pickers = $(".select-picker");
+
+            if (pickers.selectpicker !== undefined) {
+              pickers.selectpicker("refresh");
+              pickers.selectpicker("selectAll");
+            }
+
+
+            /*eslint-disable camelcase*/
+            if ($(".ion-range").ionRangeSlider !== undefined) {
+              $(".ion-range").ionRangeSlider({
+                force_edges: true,
+                onFinish: () => {
+                  // args: data, not used
+                  this.startSearch();
+                }
+              });
+            }
+            /*eslint-enable camelcase*/
+
+            // Add event handler that allows one to use the X next to inputs to clear the input.
+            $(".button-empty-input-field").on("click", function() {
+
+              // Search up to the div, and then find the input child. This is the actual input field.
+              $(this).closest("div").find("input").val("");
+            });
+
+            // Automatic search:
+            setInterval(
+                // create a callback for every second
+                () => {
+                  this.startSearch();
+                },
+                // every 10 seconds
+                10000
+              );
+
+            // Set event handlers for search collapsibles.
+            $(".panel-search").on("show.bs.collapse", function() {
+
+              $(this).find(".glyphicon-triangle-right").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
+            });
+
+            $(".panel-search").on("hide.bs.collapse", function() {
+
+              $(this).find(".glyphicon-triangle-bottom").removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
+
+            });
+
+
+          });
+      });
+
+      if ($(".select-picker").selectpicker !== undefined) {
+        $(".select-picker").selectpicker();
+      }
+
+    },
 
     buildRequest: function() {
       // for now we just copy everything
@@ -242,6 +254,10 @@ var exports = (function () {
             var runCount = 0;
             var visibleScenarios = [];
 
+            // We manually keep track of "shared with world and shared with company" right now, as discussed
+            // this is hardcoded, later on should be done in a better way. We add these at the bottom of the list
+            var fixedScenarios = [];
+
             // Loop through all scenarios and add the runs that are part of it.
             dataScenarios.forEach(function(scenario) {
 
@@ -271,7 +287,26 @@ var exports = (function () {
 
               // We only add scenarios that have atleast one item.
               if (matchingRuns.length > 0) {
-                visibleScenarios.push(scenario);
+
+                // Hardcoded name check to add the items to the list.
+                var name = scenario.name.toLowerCase();
+
+                scenario.type = "default";
+                if (name === "shared with world" || name === "shared with company") {
+                  fixedScenarios.push(scenario);
+
+                  // Used for some coloring.
+                  if (name === "shared with world") {
+                    scenario.type = "world";
+                  } else {
+                    scenario.type = "company";
+                  }
+                } else {
+
+                  // We add a custom info item to the scenario, such tha we know it is normal;
+
+                  visibleScenarios.push(scenario);
+                }
 
               }
 
@@ -279,6 +314,12 @@ var exports = (function () {
 
             // Store updated scenario array.
             dataScenarios = visibleScenarios;
+
+            // Add additional fixed scenarios.
+            fixedScenarios.forEach(function(fixedscenario) {
+              dataScenarios.push(fixedscenario);
+            });
+
 
             that.$dispatch("modelsFound", dataScenarios, dataScenarios.length, runCount);
           }

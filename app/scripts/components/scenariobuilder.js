@@ -216,33 +216,35 @@ var exports = (function() {
         // Initialize the tooltips:
         // We do this after the DOM update.
         this.$nextTick(function () {
+
+          this.updateAfterTick();
+        });
+      },
+
+      updateAfterTick: function() {
+
+        if ($("[data-toggle='tooltip']").tooltip !== undefined) {
+
           $("[data-toggle='tooltip']").tooltip({
             html: true,
             // hover activation annoys some people
             trigger: "click"
           });
-          $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").each((i, el) => {
-            // lookup corresponding variable
-            var variables = _.flatMap(this.scenarioConfig.sections, "variables");
-            var variable = _.head(_.filter(variables, ["id", el.id]));
+        }
 
-            if (variable.type === "select") {
+        $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").each((i, el) => {
+          // lookup corresponding variable
+          //var variables = _.flatMap(this.scenarioConfig.sections, "variables");
+          //var variable = _.head(_.filter(variables, ["id", el.id]));
 
-              // TODO: use typeahead for better interaction
-              // $(el).tagsinput({
-              //   itemValue: "value",
-              //   itemText: "text"
-              // });
-              // add options
-              // _.each(variable.options, (option) => {
-              //   $(el).tagsinput('add', {"text": option.text, "value": option.value});
-              // });
-              $(el).tagsinput();
-            } else {
-              $(el).tagsinput();
-            }
-          });
+          //if (variable.type === "select") {
+
+          $(el).tagsinput();
+          //} else {
+           // $(el).tagsinput();
+          //}
         });
+
       },
 
       // Return a unique id for the variable that is validated.
@@ -253,7 +255,9 @@ var exports = (function() {
       },
 
       updateWithQueryParameters: function() {
+
         if (_.has(this, "$route.query.parameters")) {
+
           // get parameters from query
           var parameters = JSON.parse(this.$route.query.parameters);
 
@@ -283,6 +287,7 @@ var exports = (function() {
             }
           }
         );
+
         // This is a bit ugly, but if we have a name, add (copy) to it and then use it.
         if (_.has(this, "$route.query.name") && _.has(this.scenarioConfig, "name")) {
           // we also have a name
@@ -306,8 +311,6 @@ var exports = (function() {
       },
 
       submitScenario: function() {
-
-        console.log("submit");
 
         var parameters = {},
             name = "";
@@ -396,15 +399,8 @@ var exports = (function() {
       initFixedToolbar: function() {
         var that = this;
 
-        if (window.addEventListener) {
-          window.addEventListener("scroll", that.updateFixedToolbarStyle);
-          window.addEventListener("touchmove", that.updateFixedToolbarStyle);
-          window.addEventListener("load", that.updateFixedToolbarStyle);
-        } else if (window.attachEvent) {
-          window.attachEvent("onscroll", that.updateFixedToolbarStyle);
-          window.attachEvent("ontouchmove", that.updateFixedToolbarStyle);
-          window.attachEvent("onload", that.updateFixedToolbarStyle);
-        }
+        $(window).on("scroll touchmove load", that.updateFixedToolbarStyle);
+
         this.updateFixedToolbarStyle();
       },
 
@@ -426,16 +422,8 @@ var exports = (function() {
       },
 
       getTop: function() {
-        var top = 0;
 
-        if (typeof (window.pageYOffset) === "number") {
-          top = window.pageYOffset;
-        } else if (document.body && document.body.scrollTop) {
-          top = document.body.scrollTop;
-        } else if (document.documentElement && document.documentElement.scrollTop) {
-          top = document.documentElement.scrollTop;
-        }
-        return top;
+        return $(window).scrollTop();
       }
     }
   });

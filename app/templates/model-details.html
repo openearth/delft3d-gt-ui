@@ -183,7 +183,17 @@
           </p>
 
           <div class="form-group input-group">
-            <span class="input-group-addon"><input type="checkbox" class="downloadoption" checked="checked" value="export_images" v-on:change="downloadOptionsChange()"></span>
+            <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_d3dinput" v-on:change="downloadOptionsChange()"></span>
+            <span class="form-control no-fixed-height">Download Delft3D input</span>
+          </div>
+
+          <div class="form-group input-group">
+            <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_d3doutput" v-on:change="downloadOptionsChange()"></span>
+            <span class="form-control no-fixed-height">Download Delft3D output</span>
+          </div>
+
+          <div class="form-group input-group">
+            <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_images" v-on:change="downloadOptionsChange()"></span>
             <span class="form-control no-fixed-height">Download generated output images</span>
           </div>
           <div class="form-group input-group" v-bind:class="{ 'inputdisabled': model.info.export === false}">
@@ -265,7 +275,7 @@
           <p>Are you sure you want to stop this model?</p>
         </template>
         <template slot="alert">
-          The model cannot be restarted after this action.
+		You will need to restart the model if you want to continue the simulation
         </template>
       </confirm-dialog>
 

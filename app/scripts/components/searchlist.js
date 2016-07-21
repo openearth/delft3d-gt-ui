@@ -48,14 +48,9 @@ var exports = (function () {
       // $(document).on("keyup keydown", function (e) {
       //   that.keyControlPressed = (e.ctrlKey === true || e.metaKey === true);
       // });
-
-
-
     },
 
     computed: {
-
-
 
       // Get the current selected modelid from the routing URL
       selectedModelId: {
@@ -96,8 +91,6 @@ var exports = (function () {
           if (r.length === 0) {
             this.$dispatch("modelsSelected", null);
           }
-
-
 
           return r;
         }
@@ -152,6 +145,10 @@ var exports = (function () {
         var rundiv = $(ev.target).closest(".run");
 
         // Is control down? Then we select multiple:
+        /*
+        ** We do not support the control key at the moment
+        ** But please leave this code here, it needs to be activated next sprint.
+
         if (this.keyControlPressed === true) {
 
           rundiv.toggleClass("selected");
@@ -182,20 +179,21 @@ var exports = (function () {
 
 
         } else {
+        */
+        // Control is not pressed, so we deselect all checkboxes, and only set the one we selected.
+        rundiv.toggleClass("selected");
 
-          // Control is not pressed, so we deselect all checkboxes, and only set the one we selected.
-          rundiv.toggleClass("selected");
+        // Select it:
+        // Set selected result id: (for old detail display at the moment)
+        this.selectedResultId = id;
 
-          // Select it:
-          // Set selected result id: (for old detail display at the moment)
-          this.selectedResultId = id;
+        // Directly select the id in the details list. (no routing)
+        this.$dispatch("modelsSelected", id);
 
-          // Directly select the id in the details list. (no routing)
-          this.$dispatch("modelsSelected", id);
+        // Only select this run:
+        this.selectedRuns = [id];
 
-          // Only select this run:
-          this.selectedRuns = [id];
-        }
+        //}
 
       }
   }
@@ -210,6 +208,5 @@ var exports = (function () {
 if (typeof module !== "undefined" && module.exports) {
   module.exports = exports;
 } else {
-  // make global
   _.assign(window, exports);
 }
