@@ -982,7 +982,6 @@
     var modelDetails = new ModelDetails();
 
 
-
     it("Should be possible to fetchLog", function(done) {
       var correctReply = false;
       var id = 405;
@@ -1060,6 +1059,68 @@
         });
 
     });
+
+    // This version sends a invalid reponse to the fetchLog, we have to handle this.
+    // Skip the UI part of this. just direct through global.
+    it("Should be possible to fetchLog - EXPECT INVALID REPONSE", function(done) {
+
+      //var correctReply = false;
+      var id = 405;
+
+      // We fake to get a model.
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .filteringPath(function() {
+          return "/api/v1/scenes/";
+        })
+        .get("/api/v1/scenes/")
+        .reply(200, [
+          {
+            id: 405,
+            name: "Run 1",
+            fileurl: "/fileurl/",
+              info: {
+                logfile: {
+                  location: "location/",
+                  file: "file"
+                }
+              }
+            }
+        ]);
+
+      global.fetchModel(id)
+        .then(function(data) {
+
+          // Now test the log
+          modelDetails.model.id = id;
+
+          // Working dir is at: modeldata.fileurl + delf3d + delft3d.log
+          var url = data.fileurl + data.info.logfile.location + data.info.logfile.file;
+
+          nock("http://0.0.0.0")
+            //.log(console.log)
+            .defaultReplyHeaders({
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*"
+            })
+            .get(url)
+            .reply(400, function() {
+              return {};
+            });
+
+          global.fetchLog(id).catch(function() {
+
+            // We expect an error.
+            done();
+          });
+        });
+
+
+    });
+
 
 
     it("Should be possible to delete a model", function(done) {
@@ -1167,6 +1228,29 @@
           done(e);
         }
       }, 150);
+    });
+
+
+    it("(todo) Should be possible to stop multiple models (stopruns) - function only check", function(done) {
+
+      // For now check if function is ok.
+      assert.isOk(global.stopModels);
+      done();
+    });
+
+    it("(todo) Should be possible to start multiple models (startModels) - function only check", function(done) {
+
+      // For now check if function is ok.
+      assert.isOk(global.startModels);
+      done();
+
+    });
+
+    it("(todo) Should be possible to delete  multiple models (deleteModels) - function only check", function(done) {
+
+      // For now check if function is ok.
+      assert.isOk(global.deleteModels);
+      done();
     });
 
 
@@ -2242,8 +2326,36 @@
 
     });
 
+
+    it("Should be possible to fetch my info - EXPECT INVALID RESPONSE", function(done) {
+
+      // We return an error this time.
+
+      nock("http://0.0.0.0")
+        //.log(console.log)
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .get("/api/v1/users/me/")
+        .reply(400, function() {
+
+          return {};
+        });
+
+      var userDetails = new UserDetails();
+
+
+      userDetails.fetchUserInfo().catch(function() {
+        // We expect an error.
+        done();
+      });
+
+    });
+
+
     it("Should be possible to receive my first and lastname", function(done) {
-      var correctReply = false;
+
 
       // The fake reply we will return.
       var reply = [{
@@ -2266,35 +2378,23 @@
         })
         .get("/api/v1/users/me/")
         .reply(200, function() {
-          correctReply = true;
           return reply;
         });
 
       var userDetails = new UserDetails();
 
-      assert.isOk(userDetails, "UserDetails created");
+      userDetails.fetchUserInfo().then(function() {
 
-      // Make sure the nock server had the time to reply
-      window.setTimeout(function() {
-        try {
-          assert(correctReply === true, "Nock server did not reach reply");
+        assert.isTrue((userDetails.user.first_name === reply[0].first_name && userDetails.user.last_name === reply[0].last_name), "First and lastname match");
 
-          // Check if the user info is set correctly.
-          assert.isTrue((userDetails.user.first_name === reply[0].first_name && userDetails.user.last_name === reply[0].last_name), "First and lastname match");
+        done();
 
-          done();
-        } catch (e) {
-          done(e);
-        }
-      }, 100);
-
-      userDetails.fetchUserInfo();
+      });
 
     });
 
 
     it("Should be possible to call the details computed property", function(done) {
-      var correctReply = false;
 
       // The fake reply we will return.
       var reply = [{
@@ -2317,7 +2417,6 @@
         })
         .get("/api/v1/users/me/")
         .reply(200, function() {
-          correctReply = true;
           return reply;
         });
 
@@ -2325,25 +2424,19 @@
 
       assert.isOk(userDetails, "UserDetails created");
 
-      // Make sure the nock server had the time to reply
-      window.setTimeout(function() {
-        try {
-          assert(correctReply === true, "Nock server did not reach reply");
+      userDetails.fetchUserInfo().then(function() {
 
-          var details = userDetails.details;
+        var details = userDetails.details;
+        var match = "id: 500\nusername: foo\nfirst_name: Foo\nlast_name: User\nemail: foo@bar.com\ngroups: 42,500";
 
-          var match = "id: 500\nusername: foo\nfirst_name: Foo\nlast_name: User\nemail: foo@bar.com\ngroups: 42,500";
+        // Check if the user info is set correctly.
+        assert.isTrue(details === match, "details match");
 
-          // Check if the user info is set correctly.
-          assert.isTrue(details === match, "details match");
+        done();
+      });
 
-          done();
-        } catch (e) {
-          done(e);
-        }
-      }, 100);
 
-      userDetails.fetchUserInfo();
+
 
     });
   });

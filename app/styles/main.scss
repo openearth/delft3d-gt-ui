@@ -67,6 +67,8 @@ $color-left-column-background: #dfdfda;
 $color-middle-column-background: #f1f1ee;
 $color-right-column-background: #fff;
 
+$shadow-color: rgba(0, 0, 0, .15);
+
 /* This part is wiredepped
 // bower:scss
 @import 'bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss';
@@ -288,7 +290,7 @@ input[type=date].form-control {
       //-webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
       //-webkit-transition: width .6s ease;
       background-color: $progress-bar-color;
-      box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
+      box-shadow: inset 0 -1px 0 $shadow-color;
       transition: width .6s ease;
     }
 
@@ -301,8 +303,9 @@ input[type=date].form-control {
 
 
     background-color: transparent;
-    border-radius: 8px;
     border: 1px solid $badge-color-unselected;
+
+    border-radius: 8px;
     color: $badge-color-unselected;
     font-size: 10px;
     height: 18px;
@@ -312,15 +315,14 @@ input[type=date].form-control {
 
   .share-status {
 
+    background-repeat: no-repeat;
+
     display: inline-block;
     height: 21px;
     margin-left: 4px;
     text-align: left;
     vertical-align: bottom;
     width: 21px;
-
-
-    background-repeat: no-repeat;
 
     // Icons as SVG
     &.private {
@@ -341,7 +343,7 @@ input[type=date].form-control {
   .arrow-right {
     position: absolute;
     right: 8px;
-    top:32px;
+    top: 32px;
   }
 
   .scenario.selected {
@@ -389,7 +391,7 @@ input[type=date].form-control {
 
 
 .clear-left {
-  clear:left;
+  clear: left;
 }
 
 .footer {
@@ -435,6 +437,7 @@ input[type=date].form-control {
     margin-left: 6px;
     padding: 6px 12px;
   }
+
   .navbar-nav li {
     // 2*15px margin
     h3 {
@@ -458,9 +461,8 @@ input[type=date].form-control {
 
 .tool-bar {
   height: 32px;
-  min-height:32px;
-
   margin-bottom: 0;
+  min-height: 32px;
 
   .btn {
     font-size: 14px;
@@ -519,14 +521,15 @@ input[type=date].form-control {
 // Generic disabled element
 .inputdisabled {
 
+  color: $gray-light;
+  pointer-events: none;
+
   // Textbox gets a gray background and border
   &input[type='text'] {
     background: $gray-lighter;
     border-color: $gray-light;
   }
 
-  color: $gray-light;
-  pointer-events: none;
 }
 
 .disabledpointer {
@@ -615,11 +618,11 @@ input[type=date].form-control {
 
 
 .animation-frame {
-  max-width: 100%;
-
   // Height should be smaller than max viewport height:
   // Such that it will fit on smaller screens.
   max-height: 60vh;
+
+  max-width: 100%;
 }
 
 // Based upon btn but without all the hover fx, etc
@@ -939,7 +942,8 @@ section {
     font-size: 11px;
   }
 
-  .control-label, label {
+  .control-label,
+  label {
     font-size: 11px;
     font-weight: normal;
   }
@@ -1034,7 +1038,7 @@ section {
 
 .search-date-input {
 
-  float:left;
+  float: left;
   width: 80px;
 }
 
@@ -1050,7 +1054,7 @@ section {
 .scenario-builder {
 
   .panel {
-    margin: 0 0 12px 0;
+    margin: 0 0 12px; // 0;
   }
 
   .ion-range-container {
@@ -1066,7 +1070,7 @@ section {
   .irs-single {
     background-color: $white;
     color: $black;
-    padding: 2px 8px 8px 8px;
+    padding: 2px 8px 8px; // 8px;
     top: -14px;
   }
 
@@ -1098,34 +1102,35 @@ section {
   }
 
   // Dimensions of the handles
-  .to, .from {
+  .to,
+  .from {
     background-color: $white;
-    border-radius: 10px;
     border: 1px solid $slider-handle-border;
+    border-radius: 10px;
     height: 20px;
     top: 16px;
     width: 20px;
   }
 
   // Horizontal background bar.
-  .irs-line span{
-    background-color: $dark-gray;
+  .irs-line span {
     background: none;
+    background-color: $dark-gray;
     height: 4px;
   }
 }
 
 
 .stylish-input-group .input-group-addon {
-  background: white;
+  background: $white;
   color: $dark-gray;
   min-width: initial;
-  padding: 6px 2px 6px 2px;
+  padding: 6px 2px; // 6px 2px;
 }
 
 .stylish-input-group .form-control {
   border-color: $dark-gray;
-  border-right:0;
+  border-right: 0;
   box-shadow: 0 0 0;
 }
 
@@ -1189,7 +1194,7 @@ section {
       color: $black;
       display: block;
       outline: none;
-      padding: 4px 0 4px 0;
+      padding: 4px 0; // 4px 0;
       text-decoration: none;
     }
 
@@ -1231,7 +1236,7 @@ section {
 }
 
 .highlighted {
-  background-color: $deltares-groen !important;
+  background-color: $deltares-groen; // !important;
 }
 
 
@@ -1243,8 +1248,8 @@ section {
   }
 
   .search-details .domain-search-boxes input[type=checkbox] + label {
-    width: 54px;
     height: 54px;
+    width: 54px;
    }
 
   // Hide the label at these screens:
@@ -1267,8 +1272,8 @@ section {
     width: 42px;
    }
 
-   // Hide the results information screen (how many results we got) - it's fairly big, and removing it makes space for the buttons on the navbar.
-   #results-info {
+  // Hide the results information screen (how many results we got) - it's fairly big, and removing it makes space for the buttons on the navbar.
+  #results-info {
     display: none;
   }
 
