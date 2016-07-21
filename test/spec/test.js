@@ -16,7 +16,7 @@
   // Create a document
   /* eslint-disable quotes */
 
-  global.document = jsdom('<!doctype html><html><body><div id="top-bar">topbar</div> <div id="tool-bar">tool-bar</div> <div id="below-tool-bar">below-tool-bar</div> <div id="app"><div id="model-create"></div><div id="model-details"></div></div><div id="template-container"></div><div id="dialog-container"></div><div id="scenario-container"></div></body></html>', {});
+  global.document = jsdom('<!doctype html><html><body><div id="top-bar">topbar</div> <div id="tool-bar">tool-bar</div> <div id="below-tool-bar">below-tool-bar</div> <div id="app"><div id="model-create"></div><div id="model-details"></div></div><div id="template-container"></div><div id="dialog-container"></div><div id="scenario-container"></div> <div id="confirm-dialog-test-holder">topbar</div> </body></html>', {});
 
   /* eslint-enable quotes */
 
@@ -471,6 +471,9 @@
     it("Is possible to confirm", function(done) {
       var confirmDialog = new ConfirmDialog();
 
+      confirmDialog.dialogId = "test";
+
+
       // Call confirm,
       confirmDialog.onConfirm = function() {
         done();
@@ -483,6 +486,8 @@
     it("Is possible to cancel", function(done) {
       var confirmDialog = new ConfirmDialog();
 
+      confirmDialog.dialogId = "test";
+
       // Simple test, see if object exists
       confirmDialog.onCancel = function() {
         done();
@@ -494,8 +499,14 @@
     it("Is possible to show", function(done) {
       var confirmDialog = new ConfirmDialog();
 
+      confirmDialog.dialogId = "test";
+
       // Simple test, see if object exists
-      $("#" + this.dialogId + "-dialog");
+
+      $("#confirm-dialog-test-holder").html("<div id='test-dialog'>dialog</div>");
+      $("#test-dialog").modal = function() {
+        console.log("modal called!");
+      };
 
       confirmDialog.show();
       done();
@@ -505,7 +516,14 @@
     it("Is possible to hide", function(done) {
       var confirmDialog = new ConfirmDialog();
 
-      // Simple test, see if object exists
+      confirmDialog.dialogId = "test";
+
+
+      $("#confirm-dialog-test-holder").html("<div id='test-dialog'>dialog</div>");
+      $("#test-dialog").modal = function() {
+        console.log("modal called!");
+      };
+
       confirmDialog.hide();
 
       done();
@@ -514,6 +532,8 @@
 
     it("Is possible to showAlert", function(done) {
       var confirmDialog = new ConfirmDialog();
+
+      confirmDialog.dialogId = "test";
 
       // Simple test, see if object exists
       confirmDialog.showAlert();
@@ -1949,6 +1969,72 @@
     });
 
 
+    it("Should be possible to publish a model private using Confirm", function(done) {
+
+      var correctReply = false;
+
+      modelDetails = new ModelDetails();
+
+      modelDetails.$parent = {};
+      modelDetails.$parent.$broadcast = function() {
+      };
+
+      modelDetails.$root = {};
+      modelDetails.$root.$broadcast = function() {
+      };
+
+      modelDetails.model.id = 4;
+
+      // Publishlevel 2 = world
+
+      var newPublishLevel = 2;
+      var target = "world";
+
+      // To get dialogs, manually have to create and add them to the component. So that is what we do here:
+      var dialog = new ConfirmDialog();
+
+      dialog.dialogId = "publish";
+      modelDetails.$children.push(dialog);
+
+      // End manual dialog.
+
+
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .post("/api/v1/scenes/" + modelDetails.model.id + "/publish_" + target + "/")
+        .reply(200, function() {
+          correctReply = true;
+          return {};
+        });
+
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 150);
+
+      $("#dialog-container").load("/templates/confirm-dialog.html", function() {
+
+        modelDetails.publishModel(newPublishLevel);
+
+        // Find the dialog:
+        var publishDialog = getDialog(modelDetails, "confirm-dialog", "publish");
+
+        // confirm the dialog:
+        publishDialog.onConfirm();
+      });
+    });
+
+
+
     it("Should be possible to publish a model private", function(done) {
       var correctReply = false;
 
@@ -2907,6 +2993,7 @@
 
       // To test the component in the function, we add it manually.
       var modelDetails = new ModelDetails();
+
       aSearchColumns.$children.push(modelDetails);
 
 
