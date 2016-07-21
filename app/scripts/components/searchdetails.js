@@ -27,89 +27,7 @@ var exports = (function () {
 
 	ready: function() {
 
-  var that = this;
-
-  fetchSearchTemplates().then((templates) => {
-
-
-    if (templates === undefined) {
-      return;
-    }
-
-
-    this.searchTemplates = templates[0];
-
-    this.templates = templates[0].templates;
-
-    var parameters = {};
-
-    // Build list of all variables and assign them to selectedParameters:
-    var variables = _.flatMap(_.flatMap(templates, "sections"), "variables");
-
-    variables.forEach(function(variable) {
-
-      parameters[variable.id] = "";
-
-      if (variable.validators.min !== undefined && variable.validators.max !== undefined) {
-        parameters[variable.id] = variable.validators.min + "," + variable.validators.max;
-      }
-    });
-
-    that.selectedParameters = parameters;
-
-
-    this.$nextTick(
-      function() {
-        // once the dom is updated, update the select pickers by hand
-        // template data is computed into modelEngine
-        $(".select-picker").selectpicker("refresh");
-        $(".select-picker").selectpicker("selectAll");
-
-
-        /*eslint-disable camelcase*/
-        $(".ion-range").ionRangeSlider({
-          force_edges: true,
-          onFinish: () => {
-            // args: data, not used
-            this.startSearch();
-          }
-        });
-        /*eslint-enable camelcase*/
-
-        // Add event handler that allows one to use the X next to inputs to clear the input.
-        $(".button-empty-input-field").on("click", function() {
-
-          // Search up to the div, and then find the input child. This is the actual input field.
-          $(this).closest("div").find("input").val("");
-        });
-
-        // Automatic search:
-        setInterval(
-            // create a callback for every second
-            () => {
-              this.startSearch();
-            },
-            // every 10 seconds
-            10000
-          );
-
-        // Set event handlers for search collapsibles.
-        $(".panel-search").on("show.bs.collapse", function() {
-
-          $(this).find(".glyphicon-triangle-right").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
-        });
-
-        $(".panel-search").on("hide.bs.collapse", function() {
-
-          $(this).find(".glyphicon-triangle-bottom").removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
-
-        });
-
-
-      });
-  });
-
-  $(".select-picker").selectpicker();
+  this.loadSearchTemplates();
 
 },
   computed: {
@@ -170,6 +88,102 @@ var exports = (function () {
   },
 
   methods: {
+
+    loadSearchTemplates: function() {
+
+      var that = this;
+
+      fetchSearchTemplates().then((templates) => {
+
+
+        if (templates === undefined) {
+          return;
+        }
+
+
+        this.searchTemplates = templates[0];
+
+        this.templates = templates[0].templates;
+
+        var parameters = {};
+
+        // Build list of all variables and assign them to selectedParameters:
+        var variables = _.flatMap(_.flatMap(templates, "sections"), "variables");
+
+        variables.forEach(function(variable) {
+
+          parameters[variable.id] = "";
+
+          if (variable.validators.min !== undefined && variable.validators.max !== undefined) {
+            parameters[variable.id] = variable.validators.min + "," + variable.validators.max;
+          }
+        });
+
+        that.selectedParameters = parameters;
+
+
+        this.$nextTick(
+          function() {
+            // once the dom is updated, update the select pickers by hand
+            // template data is computed into modelEngine
+            var pickers = $(".select-picker");
+
+            if (pickers.selectpicker !== undefined) {
+              pickers.selectpicker("refresh");
+              pickers.selectpicker("selectAll");
+            }
+
+
+            /*eslint-disable camelcase*/
+            if ($(".ion-range").ionRangeSlider !== undefined) {
+              $(".ion-range").ionRangeSlider({
+                force_edges: true,
+                onFinish: () => {
+                  // args: data, not used
+                  this.startSearch();
+                }
+              });
+            }
+            /*eslint-enable camelcase*/
+
+            // Add event handler that allows one to use the X next to inputs to clear the input.
+            $(".button-empty-input-field").on("click", function() {
+
+              // Search up to the div, and then find the input child. This is the actual input field.
+              $(this).closest("div").find("input").val("");
+            });
+
+            // Automatic search:
+            setInterval(
+                // create a callback for every second
+                () => {
+                  this.startSearch();
+                },
+                // every 10 seconds
+                10000
+              );
+
+            // Set event handlers for search collapsibles.
+            $(".panel-search").on("show.bs.collapse", function() {
+
+              $(this).find(".glyphicon-triangle-right").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
+            });
+
+            $(".panel-search").on("hide.bs.collapse", function() {
+
+              $(this).find(".glyphicon-triangle-bottom").removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
+
+            });
+
+
+          });
+      });
+
+      if ($(".select-picker").selectpicker !== undefined) {
+        $(".select-picker").selectpicker();
+      }
+
+    },
 
     buildRequest: function() {
       // for now we just copy everything

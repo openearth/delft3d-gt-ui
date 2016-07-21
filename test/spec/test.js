@@ -534,6 +534,40 @@
 
     });
 
+    it("Searchdetails - loadSearchTemplates", function(done) {
+
+      var searchDetails = new SearchDetails();
+      var expectedTemplates = 2; // Number of templates we expected to load.
+
+      nock("http://0.0.0.0")
+        .log(console.log)
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .get("/api/v1/searchforms/")
+        .reply(200, function() {
+
+          return "[{\"id\":1,\"name\":\"MAIN\",\"sections\":[{\"variables\":[{\"validators\":{},\"type\":\"text\",\"id\":\"name\",\"name\":\"Name\"},{\"disabled\":true,\"type\":\"text\",\"id\":\"engine\",\"name\":\"Model Engine\",\"validators\":{}},{\"disabled\":true,\"type\":\"semver\",\"id\":\"version\",\"name\":\"Version\",\"validators\":{}}],\"name\":\"Scenario\"},{\"variables\":[{\"units\":\"days\",\"type\":\"numeric\",\"id\":\"simstoptime\",\"name\":\"Stop time\",\"validators\":{\"max\":160,\"min\":0}},{\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\",\"validators\":{\"max\":2,\"min\":0.5},\"units\":\"days\",\"type\":\"numeric\",\"id\":\"outputinterval\",\"name\":\"Output timestep\"}],\"name\":\"Parameters\"},{\"variables\":[{\"name\":\"Basin slope\",\"validators\":{\"max\":0.3,\"min\":0.01},\"factor\":true,\"units\":\"deg\",\"type\":\"numeric\",\"id\":\"basinslope\"},{\"name\":\"River width\",\"validators\":{\"max\":1000,\"min\":100},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"riverwidth\"}],\"name\":\"Geometry\"},{\"variables\":[{\"name\":\"River discharge\",\"validators\":{\"max\":2000,\"min\":0},\"factor\":true,\"units\":\"mÂ³/s\",\"type\":\"numeric\",\"id\":\"riverdischarge\"},{\"name\":\"Tidal amplitude\",\"validators\":{\"max\":3,\"min\":0},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"tidalamplitude\"}],\"name\":\"Forces\"},{\"variables\":[{\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\",\"id\":\"composition\",\"validators\":{},\"type\":\"select\",\"options\":[{\"text\":\"coarse-sand\",\"value\":\"coarse-sand\"},{\"text\":\"medium-sand\",\"value\":\"medium-sand\"},{\"text\":\"fine-sand\",\"value\":\"fine-sanday\"},{\"text\":\"coarse-silt\",\"value\":\"coarse-silt\"},{\"text\":\"medium-silt\",\"value\":\"medium-silt\"},{\"text\":\"fine-silt\",\"value\":\"fine-silt\"}],\"name\":\"Sediment classes\"}],\"name\":\"Sediment composition\",\"description\":\"Sediment can consist of a mixture of different classes. Read <a href='more'>more</a> about the sediment composition clasess.\"}],\"templates\":[{\"name\":\"Basin fill\",\"id\":3},{\"name\":\"Basin fill with marine reworking\",\"id\":4}]}]";
+        });
+
+      searchDetails.loadSearchTemplates();
+
+      // we expect two replies.
+      window.setTimeout(function() {
+        try {
+          assert.isTrue(searchDetails.templates.length === expectedTemplates, "Did not get expected templates");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
+
+
+
+    });
+
+
     it("Is possible to get modelEngines", function(done) {
       var searchDetails = new SearchDetails();
 
@@ -2375,7 +2409,21 @@
       done();
     });
 
+    it("Check default data", function(done) {
 
+      var aSearchList = new SearchList();
+
+      var defaultInfo = {
+        selectedResultId: -1,
+        keyControlPressed: false
+      };
+
+      /*eslint-disable no-underscore-dangle*/
+      assert.deepEqual(aSearchList._data, defaultInfo, "Match default properties");
+      /*eslint-enable no-underscore-dangle*/
+
+      done();
+    });
 
 
   });
@@ -2575,7 +2623,7 @@
     });
 
 
-    it("Should be possible to load search templates", function(done) {
+    it("Should be possible to load search templates - with data", function(done) {
       var correctReply = false;
 
       nock("http://0.0.0.0")
@@ -2587,7 +2635,7 @@
         .get("/api/v1/searchforms/")
         .reply(200, function() {
           correctReply = true;
-          return {};
+          return "[{\"id\":1,\"name\":\"MAIN\",\"sections\":[{\"variables\":[{\"validators\":{},\"type\":\"text\",\"id\":\"name\",\"name\":\"Name\"},{\"disabled\":true,\"type\":\"text\",\"id\":\"engine\",\"name\":\"Model Engine\",\"validators\":{}},{\"disabled\":true,\"type\":\"semver\",\"id\":\"version\",\"name\":\"Version\",\"validators\":{}}],\"name\":\"Scenario\"},{\"variables\":[{\"units\":\"days\",\"type\":\"numeric\",\"id\":\"simstoptime\",\"name\":\"Stop time\",\"validators\":{\"max\":160,\"min\":0}},{\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\",\"validators\":{\"max\":2,\"min\":0.5},\"units\":\"days\",\"type\":\"numeric\",\"id\":\"outputinterval\",\"name\":\"Output timestep\"}],\"name\":\"Parameters\"},{\"variables\":[{\"name\":\"Basin slope\",\"validators\":{\"max\":0.3,\"min\":0.01},\"factor\":true,\"units\":\"deg\",\"type\":\"numeric\",\"id\":\"basinslope\"},{\"name\":\"River width\",\"validators\":{\"max\":1000,\"min\":100},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"riverwidth\"}],\"name\":\"Geometry\"},{\"variables\":[{\"name\":\"River discharge\",\"validators\":{\"max\":2000,\"min\":0},\"factor\":true,\"units\":\"mÂ³/s\",\"type\":\"numeric\",\"id\":\"riverdischarge\"},{\"name\":\"Tidal amplitude\",\"validators\":{\"max\":3,\"min\":0},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"tidalamplitude\"}],\"name\":\"Forces\"},{\"variables\":[{\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\",\"id\":\"composition\",\"validators\":{},\"type\":\"select\",\"options\":[{\"text\":\"coarse-sand\",\"value\":\"coarse-sand\"},{\"text\":\"medium-sand\",\"value\":\"medium-sand\"},{\"text\":\"fine-sand\",\"value\":\"fine-sanday\"},{\"text\":\"coarse-silt\",\"value\":\"coarse-silt\"},{\"text\":\"medium-silt\",\"value\":\"medium-silt\"},{\"text\":\"fine-silt\",\"value\":\"fine-silt\"}],\"name\":\"Sediment classes\"}],\"name\":\"Sediment composition\",\"description\":\"Sediment can consist of a mixture of different classes. Read <a href='more'>more</a> about the sediment composition clasess.\"}],\"templates\":[{\"name\":\"Basin fill\",\"id\":3},{\"name\":\"Basin fill with marine reworking\",\"id\":4}]}]";
         });
 
       global.fetchSearchTemplates();
@@ -2603,6 +2651,37 @@
       }, 100);
 
     });
+
+
+    it("Should be possible to load search templates - no data", function(done) {
+      var correctReply = false;
+
+      nock("http://0.0.0.0")
+        //.log(console.log)
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .get("/api/v1/searchforms/")
+        .reply(200, function() {
+          correctReply = true;
+          return "";
+        });
+
+      global.fetchSearchTemplates();
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
+
+    });
+
 
 
   });
