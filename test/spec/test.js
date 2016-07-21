@@ -1222,27 +1222,188 @@
     });
 
 
-    it("(todo) Should be possible to stop multiple models (stopruns) - function only check", function(done) {
+    it("Should be possible to stop multiple models (stopruns)", function(done) {
 
-      // For now check if function is ok.
-      assert.isOk(global.stopModels);
+      // When no id's passed, should return false.
+      assert.isFalse(global.stopModels());
       done();
     });
 
-    it("(todo) Should be possible to start multiple models (startModels) - function only check", function(done) {
+    it("hould be possible to start multiple models (startModels)", function(done) {
 
       // For now check if function is ok.
-      assert.isOk(global.startModels);
+      assert.isFalse(global.startModels());
       done();
 
     });
 
-    it("(todo) Should be possible to delete  multiple models (deleteModels) - function only check", function(done) {
+    it("Should be possible to delete  multiple models (deleteModels)", function(done) {
 
       // For now check if function is ok.
-      assert.isOk(global.deleteModels);
+      assert.isFalse(global.deleteModels());
       done();
     });
+
+
+
+    it("Should be possible to stop multiple models (stopruns) - also stop runs", function(done) {
+
+      // Process these ids
+      var ids = [1, 2];
+      var correctCount = 0;
+      var expectedCount = ids.length;
+
+      // Mock the three requests:
+      nock("http://0.0.0.0")
+        // jquery calls OPTIONS first
+        .intercept("/api/v1/scenes/" + ids[0] + "/stop/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+        // Browsers (and jquery) expect the Access-Control-Allow-Origin header
+        .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
+        .put("/api/v1/scenes/" + ids[0] + "/stop/")
+        .reply(200, function() {
+
+          // We got the right reply:
+          correctCount++;
+          return {};
+        })
+        .intercept("/api/v1/scenes/" + ids[1] + "/stop/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+        // Browsers (and jquery) expect the Access-Control-Allow-Origin header
+        .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
+        .put("/api/v1/scenes/" + ids[1] + "/stop/")
+        .reply(200, function() {
+
+          // We got the right reply:
+          correctCount++;
+          return {};
+        })
+       ;
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctCount === expectedCount, "Got all expected replies");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 150);
+
+      global.stopModels(ids);
+
+    });
+
+    it("Should be possible to start multiple models (startModels)  - also startModels runs", function(done) {
+
+      // Process these ids
+      var ids = [1, 2];
+      var correctCount = 0;
+      var expectedCount = ids.length;
+
+      // Mock the three requests:
+      nock("http://0.0.0.0")
+        // jquery calls OPTIONS first
+        .intercept("/api/v1/scenes/" + ids[0] + "/start/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+        // Browsers (and jquery) expect the Access-Control-Allow-Origin header
+        .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
+        .put("/api/v1/scenes/" + ids[0] + "/start/")
+        .reply(200, function() {
+
+          // We got the right reply:
+          correctCount++;
+          return {};
+        })
+        .intercept("/api/v1/scenes/" + ids[1] + "/start/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+        // Browsers (and jquery) expect the Access-Control-Allow-Origin header
+        .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
+        .put("/api/v1/scenes/" + ids[1] + "/start/")
+        .reply(200, function() {
+
+          // We got the right reply:
+          correctCount++;
+          return {};
+        })
+       ;
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctCount === expectedCount, "Got all expected replies");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 150);
+
+      global.startModels(ids);
+
+    });
+
+    it("Should be possible to delete  multiple models (deleteModels)  - also deleteModels runs", function(done) {
+
+// Process these ids
+      var ids = [1, 2];
+      var correctCount = 0;
+      var expectedCount = ids.length;
+
+      // Mock the three requests:
+      nock("http://0.0.0.0")
+        // jquery calls OPTIONS first
+        .intercept("/api/v1/scenes/" + ids[0] + "/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+        // Browsers (and jquery) expect the Access-Control-Allow-Origin header
+        .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
+        .delete("/api/v1/scenes/" + ids[0] + "/")
+        .reply(200, function() {
+
+          // We got the right reply:
+          correctCount++;
+          return {};
+        })
+        .intercept("/api/v1/scenes/" + ids[1] + "/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+        // Browsers (and jquery) expect the Access-Control-Allow-Origin header
+        .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
+        .delete("/api/v1/scenes/" + ids[1] + "/")
+        .reply(200, function() {
+
+          // We got the right reply:
+          correctCount++;
+          return {};
+        })
+       ;
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctCount === expectedCount, "Got all expected replies");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 150);
+
+      global.deleteModels(ids);
+
+    });
+
+
+
 
 
 
@@ -1841,6 +2002,7 @@
       /*eslint-enable camelcase*/
 
       imageAnimation.currentAnimationIndex = 0;
+      imageAnimation.currentAnimationKey = "delta_fringe_images";
 
       imageAnimation.nextImageFrame();
 
@@ -1917,11 +2079,12 @@
        /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
+      imageAnimation.switchAnimation("delta_fringe_images");
       imageAnimation.animationIndex = 0;
       imageAnimation.previousImageFrame();
 
       // We started at 0, so we expect image to go to length -1.
-      assert.isTrue(imageAnimation.animationIndex === imageAnimation.model.info.delta_fringe_images.images.length-1, "Animation frame should have wrapped");
+      assert.isTrue(imageAnimation.animationIndex === imageAnimation.model.info.delta_fringe_images.images.length - 1, "Animation frame should have wrapped");
       done();
     });
 
@@ -1931,6 +2094,8 @@
        /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
+
+      imageAnimation.switchAnimation("delta_fringe_images");
       imageAnimation.gotoFirstFrame();
 
       assert.isTrue(imageAnimation.animationIndex === 0, "Animation frame at 0");
@@ -1943,6 +2108,8 @@
        /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
+
+      imageAnimation.switchAnimation("delta_fringe_images");
       imageAnimation.gotoLastFrame();
 
       assert.isTrue(imageAnimation.animationIndex === imageAnimation.model.info.delta_fringe_images.images.length - 1, "Animation frame at 0");
@@ -2145,17 +2312,30 @@
 
       var aSearchColumns = new SearchColumns();
 
+      // Add fake compnent
+      var modelDetails = new ModelDetails();
+
+      aSearchColumns.$children.push(modelDetails);
 
       var component = aSearchColumns.getChildByName("model-details");
 
-      // We expect null in this case, as the model-details is not loaded.
-      assert.isTrue(component === null);
+      // We expect not null in this case, as the model-details is not loaded.
+      assert.isTrue(component !== null);
 
       done();
     });
 
+    it("Should be possible to call updateCollapsibles", function(done) {
 
-    it("Should be possible to get names of selected models", function(done) {
+      var aSearchColumns = new SearchColumns();
+
+      // We cannot really test the bootstrap events right now.
+      assert.isOk(aSearchColumns.updateCollapsibles, "updateCollapsibles can be called");
+
+      done();
+    });
+
+    it("Should be possible to get names of selected models ", function(done) {
 
       var aSearchColumns = new SearchColumns();
 
@@ -2167,6 +2347,42 @@
       done();
     });
 
+
+    it("Should be possible to get names of selected models with items selected", function(done) {
+
+      var aSearchColumns = new SearchColumns();
+
+      // Names should be empty right now.
+      aSearchColumns.selectedRuns = [1, 2, 3];
+
+
+      aSearchColumns.models = [];
+
+      /*eslint-disable camelcase*/
+      // Add few test items.
+      aSearchColumns.models.push({
+        id: 100,
+        scene_set: [{ id: 1, name: "a"}]
+      });
+
+      aSearchColumns.models.push({
+        id: 101,
+        scene_set: [{ id: 2, name: "b"}]
+      });
+
+      aSearchColumns.models.push({
+        id: 102,
+        scene_set: [{ id: 3, name: "c"}]
+      });
+
+      var names = aSearchColumns.selectedRunNames;
+
+       /*eslint-enable camelcase*/
+
+      assert.isTrue(names === "a,b,c", "selectedrunnames match");
+
+      done();
+    });
 
     // Ignores the selectpicker though.
     it("Should be possible to reset the form fields", function(done) {

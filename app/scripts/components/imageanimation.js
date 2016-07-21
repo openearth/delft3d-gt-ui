@@ -6,7 +6,6 @@ var exports = (function () {
   // The image animation component
   var ImageAnimation = Vue.component("image-animation", {
 
-
     template: "#template-image-animation",
     props: {
      model: {
@@ -95,12 +94,6 @@ var exports = (function () {
 
     },
 
-    events: {
-
-
-
-    },
-
     methods: {
 
       // Switch to the images:
@@ -109,7 +102,6 @@ var exports = (function () {
         this.currentAnimationKey = type;
         this.currentAnimationIndex = 0;
       },
-
 
 
       // For animations:

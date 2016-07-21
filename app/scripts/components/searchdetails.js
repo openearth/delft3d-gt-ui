@@ -242,6 +242,10 @@ var exports = (function () {
             var runCount = 0;
             var visibleScenarios = [];
 
+            // We manually keep track of "shared with world and shared with company" right now, as discussed
+            // this is hardcoded, later on should be done in a better way. We add these at the bottom of the list
+            var fixedScenarios = [];
+
             // Loop through all scenarios and add the runs that are part of it.
             dataScenarios.forEach(function(scenario) {
 
@@ -271,7 +275,15 @@ var exports = (function () {
 
               // We only add scenarios that have atleast one item.
               if (matchingRuns.length > 0) {
-                visibleScenarios.push(scenario);
+
+                // Hardcoded name check to add the items to the list.
+                var name = scenario.name.toLowerCase();
+
+                if (name === "shared with world" || name === "shared with company") {
+                  fixedScenarios.push(scenario);
+                } else {
+                  visibleScenarios.push(scenario);
+                }
 
               }
 
@@ -279,6 +291,12 @@ var exports = (function () {
 
             // Store updated scenario array.
             dataScenarios = visibleScenarios;
+
+            // Add additional fixed scenarios.
+            fixedScenarios.forEach(function(fixedscenario) {
+              dataScenarios.push(fixedscenario);
+            });
+
 
             that.$dispatch("modelsFound", dataScenarios, dataScenarios.length, runCount);
           }
