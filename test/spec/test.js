@@ -16,7 +16,7 @@
   // Create a document
   /* eslint-disable quotes */
 
-  global.document = jsdom('<!doctype html><html><body><div id="app"><div id="model-create"></div><div id="model-details"></div></div><div id="template-container"></div><div id="dialog-container"></div><div id="scenario-container"></div></body></html>', {});
+  global.document = jsdom('<!doctype html><html><body><div id="top-bar">topbar</div> <div id="tool-bar">tool-bar</div> <div id="below-tool-bar">below-tool-bar</div> <div id="app"><div id="model-create"></div><div id="model-details"></div></div><div id="template-container"></div><div id="dialog-container"></div><div id="scenario-container"></div></body></html>', {});
 
   /* eslint-enable quotes */
 
@@ -845,10 +845,10 @@
       done();
     });
 
+
     it("Should be possible to updateFixedToolbarStyle", function(done) {
       var scenarioCreate = new ScenarioCreate({
       });
-
 
       scenarioCreate.updateFixedToolbarStyle();
 
@@ -856,6 +856,7 @@
 
       done();
     });
+
 
     it("Should be possible to call GetTop", function(done) {
       var scenarioCreate = new ScenarioCreate({
