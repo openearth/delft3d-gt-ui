@@ -230,7 +230,6 @@ var exports = (function () {
       // Remove item, based on incoming modelinfo.
       removeModel: function() {
 
-        console.log("Removemodel");
         // keep track of the scenario before deletion
         // Needs to be added soon
         //var scenarioId = this.scenario;
@@ -330,7 +329,6 @@ var exports = (function () {
         this.stopDialog = getDialog(this, "confirm-dialog", "stop");
 
         this.stopDialog.onConfirm = function() {
-          console.log("confirm stop");
 
           stopModel(deletedId)
             .then(() => {
@@ -350,9 +348,6 @@ var exports = (function () {
         };
 
         this.stopDialog.show();
-
-        // Return the dialog so we can use it from other functions.
-        return this.stopDialog;
       },
 
       publishModel: function(index) {

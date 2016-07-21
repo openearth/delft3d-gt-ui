@@ -591,7 +591,6 @@
         .get("/api/v1/scenarios/")
         .query({"search": ""})
         .reply(200, function() {
-          console.log("reply scenarios");
           replyCount++;
           return "[{'id':357,'name':'New Delta Plain Scenario','owner_url':'http://localhost:9000/api/v1/users/500/','template':1,'parameters':{'engine':{'values':['Delft3D Curvilinear'],'name':'Model Engine'},'simstoptime':{'units':'days','values':[60],'name':'Stop time'},'clayvolcomposition':{'units':'%','values':[1],'name':'Clay volumetric composition'},'sandvolcomposition':{'units':'%','values':[1],'name':'Sand volumetric composition'},'version':{'values':['v0.1'],'name':'Version'},'riverdischarge':{'units':'m³/s','values':[1000],'name':'River discharge'},'riverwidth':{'units':'m','values':[555],'name':'River width'},'dt':{'units':'min','values':[1],'name':'Timestep'},'tidalamplitude':{'units':'m','values':[1],'name':'Tidal amplitude'},'outputinterval':{'units':'days','values':[1],'name':'Output timestep','description':'Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.'},'basinslope':{'units':'deg','values':[0.0143],'name':'Basin slope'}},'progress':0,'scene_set':[897]}]";
         });
@@ -604,7 +603,6 @@
         .get("/api/v1/scenes/")
         .query({"search": ""})
         .reply(200, function() {
-          console.log("reply scenes");
           replyCount++;
           return "[{'id':897,'name':'New Delta Plain Scenario: Run 1','state':'INACTIVE','progress':0,'owner':{'id':500,'username':'foo','first_name':'Foo','last_name':'User','email':'foo@bar.com','groups':[42,500]},'shared':'p','suid':'cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e','scenario':[357],'fileurl':'/files/cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e/','info':{'channel_network_images':{'images':[],'location':'process/'},'logfile':{'location':'simulation/','file':''},'delta_fringe_images':{'images':[],'location':'process/'},'procruns':0,'sediment_fraction_images':{'images':[],'location':'process/'}},'parameters':{'engine':{'name':'Model Engine','value':'Delft3D Curvilinear'},'simstoptime':{'units':'days','name':'Stop time','value':60},'clayvolcomposition':{'units':'%','name':'Clay volumetric composition','value':1},'sandvolcomposition':{'units':'%','name':'Sand volumetric composition','value':1},'version':{'name':'Version','value':'v0.1'},'riverdischarge':{'units':'m³/s','name':'River discharge','value':1000},'riverwidth':{'units':'m','name':'River width','value':555},'dt':{'units':'min','name':'Timestep','value':1},'tidalamplitude':{'units':'m','name':'Tidal amplitude','value':1},'outputinterval':{'units':'days','name':'Output timestep','value':1,'description':'Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.'},'basinslope':{'units':'deg','name':'Basin slope','value':0.0143}},'task_id':'afbc3296-1679-450a-8c5e-5b6431c5cf20','workingdir':'/data/container/files/cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e/'}]";
         });
@@ -636,7 +634,7 @@
         .get("/api/v1/scenarios/")
         .query({"search": ""})
         .reply(200, function() {
-          console.log("reply scenarios");
+
           replyCount++;
           return JSON.parse("[{\"id\":357,\"name\":\"New Delta Plain Scenario\",\"owner_url\":\"http://localhost:9000/api/v1/users/500/\",\"template\":1,\"parameters\":{\"engine\":{\"values\":[\"Delft3D Curvilinear\"],\"name\":\"Model Engine\"},\"simstoptime\":{\"units\":\"days\",\"values\":[60],\"name\":\"Stop time\"},\"clayvolcomposition\":{\"units\":\"%\",\"values\":[1],\"name\":\"Clay volumetric composition\"},\"sandvolcomposition\":{\"units\":\"%\",\"values\":[1],\"name\":\"Sand volumetric composition\"},\"version\":{\"values\":[\"v0.1\"],\"name\":\"Version\"},\"riverdischarge\":{\"units\":\"m³/s\",\"values\":[1000],\"name\":\"River discharge\"},\"riverwidth\":{\"units\":\"m\",\"values\":[555],\"name\":\"River width\"},\"dt\":{\"units\":\"min\",\"values\":[1],\"name\":\"Timestep\"},\"tidalamplitude\":{\"units\":\"m\",\"values\":[1],\"name\":\"Tidal amplitude\"},\"outputinterval\":{\"units\":\"days\",\"values\":[1],\"name\":\"Output timestep\",\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"},\"basinslope\":{\"units\":\"deg\",\"values\":[0.0143],\"name\":\"Basin slope\"}},\"progress\":0,\"scene_set\":[897]}]");
         });
@@ -649,7 +647,7 @@
         .get("/api/v1/scenes/")
         .query({"search": ""})
         .reply(200, function() {
-          console.log("reply scenes");
+
           replyCount++;
           return JSON.parse("[{\"id\":897,\"name\":\"New Delta Plain Scenario: Run 1\",\"state\":\"INACTIVE\",\"progress\":0,\"owner\":{\"id\":500,\"username\":\"foo\",\"first_name\":\"Foo\",\"last_name\":\"User\",\"email\":\"foo@bar.com\",\"groups\":[42,500]},\"shared\":\"p\",\"suid\":\"cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e\",\"scenario\":[357],\"fileurl\":\"/files/cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e/\",\"info\":{\"channel_network_images\":{\"images\":[],\"location\":\"process/\"},\"logfile\":{\"location\":\"simulation/\",\"file\":\"\"},\"delta_fringe_images\":{\"images\":[],\"location\":\"process/\"},\"procruns\":0,\"sediment_fraction_images\":{\"images\":[],\"location\":\"process/\"}},\"parameters\":{\"engine\":{\"name\":\"Model Engine\",\"value\":\"Delft3D Curvilinear\"},\"simstoptime\":{\"units\":\"days\",\"name\":\"Stop time\",\"value\":60},\"clayvolcomposition\":{\"units\":\"%\",\"name\":\"Clay volumetric composition\",\"value\":1},\"sandvolcomposition\":{\"units\":\"%\",\"name\":\"Sand volumetric composition\",\"value\":1},\"version\":{\"name\":\"Version\",\"value\":\"v0.1\"},\"riverdischarge\":{\"units\":\"m³/s\",\"name\":\"River discharge\",\"value\":1000},\"riverwidth\":{\"units\":\"m\",\"name\":\"River width\",\"value\":555},\"dt\":{\"units\":\"min\",\"name\":\"Timestep\",\"value\":1},\"tidalamplitude\":{\"units\":\"m\",\"name\":\"Tidal amplitude\",\"value\":1},\"outputinterval\":{\"units\":\"days\",\"name\":\"Output timestep\",\"value\":1,\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"},\"basinslope\":{\"units\":\"deg\",\"name\":\"Basin slope\",\"value\":0.0143}},\"task_id\":\"afbc3296-1679-450a-8c5e-5b6431c5cf20\",\"workingdir\":\"/data/container/files/cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e/\"}]");
         });
@@ -1113,7 +1111,7 @@
         })
         .intercept("/api/v1/scenes/4/start/", "OPTIONS")
         .reply(200, function() {
-          return "content";
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
         })
         .put("/api/v1/scenes/4/start/", {
           workflow: "export"
@@ -1149,7 +1147,7 @@
         // jquery calls OPTIONS first
         .intercept("/api/v1/scenes/4/start/", "OPTIONS")
         .reply(200, function() {
-          return "content";
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
         })
         // Browsers (and jquery) expect the Access-Control-Allow-Origin header
         .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
@@ -1172,52 +1170,70 @@
     });
 
 
-    // Cannot get confirm to work..
-    xit("Should be possible to stop a model", function(done) {
-      var correctReply = true;
+
+    it("Should be possible to stop a model", function(done) {
+      var correctReply = false;
+
+      modelDetails = new ModelDetails();
 
       modelDetails.$parent = {};
       modelDetails.$parent.$broadcast = function() {
       };
 
+      modelDetails.$root = {};
+      modelDetails.$root.$broadcast = function() {
+      };
+
       modelDetails.model.id = 4;
+
+      // To get dialogs, manually have to create and add them to the component. So that is what we do here:
+      var dialog = new ConfirmDialog();
+
+      dialog.dialogId = "stop";
+      modelDetails.$children.push(dialog);
+
+      // End manual dialog.
+
 
       nock("http://0.0.0.0")
         //.log(console.log)
         // jquery calls OPTIONS first
-        .intercept("/api/v1/scenes/4/stop/", "OPTIONS")
+        .intercept("/api/v1/scenes/" + modelDetails.model.id + "/stop/", "OPTIONS")
         .reply(200, function() {
-          console.log("intercept");
-          return "content";
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
         })
         // Browsers (and jquery) expect the Access-Control-Allow-Origin header
         .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
-        .put("/api/v1/scenes/4/stop/", {id: modelDetails.model.id})
+        .put("/api/v1/scenes/" + modelDetails.model.id + "/stop/")
         .reply(200, function() {
-          return "{\"a\":4}";
+
+          // We got the right reply:
+          correctReply = true;
+          return {};
         });
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 150);
 
       $("#dialog-container").load("/templates/confirm-dialog.html", function() {
 
-        console.log("dialog template loaded");
-        var stopDialog = modelDetails.stopModel();
+        modelDetails.stopModel();
 
-        console.log(stopDialog);
+        // Find the dialog:
+        var stopDialog = getDialog(modelDetails, "confirm-dialog", "stop");
 
         // confirm the dialog:
         stopDialog.onConfirm();
-
-        // Make sure the nock server had the time to reply
-        window.setTimeout(function() {
-          try {
-            assert(correctReply === true, "Nock server did not reach reply");
-            done();
-          } catch (e) {
-            done(e);
-          }
-        }, 150);
       });
     });
+
 
 
     it("Should be possible to change download options", function(done) {
@@ -1300,16 +1316,73 @@
     });
 
 
+    it("Should be possible to publish a model private using Confirm", function(done) {
 
-
-
-
-    it("Should be possible to publish a model private", function(done) {
       var correctReply = false;
+
+      modelDetails = new ModelDetails();
 
       modelDetails.$parent = {};
       modelDetails.$parent.$broadcast = function() {
       };
+
+      modelDetails.$root = {};
+      modelDetails.$root.$broadcast = function() {
+      };
+
+      modelDetails.model.id = 4;
+
+      // Publishlevel 2 = world
+
+      var newPublishLevel = 2;
+      var target = "world";
+
+      // To get dialogs, manually have to create and add them to the component. So that is what we do here:
+      var dialog = new ConfirmDialog();
+
+      dialog.dialogId = "publish";
+      modelDetails.$children.push(dialog);
+
+      // End manual dialog.
+
+
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .post("/api/v1/scenes/" + modelDetails.model.id + "/publish_" + target + "/")
+        .reply(200, function() {
+          correctReply = true;
+          return {};
+        });
+
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 150);
+
+      $("#dialog-container").load("/templates/confirm-dialog.html", function() {
+
+        modelDetails.publishModel(newPublishLevel);
+
+        // Find the dialog:
+        var publishDialog = getDialog(modelDetails, "confirm-dialog", "publish");
+
+        // confirm the dialog:
+        publishDialog.onConfirm();
+      });
+    });
+
+
+    it("Should be possible to publish a model private", function(done) {
+      var correctReply = false;
 
       var modelToPublishId = 4;
       var target = "private";
@@ -1571,46 +1644,67 @@
     });
 
 
-    xit("Should be possible to REMOVE a model", function(done) {
+    it("Should be possible to REMOVE a model", function(done) {
+      var correctReply = false;
 
-      var aModelDetails = new ModelDetails();
+      modelDetails = new ModelDetails();
 
-      // Try to remove this:
-      aModelDetails.model.id = 1;
+      modelDetails.$parent = {};
+      modelDetails.$parent.$broadcast = function() {
+      };
+
+      modelDetails.$root = {};
+      modelDetails.$root.$broadcast = function() {
+      };
+
+      modelDetails.model.id = 4;
+
+      // To get dialogs, manually have to create and add them to the component. So that is what we do here:
+      var dialog = new ConfirmDialog();
+
+      dialog.dialogId = "delete";
+      modelDetails.$children.push(dialog);
+
+      // End manual dialog.
+
+
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .intercept("/api/v1/scenes/" + modelDetails.model.id + "/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+        .delete("/api/v1/scenes/" + modelDetails.model.id + "/")
+        .reply(200, function() {
+          correctReply = true;
+          return {};
+        });
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 150);
 
 
       $("#dialog-container").load("/templates/confirm-dialog.html", function() {
-        aModelDetails.removeModel();
+
+        var deleteDialog = getDialog(modelDetails, "confirm-dialog", "delete");
+
+
+        modelDetails.removeModel();
+
+        // confirm the dialog:
+        deleteDialog.onConfirm();
       });
-
-
-      var componentName = "confirm-dialog";
-      var dialogId = "delete";
-
-      // Find created dialog:
-      function getConfirmDialog() {
-
-        for(var i = 0; i < aModelDetails.$children.length; i++) {
-          // Check if name matches:
-          if (aModelDetails.$children[i].$options.name === componentName) {
-            var dialog = aModelDetails.$children[i];
-
-            if (dialog.dialogId === dialogId) {
-              return aModelDetails.$children[i];
-            }
-          }
-        }
-      }
-
-      var confirm = getConfirmDialog();
-
-      confirm.onConfirm();
-
-
-      done();
-
     });
-
 
 
   });

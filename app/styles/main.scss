@@ -96,9 +96,9 @@ $color-right-column-background: #fff;
 // Truncate a line of text with elli...
 @mixin truncate {
 
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 // Disable text selection of element(s)
@@ -246,18 +246,18 @@ input[type=date].form-control {
   }
 
   .scenario-info {
-    padding: 4px 4px 8px 8px;
     border-bottom: 1px solid $scenario-info-border;
     min-height: 64px;
+    padding: 4px 4px 8px 8px;
   }
 
   .run {
+    background-color: $white;
     border-bottom: 1px solid $white;
     color: $black;
-    background-color: $white;
-    position: relative;
-    padding: 4px 4px 8px 8px;
     min-height: 64px;
+    padding: 4px 4px 8px 8px;
+    position: relative;
 
     &:hover {
       background-color: darken($white, 2%);
@@ -265,31 +265,31 @@ input[type=date].form-control {
   }
 
   .matched-vars {
-    margin-top: 14px;
     margin-bottom: 0;
+    margin-top: 14px;
   }
 
   .progress-holder {
-    width: 85px;
 
     float: right;
-    text-align: left;
     font-size: 10px;
     font-weight: 800;
     margin-right: 32px;
+    text-align: left;
+    width: 85px;
 
     .progress {
-      margin-bottom: 0;
       background-color: $dark-gray;
       height: 6px;
+      margin-bottom: 0;
     }
 
     .progress-bar {
       //-webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
-      box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
       //-webkit-transition: width .6s ease;
-      transition: width .6s ease;
       background-color: $progress-bar-color;
+      box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
+      transition: width .6s ease;
     }
 
 
@@ -298,13 +298,13 @@ input[type=date].form-control {
 
 
   .badge {
-    background-color: transparent;
 
+
+    background-color: transparent;
     border-radius: 8px;
-    font-size: 10px;
     border: 1px solid $badge-color-unselected;
     color: $badge-color-unselected;
-
+    font-size: 10px;
     height: 18px;
     line-height: 10px;
     vertical-align: middle;
@@ -312,13 +312,12 @@ input[type=date].form-control {
 
   .share-status {
 
-    height: 21px;
-    width: 21px;
-    text-align: left;
-
     display: inline-block;
+    height: 21px;
     margin-left: 4px;
+    text-align: left;
     vertical-align: bottom;
+    width: 21px;
 
 
     background-repeat: no-repeat;
@@ -341,8 +340,8 @@ input[type=date].form-control {
   // Arrow shown at right of list
   .arrow-right {
     position: absolute;
-    top:32px;
     right: 8px;
+    top:32px;
   }
 
   .scenario.selected {
@@ -373,20 +372,15 @@ input[type=date].form-control {
     }
 
     .badge {
-      color: $white;
       border: 1px solid $white;
+      color: $white;
     }
 
-    &:hover
-    {
+    &:hover {
       background-color: lighten($scenario-selected-background, 2%);
     }
 
   }
-
-
-
-
 }
 
 
@@ -452,9 +446,9 @@ input[type=date].form-control {
 }
 
 .heading-bar {
+  font-weight: 600;
   height: 32px;
   line-height: 32px;
-  font-weight: 600;
 }
 
 // Force truncate of long names in right detail panel.
@@ -477,16 +471,15 @@ input[type=date].form-control {
 
     &.nav-bar-button {
 
-      height: 28px;
-      margin: 2px;
       background-color: $navigation-button-background;
+      border: 0;
       color: $white;
       font-weight: normal;
-      border: 0;
+      height: 28px;
+      margin: 2px;
     }
 
-    &.default
-    {
+    &.default {
       background-color: $navigation-button-background-default;
     }
   }
@@ -670,8 +663,6 @@ input[type=date].form-control {
   white-space: pre-line;
   word-break: normal;
   word-wrap: normal;
-
-
 }
 
 
@@ -915,8 +906,8 @@ section {
   .slider {
 
     .irs {
-      margin-right: 6px;
       height: 30px;
+      margin-right: 6px;
     }
 
     .irs-line,
@@ -949,10 +940,8 @@ section {
   }
 
   .control-label, label {
-
-    font-weight: normal;
     font-size: 11px;
-
+    font-weight: normal;
   }
 
 
@@ -968,14 +957,14 @@ section {
      // Hide the actual checkbox.
     input[type=checkbox] {
       display: none;
-      width: 62px;
       height: 62px;
+      width: 62px;
     }
 
     .domain-selection-box {
       display: inline-block;
-      margin-right: 6px;
       float: left;
+      margin-right: 6px;
 
       // Last child does not have any right margin!
       &:last-child {
@@ -987,18 +976,17 @@ section {
     // Style when unchecked. Note: Label MUST follow immediately after the input element.
     input[type=checkbox] + label {
 
-      cursor: pointer;
-      display: block;
-      width: 62px;
-      height: 62px;
+      background-color: $white;
       background-position: center center;
       background-repeat: no-repeat;
-      background-color: $white;
-      text-align: center;
-      font-size: 12px;
       color: $black;
+      cursor: pointer;
+      display: block;
+      font-size: 12px;
+      height: 62px;
       padding-top: 44px;
-
+      text-align: center;
+      width: 62px;
 
       &:hover {
         background-color: lighten($white, 5%);
@@ -1046,15 +1034,15 @@ section {
 
 .search-date-input {
 
-  width: 80px;
   float:left;
+  width: 80px;
 }
 
 .search-date-label {
-  vertical-align: middle;
   float: left;
   line-height: 32px;
   margin: 0 4px 0 4px;
+  vertical-align: middle;
 }
 
 
@@ -1112,38 +1100,38 @@ section {
   // Dimensions of the handles
   .to, .from {
     background-color: $white;
-    width: 20px;
-    height: 20px;
     border-radius: 10px;
     border: 1px solid $slider-handle-border;
+    height: 20px;
     top: 16px;
+    width: 20px;
   }
 
   // Horizontal background bar.
   .irs-line span{
-    height: 4px;
-    background: none;
     background-color: $dark-gray;
+    background: none;
+    height: 4px;
   }
 }
 
 
 .stylish-input-group .input-group-addon {
   background: white;
+  color: $dark-gray;
   min-width: initial;
   padding: 6px 2px 6px 2px;
-  color: $dark-gray;
 }
 
 .stylish-input-group .form-control {
+  border-color: $dark-gray;
   border-right:0;
   box-shadow: 0 0 0;
-  border-color: $dark-gray;
 }
 
 .stylish-input-group button {
-  border: 0;
   background: transparent;
+  border: 0;
 }
 
 .model-details {
@@ -1164,8 +1152,8 @@ section {
   .panel {
     //-webkit-box-shadow: none;
     //-moz-box-shadow: none;
-    box-shadow: none;
     border: 0;
+    box-shadow: none;
     padding: 4px;
   }
 
@@ -1237,8 +1225,8 @@ section {
 }
 
 .publish-level {
-  transition-property: all;
   transition-duration: 500ms;
+  transition-property: all;
   transition-timing-function: ease-in;
 }
 
@@ -1275,8 +1263,8 @@ section {
   }
 
   .search-details .domain-search-boxes input[type=checkbox] + label {
-    width: 42px;
     height: 42px;
+    width: 42px;
    }
 
    // Hide the results information screen (how many results we got) - it's fairly big, and removing it makes space for the buttons on the navbar.
