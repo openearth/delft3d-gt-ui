@@ -69,13 +69,13 @@ $color-right-column-background: #fff;
 
 $shadow-color: rgba(0, 0, 0, .15);
 
-$world-scenario-item-background: #CFF09E;
-$world-scenario-selected-border: #79BD9A;
-$world-scenario-item-selected-background: #79BD9A;
+$world-scenario-item-background: $scenario-item-background;
+$world-scenario-selected-border: $scenario-selected-border;
+$world-scenario-item-selected-background: $scenario-selected-background;
 
-$company-scenario-item-background: #E9E4DE;
-$company-scenario-selected-border: #7A6A61;
-$company-scenario-item-selected-background: #7A6A61;
+$company-scenario-item-background: $scenario-item-background;
+$company-scenario-selected-border: $scenario-selected-border;
+$company-scenario-item-selected-background: $scenario-selected-background;
 
 
 /* This part is wiredepped
