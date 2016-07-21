@@ -36,10 +36,8 @@ var exports = (function () {
       return;
     }
 
-    console.log("loading search");
-  //  console.log(templates.sections);
-    this.searchTemplates = templates[0];
 
+    this.searchTemplates = templates[0];
 
     this.templates = templates[0].templates;
 
@@ -61,54 +59,54 @@ var exports = (function () {
 
 
     this.$nextTick(
-          function() {
-            // once the dom is updated, update the select pickers by hand
-            // template data is computed into modelEngine
-            $(".select-picker").selectpicker("refresh");
-            $(".select-picker").selectpicker("selectAll");
+      function() {
+        // once the dom is updated, update the select pickers by hand
+        // template data is computed into modelEngine
+        $(".select-picker").selectpicker("refresh");
+        $(".select-picker").selectpicker("selectAll");
 
 
-            /*eslint-disable camelcase*/
-            $(".ion-range").ionRangeSlider({
-              force_edges: true,
-              onFinish: () => {
-                // args: data, not used
-                this.startSearch();
-              }
-            });
-            /*eslint-enable camelcase*/
+        /*eslint-disable camelcase*/
+        $(".ion-range").ionRangeSlider({
+          force_edges: true,
+          onFinish: () => {
+            // args: data, not used
+            this.startSearch();
+          }
+        });
+        /*eslint-enable camelcase*/
 
-            // Add event handler that allows one to use the X next to inputs to clear the input.
-            $(".button-empty-input-field").on("click", function() {
+        // Add event handler that allows one to use the X next to inputs to clear the input.
+        $(".button-empty-input-field").on("click", function() {
 
-              // Search up to the div, and then find the input child. This is the actual input field.
-              $(this).closest("div").find("input").val("");
-            });
+          // Search up to the div, and then find the input child. This is the actual input field.
+          $(this).closest("div").find("input").val("");
+        });
 
-            // Automatic search:
-            setInterval(
-                // create a callback for every second
-                () => {
-                  this.startSearch();
-                },
-                // every 10 seconds
-                10000
-              );
+        // Automatic search:
+        setInterval(
+            // create a callback for every second
+            () => {
+              this.startSearch();
+            },
+            // every 10 seconds
+            10000
+          );
 
-            // Set event handlers for search collapsibles.
-            $(".panel-search").on("show.bs.collapse", function() {
+        // Set event handlers for search collapsibles.
+        $(".panel-search").on("show.bs.collapse", function() {
 
-              $(this).find(".glyphicon-triangle-right").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
-            });
+          $(this).find(".glyphicon-triangle-right").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
+        });
 
-            $(".panel-search").on("hide.bs.collapse", function() {
+        $(".panel-search").on("hide.bs.collapse", function() {
 
-              $(this).find(".glyphicon-triangle-bottom").removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
+          $(this).find(".glyphicon-triangle-bottom").removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
 
-            });
+        });
 
 
-          });
+      });
   });
 
   $(".select-picker").selectpicker();

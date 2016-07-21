@@ -505,6 +505,35 @@
 
   describe("Search details", function() {
 
+
+    it("Does Searchdetails have the initial values", function(done) {
+
+      var searchDetails = new SearchDetails();
+      var defaultData = {
+        selectedTemplates: [],
+
+        // Fixed properties
+        templates: [],
+        shared: [],
+        startDate: null,
+        endDate: null,
+        search: "",
+
+        // This object will variables received from the templates.
+        selectedParameters: { },
+
+        // Template used for searching (probably always one)
+        searchTemplates: []
+      };
+
+      /*eslint-disable no-underscore-dangle*/
+      assert.deepEqual(searchDetails._data, defaultData, "Match default properties");
+      /*eslint-enable no-underscore-dangle*/
+
+      done();
+
+    });
+
     it("Is possible to get modelEngines", function(done) {
       var searchDetails = new SearchDetails();
 
@@ -823,7 +852,7 @@
     });
 
 
-    it("Should be possible to updte with query parameters", function(done) {
+    it("Should be possible to update with query parameters", function(done) {
       var scenarioCreate = new ScenarioCreate();
 
       scenarioCreate.updateWithQueryParameters();
@@ -837,6 +866,21 @@
     it("Should be possible to submit a scenario", function(done) {
       var scenarioCreate = new ScenarioCreate();
 
+      // Set some vars:
+      scenarioCreate.prepareScenarioConfig({
+        "sections": [
+          {
+            "variables": [
+              {
+                id: "var1",
+                default: 0,
+                factor: true
+              }
+            ]
+          }
+        ]
+      });
+
       scenarioCreate.submitScenario();
 
       assert.isOk(scenarioCreate.scenarioConfig);
@@ -844,6 +888,14 @@
       done();
     });
 
+
+    it("Should be possible to call updateAfterTick", function(done) {
+      var scenarioCreate = new ScenarioCreate();
+
+      assert.isOk(scenarioCreate.updateAfterTick);
+
+      done();
+    });
 
     it("Should be possible to prepare a scenario", function(done) {
       var scenarioCreate = new ScenarioCreate();
@@ -942,6 +994,7 @@
       var correctReply = false;
 
 
+
       nock("http://0.0.0.0")
       .defaultReplyHeaders({
         "Content-Type": "application/json",
@@ -950,7 +1003,7 @@
       .get("/api/v1/templates/")
       .reply(200, function() {
         correctReply = true;
-        return {};
+        return "[{\"id\":50,\"name\":\"Basin fill\",\"meta\":{\"description\":\"A river dominated and tidal influenced delta (no waves). No specific location. This is a delta like the Mississipi delta or the Mahakam river delta on East Kalimantan.\",\"creator\":\"fedor.baart@deltares.nl\"},\"sections\":[{\"variables\":[{\"default\":\"Basin Fill Scenario\",\"type\":\"text\",\"id\":\"name\",\"name\":\"Name\",\"validators\":{\"required\":true}},{\"name\":\"Model Engine\",\"default\":\"Delft3D Curvilinear\",\"disabled\":true,\"validators\":{\"required\":true},\"type\":\"text\",\"id\":\"engine\"},{\"name\":\"Version\",\"default\":\"v0.1\",\"disabled\":true,\"validators\":{\"required\":true},\"type\":\"semver\",\"id\":\"version\"}],\"name\":\"Scenario\"},{\"variables\":[{\"name\":\"Stop time\",\"default\":60,\"validators\":{\"max\":160,\"required\":true,\"min\":0},\"units\":\"days\",\"type\":\"numeric\",\"id\":\"simstoptime\"},{\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\",\"default\":1,\"validators\":{\"max\":2,\"required\":true,\"min\":0.5},\"units\":\"days\",\"type\":\"numeric\",\"id\":\"outputinterval\",\"name\":\"Output timestep\"}],\"name\":\"Parameters\"},{\"variables\":[{\"name\":\"Basin slope\",\"default\":0.0143,\"validators\":{\"max\":0.3,\"required\":true,\"min\":0.01},\"factor\":true,\"units\":\"deg\",\"type\":\"numeric\",\"id\":\"basinslope\"},{\"name\":\"River width\",\"default\":300,\"validators\":{\"max\":1000,\"required\":true,\"min\":100},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"riverwidth\"}],\"name\":\"Geometry\"},{\"variables\":[{\"name\":\"River discharge\",\"default\":1000,\"validators\":{\"max\":2000,\"required\":true,\"min\":0},\"factor\":true,\"units\":\"mÂ³/s\",\"type\":\"numeric\",\"id\":\"riverdischarge\"},{\"name\":\"Tidal amplitude\",\"default\":1,\"validators\":{\"max\":3,\"required\":true,\"min\":0},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"tidalamplitude\"}],\"name\":\"Forces\"},{\"variables\":[{\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\",\"default\":\"medium-sand\",\"id\":\"composition\",\"validators\":{},\"type\":\"select\",\"options\":[{\"text\":\"coarse-sand\",\"value\":\"coarse-sand\"},{\"text\":\"medium-sand\",\"value\":\"medium-sand\"},{\"text\":\"fine-sand\",\"value\":\"fine-sanday\"},{\"text\":\"coarse-silt\",\"value\":\"coarse-silt\"},{\"text\":\"medium-silt\",\"value\":\"medium-silt\"},{\"text\":\"fine-silt\",\"value\":\"fine-silt\"}],\"name\":\"Sediment classes\"}],\"name\":\"Sediment composition\",\"description\":\"Sediment can consist of a mixture of different classes. Read <a href='more'>more</a> about the sediment composition clasess.\"}]},{\"id\":51,\"name\":\"Basin fill with marine reworking\",\"meta\":{\"description\":\"A river or tide dominated delta with wind waves as a marine reworking force\",\"creator\":\"liang.li@tudelft.nl\"},\"sections\":[{\"variables\":[{\"default\":\"Basin Fill with Marine Reworking Scenario\",\"type\":\"text\",\"id\":\"name\",\"name\":\"Name\",\"validators\":{\"required\":true}},{\"name\":\"Model Engine\",\"default\":\"Delft3D Curvilinear\",\"disabled\":true,\"validators\":{\"required\":true},\"type\":\"text\",\"id\":\"engine\"},{\"name\":\"Version\",\"default\":\"v0.1\",\"disabled\":true,\"validators\":{\"required\":true},\"type\":\"semver\",\"id\":\"version\"}],\"name\":\"Scenario\"},{\"variables\":[{\"name\":\"Stop time\",\"default\":60,\"validators\":{\"max\":160,\"required\":true,\"min\":0},\"units\":\"days\",\"type\":\"numeric\",\"id\":\"simstoptime\"},{\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\",\"default\":1,\"validators\":{\"max\":2,\"required\":true,\"min\":0.5},\"units\":\"days\",\"type\":\"numeric\",\"id\":\"outputinterval\",\"name\":\"Output timestep\"}],\"name\":\"Parameters\"},{\"variables\":[{\"name\":\"Basin slope\",\"default\":0.0143,\"validators\":{\"max\":0.3,\"required\":true,\"min\":0.01},\"factor\":true,\"units\":\"deg\",\"type\":\"numeric\",\"id\":\"basinslope\"},{\"name\":\"River width\",\"default\":300,\"validators\":{\"max\":1000,\"required\":true,\"min\":100},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"riverwidth\"}],\"name\":\"Geometry\"},{\"variables\":[{\"name\":\"River discharge\",\"default\":1000,\"validators\":{\"max\":2000,\"required\":true,\"min\":0},\"factor\":true,\"units\":\"mÂ³/s\",\"type\":\"numeric\",\"id\":\"riverdischarge\"},{\"name\":\"Tidal amplitude\",\"default\":1,\"validators\":{\"max\":3,\"required\":true,\"min\":0},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"tidalamplitude\"}],\"name\":\"Forces\"},{\"variables\":[{\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\",\"default\":\"medium-sand\",\"id\":\"composition\",\"validators\":{},\"type\":\"select\",\"options\":[{\"text\":\"coarse-sand\",\"value\":\"coarse-sand\"},{\"text\":\"medium-sand\",\"value\":\"medium-sand\"},{\"text\":\"fine-sand\",\"value\":\"fine-sanday\"},{\"text\":\"coarse-silt\",\"value\":\"coarse-silt\"},{\"text\":\"medium-silt\",\"value\":\"medium-silt\"},{\"text\":\"fine-silt\",\"value\":\"fine-silt\"}],\"name\":\"Sediment classes\"}],\"name\":\"Sediment composition\",\"description\":\"Sediment can consist of a mixture of different classes. Read <a href='more'>more</a> about the sediment composition clasess.\"}]},{\"id\":52,\"name\":\"Testing template\",\"meta\":{\"description\":\"A river dominated and tidal influenced delta (no waves). No specific location. This is a delta like the Mississipi delta or the Mahakam river delta on East Kalimantan.\",\"creator\":\"fedor.baart@deltares.nl\"},\"sections\":[{\"variables\":[{\"default\":\"Test Basin Fill Scenario\",\"type\":\"text\",\"id\":\"name\",\"name\":\"Name\",\"validators\":{\"required\":true}},{\"name\":\"Timestep\",\"default\":2,\"validators\":{\"max\":20,\"required\":true,\"min\":0.5},\"units\":\"min\",\"type\":\"numeric\",\"id\":\"dt\"},{\"name\":\"Model Engine\",\"default\":\"Delft3D Curvilinear\",\"disabled\":true,\"validators\":{\"required\":true},\"type\":\"text\",\"id\":\"engine\"},{\"name\":\"Version\",\"default\":\"v0.1\",\"disabled\":true,\"validators\":{\"required\":true},\"type\":\"semver\",\"id\":\"version\"}],\"name\":\"Scenario\"},{\"variables\":[{\"name\":\"Stop time\",\"default\":60,\"validators\":{\"max\":160,\"required\":true,\"min\":0},\"units\":\"days\",\"type\":\"numeric\",\"id\":\"simstoptime\"},{\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\",\"default\":1,\"validators\":{\"max\":2,\"required\":true,\"min\":0.5},\"units\":\"days\",\"type\":\"numeric\",\"id\":\"outputinterval\",\"name\":\"Output timestep\"}],\"name\":\"Parameters\"},{\"variables\":[{\"name\":\"Basin slope\",\"default\":0.0143,\"validators\":{\"max\":0.3,\"required\":true,\"min\":0.01},\"factor\":true,\"units\":\"deg\",\"type\":\"numeric\",\"id\":\"basinslope\"},{\"name\":\"River width\",\"default\":300,\"validators\":{\"max\":1000,\"required\":true,\"min\":100},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"riverwidth\"}],\"name\":\"Geometry\"},{\"variables\":[{\"name\":\"River discharge\",\"default\":1000,\"validators\":{\"max\":2000,\"required\":true,\"min\":0},\"factor\":true,\"units\":\"mÂ³/s\",\"type\":\"numeric\",\"id\":\"riverdischarge\"},{\"name\":\"Tidal amplitude\",\"default\":1,\"validators\":{\"max\":3,\"required\":true,\"min\":0},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"tidalamplitude\"}],\"name\":\"Forces\"},{\"variables\":[{\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\",\"default\":\"medium-sand\",\"id\":\"composition\",\"validators\":{},\"type\":\"select\",\"options\":[{\"text\":\"coarse-sand\",\"value\":\"coarse-sand\"},{\"text\":\"medium-sand\",\"value\":\"medium-sand\"},{\"text\":\"fine-sand\",\"value\":\"fine-sanday\"},{\"text\":\"coarse-silt\",\"value\":\"coarse-silt\"},{\"text\":\"medium-silt\",\"value\":\"medium-silt\"},{\"text\":\"fine-silt\",\"value\":\"fine-silt\"}],\"name\":\"Sediment classes\"}],\"name\":\"Sediment composition\",\"description\":\"Sediment can consist of a mixture of different classes. Read <a href='more'>more</a> about the sediment composition clasess.\"}]}]";
       });
 
       scenarioCreate.fetchTemplateList();
@@ -959,6 +1012,8 @@
       window.setTimeout(function() {
         try {
           assert(correctReply === true, "Nock server did not reach reply");
+
+
           done();
         } catch (e) {
           done(e);
@@ -1959,6 +2014,31 @@
     imageAnimation.model = { };
 
 
+
+    it("Does ImageAnimation have the initial values", function(done) {
+
+      var defaultData = {
+        // Current animation frame:
+        currentAnimationIndex: 0,
+
+        // timer id for animation.
+        timerAnimation: -1,
+
+        // Which imagelist are we currently watching?
+        currentAnimationKey: "delta_fringe_images",
+
+        isAnimating: false
+      };
+
+      /*eslint-disable no-underscore-dangle*/
+      assert.deepEqual(imageAnimation._data, defaultData, "Match default properties");
+      /*eslint-enable no-underscore-dangle*/
+
+      done();
+
+    });
+
+
     it("Does ImageAnimation have the right default 'props'", function(done) {
 
 
@@ -2054,12 +2134,29 @@
       done();
     });
 
+    it("Should be possible to check animationFrame property - empty", function(done) {
+
+       /*eslint-disable camelcase*/
+      imageAnimation.model.info = { delta_fringe_images: { location: "location/", images: ["firstframe.jpg", "lastframe.jpg"] } };
+      /*eslint-enable camelcase*/
+      imageAnimation.model.fileurl = "fileurl/";
+      imageAnimation.currentAnimationKey = "";
+
+      var imgurl = imageAnimation.animationFrame;
+
+      assert.isTrue(imgurl === "", "Animation frame file matches expectation");
+
+      done();
+    });
+
+
     it("Should be possible to check frameCount property", function(done) {
 
       // We should not have any frames in this animation object, but maybe make sure later on?
        /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
+      imageAnimation.currentAnimationKey = "delta_fringe_images";
       assert.isTrue(imageAnimation.frameCount === imageAnimation.model.info.delta_fringe_images.images.length, "Animation framecount should not be 0");
       done();
     });
