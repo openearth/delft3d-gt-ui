@@ -77,7 +77,6 @@
   // used by other component
   global.ModelDetails = ModelDetails;
 
-  var ModelCreate = require("../../app/scripts/components/modelcreate.js").ModelCreate;
 
   // used by other component
   var ScenarioCreate = require("../../app/scripts/components/scenariobuilder.js").ScenarioCreate;
@@ -375,14 +374,6 @@
   });
 
   describe("Components", function() {
-    it("Is possible to instantiate component ModelCreate", function(done) {
-
-      var modelCreate = new ModelCreate({
-      });
-
-      assert.isOk(modelCreate);
-      done();
-    });
 
     it("Is possible to instantiate component ModelDetails", function(done) {
       var modelDetails = new ModelDetails({
@@ -1820,10 +1811,15 @@
 
 
 
-
     it("Should be possible to stop image frames", function(done) {
 
+      // Fake a timer interval:
+      imageAnimation.timerAnimation = 2;
+
       imageAnimation.stopImageFrame();
+
+      assert.isTrue(imageAnimation.timerAnimation === -1, "timeranimation id should have become -1");
+
       done();
 
     });
@@ -1831,12 +1827,26 @@
     it("Should be possible to play image frames the imageFrame", function(done) {
 
       imageAnimation.playImageFrame();
+
+      assert.isTrue(imageAnimation.timerAnimation !== -1, "timeranimation id should not be -1");
+
       done();
 
     });
 
-    it("Should be possible to change the imageFrame", function(done) {
+    it("Should be possible to change to next imageFrame", function(done) {
+
+      /*eslint-disable camelcase*/
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      /*eslint-enable camelcase*/
+
+      imageAnimation.currentAnimationIndex = 0;
+
       imageAnimation.nextImageFrame();
+
+      // Next frame should have brought to the next frame.
+      assert.isTrue(imageAnimation.animationIndex === 1, "Animation frame at 1");
+
       done();
     });
 
@@ -1888,7 +1898,7 @@
        /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
-      assert.isTrue(imageAnimation.frameCount === imageAnimation.model.info.delta_fringe_images.images.length, "Animation framecount should be 0");
+      assert.isTrue(imageAnimation.frameCount === imageAnimation.model.info.delta_fringe_images.images.length, "Animation framecount should not be 0");
       done();
     });
 
@@ -1898,6 +1908,20 @@
       // We should not have any frames in this animation object, but maybe make sure later on?
       imageAnimation.switchAnimation("delta_fringe_images");
 
+      done();
+    });
+
+    it("Should be possible to previousImageFrame", function(done) {
+
+      // index should become 0
+       /*eslint-disable camelcase*/
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      /*eslint-enable camelcase*/
+      imageAnimation.animationIndex = 0;
+      imageAnimation.previousImageFrame();
+
+      // We started at 0, so we expect image to go to length -1.
+      assert.isTrue(imageAnimation.animationIndex === imageAnimation.model.info.delta_fringe_images.images.length-1, "Animation frame should have wrapped");
       done();
     });
 
