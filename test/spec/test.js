@@ -742,7 +742,7 @@
     });
   });
 
-  describe("Scenario builder", function() {
+  describe("SScenarioCreate - cenario builder", function() {
 
     it("Should be possible to convert a single value to a tag array", function(done) {
       var array = factorToArray({
@@ -982,7 +982,7 @@
 
       // fake the router
       scenarioCreate.$route = {};
-      console.log("route", scenarioCreate.$route);
+
       scenarioCreate.$route.query = {
         name: "test"
       };
@@ -1020,6 +1020,7 @@
       assert.isOk(scenarioCreate);
       done();
     });
+
 
     // Test if we can fetc htemplates through scenario builder
     // Later on it should maybe really use fake JSON to build scenarios.
@@ -2293,7 +2294,7 @@
       done();
     });
 
-    it("Should be possible get selected scenarios", function(done) {
+    it("Should be possible get selected runs", function(done) {
 
       // Add an artificial sene with a model in scene_set with id 1.
       var aSearchList = new SearchList();
@@ -2312,6 +2313,24 @@
       done();
     });
 
+    it("Should be possible get selected runs - none selected", function(done) {
+
+      // Add an artificial sene with a model in scene_set with id 1.
+      var aSearchList = new SearchList();
+
+      aSearchList.models = [];
+
+       /*eslint-disable camelcase*/
+      aSearchList.models.push({id: 123, scene_set: [{ id: 1}]});
+       /*eslint-enable camelcase*/
+
+      aSearchList.selectedRuns = []; // Assume we test #1
+
+      var models = aSearchList.selectedModels;
+
+      assert.isTrue((models.length === 0), "selectedRun is correct.");
+      done();
+    });
 
     it("Should be possible get selectedModelid", function(done) {
 

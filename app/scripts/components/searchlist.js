@@ -208,6 +208,5 @@ var exports = (function () {
 if (typeof module !== "undefined" && module.exports) {
   module.exports = exports;
 } else {
-  // make global
   _.assign(window, exports);
 }

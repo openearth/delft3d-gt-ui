@@ -69,6 +69,15 @@ $color-right-column-background: #fff;
 
 $shadow-color: rgba(0, 0, 0, .15);
 
+$world-scenario-item-background: #c3f6fc;
+$world-scenario-selected-border: #c3f6fc;
+$world-scenario-item-selected-background: #1cb9cc;
+
+$company-scenario-item-background: #f0d3a1;
+$company-scenario-selected-border: #f0d3a1;
+$company-scenario-item-selected-background: #df9617;
+
+
 /* This part is wiredepped
 // bower:scss
 @import 'bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss';
@@ -245,6 +254,17 @@ input[type=date].form-control {
     border: 2px solid $scenario-selected-border;
     min-height: 64px;
 
+    // Special coloring for the fixed scenario groups.
+    &.worldscenario {
+      border-color: $world-scenario-selected-border;
+      background-color: $world-scenario-item-background;
+    }
+
+    &.companyscenario {
+      border-color: $company-scenario-selected-border;
+      background-color: $company-scenario-item-background;
+    }
+
   }
 
   .scenario-info {
@@ -349,6 +369,16 @@ input[type=date].form-control {
   .scenario.selected {
     background-color: $scenario-selected-background;
     color: $white;
+
+    // Special coloring for the fixed scenario groups.
+    &.worldscenario {
+      background-color: $world-scenario-item-selected-background;
+    }
+
+    &.companyscenario {
+      background-color: $company-scenario-item-selected-background;
+    }
+
   }
 
   // When an item is selected some things change. that happens here
@@ -356,6 +386,7 @@ input[type=date].form-control {
 
     background-color: $scenario-selected-background;
     color: $white;
+
 
 
     .share-status {
@@ -381,8 +412,23 @@ input[type=date].form-control {
     &:hover {
       background-color: lighten($scenario-selected-background, 2%);
     }
-
   }
+
+    // Special coloring for the fixed scenario groups.
+    .worldscenario {
+      .run.selected {
+
+        background-color: $world-scenario-item-selected-background;
+      }
+    }
+
+    .companyscenario {
+       .run.selected {
+          background-color: $company-scenario-item-selected-background;
+       }
+    }
+
+
 }
 
 

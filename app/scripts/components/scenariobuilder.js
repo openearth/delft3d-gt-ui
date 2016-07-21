@@ -255,7 +255,9 @@ var exports = (function() {
       },
 
       updateWithQueryParameters: function() {
+
         if (_.has(this, "$route.query.parameters")) {
+
           // get parameters from query
           var parameters = JSON.parse(this.$route.query.parameters);
 
@@ -285,6 +287,7 @@ var exports = (function() {
             }
           }
         );
+
         // This is a bit ugly, but if we have a name, add (copy) to it and then use it.
         if (_.has(this, "$route.query.name") && _.has(this.scenarioConfig, "name")) {
           // we also have a name
@@ -419,16 +422,8 @@ var exports = (function() {
       },
 
       getTop: function() {
-        var top = 0;
 
-        if (typeof (window.pageYOffset) === "number") {
-          top = window.pageYOffset;
-        } else if (document.body && document.body.scrollTop) {
-          top = document.body.scrollTop;
-        } else if (document.documentElement && document.documentElement.scrollTop) {
-          top = document.documentElement.scrollTop;
-        }
-        return top;
+        return $(window).scrollTop();
       }
     }
   });

@@ -16,7 +16,7 @@
         <div  class="list-group-item">
 
           <!-- scenario info -->
-          <div class="scenario"  data-scenarioid="{{entry.id}}"  v-bind:class="{ 'selected': this.selectedScenarios.indexOf(entry.id) !== -1 }">
+          <div class="scenario"  data-scenarioid="{{entry.id}}"  v-bind:class="{ 'selected': this.selectedScenarios.indexOf(entry.id) !== -1, 'worldscenario': entry.type === 'world', 'companyscenario': entry.type === 'company'}">
             <div class="scenario-info"  v-on:click="scenarioSelect(entry.id, $event)">
 
               <span class="scenario-name"><span class=" glyphicon glyphicon-chevron-down" data-toggle="collapse" data-target="#scenario-{{entry.id}}" aria-controls="scenario-{{$index}}"   data-scenarioid="{{entry.id}}"></span> Scenario: {{entry.name}}</span>

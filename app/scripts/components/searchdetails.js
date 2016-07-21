@@ -291,9 +291,20 @@ var exports = (function () {
                 // Hardcoded name check to add the items to the list.
                 var name = scenario.name.toLowerCase();
 
+                scenario.type = "default";
                 if (name === "shared with world" || name === "shared with company") {
                   fixedScenarios.push(scenario);
+
+                  // Used for some coloring.
+                  if (name === "shared with world") {
+                    scenario.type = "world";
+                  } else {
+                    scenario.type = "company";
+                  }
                 } else {
+
+                  // We add a custom info item to the scenario, such tha we know it is normal;
+
                   visibleScenarios.push(scenario);
                 }
 
