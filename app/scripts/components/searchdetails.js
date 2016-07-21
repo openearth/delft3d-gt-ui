@@ -195,6 +195,8 @@ var exports = (function () {
       };
 
       // serialize parameters corresponding to https://publicwiki.deltares.nl/display/Delft3DGT/Search
+      console.log("PARAMS");
+      console.log(this.selectedParameters);
       params.parameter = _.map(
         // loop over all parameters in the template
         this.selectedParameters,

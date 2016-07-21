@@ -38,7 +38,7 @@ var exports = (function () {
       },
 
       show: function() {
-
+        console.log("id " + this.dialogId);
         var el = $("#" + this.dialogId + "-dialog");
 
         if (el.modal !== undefined) {

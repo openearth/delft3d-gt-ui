@@ -260,6 +260,29 @@
 
 
 
+      // This test is now working using the filteringPath option.
+      // When testing get request, this seems to be the solution.
+      it("If we can query the model list - FAILURE test", function(done) {
+        nock("http://0.0.0.0")
+          .defaultReplyHeaders({
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          })
+          .get("/api/v1/scenes/")
+          .reply(400, [
+            {
+              id: 1,
+              name: "Run 1"
+            }
+          ]);
+
+
+        global.fetchModels().catch(function() {
+          // We expected an error.
+          done();
+        });
+
+      });
 
 
 
@@ -472,7 +495,9 @@
       var confirmDialog = new ConfirmDialog();
 
       // Simple test, see if object exists
-      assert.isOk(confirmDialog.show);
+      $("#" + this.dialogId + "-dialog");
+
+      confirmDialog.show();
       done();
     });
 
@@ -481,7 +506,8 @@
       var confirmDialog = new ConfirmDialog();
 
       // Simple test, see if object exists
-      assert.isOk(confirmDialog.hide);
+      confirmDialog.hide();
+
       done();
     });
 
@@ -490,7 +516,8 @@
       var confirmDialog = new ConfirmDialog();
 
       // Simple test, see if object exists
-      assert.isOk(confirmDialog.showAlert);
+      confirmDialog.showAlert();
+
       done();
     });
 
@@ -1140,6 +1167,87 @@
         });
 
     });
+
+
+    // This function should not perform a request as there is no filelog yet!
+    it("Should be possible to fetchLog - NO filelog yet", function(done) {
+      var correctReply = true;
+      var id = 405;
+
+      // We fake to get a model.
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .filteringPath(function() {
+          return "/api/v1/scenes/";
+        })
+        .get("/api/v1/scenes/")
+        .reply(200, [
+          {
+            id: 405,
+            name: "Run 1",
+            fileurl: "/fileurl/",
+              info: {
+                logfile: {
+                  location: "location/",
+                  file: "" // <-- this is the part we are testing.
+                }
+              }
+            }
+        ]);
+
+      global.fetchModel(id)
+        .then(function(data) {
+
+          // Now test the log
+          modelDetails.model.id = id;
+
+          // We refer to this item:
+          //var model = itemsCache["4"];
+
+          // Working dir is at: modeldata.fileurl + delf3d + delft3d.log
+          var url = data.fileurl + data.info.logfile.location + data.info.logfile.file;
+
+          nock("http://0.0.0.0")
+            //.log(console.log)
+            .defaultReplyHeaders({
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*"
+            })
+            .get(url)
+            .reply(200, function() {
+              correctReply = false; // We did not expect a reply!!
+              return {};
+            });
+
+          modelDetails.fetchLog();
+
+          // Make sure the nock server had the time to reply
+          window.setTimeout(function() {
+            try {
+              assert(correctReply === true, "[x] No Ajax call performed");
+              done();
+            } catch (e) {
+              done(e);
+            }
+          }, 100);
+
+
+        })
+        .catch(function(e) {
+          console.log("no data returned", e);
+          // rethrow error to capture it and avoid time out
+          try {
+            throw e;
+          } catch (exc) {
+            done(exc);
+          }
+        });
+
+    });
+
 
     // This version sends a invalid reponse to the fetchLog, we have to handle this.
     // Skip the UI part of this. just direct through global.
@@ -2284,6 +2392,42 @@
     });
 
 
+    it("Should be possible to change to next imageFrame - no model info", function(done) {
+
+      /*eslint-disable camelcase*/
+      imageAnimation.model.info = undefined;
+      /*eslint-enable camelcase*/
+
+      imageAnimation.currentAnimationIndex = 0;
+      imageAnimation.currentAnimationKey = "delta_fringe_images";
+
+      imageAnimation.nextImageFrame();
+
+      // Next frame should still be at 0, as we did not have any model info.
+      assert.isTrue(imageAnimation.currentAnimationIndex === 0, "Animation index should stay 0");
+
+      done();
+    });
+
+    it("Should be possible to change to next imageFrame - no animationkey", function(done) {
+
+      /*eslint-disable camelcase*/
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      /*eslint-enable camelcase*/
+
+      imageAnimation.currentAnimationIndex = 0;
+      imageAnimation.currentAnimationKey = "";
+
+      imageAnimation.nextImageFrame();
+
+      // Next frame should still be at 0, as we did not have an animation key yet
+      assert.isTrue(imageAnimation.currentAnimationIndex === 0, "Animation index should stay 0");
+
+      done();
+    });
+
+
+
     it("Should be possible to check isanimating property", function(done) {
 
       imageAnimation.stopImageFrame();
@@ -2299,6 +2443,9 @@
       /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
+
+      imageAnimation.currentAnimationKey = "delta_fringe_images";
+
       assert.isTrue(imageAnimation.hasFrames === true, "Animation does not have frames");
       done();
     });
@@ -2307,6 +2454,8 @@
 
       // We should not have any frames in this animation object, but maybe make sure later on?
       imageAnimation.currentAnimationIndex = 0;
+      imageAnimation.currentAnimationKey = "delta_fringe_images";
+
       assert.isTrue(imageAnimation.animationIndex === 0, "Animation frame at 0");
       done();
     });
@@ -2754,6 +2903,11 @@
 
       // A fake model array..
       var selected = 1;
+
+      // To test the component in the function, we add it manually.
+      var modelDetails = new ModelDetails();
+      aSearchColumns.$children.push(modelDetails);
+
 
       aSearchColumns.$dispatch("modelsSelected", selected);
 
