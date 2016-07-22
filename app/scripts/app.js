@@ -1,4 +1,4 @@
-/* global ModelDetails, ScenarioCreate, ModelList,  FinderColumns, DeleteScenario, SearchColumns */
+/* global ModelDetails, ScenarioCreate, DeleteScenario, SearchColumns */
 
 var router;
 
@@ -31,14 +31,6 @@ var exports = (function() {
         router = new VueRouter();
 
         router.map({
-          "/search": {
-            name: "search",
-            component: SearchColumns
-          },
-          "/scenarios/:scenarioid/models/:modelid": {
-            name: "finder-columns",
-            component: FinderColumns
-          },
           "/models/:modelid": {
             component: ModelDetails
           },
@@ -46,12 +38,9 @@ var exports = (function() {
             name: "scenarios-create",
             component: ScenarioCreate
           },
-          "/models": {
-            component: ModelList
-          },
           "/": {
             name: "home",
-            component: FinderColumns
+            component: SearchColumns
           },
           "/scenarios/delete/:scenarioid": {
             name: "delete-scenario",

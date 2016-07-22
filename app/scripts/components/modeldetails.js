@@ -1,4 +1,4 @@
-/* global ImageAnimation, ConfirmDialog, getDialog, fetchModel, fetchLog, deleteModel, startModel, exportModel, stopModel, publishModel, router */
+/* global ImageAnimation, ConfirmDialog, getDialog, fetchModel, fetchLog, deleteModel, startModel, exportModel, stopModel, publishModel  */
 var exports = (function () {
   "use strict";
 
@@ -80,7 +80,7 @@ var exports = (function () {
         set: function(val) {
           // updating the data
           // clear model data
-          console.log("New model set, replacing model by empty model");
+          console.log("New model set, replacing model by empty model: " + val);
           var modelId = parseInt(val);
 
           this.model = {};
@@ -102,6 +102,7 @@ var exports = (function () {
 
 
       },
+
       scenario: {
         get: function() {
           if (_.has(this, "model.scenario")) {
@@ -122,28 +123,7 @@ var exports = (function () {
             return 0;
           }
 
-          var max = 0;
-
-          if (this.model.info !== undefined) {
-            $.each(this.model.info, function(key, value) {
-
-              // Channel network images, etc are also inhere.. so we have to check if the info object exists..
-              if (value.info !== undefined && value.info !== null) {
-                // We loop through all output arrays, and take the highest progress.
-                if (value.info.output !== undefined) {
-                  for(var i = 0; i < value.info.output.length; i++) {
-                    if (value.info.output[i].progress > max) {
-                      max = value.info.output[i].progress;
-                    }
-                  }
-                }
-              }
-
-            });
-          }
-
-          // Return in percent.
-          return Math.round(max * 100);
+          return this.model.progress;
         }
 
       },
@@ -213,33 +193,25 @@ var exports = (function () {
         // update data with id, and if transition is passed transition to it
         // afterwards, pass the log
 
+        var that = this;
+
         // make sure id is a number
+
         fetchModel(id)
           .then(
             (json) => {
 
-              // copy old data and set model
-              var data = this.$data;
-
-              data.model = json;
+              that.model = json;
 
               if (this.waitingForUpdate) {
                 this.highlightPublishLevel();
               }
 
               this.waitingForUpdate = false;
-              // and fetch log afterwards
-              // fetchLog(data.model.id)
-              //   .then(log => {
-              //     $("#model-log-output").text(log);
-              //   })
-              //   .catch(e => {
-              //     $("#model-log-output").text("Failed to get log: " + e);
-              //   });
             }
           )
-          .catch(e => {
-            console.log("Failed to get model with id", id, "error", e);
+          .catch(() => {
+            //console.log("Failed to get model with id", id, "error", e);
           });
 
       },
@@ -258,9 +230,9 @@ var exports = (function () {
       // Remove item, based on incoming modelinfo.
       removeModel: function() {
 
-        console.log("Removemodel");
         // keep track of the scenario before deletion
-        var scenarioId = this.scenario;
+        // Needs to be added soon
+        //var scenarioId = this.scenario;
 
         // Do we also remove all the additional files? This is based on the checkmark.
         // if deletefiles is true, we will tell the server that we want to remove these files.
@@ -271,10 +243,8 @@ var exports = (function () {
           "deletefiles": deletefiles
         };
 
-        // This if statement caused thge delete to only work once:
-        //if (!this.deleteDialog) {
+
         this.deleteDialog = getDialog(this, "confirm-dialog", "delete");
-        //}
 
         this.deleteDialog.onConfirm = function() {
           var deletedId = this.model.id;
@@ -287,22 +257,16 @@ var exports = (function () {
                 type: "success"
               });
 
+              // Immediatly refresh screen:
+              this.$root.$broadcast("updateSearch");
+
             })
             .catch(e => {
               console.log("model deletion failed", e);
             });
 
-          // key values correspond to url parameters which are lowercase
-          var params = {
-            modelid: -1,
-            scenarioid: scenarioId
-          };
 
-          // TODO: keep routing logic in main window
-          router.go({
-            name: "finder-columns",
-            params: params
-          });
+          this.deleteDialog.hide();
 
         }.bind(this);
 
@@ -312,17 +276,18 @@ var exports = (function () {
         // Show the dialog:
         this.deleteDialog.show();
 
-
       },
+
       fetchLog: function() {
+
         // Working dir is at: modeldata.fileurl + delf3d + delft3d.log
         fetchLog(this.model.id)
           .then(log => {
             // don't do this with jquery, too slow
-            document.getElementById("model-log-output").textContent = log;
+            $("#model-log-output").text(log);
           })
           .catch(e => {
-            console.log(e);
+            console.log("error - fetchlog" + e);
             $("#model-log-output").text("No log available");
           });
       },
@@ -338,6 +303,9 @@ var exports = (function () {
               showTime: 5000,
               type: "success"
             });
+
+            // Immediatly refresh screen:
+            this.$root.$broadcast("updateSearch");
           })
           .catch((e) => {
             console.log(e);
@@ -358,11 +326,10 @@ var exports = (function () {
       stopModel: function() {
         var deletedId = this.model.id;
 
-        if (!this.stopDialog) {
-          this.stopDialog = getDialog(this, "confirm-dialog", "stop");
-        }
+        this.stopDialog = getDialog(this, "confirm-dialog", "stop");
 
         this.stopDialog.onConfirm = function() {
+
           stopModel(deletedId)
             .then(() => {
               this.$parent.$broadcast("show-alert", {
@@ -370,6 +337,9 @@ var exports = (function () {
                 showTime: 5000,
                 type: "success"
               });
+
+              // Immediatly refresh screen:
+              this.$root.$broadcast("updateSearch");
 
             })
             .catch((e) => {
@@ -381,9 +351,8 @@ var exports = (function () {
       },
 
       publishModel: function(index) {
-        if (!this.publishDialog) {
-          this.publishDialog = getDialog(this, "confirm-dialog", "publish");
-        }
+
+        this.publishDialog = getDialog(this, "confirm-dialog", "publish");
 
         this.publishDialog.onConfirm = function() {
           publishModel(this.model.id, this.publishLevels[index].url)
@@ -395,6 +364,10 @@ var exports = (function () {
               });
               this.waitingForUpdate = true;
               this.highlightPublishLevel();
+
+              // Immediatly refresh screen:
+              this.$root.$broadcast("updateSearch");
+
             })
             .catch(e => {
               console.log(e);

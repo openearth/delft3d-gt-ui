@@ -12,7 +12,6 @@ var exports = (function() {
       //Load test template data:
       $.getJSON("/api/v1/scenarios/")
         .done(function(data) {
-          //console.log("scenarios", data);
           resolve(data);
         })
         .fail(function(error) {
@@ -23,9 +22,14 @@ var exports = (function() {
   }
 
   function deleteScenario(id) {
+
+
     return new Promise(function(resolve, reject) {
       // add extra options to id
       //var postData = _.assign({id: id}, options);
+      if (id === undefined) {
+        reject("No scenario id to delete");
+      }
 
       $.ajax({
         url: "/api/v1/scenarios/" + id + "/",

@@ -44,40 +44,32 @@ var exports = (function () {
         return reject(new Error("Model not found, even after updating"));
       }
 
-      if (_.has(itemsCache, id)) {
-        // we already have the model, return it
-        var model = itemsCache[id];
+      // There was  a cache check here (if (_.has(itemsCache, id)) ) - but if we always get old data, and it never refreshes.
+      // Maybe there should be a timed removal of cached items. But for now, we do not cache it - as we specifically ask to update one model.
+      fetchModels()
+        .then(mymodels => {
+          // search through the list of models
+          // The `_.matchesProperty` iteratee shorthand.
+          // returns undefined if not found
+          var secondTryModel = _.find(mymodels, ["id", id]);
 
-        resolve(model);
-      } else {
-        // TODO: We just need 1 model. Use a unique id (uuid)
-        // if we don't have it, reset all the models and see if it is there....
-        fetchModels()
-          .then(models => {
-            // search through the list of models
-            // The `_.matchesProperty` iteratee shorthand.
-            // returns undefined if not found
-            var secondTryModel = _.find(models, ["id", id]);
+          if (secondTryModel) {
+            // Ladies and gentlemen, we got him....
+            resolve(secondTryModel);
+          } else {
+            // still not here....
+            reject(new Error("Model not found, even after updating"));
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
 
-            if (secondTryModel) {
-              // Ladies and gentlemen, we got him....
-              resolve(secondTryModel);
-            } else {
-              // still not here....
-              reject(new Error("Model not found, even after updating"));
-            }
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      }
     });
   }
 
   function deleteModel(id) {
     return new Promise(function(resolve, reject) {
-      // add extra options to id
-      //var postData = _.assign({id: id}, options);
 
       $.ajax({
         url: "/api/v1/scenes/" + id + "/",
@@ -93,7 +85,6 @@ var exports = (function () {
         });
 
     });
-
   }
 
   function startModel(id) {
@@ -101,7 +92,7 @@ var exports = (function () {
     return new Promise(function(resolve, reject) {
       $.ajax({
         url: "/api/v1/scenes/" + id + "/start/",
-        method: "POST"
+        method: "PUT"
       })
         .done(function() {
           // no data to return, just call the callback
@@ -139,7 +130,7 @@ var exports = (function () {
       $.ajax({
         url: "/api/v1/scenes/" + id + "/start/",
         data: {workflow: "export"},
-        method: "POST"
+        method: "PUT"
       })
         .done(function() {
           // no data to return, just call the callback
@@ -160,7 +151,7 @@ var exports = (function () {
       $.ajax({
         url: "/api/v1/scenes/" + id + "/stop/",
         data: {id: id},
-        method: "POST"
+        method: "PUT"
         })
         .done(function() {
           // no data to return, just call the callback
@@ -175,15 +166,65 @@ var exports = (function () {
 
   }
 
+
+  /// Batch version of deleteModel. We expect an array of items to delete.
+  function deleteModels(ids) {
+    // We expect an array of ids.
+    if (_.isArray(ids) === false) {
+      return false;
+    }
+
+    // We need to determine the result of this somehow. [TODO]
+    // Loop through all ids:
+    for(var i = 0; i < ids.length; i++) {
+      deleteModel(ids[i]);
+    }
+
+    return true;
+  }
+
+  function startModels(ids) {
+    // We expect an array of ids.
+    if (_.isArray(ids) === false) {
+      return false;
+    }
+
+    // We need to determine the result of this somehow. [TODO]
+    // Loop through all ids:
+    for(var i = 0; i < ids.length; i++) {
+      startModel(ids[i]);
+    }
+
+    return true;
+  }
+
+  function stopModels(ids) {
+
+    // We expect an array of ids.
+    if (_.isArray(ids) === false) {
+      return false;
+    }
+
+    // We need to determine the result of this somehow. [TODO]
+    // Loop through all ids:
+    for(var i = 0; i < ids.length; i++) {
+      stopModel(ids[i]);
+    }
+
+    return true;
+  }
+
+
   function fetchLog(id) {
     return new Promise(function(resolve, reject) {
       try {
         var model = itemsCache[id];
 
+
       } catch(e) {
         // if we can't find a model reject and bail out
         reject(e);
-        console.log("model not found for id", id, "while retrieving log");
+
         return;
       }
 
@@ -219,7 +260,11 @@ var exports = (function () {
     startModel: startModel,
     exportModel: exportModel,
     stopModel: stopModel,
-    publishModel: publishModel
+    publishModel: publishModel,
+
+    startModels: startModels,
+    stopModels: stopModels,
+    deleteModels: deleteModels
   };
 }());
 

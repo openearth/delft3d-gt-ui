@@ -27,8 +27,6 @@ var exports = (function () {
 
       deleteScenario: function(scenarioid) {
 
-
-
         var postdata = {
           id: scenarioid,
           deletefiles: true
@@ -50,7 +48,6 @@ var exports = (function () {
             name: "home",
             params: params
           });
-
 
         });
 

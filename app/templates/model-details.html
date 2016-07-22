@@ -1,6 +1,6 @@
 <template id="template-model-details">
+
   <div class="model-details">
-    <h3>Details <span v-if="(model.id !== undefined)">for &ldquo;<strong>{{model.name}}</strong>&rdquo;</span></h3>
     <div class="alert alert-info" v-if="(model.id === undefined)">
       No run selected.
     </div>
@@ -29,7 +29,7 @@
 
               <tr>
                 <td>Model files</td>
-                <td>View <a href="{{model.fileurl}}">working directory</a></td>
+                <td>View <a href="{{model.fileurl}}" target="_blank">working directory</a></td>
               </tr>
 
               <tr>
@@ -51,7 +51,7 @@
               </tr>
 
               <tr class="publish-level">
-                <td>Publish level</td>
+                <td>Share level</td>
                 <td><span>{{ publishLevel }}</span></td>
               </tr>
 
@@ -73,35 +73,36 @@
             Please select an action to perform on this simulation.
           </p>
 
-          <button type="button" class="btn btn-labeled btn-success" v-bind:class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE') || isReadOnly() }" id="simulation-control-start" v-on:click="startModel">
+          <!-- v-bind:class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE') || isReadOnly() }" -->
+          <button type="button" class="btn btn-labeled btn-success"  id="simulation-control-start" v-on:click="startModel" v-bind:class="{ 'inputdisabled':  isReadOnly() }" >
             <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>
             Restart
           </button>
 
-          <button type="button" class="btn btn-labeled btn-success" v-bind:class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE') || isReadOnly() }"  v-on:click="exportModel">
-            <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>
-            Start export
-          </button>
 
-          <button type="button" class="btn btn-labeled btn-warning" v-bind:class="{ 'inputdisabled':  !(model.state === 'PROCESSING') || isReadOnly() }" id="simulation-control-stop" v-on:click="stopModel">
+          <!-- v-bind:class="{ 'inputdisabled':  !(model.state === 'PROCESSING') || isReadOnly() }" -->
+          <button type="button" class="btn btn-labeled btn-warning" id="simulation-control-stop" v-on:click="stopModel" v-bind:class="{ 'inputdisabled':  isReadOnly() }">
             <span class="btn-label"><i class="glyphicon glyphicon-stop"></i></span>
             Stop
           </button>
 
-
-          <button type="button" class="btn btn-labeled btn-danger" v-bind:class="{ 'inputdisabled': !((model.state === 'SUCCESS' || model.state === 'ABORTED' || model.state === 'FAILURE') || model.state === 'PENDING') || isReadOnly() }"  v-on:click="removeModel(model)">
+          <!-- v-bind:class="{ 'inputdisabled': !((model.state === 'SUCCESS' || model.state === 'ABORTED' || model.state === 'FAILURE') || model.state === 'PENDING') || isReadOnly() }"  -->
+          <button type="button" class="btn btn-labeled btn-danger" v-on:click="removeModel(model)" v-bind:class="{ 'inputdisabled':  isReadOnly() }">
             <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
             Remove run
           </button>
 
-         <h5 v-bind:class="{ 'default-hidden': (model.state === 'SUCCESS' || model.state === 'FAILURE') || isReadOnly() }">&ldquo;<i>Start export</i>&rdquo; becomes available after a simulation has finished.</h5>
+          <span class="alert alert-info alert-small" role="alert" v-if="isReadOnly()" >
+
+            Simulation control is only available when runs are not published.
+          </span>
 
         </div>
       </div>
 
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h2 class="panel-title">Publish controls</h2>
+          <h2 class="panel-title">Share controls</h2>
         </div>
         <div class="panel-body">
           <p>
@@ -114,7 +115,7 @@
             <template v-for="level in publishLevels">
               <button
                  class="form-group btn btn-labeled btn-default"
-                 :class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE') || !isLevelEnabled($index) }"
+                 :class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE' || model.state === 'ABORTED') || !isLevelEnabled($index) }"
                  v-on:click="publishModel($index)">
                 <span class="btn-label">
                   <i class="glyphicon" :class="publishLevels[$index].iconClass">
@@ -182,12 +183,22 @@
           </p>
 
           <div class="form-group input-group">
-            <span class="input-group-addon"><input type="checkbox" class="downloadoption" checked="checked" value="export_images" v-on:change="downloadOptionsChange()"></span>
+            <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_d3dinput" v-on:change="downloadOptionsChange()"></span>
+            <span class="form-control no-fixed-height">Download Delft3D input</span>
+          </div>
+
+          <div class="form-group input-group">
+            <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_d3doutput" v-on:change="downloadOptionsChange()"></span>
+            <span class="form-control no-fixed-height">Download Delft3D output</span>
+          </div>
+
+          <div class="form-group input-group">
+            <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_images" v-on:change="downloadOptionsChange()"></span>
             <span class="form-control no-fixed-height">Download generated output images</span>
           </div>
           <div class="form-group input-group" v-bind:class="{ 'inputdisabled': model.info.export === false}">
             <span class="input-group-addon"><input type="checkbox" class="downloadoption"  value="export_thirdparty" v-on:change="downloadOptionsChange()" ></span>
-            <span class="form-control no-fixed-height">Include export for RMS / Petrel. <span v-if="model.info.export === false"><small>Please use <strong>"Start export"</strong> first at Simulation controls. After export completes, this option is available.</small></span></span>
+            <span class="form-control no-fixed-height">Include export for RMS / Petrel <span v-if="model.info.export === false">. <small>Please use <strong>"Start export"</strong> first at Simulation controls. After export completes, this option is available.</small></span></span>
           </div>
 
           <div class="form-group input-group">
@@ -195,11 +206,17 @@
             <span class="form-control no-fixed-height">Download output movie</span>
           </div>
 
-          <div class="btn-group">
-            <button class="form-control btn btn-primary" id="download-submit" v-on:click="downloadFiles()" value="">
-              Download
-            </button>
-          </div>
+
+          <button class="btn btn-primary" type="button"  id="download-submit" v-on:click="downloadFiles()" value="">
+            Download
+          </button>
+
+          <button class="btn btn-primary" type="button" v-bind:class="{ 'inputdisabled': model.state === 'PROCESSING' }"  v-on:click="exportModel">
+            Start export
+          </button>
+
+          <h5 v-bind:class="{ 'default-hidden': model.state === 'PROCESSING' }">&ldquo;<i>Start export</i>&rdquo; becomes available after a simulation has finished and not published.</h5>
+
         </div>
       </div>
 
@@ -228,10 +245,10 @@
       <!-- MODALS -->
       <confirm-dialog dialog-id="publish" confirm-button-title="Publish">
         <template slot="title">
-          Publish model '{{ model.name }}'?
+          Share model '{{ model.name }}'?
         </template>
         <template slot="body">
-          <p>Are you sure you want to publish this model as '{{ nextPublishLevel }}'?</p>
+          <p>Are you sure you want to share this model as '{{ nextPublishLevel }}'?</p>
         </template>
         <template slot="alert">
           This action cannot be undone.
@@ -258,7 +275,7 @@
           <p>Are you sure you want to stop this model?</p>
         </template>
         <template slot="alert">
-          The model cannot be restarted after this action.
+		You will need to restart the model if you want to continue the simulation
         </template>
       </confirm-dialog>
 

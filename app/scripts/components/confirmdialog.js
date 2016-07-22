@@ -38,15 +38,28 @@ var exports = (function () {
       },
 
       show: function() {
-        $("#" + this.dialogId + "-dialog").modal({});
+
+        var el = $("#" + this.dialogId + "-dialog");
+
+        if (el.modal !== undefined) {
+          el.modal({});
+        }
+
       },
 
       hide: function() {
-        $("#" + this.dialogId + "-dialog").modal("hide");
+
+        var el = $("#" + this.dialogId + "-dialog");
+
+        if (el.modal !== undefined) {
+          el.modal("hide");
+        }
       },
 
       showAlert: function(isVisible) {
+
         $("#" + this.dialogId + "-dialog-alert").toggle(isVisible);
+
       }
     }
 

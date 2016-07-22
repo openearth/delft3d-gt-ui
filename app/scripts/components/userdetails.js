@@ -18,13 +18,7 @@ var exports = (function () {
     },
 
     ready: function() {
-      $.getJSON("/api/v1/users/me/")
-        .done((data) => {
-          this.user = _.first(data);
-        })
-        .fail((e) => {
-          console.log("failed to get user info", e);
-        });
+      this.fetchUserInfo();
     },
     computed: {
       details: function() {
@@ -39,6 +33,24 @@ var exports = (function () {
       }
     },
     methods: {
+      fetchUserInfo: function() {
+        var that = this;
+
+        return new Promise(function(resolve, reject) {
+          $.getJSON("/api/v1/users/me/")
+          .done(function(data) {
+
+            that.user = _.first(data);
+
+            resolve();
+          })
+          .fail((e) => {
+
+            reject(e);
+          });
+
+        });
+      }
     }
   });
 
