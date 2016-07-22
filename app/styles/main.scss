@@ -83,7 +83,22 @@ $company-scenario-item-selected-background: $scenario-selected-background;
 // it's better to include the main package
 @import 'bower_components/bootstrap-sass/assets/stylesheets/bootstrap';
 @import 'bower_components/font-awesome/scss/font-awesome';
-@import 'bower_components/open-sans-fontface/sass/open-sans.scss';
+
+
+// See issue: https://discourse.roots.io/t/adding-open-sans-via-fontfacekit-bower-isnt-working-with-gulp/3562/2
+// Override our font settings from here:
+@import '_mixins.scss';
+@import '_variables.scss';
+@import 'bower_components/open-sans-fontface/sass/_Bold.scss';
+@import 'bower_components/open-sans-fontface/sass/_BoldItalic.scss';
+@import 'bower_components/open-sans-fontface/sass/_ExtraBold.scss';
+@import 'bower_components/open-sans-fontface/sass/_ExtraBoldItalic.scss';
+@import 'bower_components/open-sans-fontface/sass/_Italic.scss';
+@import 'bower_components/open-sans-fontface/sass/_Light.scss';
+@import 'bower_components/open-sans-fontface/sass/_LightItalic.scss';
+@import 'bower_components/open-sans-fontface/sass/_Regular.scss';
+@import 'bower_components/open-sans-fontface/sass/_Semibold.scss';
+@import 'bower_components/open-sans-fontface/sass/_SemiboldItalic.scss';
 
 
 /* Utilities */
