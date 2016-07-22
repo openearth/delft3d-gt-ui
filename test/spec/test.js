@@ -3286,7 +3286,7 @@
 
        /*eslint-enable camelcase*/
 
-      assert.isTrue(names === "a,b,c", "selectedrunnames match");
+      assert.isTrue(names === "a, b, c", "selectedrunnames match");
 
       done();
     });
