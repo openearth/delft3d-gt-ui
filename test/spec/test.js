@@ -118,6 +118,9 @@
   // }
   // test();
 
+  // AS the above does not work, we create some fake jQuery wrappers to mock some of our function calls (sliders, modal, etc) we do this on the spot at some tests.
+
+
 
 
 
@@ -169,6 +172,30 @@
 
       });
 
+
+      it("Should be possible to LIST scenarios - FAILURE test", function(done) {
+        nock("http://0.0.0.0")
+          .defaultReplyHeaders({
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          })
+          .filteringPath(function() {
+            return "/api/v1/scenarios/";
+          })
+          .get("/api/v1/scenarios/")
+          .reply(400, {
+          });
+
+        // We expect an error, so we call done if this happens.
+        global.fetchScenarios().catch(function() {
+          // We expected an error.
+          done();
+        });
+
+      });
+
+
+
     // Can we remove scenarios?
       it("Should be possible to DELETE scenarios", function(done) {
 
@@ -202,6 +229,35 @@
           }
         }, 100);
       });
+
+
+      it("Should be possible to DELETE scenarios - FAILURE test", function(done) {
+
+        var deleteid = 4;
+
+        nock("http://0.0.0.0")
+          //.log(console.log)
+          .defaultReplyHeaders({
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          })
+          .intercept("/api/v1/scenarios/" + deleteid + "/", "OPTIONS") // We get an "OPTIONS" first.
+          .reply(400, function() {
+            return "";
+          })
+          .delete("/api/v1/scenarios/" + deleteid + "/")
+          .reply(200, function() {
+            return "";
+          });
+
+        // An error is expected, so we use done() when it happens.
+        global.deleteScenario(deleteid).catch(function() {
+          // We expected an error.
+          done();
+        });
+
+      });
+
 
       // Test deletescenario when we do not specify any id
       it("Should be possible to DELETE scenarios - no id specified", function(done) {
@@ -504,12 +560,29 @@
       // Simple test, see if object exists
 
       $("#confirm-dialog-test-holder").html("<div id='test-dialog'>dialog</div>");
-      $("#test-dialog").modal = function() {
-        console.log("modal called!");
-      };
+      $.fn.modal = undefined;
 
       confirmDialog.show();
       done();
+    });
+
+    it("Is possible to show - with modal", function(done) {
+      var confirmDialog = new ConfirmDialog();
+
+      confirmDialog.dialogId = "test";
+
+      // Simple test, see if object exists
+
+      $("#confirm-dialog-test-holder").html("<div id='test-dialog'>dialog</div>");
+
+
+      // Normally this is applied directly to an element, with a jquery reference, but we cannot do that using tests?
+      $.fn.modal = function() {
+        done();
+        $.fn.modal = undefined; // Unset for later calls.
+      };
+
+      confirmDialog.show();
     });
 
 
@@ -520,13 +593,30 @@
 
 
       $("#confirm-dialog-test-holder").html("<div id='test-dialog'>dialog</div>");
-      $("#test-dialog").modal = function() {
-        console.log("modal called!");
-      };
+
 
       confirmDialog.hide();
 
       done();
+    });
+
+    it("Is possible to hide - with modal", function(done) {
+      var confirmDialog = new ConfirmDialog();
+
+      confirmDialog.dialogId = "test";
+
+
+      $("#confirm-dialog-test-holder").html("<div id='test-dialog'>dialog</div>");
+
+      // Normally this is applied directly to an element, with a jquery reference, but we cannot do that using tests?
+      $.fn.modal = function() {
+
+        done();
+        $.fn.modal = undefined; // Unset for later calls.
+      };
+
+      confirmDialog.hide();
+
     });
 
 
@@ -1190,6 +1280,18 @@
     });
 
 
+
+    it("Should be possible to fetchLog - NON existing model", function(done) {
+      var id = 405;
+
+      // We expect an error! As there are no models yet
+      global.fetchLog(id).catch(function() {
+        // We expect an error.
+        done();
+      });
+    });
+
+
     // This function should not perform a request as there is no filelog yet!
     it("Should be possible to fetchLog - NO filelog yet", function(done) {
       var correctReply = true;
@@ -1327,8 +1429,6 @@
             done();
           });
         });
-
-
     });
 
 
@@ -2473,6 +2573,21 @@
 
     });
 
+    it("Should be possible to play image frames the imageFrame - No animationkey set", function(done) {
+
+      imageAnimation.currentAnimationKey = "";
+
+      // Without an animation key, playimage should just return and do nothing.
+      imageAnimation.playImageFrame();
+
+      imageAnimation.timerAnimation = -1;
+
+      assert.isTrue(imageAnimation.timerAnimation === -1, "timeranimation id should still be -1");
+
+      done();
+
+    });
+
     it("Should be possible to change to next imageFrame", function(done) {
 
       /*eslint-disable camelcase*/
@@ -2632,7 +2747,26 @@
       done();
     });
 
-    it("Should be possible to previousImageFrame", function(done) {
+    it("Should be possible to previousImageFrame - No model info", function(done) {
+
+      // index should become 0
+       /*eslint-disable camelcase*/
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.switchAnimation("delta_fringe_images");
+      imageAnimation.currentAnimationIndex = 1; // fake an index.
+
+      // now remove data.
+      imageAnimation.model.info = undefined;
+      /*eslint-enable camelcase*/
+
+      imageAnimation.previousImageFrame();
+
+      // We started at 0, without data, so it should still be 1, as it was left untouched (maybe shoudl become 0 if the model data is gone though)
+      assert.isTrue(imageAnimation.animationIndex === 1, "Animation frame should still have been one.");
+      done();
+    });
+
+    it("Should be possible to previousImageFrame ", function(done) {
 
       // index should become 0
        /*eslint-disable camelcase*/
@@ -2646,6 +2780,8 @@
       assert.isTrue(imageAnimation.animationIndex === imageAnimation.model.info.delta_fringe_images.images.length - 1, "Animation frame should have wrapped");
       done();
     });
+
+
 
     it("Should be possible to gotoFirstFrame", function(done) {
 
