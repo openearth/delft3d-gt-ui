@@ -516,13 +516,16 @@ input[type=date].form-control {
 
 .heading-bar {
   font-weight: 600;
-
-  line-height: auto;
 }
+
 
 // Force truncate of long names in right detail panel.
 #column-run-details .heading-bar {
   @include truncate();
+}
+
+.container-fluid {
+   border-bottom: 1px solid lighten($gray-dark, 60%);
 }
 
 .tool-bar {
@@ -531,14 +534,10 @@ input[type=date].form-control {
   min-height: 40px;
 
 
-
   .btn-toolbar {
     padding: 4px 0px 4px 0px;
-
-  }
-
-  .row {
-    border-bottom: 1px solid lighten($gray-dark, 60%);
+    height: 40px;
+    line-height: 32px;
   }
 
   .btn {
