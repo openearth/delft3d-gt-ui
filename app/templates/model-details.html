@@ -131,8 +131,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(key, param) in model.parameters">
-                <td>{{ (param.name || key) }}</td>
+              <tr v-for="(key, param) in model.parameters | orderBy '$key'">
+                <td>{{ (param.name || key) | capitalize }}</td>
                 <td>{{param.value}}</td>
                 <td>
                   <!-- we add this as we might have some older models not having the units var yet. -->
