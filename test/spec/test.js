@@ -16,7 +16,7 @@
   // Create a document
   /* eslint-disable quotes */
 
-  global.document = jsdom('<!doctype html><html><body><div id="top-bar">topbar</div> <div id="tool-bar">tool-bar</div> <div id="below-tool-bar">below-tool-bar</div> <div id="app"><div id="model-create"></div><div id="model-details"></div></div><div id="template-container"></div><div id="dialog-container"></div><div id="scenario-container"></div> <div id="confirm-dialog-test-holder">topbar</div> </body></html>', {});
+  global.document = jsdom('<!doctype html><html><body><div id="app"><div id="model-create"></div><div id="model-details"></div></div><div id="template-container"></div><div id="dialog-container"></div><div id="scenario-container"></div> <div id="confirm-dialog-test-holder">topbar</div>  <div id="template-user-details"></div> <div id="top-bar">topbar</div> <div id="tool-bar">tool-bar</div> <div id="below-tool-bar">below-tool-bar</div> <div id="to_make_a_vscrollbar" style="height: 5000px;">text</div> </body></html>', {});
 
   /* eslint-enable quotes */
 
@@ -221,7 +221,7 @@
           .delete("/api/v1/scenarios/" + deleteid + "/")
           .reply(200, function() {
             correctReply = true;
-            return "";
+            return {"result": "ok"};
           });
 
         global.deleteScenario(deleteid);
@@ -885,7 +885,7 @@
     });
   });
 
-  describe("SScenarioCreate - cenario builder", function() {
+  describe("ScenarioCreate - Scenario builder", function() {
 
     it("Should be possible to convert a single value to a tag array", function(done) {
       var array = factorToArray({
@@ -966,12 +966,38 @@
       var scenarioCreate = new ScenarioCreate({
       });
 
+
       scenarioCreate.updateFixedToolbarStyle();
 
       assert.isOk(scenarioCreate.updateFixedToolbarStyle);
 
       done();
     });
+
+    it("Should be possible to updateFixedToolbarStyle - scrolled down", function(done) {
+      var scenarioCreate = new ScenarioCreate({
+      });
+
+      scenarioCreate.initFixedToolbar();
+      // Fake a scrolling activity:
+      var original = $.fn.scrollTop;
+
+      $.fn.scrollTop = function() {
+        return 1000;
+      };
+
+      scenarioCreate.navBars.topBar.clientHeight = 40;
+
+      scenarioCreate.updateFixedToolbarStyle();
+
+      assert.isOk(scenarioCreate.updateFixedToolbarStyle);
+
+      // Original functoin again.
+      $.fn.scrollTop = original;
+
+      done();
+    });
+
 
 
     it("Should be possible to call GetTop", function(done) {
@@ -2075,6 +2101,79 @@
     });
 
 
+    it("Should be possible to publish a model private using Confirm - FAILURE test", function(done) {
+
+      modelDetails = new ModelDetails();
+
+      modelDetails.$parent = {};
+      modelDetails.$parent.$broadcast = function() {
+        done("Broadcast should not have been called");
+      };
+
+      modelDetails.$root = {};
+      modelDetails.$root.$broadcast = function() {
+        done("Broadcast should not have been called");
+      };
+
+      modelDetails.model.id = 4;
+
+      // Publishlevel 2 = world
+
+      var newPublishLevel = 2;
+      var target = "world";
+
+      // To get dialogs, manually have to create and add them to the component. So that is what we do here:
+      var dialog = new ConfirmDialog();
+
+      dialog.dialogId = "publish";
+      modelDetails.$children.push(dialog);
+
+      // End manual dialog.
+
+
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .post("/api/v1/scenes/" + modelDetails.model.id + "/publish_" + target + "/")
+        .reply(400, function() { // We reply with 400
+          return {};
+        });
+
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        done();
+
+      }, 150);
+
+      // We test if the continue code was still called by checking if a broadcast was executed.
+      modelDetails.$parent = {};
+      modelDetails.$parent.$broadcast = function() {
+        done("Broadcast should not have been called");
+      };
+
+      modelDetails.$root = {};
+      modelDetails.$root.$broadcast = function() {
+        done("Broadcast should not have been called");
+      };
+
+
+      $("#dialog-container").load("/templates/confirm-dialog.html", function() {
+
+        modelDetails.publishModel(newPublishLevel);
+
+        // Find the dialog:
+        var publishDialog = getDialog(modelDetails, "confirm-dialog", "publish");
+
+        // confirm the dialog:
+        publishDialog.onConfirm();
+      });
+    });
+
+
+
     it("Should be possible to publish a model private using Confirm", function(done) {
 
       var correctReply = false;
@@ -2744,6 +2843,17 @@
       done();
     });
 
+    it("Should be possible to check frameCount property - no data", function(done) {
+
+      // We should not have any frames in this animation object, but maybe make sure later on?
+       /*eslint-disable camelcase*/
+      imageAnimation.model.info = { };
+      /*eslint-enable camelcase*/
+      imageAnimation.currentAnimationKey = "delta_fringe_images";
+      assert.isTrue(imageAnimation.frameCount === 0, "Animation framecount should not be 0");
+      done();
+    });
+
 
     it("Should be possible to switchAnimation", function(done) {
 
@@ -2767,7 +2877,7 @@
 
       imageAnimation.previousImageFrame();
 
-      // We started at 0, without data, so it should still be 1, as it was left untouched (maybe shoudl become 0 if the model data is gone though)
+      // We started at 0, without data, so it should still be 1, as it was left untouched (maybe should become 0 if the model data is gone though)
       assert.isTrue(imageAnimation.animationIndex === 1, "Animation frame should still have been one.");
       done();
     });
@@ -2787,6 +2897,20 @@
       done();
     });
 
+    it("Should be possible to previousImageFrame - no animation key ", function(done) {
+
+      // index should become 0
+       /*eslint-disable camelcase*/
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      /*eslint-enable camelcase*/
+      imageAnimation.currentAnimationKey = ""; // No animation key
+      imageAnimation.currentAnimationIndex = 1; // fake an index.;
+      imageAnimation.previousImageFrame();
+
+      // We started at 0, without data, so it should still be 1, as it was left untouched (maybe should become 0 if the model data is gone though)
+      assert.isTrue(imageAnimation.animationIndex === 1, "Animation frame should still have been one.");
+      done();
+    });
 
 
     it("Should be possible to gotoFirstFrame", function(done) {
@@ -3298,6 +3422,16 @@
 
   describe("UserDetails", function() {
 
+    // Not sure how to do this..
+    xit("Should be able to call ready()", function(done) {
+
+
+      //var userDetails = new UserDetails();
+       /*eslint-disable no-underscore-dangle*/
+      /*eslint-enable no-underscore-dangle*/
+      done();
+
+    });
 
     it("Should have default information", function(done) {
 
@@ -3507,3 +3641,4 @@
 
 
 })();
+
