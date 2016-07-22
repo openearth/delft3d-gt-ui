@@ -1563,6 +1563,41 @@
       }, 100);
     });
 
+    it("Should be possible to export a model", function(done) {
+      var correctReply = false;
+
+      modelDetails.model.id = 4;
+
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .intercept("/api/v1/scenes/4/start/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+        .put("/api/v1/scenes/4/start/", {
+          workflow: "export"
+        })
+        .reply(200, function() {
+          correctReply = true;
+          return {};
+        });
+
+      modelDetails.exportModel();
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
+    });
+
     it("Should be possible to export a model - FAILURE test", function(done) {
 
 

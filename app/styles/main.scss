@@ -23,6 +23,7 @@ $white: #f3f3f3;
 $gray-light: #ccc;
 $black: #070707;
 $dark-gray: #ccc;
+$standard-button-background: #008bbf;
 
 $color-details-column: $white;
 $color-scenario-column: #ddd;
@@ -88,6 +89,7 @@ $company-scenario-item-selected-background: $scenario-selected-background;
 // it's better to include the main package
 @import 'bower_components/bootstrap-sass/assets/stylesheets/bootstrap';
 @import 'bower_components/font-awesome/scss/font-awesome';
+@import 'bower_components/open-sans-fontface/sass/open-sans.scss';
 
 
 /* Utilities */
@@ -183,8 +185,7 @@ $row-height: 32px;
 
 // Default font:
 body {
-  font-family: 'Segoe UI';
-
+ font-family: "Open Sans";
 }
 
 
@@ -275,7 +276,6 @@ input[type=date].form-control {
 
   .run {
     background-color: $white;
-    border-bottom: 1px solid $white;
     color: $black;
     min-height: 64px;
     padding: 4px 4px 8px 8px;
@@ -492,6 +492,17 @@ input[type=date].form-control {
     }
   }
 
+}
+
+#top-bar {
+  .navbar-btn {
+
+    background-color: $standard-button-background;
+
+    &:hover {
+      background-color: lighten($standard-button-background, 5%);
+    }
+  }
 }
 
 .heading-bar {
@@ -854,8 +865,6 @@ nav.sidebar,
 
   .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
     color: $black;
-
-
   }
 
   // Disabled style for dropdowns.
@@ -950,6 +959,10 @@ section {
 
   #column-search-results {
     background-color: $color-middle-column-background;
+
+    .heading-bar {
+      padding: 0px 10px 0px 0px;
+    }
   }
 
   #column-run-details {
@@ -1219,6 +1232,7 @@ section {
 
 
   .alert {
+    border-radius: 0;
     margin: 1px;
   }
 
