@@ -121,7 +121,13 @@
   // AS the above does not work, we create some fake jQuery wrappers to mock some of our function calls (sliders, modal, etc) we do this on the spot at some tests.
 
 
+  $.fn.selectpicker = function(options) {
+    console.log("SelectPicker mock: " + options);
+  };
 
+  $.fn.ionRangeSlider = function(options) {
+    console.log("ionRangeSlider mock: " + options);
+  };
 
 
   // In testing we override the URL domain name. Otherwise nock cannot work. Nock does NOT support relative paths.
