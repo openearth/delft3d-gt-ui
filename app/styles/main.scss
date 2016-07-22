@@ -2,12 +2,6 @@
 
 $icon-font-path: '../fonts/';
 
-// Load Segoe UI font.
-@font-face {
-  font-family: 'Segoe UI';
-  src: url('#{$icon-font-path}segoe-ui-webfont.woff') format('woff');
-}
-
 // From: huisstijl.deltares.nl
 
 $builder-form-row: #d6d6ce;
@@ -959,10 +953,6 @@ section {
 
   #column-search-results {
     background-color: $color-middle-column-background;
-
-    .heading-bar {
-      padding: 0px 10px 0px 0px;
-    }
   }
 
   #column-run-details {
@@ -1295,6 +1285,10 @@ section {
 
 .model-list {
   background-color: $model-list-background;
+
+  .list-group {
+    margin-bottom: 8px;
+  }
 }
 
 .publish-level {
