@@ -2,12 +2,6 @@
 
 $icon-font-path: '../fonts/';
 
-// Load Segoe UI font.
-@font-face {
-  font-family: 'Segoe UI';
-  src: url('#{$icon-font-path}segoe-ui-webfont.woff') format('woff');
-}
-
 // From: huisstijl.deltares.nl
 
 $builder-form-row: #d6d6ce;
@@ -23,6 +17,7 @@ $white: #f3f3f3;
 $gray-light: #ccc;
 $black: #070707;
 $dark-gray: #ccc;
+$standard-button-background: #008bbf;
 
 $color-details-column: $white;
 $color-scenario-column: #ddd;
@@ -90,6 +85,22 @@ $company-scenario-item-selected-background: $scenario-selected-background;
 @import 'bower_components/font-awesome/scss/font-awesome';
 
 
+// See issue: https://discourse.roots.io/t/adding-open-sans-via-fontfacekit-bower-isnt-working-with-gulp/3562/2
+// Override our font settings from here:
+@import '_mixins.scss';
+@import '_variables.scss';
+@import 'bower_components/open-sans-fontface/sass/_Bold.scss';
+@import 'bower_components/open-sans-fontface/sass/_BoldItalic.scss';
+@import 'bower_components/open-sans-fontface/sass/_ExtraBold.scss';
+@import 'bower_components/open-sans-fontface/sass/_ExtraBoldItalic.scss';
+@import 'bower_components/open-sans-fontface/sass/_Italic.scss';
+@import 'bower_components/open-sans-fontface/sass/_Light.scss';
+@import 'bower_components/open-sans-fontface/sass/_LightItalic.scss';
+@import 'bower_components/open-sans-fontface/sass/_Regular.scss';
+@import 'bower_components/open-sans-fontface/sass/_Semibold.scss';
+@import 'bower_components/open-sans-fontface/sass/_SemiboldItalic.scss';
+
+
 /* Utilities */
 // Make object shadowed.
 @mixin shadowed() {
@@ -101,7 +112,7 @@ $company-scenario-item-selected-background: $scenario-selected-background;
 
 // Fill max height.
 @mixin fill {
-  height: calc(100vh - 116px);
+  height: calc(100vh - 124px);
 }
 
 // Truncate a line of text with elli...
@@ -183,8 +194,7 @@ $row-height: 32px;
 
 // Default font:
 body {
-  font-family: 'Segoe UI';
-
+ font-family: "Open Sans";
 }
 
 
@@ -275,7 +285,6 @@ input[type=date].form-control {
 
   .run {
     background-color: $white;
-    border-bottom: 1px solid $white;
     color: $black;
     min-height: 64px;
     padding: 4px 4px 8px 8px;
@@ -494,21 +503,42 @@ input[type=date].form-control {
 
 }
 
+#top-bar {
+  .navbar-btn {
+
+    background-color: $standard-button-background;
+
+    &:hover {
+      background-color: lighten($standard-button-background, 5%);
+    }
+  }
+}
+
 .heading-bar {
   font-weight: 600;
-  height: 32px;
-  line-height: 32px;
 }
+
 
 // Force truncate of long names in right detail panel.
 #column-run-details .heading-bar {
   @include truncate();
 }
 
+.container-fluid {
+   border-bottom: 1px solid lighten($gray-dark, 60%);
+}
+
 .tool-bar {
-  height: 32px;
+
   margin-bottom: 0;
-  min-height: 32px;
+  min-height: 40px;
+
+
+  .btn-toolbar {
+    padding: 4px 0px 4px 0px;
+    height: 40px;
+    line-height: 32px;
+  }
 
   .btn {
     font-size: 14px;
@@ -533,6 +563,10 @@ input[type=date].form-control {
   }
 
 
+}
+
+.btn-spaced-right {
+  margin-right: 8px;
 }
 
 // Scenario list
@@ -854,8 +888,6 @@ nav.sidebar,
 
   .navbar-inverse .navbar-nav .open .dropdown-menu>li>a {
     color: $black;
-
-
   }
 
   // Disabled style for dropdowns.
@@ -1005,8 +1037,8 @@ section {
 
   .panel-heading {
     background-color: transparent;
-
   }
+
 
   .domain-search-boxes {
 
@@ -1195,6 +1227,13 @@ section {
 
 .model-details {
   background-color: $color-right-column-background;
+
+  .panel-heading {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
+
 }
 
 
@@ -1219,7 +1258,9 @@ section {
 
 
   .alert {
+    border-radius: 0;
     margin: 1px;
+    margin-top: 8px;
   }
 
   .alert-small {
@@ -1264,6 +1305,16 @@ section {
   }
 }
 
+.model-details {
+  .panel-default {
+    padding: 0px;
+  }
+
+  .panel-title {
+    padding-left: 8px;
+  }
+}
+
 .user-details {
   a {
     color: $white;
@@ -1281,6 +1332,10 @@ section {
 
 .model-list {
   background-color: $model-list-background;
+
+  .list-group {
+    margin-bottom: 8px;
+  }
 }
 
 .publish-level {
@@ -1293,6 +1348,16 @@ section {
   background-color: $deltares-groen; // !important;
 }
 
+/*
+For later... align the buttons.
+.bootstrap-select > .dropdown-toggle {
+  padding-right: 37px;
+
+  span {
+    height: 100px;
+  }
+}
+*/
 
 
 @media screen and (max-width: 1250px) {

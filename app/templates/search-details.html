@@ -1,6 +1,6 @@
 <template id="template-search-details">
 
- <div class="search-details">
+  <div class="search-details">
     <div>
       <form v-on:change="startSearch" v-on:input="startSearch">
         <div class="panel-group" id="run-accordion" role="tablist" aria-multiselectable="true">
@@ -8,120 +8,120 @@
 
             <div class="panel-collapse" role="tabpanel">
 
-                <div class="form-group domain-search-boxes">
-                  <label for="options">Search domain:</label>
+              <div class="form-group domain-search-boxes">
+                <label for="options">Search domain:</label>
 
-                  <!-- break because of the label hack below -->
-                  <div class="form-group">
-
-                        <div class="domain-selection-box">
-                          <input type="checkbox" value="private"  v-model="shared"  id="domain-private"  checked="checked"/>
-                          <label for="domain-private" class="domain-private"><span>Private</span></label>
-                        </div>
-
-                        <div class="domain-selection-box">
-                          <input type="checkbox" value="company" v-model="shared" id="domain-company"   checked="checked"/>
-                          <label for="domain-company" class="domain-company"><span>Company</span></label>
-                        </div>
-
-                        <div class="domain-selection-box">
-                          <input type="checkbox" value="public" v-model="shared" id="domain-public"  checked="checked" />
-                          <label for="domain-public" class="domain-public"><span>Public</span></label>
-                        </div>
-
-                  </div>
-              </div>
-
-                <div class="form-group clear-left">
-                 <label for="search">Search on name:</label>
-                  <div class="input-group stylish-input-group">
-                  <input type="text" class="form-control" id="search" placeholder="Type to search..." v-model="search">
-                    <span class="input-group-addon">
-                        <button class="button-empty-input-field" type="button">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </button>
-                    </span>
-                  </div>
-                </div>
-
-<!-- label search is hidden for now, as long a we do not support it.
-                <div class="form-group clear-left">
-                 <label for="text">Labels:</label>
-                  <div class="input-group stylish-input-group">
-                  <input type="text" class="form-control" id="text" placeholder="Type to seach for labels..." v-model="text">
-                    <span class="input-group-addon">
-                        <button class="button-empty-input-field" type="button">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </button>
-                    </span>
-                  </div>
-                </div>
--->
-
-<!-- date search is hidden for now, as long a we do not support it.
+                <!-- break because of the label hack below -->
                 <div class="form-group">
-                  <label for="begin-date">Search period:</label>
 
-                  <div>
-                    <div class="input-group stylish-input-group search-date-input" >
-                      <input type="date" name="begin-date" value="" class="form-control" v-model="endDate" maxlength="10" placeholder="dd-mm-yyyy" />
-                      <span class="input-group-addon">
-                        <button class="button-empty-input-field" type="button">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </button>
-                      </span>
-                    </div>
-
-                    <div class="search-date-label">until</div>
-
-
-                    <div class="input-group stylish-input-group search-date-input" >
-                      <input type="date" name="end-date" value="" class="form-control" v-model="startDate" maxlength="10" placeholder="dd-mm-yyyy" />
-                      <span class="input-group-addon">
-                        <button class="button-empty-input-field" type="button">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </button>
-                      </span>
-                    </div>
+                  <div class="domain-selection-box">
+                    <input type="checkbox" value="private"  v-model="shared"  id="domain-private"  checked="checked"/>
+                    <label for="domain-private" class="domain-private"><span>Private</span></label>
                   </div>
+
+                  <div class="domain-selection-box">
+                    <input type="checkbox" value="company" v-model="shared" id="domain-company"   checked="checked"/>
+                    <label for="domain-company" class="domain-company"><span>Company</span></label>
+                  </div>
+
+                  <div class="domain-selection-box">
+                    <input type="checkbox" value="public" v-model="shared" id="domain-public"  checked="checked" />
+                    <label for="domain-public" class="domain-public"><span>Public</span></label>
+                  </div>
+
                 </div>
--->
-
-                 <!-- Templates -->
-                    <div class="form-group">
-                      <label for="template">Template</label>
-                      <select class="select-picker form-control" multiple id="template" v-model="selectedTemplates" data-selected-text-format="count > 3" data-actions-box="true">
-                        <option v-for="template in templates" selected>{{ template.name }}</option>
-                      </select>
-                    </div>
-                <!-- end template list -->
-
-
-
-
               </div>
+
+              <div class="form-group clear-left">
+                <label for="search">Search on name:</label>
+                <div class="input-group">
+                  <input type="text" class="form-control" id="search" placeholder="Type to search..." v-model="search">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default button-empty-input-field" type="button">
+                      <i class="fa fa-times" aria-hidden="true"></i>
+                    </button>
+                  </span>
+                </div>
+              </div>
+
+              <!-- label search is hidden for now, as long a we do not support it.
+                   <div class="form-group clear-left">
+                     <label for="text">Labels:</label>
+                     <div class="input-group stylish-input-group">
+                       <input type="text" class="form-control" id="text" placeholder="Type to seach for labels..." v-model="text">
+                       <span class="input-group-addon">
+                         <button class="button-empty-input-field" type="button">
+                           <span class="glyphicon glyphicon-remove"></span>
+                         </button>
+                       </span>
+                     </div>
+                   </div>
+                   -->
+
+              <!-- date search is hidden for now, as long a we do not support it.
+                   <div class="form-group">
+                     <label for="begin-date">Search period:</label>
+
+                     <div>
+                       <div class="input-group stylish-input-group search-date-input" >
+                         <input type="date" name="begin-date" value="" class="form-control" v-model="endDate" maxlength="10" placeholder="dd-mm-yyyy" />
+                         <span class="input-group-addon">
+                           <button class="button-empty-input-field" type="button">
+                             <span class="glyphicon glyphicon-remove"></span>
+                           </button>
+                         </span>
+                       </div>
+
+                       <div class="search-date-label">until</div>
+
+
+                       <div class="input-group stylish-input-group search-date-input" >
+                         <input type="date" name="end-date" value="" class="form-control" v-model="startDate" maxlength="10" placeholder="dd-mm-yyyy" />
+                         <span class="input-group-addon">
+                           <button class="button-empty-input-field" type="button">
+                             <span class="glyphicon glyphicon-remove"></span>
+                           </button>
+                         </span>
+                       </div>
+                     </div>
+                   </div>
+                   -->
+
+              <!-- Templates -->
+              <div class="form-group">
+                <label for="template">Template</label>
+                <select class="select-picker form-control" multiple id="template" v-model="selectedTemplates" data-selected-text-format="count > 3" data-actions-box="true">
+                  <option v-for="template in templates" selected>{{ template.name }}</option>
+                </select>
+              </div>
+              <!-- end template list -->
 
 
 
 
             </div>
 
-            <!-- Dynamically generated HTML using incoming template from API -->
+
+
+
+          </div>
+
+          <!-- Dynamically generated HTML using incoming template from API -->
 
 
 
 
-            <!-- Variables -->
+          <!-- Variables -->
 
-            <div v-for="section in searchTemplates.sections" v-show="searchTemplates !== undefined">
+          <div v-for="section in searchTemplates.sections" v-show="searchTemplates !== undefined">
 
-              <div class="panel panel-default panel-search">
-                <div class="panel-heading list-group-item" role="tab" >
-                  <a role="button" class="section-collapse-link" data-toggle="collapse" data-parent="#template-{{$index}}" href="#template-{{$index}}" aria-expanded="true" aria-controls="template-collapse">
-                   <h3 class="panel-title"><span class="glyphicon glyphicon-triangle-right"></span> {{section.name | uppercase }}</h3>
-                  </a>
+            <div class="panel panel-default panel-search">
+              <div class="panel-heading list-group-item" role="tab" >
+                <a role="button" class="section-collapse-link" data-toggle="collapse" data-parent="#template-{{$index}}" href="#template-{{$index}}" aria-expanded="true" aria-controls="template-collapse">
+                  <h3 class="panel-title"><span class="glyphicon glyphicon-triangle-right"></span> {{section.name | uppercase }}</h3>
+                </a>
 
-                  <div class="panel-collapse collapse" role="tabpanel" aria-labelledby="template-{{$index}}" id="template-{{$index}}">
+                <div class="panel-collapse collapse" role="tabpanel" aria-labelledby="template-{{$index}}" id="template-{{$index}}">
 
                   <div class="form-group" v-for="variable in section.variables">
                     <label class="control-label" for="{{variable.id}}">{{ variable.name }}: <span v-if="variable.units" >({{ variable.units }})</span></label>
@@ -134,71 +134,71 @@
 
                         <template v-if="variable.type === 'slider'">
                           <div>
-                          <input
-                            type="text"
-                            class="ion-range"
-                            id="{{ variable.id }}"
-                            data-min="{{ variable.validators.min }}"
-                            data-max="{{ variable.validators.max }}"
-                            data-type="double"
-                            v-model="selectedParameters[variable.id]"
-                           />
+                            <input
+                               type="text"
+                               class="ion-range"
+                               id="{{ variable.id }}"
+                               data-min="{{ variable.validators.min }}"
+                               data-max="{{ variable.validators.max }}"
+                               data-type="double"
+                               v-model="selectedParameters[variable.id]"
+                               />
                           </div>
                         </template>
 
                         <!-- the 0.01 makes the floating point values work -->
                         <template v-if="variable.type === 'numeric'">
                           <div>
-                          <input
-                            type="text"
-                            class="ion-range"
-                            id="{{ variable.id }}"
-                            data-step="0.01"
-                            data-min="{{ variable.validators.min }}"
-                            data-max="{{ variable.validators.max }}"
-                            data-type="double"
-                            v-model="selectedParameters[variable.id]"
-                           />
+                            <input
+                               type="text"
+                               class="ion-range"
+                               id="{{ variable.id }}"
+                               data-step="0.01"
+                               data-min="{{ variable.validators.min }}"
+                               data-max="{{ variable.validators.max }}"
+                               data-type="double"
+                               v-model="selectedParameters[variable.id]"
+                               />
                           </div>
                         </template>
 
-                         <template v-if="variable.type !== 'numeric' && variable.type !== 'slider' && variable.type !== 'select'">
-                          <div class="input-group stylish-input-group">
+                        <template v-if="variable.type !== 'numeric' && variable.type !== 'slider' && variable.type !== 'select'">
+                            <div class="input-group">
                             <input
                                type="{{ variable.type }}"
                                class="form-control"
                                id="{{ variable.id }}"
                                value=""
-                                v-model="selectedParameters[variable.id]"
+                               v-model="selectedParameters[variable.id]"
                                />
-                            <span class="input-group-addon">
-                              <button class="button-empty-input-field" type="button">
-                                  <span class="glyphicon glyphicon-remove"></span>
-                              </button>
-                            </span>
+                              <span class="input-group-btn">
+                                <button class="btn btn-default button-empty-input-field" type="button">
+                                  <i class="fa fa-times" aria-hidden="true"></i>
+                                </button>
+                              </span>
                           </div>
-                          </template>
+                        </template>
 
-                          <template v-if="variable.type === 'select' && !variable.factor">
-                            <div class="form-group">
+                        <template v-if="variable.type === 'select' && !variable.factor">
+                          <div class="form-group">
                             <select class="select-picker form-control" multiple
-                                   id="{{ variable.id }}"
-                                   v-model="selectedParameters[variable.id]"
-                                   data-selected-text-format="count > 3" data-actions-box="true"
-                                   >
+                                    id="{{ variable.id }}"
+                                    v-model="selectedParameters[variable.id]"
+                                    data-selected-text-format="count > 3" data-actions-box="true"
+                                    >
                               <option
                                  v-for="option in variable.options"
                                  v-bind:value="option.text"
-                                  selected="selected"
+                                 selected="selected"
 
                                  >
                                 {{ option.text }}
                               </option>
                             </select>
-                            </div>
+                          </div>
 
 
-                          </template>
+                        </template>
 
                       </template>
                       <!-- text area -->
@@ -207,7 +207,7 @@
                         <textarea
                            class="form-control"
                            rows="3"
-                            v-model="selectedParameters[variable.id]"
+                           v-model="selectedParameters[variable.id]"
 
                            ></textarea>
                       </template>
@@ -219,10 +219,10 @@
               </div>
             </div>
           </div>
-</form>
+      </form>
 
 
-</div>
-</div>
+      </div>
+    </div>
 
 </template>

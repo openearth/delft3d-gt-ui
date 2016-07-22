@@ -401,10 +401,7 @@ var exports = (function () {
       },
 
       highlightPublishLevel: function() {
-        $(".publish-level").addClass("highlighted");
-        window.setTimeout(function() {
-          $(".publish-level").removeClass("highlighted");
-        }, 1500);
+        $(".publish-level").addClass("highlighted").delay(1500).removeClass("highlighted");
       }
     }
   });

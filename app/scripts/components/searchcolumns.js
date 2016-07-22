@@ -62,7 +62,7 @@ var exports = (function () {
             });
           });
 
-          return names.join(",");
+          return names.join(", ");
         }
       }
 
