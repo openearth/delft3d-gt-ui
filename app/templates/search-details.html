@@ -37,7 +37,7 @@
                 <div class="input-group">
                   <input type="text" class="form-control" id="search" placeholder="Type to search..." v-model="search">
                   <span class="input-group-btn">
-                    <button class="btn btn-default" type="button">
+                    <button class="btn btn-default button-empty-input-field" type="button">
                       <i class="fa fa-times" aria-hidden="true"></i>
                     </button>
                   </span>
@@ -163,7 +163,7 @@
                         </template>
 
                         <template v-if="variable.type !== 'numeric' && variable.type !== 'slider' && variable.type !== 'select'">
-                          <div class="input-group stylish-input-group">
+                            <div class="input-group">
                             <input
                                type="{{ variable.type }}"
                                class="form-control"
@@ -171,11 +171,11 @@
                                value=""
                                v-model="selectedParameters[variable.id]"
                                />
-                            <span class="input-group-addon">
-                              <button class="button-empty-input-field" type="button">
-                                <span class="glyphicon glyphicon-remove"></span>
-                              </button>
-                            </span>
+                              <span class="input-group-btn">
+                                <button class="btn btn-default button-empty-input-field" type="button">
+                                  <i class="fa fa-times" aria-hidden="true"></i>
+                                </button>
+                              </span>
                           </div>
                         </template>
 

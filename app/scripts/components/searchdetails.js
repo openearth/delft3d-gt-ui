@@ -148,9 +148,21 @@ var exports = (function () {
 
             // Add event handler that allows one to use the X next to inputs to clear the input.
             $(".button-empty-input-field").on("click", function() {
+              var input = $(this).closest("div").find("input");
 
+              // Force update selected parameters.
+              // Quick fix for selected parameter, should be a parameter later.
+              var id = input.attr("id");
+
+              if (id === "search") {
+                that.search = "";
+              } else {
+                that.selectedParameters[id] = "";
+              }
               // Search up to the div, and then find the input child. This is the actual input field.
-              $(this).closest("div").find("input").val("");
+              //input.val("");
+              that.startSearch();
+
             });
 
             // Automatic search:
@@ -195,8 +207,6 @@ var exports = (function () {
       };
 
       // serialize parameters corresponding to https://publicwiki.deltares.nl/display/Delft3DGT/Search
-      console.log("PARAMS");
-      console.log(this.selectedParameters);
       params.parameter = _.map(
         // loop over all parameters in the template
         this.selectedParameters,

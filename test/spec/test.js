@@ -16,7 +16,7 @@
   // Create a document
   /* eslint-disable quotes */
 
-  global.document = jsdom('<!doctype html><html><body><div id="top-bar">topbar</div> <div id="tool-bar">tool-bar</div> <div id="below-tool-bar">below-tool-bar</div> <div id="app"><div id="model-create"></div><div id="model-details"></div></div><div id="template-container"></div><div id="dialog-container"></div><div id="scenario-container"></div> <div id="confirm-dialog-test-holder">topbar</div> </body></html>', {});
+  global.document = jsdom('<!doctype html><html><body><div id="app"><div id="model-create"></div><div id="model-details"></div></div><div id="template-container"></div><div id="dialog-container"></div><div id="scenario-container"></div> <div id="confirm-dialog-test-holder">topbar</div>  <div id="template-user-details"></div> <div id="top-bar">topbar</div> <div id="tool-bar">tool-bar</div> <div id="below-tool-bar">below-tool-bar</div> <div id="to_make_a_vscrollbar" style="height: 5000px;">text</div> </body></html>', {});
 
   /* eslint-enable quotes */
 
@@ -118,7 +118,16 @@
   // }
   // test();
 
+  // AS the above does not work, we create some fake jQuery wrappers to mock some of our function calls (sliders, modal, etc) we do this on the spot at some tests.
 
+
+  $.fn.selectpicker = function(options) {
+    console.log("SelectPicker mock: " + options);
+  };
+
+  $.fn.ionRangeSlider = function(options) {
+    console.log("ionRangeSlider mock: " + options);
+  };
 
 
   // In testing we override the URL domain name. Otherwise nock cannot work. Nock does NOT support relative paths.
@@ -169,6 +178,30 @@
 
       });
 
+
+      it("Should be possible to LIST scenarios - FAILURE test", function(done) {
+        nock("http://0.0.0.0")
+          .defaultReplyHeaders({
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          })
+          .filteringPath(function() {
+            return "/api/v1/scenarios/";
+          })
+          .get("/api/v1/scenarios/")
+          .reply(400, {
+          });
+
+        // We expect an error, so we call done if this happens.
+        global.fetchScenarios().catch(function() {
+          // We expected an error.
+          done();
+        });
+
+      });
+
+
+
     // Can we remove scenarios?
       it("Should be possible to DELETE scenarios", function(done) {
 
@@ -188,7 +221,7 @@
           .delete("/api/v1/scenarios/" + deleteid + "/")
           .reply(200, function() {
             correctReply = true;
-            return "";
+            return {"result": "ok"};
           });
 
         global.deleteScenario(deleteid);
@@ -202,6 +235,35 @@
           }
         }, 100);
       });
+
+
+      it("Should be possible to DELETE scenarios - FAILURE test", function(done) {
+
+        var deleteid = 4;
+
+        nock("http://0.0.0.0")
+          //.log(console.log)
+          .defaultReplyHeaders({
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          })
+          .intercept("/api/v1/scenarios/" + deleteid + "/", "OPTIONS") // We get an "OPTIONS" first.
+          .reply(400, function() {
+            return "";
+          })
+          .delete("/api/v1/scenarios/" + deleteid + "/")
+          .reply(200, function() {
+            return "";
+          });
+
+        // An error is expected, so we use done() when it happens.
+        global.deleteScenario(deleteid).catch(function() {
+          // We expected an error.
+          done();
+        });
+
+      });
+
 
       // Test deletescenario when we do not specify any id
       it("Should be possible to DELETE scenarios - no id specified", function(done) {
@@ -504,12 +566,29 @@
       // Simple test, see if object exists
 
       $("#confirm-dialog-test-holder").html("<div id='test-dialog'>dialog</div>");
-      $("#test-dialog").modal = function() {
-        console.log("modal called!");
-      };
+      $.fn.modal = undefined;
 
       confirmDialog.show();
       done();
+    });
+
+    it("Is possible to show - with modal", function(done) {
+      var confirmDialog = new ConfirmDialog();
+
+      confirmDialog.dialogId = "test";
+
+      // Simple test, see if object exists
+
+      $("#confirm-dialog-test-holder").html("<div id='test-dialog'>dialog</div>");
+
+
+      // Normally this is applied directly to an element, with a jquery reference, but we cannot do that using tests?
+      $.fn.modal = function() {
+        done();
+        $.fn.modal = undefined; // Unset for later calls.
+      };
+
+      confirmDialog.show();
     });
 
 
@@ -520,13 +599,30 @@
 
 
       $("#confirm-dialog-test-holder").html("<div id='test-dialog'>dialog</div>");
-      $("#test-dialog").modal = function() {
-        console.log("modal called!");
-      };
+
 
       confirmDialog.hide();
 
       done();
+    });
+
+    it("Is possible to hide - with modal", function(done) {
+      var confirmDialog = new ConfirmDialog();
+
+      confirmDialog.dialogId = "test";
+
+
+      $("#confirm-dialog-test-holder").html("<div id='test-dialog'>dialog</div>");
+
+      // Normally this is applied directly to an element, with a jquery reference, but we cannot do that using tests?
+      $.fn.modal = function() {
+
+        done();
+        $.fn.modal = undefined; // Unset for later calls.
+      };
+
+      confirmDialog.hide();
+
     });
 
 
@@ -789,7 +885,7 @@
     });
   });
 
-  describe("SScenarioCreate - cenario builder", function() {
+  describe("ScenarioCreate - Scenario builder", function() {
 
     it("Should be possible to convert a single value to a tag array", function(done) {
       var array = factorToArray({
@@ -870,12 +966,38 @@
       var scenarioCreate = new ScenarioCreate({
       });
 
+
       scenarioCreate.updateFixedToolbarStyle();
 
       assert.isOk(scenarioCreate.updateFixedToolbarStyle);
 
       done();
     });
+
+    it("Should be possible to updateFixedToolbarStyle - scrolled down", function(done) {
+      var scenarioCreate = new ScenarioCreate({
+      });
+
+      scenarioCreate.initFixedToolbar();
+      // Fake a scrolling activity:
+      var original = $.fn.scrollTop;
+
+      $.fn.scrollTop = function() {
+        return 1000;
+      };
+
+      scenarioCreate.navBars.topBar.clientHeight = 40;
+
+      scenarioCreate.updateFixedToolbarStyle();
+
+      assert.isOk(scenarioCreate.updateFixedToolbarStyle);
+
+      // Original functoin again.
+      $.fn.scrollTop = original;
+
+      done();
+    });
+
 
 
     it("Should be possible to call GetTop", function(done) {
@@ -1190,6 +1312,18 @@
     });
 
 
+
+    it("Should be possible to fetchLog - NON existing model", function(done) {
+      var id = 405;
+
+      // We expect an error! As there are no models yet
+      global.fetchLog(id).catch(function() {
+        // We expect an error.
+        done();
+      });
+    });
+
+
     // This function should not perform a request as there is no filelog yet!
     it("Should be possible to fetchLog - NO filelog yet", function(done) {
       var correctReply = true;
@@ -1327,8 +1461,6 @@
             done();
           });
         });
-
-
     });
 
 
@@ -1395,6 +1527,41 @@
 
 
 
+
+    it("Should be possible to export a model", function(done) {
+      var correctReply = false;
+
+      modelDetails.model.id = 4;
+
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .intercept("/api/v1/scenes/4/start/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+        .put("/api/v1/scenes/4/start/", {
+          workflow: "export"
+        })
+        .reply(200, function() {
+          correctReply = true;
+          return {};
+        });
+
+      modelDetails.exportModel();
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
+    });
 
     it("Should be possible to export a model", function(done) {
       var correctReply = false;
@@ -1969,6 +2136,79 @@
     });
 
 
+    it("Should be possible to publish a model private using Confirm - FAILURE test", function(done) {
+
+      modelDetails = new ModelDetails();
+
+      modelDetails.$parent = {};
+      modelDetails.$parent.$broadcast = function() {
+        done("Broadcast should not have been called");
+      };
+
+      modelDetails.$root = {};
+      modelDetails.$root.$broadcast = function() {
+        done("Broadcast should not have been called");
+      };
+
+      modelDetails.model.id = 4;
+
+      // Publishlevel 2 = world
+
+      var newPublishLevel = 2;
+      var target = "world";
+
+      // To get dialogs, manually have to create and add them to the component. So that is what we do here:
+      var dialog = new ConfirmDialog();
+
+      dialog.dialogId = "publish";
+      modelDetails.$children.push(dialog);
+
+      // End manual dialog.
+
+
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .post("/api/v1/scenes/" + modelDetails.model.id + "/publish_" + target + "/")
+        .reply(400, function() { // We reply with 400
+          return {};
+        });
+
+
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        done();
+
+      }, 150);
+
+      // We test if the continue code was still called by checking if a broadcast was executed.
+      modelDetails.$parent = {};
+      modelDetails.$parent.$broadcast = function() {
+        done("Broadcast should not have been called");
+      };
+
+      modelDetails.$root = {};
+      modelDetails.$root.$broadcast = function() {
+        done("Broadcast should not have been called");
+      };
+
+
+      $("#dialog-container").load("/templates/confirm-dialog.html", function() {
+
+        modelDetails.publishModel(newPublishLevel);
+
+        // Find the dialog:
+        var publishDialog = getDialog(modelDetails, "confirm-dialog", "publish");
+
+        // confirm the dialog:
+        publishDialog.onConfirm();
+      });
+    });
+
+
+
     it("Should be possible to publish a model private using Confirm", function(done) {
 
       var correctReply = false;
@@ -2437,12 +2677,24 @@
 
 
 
+    it("Should be possible to stop image frames - no anim key", function(done) {
+
+      // Fake a timer interval:
+      imageAnimation.timerAnimation = 0;
+      imageAnimation.currentAnimationKey = "";
+
+      assert.isFalse(imageAnimation.stopImageFrame(), "should have bailed out early");
+
+
+      done();
+
+    });
 
     it("Should be possible to stop image frames", function(done) {
 
       // Fake a timer interval:
       imageAnimation.timerAnimation = 2;
-
+      imageAnimation.currentAnimationKey = "delta_fringe_images";
       imageAnimation.stopImageFrame();
 
       assert.isTrue(imageAnimation.timerAnimation === -1, "timeranimation id should have become -1");
@@ -2456,6 +2708,21 @@
       imageAnimation.playImageFrame();
 
       assert.isTrue(imageAnimation.timerAnimation !== -1, "timeranimation id should not be -1");
+
+      done();
+
+    });
+
+    it("Should be possible to play image frames the imageFrame - No animationkey set", function(done) {
+
+      imageAnimation.currentAnimationKey = "";
+
+      // Without an animation key, playimage should just return and do nothing.
+      imageAnimation.playImageFrame();
+
+      imageAnimation.timerAnimation = -1;
+
+      assert.isTrue(imageAnimation.timerAnimation === -1, "timeranimation id should still be -1");
 
       done();
 
@@ -2477,6 +2744,29 @@
 
       done();
     });
+
+
+    it("Should be possible to change to next imageFrame - stop at end", function(done) {
+
+      /*eslint-disable camelcase*/
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      /*eslint-enable camelcase*/
+
+      imageAnimation.currentAnimationIndex = 0;
+      imageAnimation.currentAnimationKey = "delta_fringe_images";
+
+      // Loop some times, we should end at the last image anyway.
+      for (var i = 0; i < 10; i++) {
+        imageAnimation.nextImageFrame();
+      }
+
+      // Next frame should have brought to the next frame.
+      assert.isTrue(imageAnimation.animationIndex === imageAnimation.model.info.delta_fringe_images.images.length - 1, "Animation frame at end");
+
+      done();
+    });
+
+
 
 
     it("Should be possible to change to next imageFrame - no model info", function(done) {
@@ -2588,6 +2878,17 @@
       done();
     });
 
+    it("Should be possible to check frameCount property - no data", function(done) {
+
+      // We should not have any frames in this animation object, but maybe make sure later on?
+       /*eslint-disable camelcase*/
+      imageAnimation.model.info = { };
+      /*eslint-enable camelcase*/
+      imageAnimation.currentAnimationKey = "delta_fringe_images";
+      assert.isTrue(imageAnimation.frameCount === 0, "Animation framecount should not be 0");
+      done();
+    });
+
 
     it("Should be possible to switchAnimation", function(done) {
 
@@ -2597,7 +2898,26 @@
       done();
     });
 
-    it("Should be possible to previousImageFrame", function(done) {
+    it("Should be possible to previousImageFrame - No model info", function(done) {
+
+      // index should become 0
+       /*eslint-disable camelcase*/
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.switchAnimation("delta_fringe_images");
+      imageAnimation.currentAnimationIndex = 1; // fake an index.
+
+      // now remove data.
+      imageAnimation.model.info = undefined;
+      /*eslint-enable camelcase*/
+
+      imageAnimation.previousImageFrame();
+
+      // We started at 0, without data, so it should still be 1, as it was left untouched (maybe should become 0 if the model data is gone though)
+      assert.isTrue(imageAnimation.animationIndex === 1, "Animation frame should still have been one.");
+      done();
+    });
+
+    it("Should be possible to previousImageFrame ", function(done) {
 
       // index should become 0
        /*eslint-disable camelcase*/
@@ -2612,6 +2932,22 @@
       done();
     });
 
+    it("Should be possible to previousImageFrame - no animation key ", function(done) {
+
+      // index should become 0
+       /*eslint-disable camelcase*/
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      /*eslint-enable camelcase*/
+      imageAnimation.currentAnimationKey = ""; // No animation key
+      imageAnimation.currentAnimationIndex = 1; // fake an index.;
+      imageAnimation.previousImageFrame();
+
+      // We started at 0, without data, so it should still be 1, as it was left untouched (maybe should become 0 if the model data is gone though)
+      assert.isTrue(imageAnimation.animationIndex === 1, "Animation frame should still have been one.");
+      done();
+    });
+
+
     it("Should be possible to gotoFirstFrame", function(done) {
 
       // index should become 0
@@ -2621,6 +2957,21 @@
 
       imageAnimation.switchAnimation("delta_fringe_images");
       imageAnimation.gotoFirstFrame();
+
+      assert.isTrue(imageAnimation.animationIndex === 0, "Animation frame at 0");
+      done();
+    });
+
+    it("Should be possible to gotoLastFrame - number wrap", function(done) {
+
+      // index should become 0.. we do not have any images. Maybe test later using an fake array.
+       /*eslint-disable camelcase*/
+      imageAnimation.model.info = { delta_fringe_images: { images: [] } };
+      /*eslint-enable camelcase*/
+
+      imageAnimation.animationIndex = -10;
+      imageAnimation.switchAnimation("delta_fringe_images");
+      imageAnimation.gotoLastFrame();
 
       assert.isTrue(imageAnimation.animationIndex === 0, "Animation frame at 0");
       done();
@@ -2935,7 +3286,7 @@
 
        /*eslint-enable camelcase*/
 
-      assert.isTrue(names === "a,b,c", "selectedrunnames match");
+      assert.isTrue(names === "a, b, c", "selectedrunnames match");
 
       done();
     });
@@ -3106,6 +3457,16 @@
 
   describe("UserDetails", function() {
 
+    // Not sure how to do this..
+    xit("Should be able to call ready()", function(done) {
+
+
+      //var userDetails = new UserDetails();
+       /*eslint-disable no-underscore-dangle*/
+      /*eslint-enable no-underscore-dangle*/
+      done();
+
+    });
 
     it("Should have default information", function(done) {
 
@@ -3315,3 +3676,4 @@
 
 
 })();
+

@@ -8,9 +8,7 @@
           <div class="row" >
             <div class="col-xs-2" id="column-search-details">
               <div class="btn-toolbar heading-bar" >
-                Search
-
-                <button type="button" class="btn pull-right nav-bar-button" id="btn-reset-search-form" v-on:click="resetFields">Reset</button>
+                Search <button type="button" class="btn pull-right nav-bar-button" id="btn-reset-search-form" v-on:click="resetFields">Reset</button>
               </div>
             </div>
 
@@ -21,12 +19,12 @@
                 <a class="btn pull-right nav-bar-button" title="Create scenario" href="#/scenarios/create">Create scenario</a>
 
                 <model-control-menu :selected-runs="selectedRuns" :models="models" :selected-scenarios="selectedScenarios" ></model-control-menu>
-            </div>
+              </div>
           </div>
 
           <div class="col-xs-5" id="column-run-details">
             <div class="btn-toolbar heading-bar" >
-              Details <span v-if="selectedRuns.length > 0">for &ldquo;<strong>{{selectedRunNames}}</strong>&rdquo;</span>
+              Details <span v-if="selectedRuns.length > 0">for &ldquo;{{selectedRunNames}}&rdquo;</span>
             </div>
           </div>
         </div>
