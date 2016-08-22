@@ -1,7 +1,6 @@
 <template id="template-model-details">
-  <div>
-    <h3 >Details <span v-if="(model.id !== undefined)">for &ldquo;<strong>{{model.name}}</strong>&rdquo;</span></h3>
-    <div class="column-header"></div>
+
+  <div class="model-details">
     <div class="alert alert-info" v-if="(model.id === undefined)">
       No run selected.
     </div>
@@ -12,20 +11,25 @@
 
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h2 class="panel-title">Summary </h2>
+          <h2 class="panel-title">Summary</h2>
         </div>
 
         <div class="panel-body" v-if="model">
           <table class="table-default">
             <tbody>
               <tr>
-                <td>Name</td>
+                <td class="col-md-2">Name</td>
                 <td>{{model.name}} </td>
+              </tr>
+
+              <tr v-if="model.owner">
+                <td>Owner of run</td>
+                <td><a href="mailto:{{model.owner.email}}">{{ model.owner.first_name }} {{ model.owner.last_name }}</a> </td>
               </tr>
 
               <tr>
                 <td>Model files</td>
-                <td>View <a href="{{model.fileurl}}">working directory</a></td>
+                <td>View <a href="{{model.fileurl}}" target="_blank">working directory</a></td>
               </tr>
 
               <tr>
@@ -37,7 +41,7 @@
                 <td>Progress</td>
                 <td>
 
-                  <div class="progress progress-incell ">
+                  <div class="progress progress-incell">
                     <div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" v-bind:style="{width: progress + '%'}" data-toggle="tooltip" data-placement="top" title="Progress">
                       <span class="sr-only">{{progress}}% Complete</span>
                       <span class="progress-type">{{progress}}%</span>
@@ -46,6 +50,10 @@
                 </td>
               </tr>
 
+              <tr class="publish-level">
+                <td>Share level</td>
+                <td><span>{{ publishLevel }}</span></td>
+              </tr>
 
               <tr>
                 <td>Identification</td>
@@ -62,30 +70,52 @@
         </div>
         <div class="panel-body">
           <p>
-            Please select an action to perform on this simulation
+            Please select an action to perform on this simulation.
           </p>
 
-          <button type="button" class="btn btn-labeled btn-success" v-bind:class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE') }" id="simulation-control-start" v-on:click="startModel">
+          <button type="button" class="btn btn-labeled btn-success btn-spaced-right"  id="simulation-control-start" v-on:click="startModel" v-bind:class="{ 'inputdisabled':  isReadOnly() }" >
             <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>
             Restart
-          </button>
-
-          <button type="button" class="btn btn-labeled btn-warning" v-bind:class="{ 'inputdisabled':  !(model.state === 'PROCESSING') }" id="simulation-control-stop" v-on:click="stopModel">
+          </button><button type="button" class="btn btn-labeled btn-warning  btn-spaced-right" id="simulation-control-stop" v-on:click="stopModel" v-bind:class="{ 'inputdisabled':  isReadOnly() }">
             <span class="btn-label"><i class="glyphicon glyphicon-stop"></i></span>
             Stop
-          </button>
-
-
-          <button type="button" class="btn btn-labeled btn-danger" v-bind:class="{ 'inputdisabled': !((model.state === 'SUCCESS' || model.state === 'FAILURE') || model.state === 'PENDING') }"  v-on:click="removeModel(model)">
+          </button><button type="button" class="btn btn-labeled btn-danger  btn-spaced-right" v-on:click="removeModel(model)" v-bind:class="{ 'inputdisabled':  isReadOnly() }">
             <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
             Remove run
           </button>
-          <!--
-          Do not give option anymore to remove files. WE will always do this.
-          <input type="checkbox" value="1" id="simulation-control-check-delete-files" /> Also delete all simulation files
-          -->
+
+          <span class="alert alert-info alert-small" role="alert" v-if="isReadOnly()" >
+
+            Simulation control is only available when runs are not published.
+          </span>
+
         </div>
       </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h2 class="panel-title">Share controls</h2>
+        </div>
+        <div class="panel-body">
+          <p>
+            You can change the rights of your simulation results. You can share them with everybody, only your company or keep them private (default).
+          </p>
+
+          <!-- These are now links, replace by post requests later, otherwise a search engine will start publishing models -->
+          <!-- This form-inline is normally applied to a form but in this case we have 3 forms as a form group. -->
+          <template v-for="level in publishLevels"><button type="button"
+               class="btn btn-labeled btn-default  btn-spaced-right"
+               :class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE' || model.state === 'ABORTED') || !isLevelEnabled($index) }"
+               v-on:click="publishModel($index)">
+              <span class="btn-label">
+                <i class="glyphicon" :class="publishLevels[$index].iconClass"></i>
+              </span>
+              {{ publishLevels[$index].description }}
+            </button></template>
+
+        </div>
+      </div>
+
 
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -97,18 +127,13 @@
               <tr>
                 <th>Parameter</th>
                 <th>Value</th>
-                <th>Using vary</th>
                 <th>Units</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(key, param) in model.parameters">
-                <td>{{key}}</td>
+              <tr v-for="(key, param) in model.parameters | orderBy '$key'">
+                <td>{{ (param.name || key) | capitalize }}</td>
                 <td>{{param.value}}</td>
-                <td>
-                  <span v-if="param.useautostep === true">Yes</span>
-                  <span v-else>No</span>
-                </td>
                 <td>
                   <!-- we add this as we might have some older models not having the units var yet. -->
                   <span v-if="param.units !== undefined">
@@ -143,18 +168,42 @@
           <p>
             Please check what you would like to download. Your download will be a ZIP file which contains the requested files.
           </p>
-          <p>
-            Currently you can only dowload the generated output images.
-          </p>
+
           <div class="form-group input-group">
-            <span class="input-group-addon"><input type="checkbox" class="downloadoption" checked="checked" v-on:change="downloadOptionsChange()"></span>
-            <span class="form-control">Download generated output images</span>
+            <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_d3dinput" v-on:change="downloadOptionsChange()"></span>
+            <span class="form-control no-fixed-height">Download Delft3D input</span>
           </div>
-          <div class="btn-group">
-            <button class="form-control btn btn-primary" id="download-submit" v-on:click="downloadFiles()" value="">
-              Download
-            </button>
+
+          <div class="form-group input-group">
+            <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_d3doutput" v-on:change="downloadOptionsChange()"></span>
+            <span class="form-control no-fixed-height">Download Delft3D output</span>
           </div>
+
+          <div class="form-group input-group">
+            <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_images" v-on:change="downloadOptionsChange()"></span>
+            <span class="form-control no-fixed-height">Download generated output images</span>
+          </div>
+          <div class="form-group input-group" v-bind:class="{ 'inputdisabled': model.info.export === false}">
+            <span class="input-group-addon"><input type="checkbox" class="downloadoption"  value="export_thirdparty" v-on:change="downloadOptionsChange()" ></span>
+            <span class="form-control no-fixed-height">Include export for RMS / Petrel <span v-if="model.info.export === false">. <small>Please use <strong>"Start export"</strong> first at Simulation controls. After export completes, this option is available.</small></span></span>
+          </div>
+
+          <div class="form-group input-group">
+            <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_movie" v-on:change="downloadOptionsChange()"></span>
+            <span class="form-control no-fixed-height">Download output movie</span>
+          </div>
+
+
+          <button class="btn btn-primary" type="button"  id="download-submit" v-on:click="downloadFiles()" value="">
+            Download
+          </button>
+
+          <button class="btn btn-primary" type="button" v-bind:class="{ 'inputdisabled': model.state === 'PROCESSING' }"  v-on:click="exportModel">
+            Start export
+          </button>
+
+          <h5 v-bind:class="{ 'default-hidden': model.state === 'PROCESSING' }">&ldquo;<i>Start export</i>&rdquo; becomes available after a simulation has finished and not published.</h5>
+
         </div>
       </div>
 
@@ -181,34 +230,42 @@
       </div>
 
       <!-- MODALS -->
+      <confirm-dialog dialog-id="publish" confirm-button-title="Publish">
+        <template slot="title">
+          Share model '{{ model.name }}'?
+        </template>
+        <template slot="body">
+          <p>Are you sure you want to share this model as '{{ nextPublishLevel }}'?</p>
+        </template>
+        <template slot="alert">
+          This action cannot be undone.
+        </template>
+      </confirm-dialog>
 
-      <div class="modal default-hidden fade " id="dialog-confirm-delete" tabindex="-1" role="dialog">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title">Remove model '<span id="dialog-remove-name"></span>'?</h4>
-            </div>
-            <div class="modal-body">
-              <p>
-                Are you sure you want to remove this model?
-              </p>
+      <confirm-dialog dialog-id="delete" confirm-button-title="Delete">
+        <template slot="title">
+          Remove model '{{ model.name }}'?
+        </template>
+        <template slot="body">
+          <p>Are you sure you want to remove this model?</p>
+        </template>
+        <template slot="alert">
+          Additional files already generated by this models will also be deleted.
+        </template>
+      </confirm-dialog>
 
-              <!-- warning which is shown if user also wants to delete additional files. -->
-              <div class="msg-delete-extra alert alert-info" role="alert">
-                Additional files already generated by this models will also be deleted.
-              </div>
-
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-warning" id="dialog-remove-response-accept">Delete</button>
-              <button type="button" class="btn btn-primary" id="dialog-remove-response-cancel" data-dismiss="modal">Cancel</button>
-            </div>
-          </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-      </div>
-      <!-- REMOVE FROM HERE -->
-    </div>
+      <confirm-dialog dialog-id="stop" confirm-button-title="Stop">
+        <template slot="title">
+          Stop model '{{ model.name }}'?
+        </template>
+        <template slot="body">
+          <p>Are you sure you want to stop this model?</p>
+        </template>
+        <template slot="alert">
+		You will need to restart the model if you want to continue the simulation
+        </template>
+      </confirm-dialog>
 
   </div>
+
 </template>

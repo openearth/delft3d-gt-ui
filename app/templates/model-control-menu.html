@@ -1,0 +1,27 @@
+<template id="template-model-control-menu" inline-template>
+
+  <div class="btn-group dropdown pull-right">
+    <button type="button" class="btn btn-default dropdown-toggle nav-bar-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars" aria-hidden="true"></i>
+</span></button>
+
+    <ul class="dropdown-menu">
+
+      <!-- clone item, enabled only if one item is selected -->
+      <!-- disabled pointer is on the parent (as pointer events:none disable mouse cursor changes) -->
+      <li v-bind:class="{disabledpointer: selectedScenarios.length !== 1 }"><a v-bind:class="{inputdisabled: selectedScenarios.length !== 1 }" v-on:click="cloneScenario()">Clone scenario</a></li>
+      <li v-bind:class="{disabledpointer: selectedScenarios.length === 0 }"><a v-bind:class="{inputdisabled: selectedScenarios.length === 0 }" v-on:click="deleteSelectedScenario()">Delete scenario(s)</a></li>
+<!--
+    Hidden for a moment, as we disable multiselect
+
+      <li role="separator" class="divider"></li>
+
+      <li><a v-bind:class="{inputdisabled: selectedRuns.length === 0  && selectedScenarios.length === 0}" v-on:click="startSelectedModels()">Start</a></li>
+      <li><a v-bind:class="{inputdisabled: selectedRuns.length === 0  && selectedScenarios.length === 0}" v-on:click="stopSelectedModels()">Stop</a></li>
+
+      <li role="separator" class="divider"></li>
+      <li><a v-bind:class="{inputdisabled: selectedRuns.length === 0  && selectedScenarios.length === 0}"  v-on:click="deleteSelectedModels()">Delete</a></li>
+-->
+    </ul>
+  </div>
+
+</template>

@@ -1,4 +1,4 @@
-/* global ImageAnimation, fetchModel, fetchLog, deleteModel, startModel, stopModel, router */
+/* global ImageAnimation, ConfirmDialog, getDialog, fetchModel, fetchLog, deleteModel, startModel, exportModel, stopModel, publishModel  */
 var exports = (function () {
   "use strict";
 
@@ -7,28 +7,50 @@ var exports = (function () {
 
     components: {
       // <my-component> will only be available in Parent's template
-      "image-animation": ImageAnimation
-
+      "image-animation": ImageAnimation,
+      "confirm-dialog": ConfirmDialog
     },
 
     // Show the details of one model
     data: function() {
-      console.log("loading model details for id", this.id);
-
       return {
         timerId: -1,
         model: {
-        }
+        },
+        publishLevels: [
+          {
+            "indicator": "p",
+            "url": "private",
+            "iconClass": "glyphicon-people",
+            "description": "Private"
+          },
+          {
+            "indicator": "c",
+            "url": "company",
+            "iconClass": "glyphicon-blackboard",
+            "description": "Company"
+          },
+          {
+            "indicator": "w",
+            "url": "world",
+            "iconClass": "glyphicon-globe",
+            "description": "Public"
+          }
+        ],
+        waitingForUpdate: false,
+        publishDialog: null,
+        deleteDialog: null,
+        stopDialog: null
       };
 
     },
 
     created: function() {
-      console.log("Model details are created with model", JSON.stringify(this.model));
-      this.updateData(this.model.id);
+      if (this.model.id !== -1) {
+        this.updateData(this.model.id);
+      }
     },
     ready: function() {
-      console.log("model details are ready");
       // enable the tab based menu (only for tabs, keep real links)
       $("#model-details-navigation .nav a[data-toggle='tab']").click(function (e) {
         e.preventDefault();
@@ -39,7 +61,6 @@ var exports = (function () {
       clipboard.on("success", function(e) {
         e.clearSelection();
       });
-      console.log("updating model id");
 
     },
     computed: {
@@ -59,7 +80,7 @@ var exports = (function () {
         set: function(val) {
           // updating the data
           // clear model data
-          console.log("New model set, replacing model by empty model");
+          console.log("New model set, replacing model by empty model: " + val);
           var modelId = parseInt(val);
 
           this.model = {};
@@ -77,15 +98,11 @@ var exports = (function () {
             this.updateData(modelId);
           }, 5000);
 
-          // Stop any animation if we were animating.
-          //this.stopImageFrame();
-
-          // Reset index:
-          //this.currentAnimationIndex = 0;
         }
 
 
       },
+
       scenario: {
         get: function() {
           if (_.has(this, "model.scenario")) {
@@ -106,28 +123,7 @@ var exports = (function () {
             return 0;
           }
 
-          var max = 0;
-
-          if (this.model.info !== undefined) {
-            $.each(this.model.info, function(key, value) {
-
-              // Channel network images, etc are also inhere.. so we have to check if the info object exists..
-              if (value.info !== undefined && value.info !== null) {
-                // We loop through all output arrays, and take the highest progress.
-                if (value.info.output !== undefined) {
-                  for(var i = 0; i < value.info.output.length; i++) {
-                    if (value.info.output[i].progress > max) {
-                      max = value.info.output[i].progress;
-                    }
-                  }
-                }
-              }
-
-            });
-          }
-
-          // Return in percent.
-          return Math.round(max * 100);
+          return this.model.progress;
         }
 
       },
@@ -148,18 +144,46 @@ var exports = (function () {
 
           return this.model && this.model.state === "PROCESSING";
         }
+      },
+
+      publishLevel: {
+        cache: false,
+        get: function() {
+          var msg = (this.waitingForUpdate ? "Changing to '" : "");
+
+          var index = this.indexOfPublishLevel();
+
+          if (this.waitingForUpdate) {
+            index++;
+          }
+
+          if (index >= 0 && index <= this.publishLevels.length) {
+            return msg + this.publishLevels[index].description + (this.waitingForUpdate ? "'" : "");
+          }
+          return "Unknown";
+        }
+      },
+
+      nextPublishLevel: {
+        cache: false,
+        get: function() {
+          var index = this.indexOfPublishLevel() + 1;
+
+          if (index >= 0 && index < this.publishLevels.length) {
+            return this.publishLevels[index].description;
+          }
+          return "Unknown";
+        }
       }
     },
     route: {
       data: function(transition) {
         // get model (from a service or parent)
 
-        console.log("data transition", transition, this);
         this.updateData(parseInt(transition.to.params.modelid));
         transition.next();
       },
       activate: function(transition) {
-        console.log("activating transition", transition);
         transition.next();
 
       }
@@ -169,44 +193,47 @@ var exports = (function () {
         // update data with id, and if transition is passed transition to it
         // afterwards, pass the log
 
+        var that = this;
+
         // make sure id is a number
+
         fetchModel(id)
           .then(
             (json) => {
 
-              // copy old data and set model
-              var data = this.$data;
+              that.model = json;
 
-              data.model = json;
-              // and fetch log afterwards
-              // fetchLog(data.model.id)
-              //   .then(log => {
-              //     $("#model-log-output").text(log);
-              //   })
-              //   .catch(e => {
-              //     $("#model-log-output").text("Failed to get log: " + e);
-              //   });
+              if (this.waitingForUpdate) {
+                this.highlightPublishLevel();
+              }
+
+              this.waitingForUpdate = false;
             }
           )
-          .catch(e => {
-            console.log("Failed to get model with id", id, "error", e);
+          .catch(() => {
+            //console.log("Failed to get model with id", id, "error", e);
           });
 
       },
+
       downloadFiles: function() {
         // Open download window
         var id = this.model.id;
 
-        window.open("/scene/export?id=" + id);
+        // Get array of checked download options.
+        var downloadOptions = $(".downloadoption:checked").map(function() {
+          return "options=" + $(this).val();
+        }).get(); //
+
+        window.open("/api/v1/scenes/" + id + "/export/?" + downloadOptions.join("&"));
       },
       // Remove item, based on incoming modelinfo.
       removeModel: function() {
 
         // keep track of the scenario before deletion
-        var scenarioId = this.scenario;
-        var that = this;
+        // Needs to be added soon
+        //var scenarioId = this.scenario;
 
-        $("#dialog-remove-name").html(this.model.name);
         // Do we also remove all the additional files? This is based on the checkmark.
         // if deletefiles is true, we will tell the server that we want to remove these files.
         var deletefiles = true; // We do not provide this option anymore. LEaving it here shortly if someone changes his or her mind: $("#simulation-control-check-delete-files").is(":checked");
@@ -216,101 +243,78 @@ var exports = (function () {
           "deletefiles": deletefiles
         };
 
-        // User accepts deletion:
-        $("#dialog-remove-response-accept").on("click", () => {
+
+        this.deleteDialog = getDialog(this, "confirm-dialog", "delete");
+
+        this.deleteDialog.onConfirm = function() {
           var deletedId = this.model.id;
 
-
           deleteModel(deletedId, options)
-            .then(function(data) {
-              console.log("model deleted from server", deletedId, "data:", data);
+            .then(() => {
+              this.$parent.$broadcast("show-alert", {
+                message: "Deleting run... It might take a moment before the view is updated.",
+                showTime: 5000,
+                type: "success"
+              });
 
-              that.$parent.$broadcast("show-alert", { message: "Deleting run... It might take a moment before the view is updated.", showTime: 5000, type: "success"});
+              // Immediatly refresh screen:
+              this.$root.$broadcast("updateSearch");
 
             })
             .catch(e => {
               console.log("model deletion failed", e);
             });
 
-          // Hide dialog when user presses this accept.:
-          $("#dialog-confirm-delete").modal("hide");
 
-          // key values correspond to url parameters which are lowercase
-          var params = {
-            modelid: -1,
-            scenarioid: scenarioId
-          };
+          this.deleteDialog.hide();
 
-          // TODO: keep routing logic in main window
-          router.go({
-            name: "finder-columns",
-            params: params
-          });
-
-        });
+        }.bind(this);
 
         // We also show an extra warning in the dialog, if user chooses to remove additional files.
-        $("#dialog-confirm-delete .msg-delete-extra").toggle(deletefiles);
+        this.deleteDialog.showAlert(deletefiles);
 
         // Show the dialog:
-        $("#dialog-confirm-delete").modal({});
-
+        this.deleteDialog.show();
 
       },
+
       fetchLog: function() {
+
         // Working dir is at: modeldata.fileurl + delf3d + delft3d.log
         fetchLog(this.model.id)
           .then(log => {
             // don't do this with jquery, too slow
-            document.getElementById("model-log-output").textContent = log;
+            $("#model-log-output").text(log);
           })
           .catch(e => {
-            console.log(e);
+            console.log("error - fetchlog" + e);
             $("#model-log-output").text("No log available");
           });
       },
 
-      // Not used anymore?
-      // changeMenuItem: function(event) {
-
-      //   var el = $(event.target);
-
-      //   // Hide all panels except for the target.
-      //   $(".collapse").hide();
-
-      //   // Get target:
-      //   var targetSelector = $(el).attr("data-target");
-      //   var target = $(targetSelector);
-
-      //   target.show();
-
-
-      //   // If there is an animation property, we set this:
-      //   var targetAnimation = $(el).attr("data-animation");
-
-      //   if (targetAnimation !== undefined && targetAnimation.length > 0) {
-      //     this.currentAnimationKey = targetAnimation;
-      //     this.currentAnimationIndex = 0;
-      //     this.stopImageFrame();
-
-      //   } else {
-      //     this.currentAnimationKey = "";
-      //     this.currentAnimationIndex = 0;
-      //   }
-
-
-
-      //   event.stopPropagation();
-      // },
-
       // User wants to start a model. We just do not do anything now, as this needs to be implemented.
       startModel: function() {
-        var that = this;
 
         // We use the runmodel for this.
         startModel(this.model.id)
+          .then(() => {
+            this.$parent.$broadcast("show-alert", {
+              message: "Restarting run... It might take a moment before the view is updated.",
+              showTime: 5000,
+              type: "success"
+            });
+
+            // Immediatly refresh screen:
+            this.$root.$broadcast("updateSearch");
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      },
+
+      exportModel: function() {
+        exportModel(this.model.id)
           .then(msg => {
-            that.$parent.$broadcast("show-alert", { message: "Restarting run... It might take a moment before the view is updated.", showTime: 5000, type: "success"});
             console.log(msg);
           })
           .catch(e => {
@@ -320,23 +324,59 @@ var exports = (function () {
 
       // Stop a model.
       stopModel: function() {
-
         var deletedId = this.model.id;
-        var that = this;
 
-        stopModel(deletedId)
-          .then(msg => {
-            console.log(msg);
-            that.$parent.$broadcast("show-alert", { message: "Stopping run... It might take a moment before the view is updated.", showTime: 5000, type: "success"});
+        this.stopDialog = getDialog(this, "confirm-dialog", "stop");
 
-          })
-          .catch(e => {
-            console.log(e);
-          });
+        this.stopDialog.onConfirm = function() {
 
+          stopModel(deletedId)
+            .then(() => {
+              this.$parent.$broadcast("show-alert", {
+                message: "Stopping run... It might take a moment before the view is updated.",
+                showTime: 5000,
+                type: "success"
+              });
+
+              // Immediatly refresh screen:
+              this.$root.$broadcast("updateSearch");
+
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        };
+
+        this.stopDialog.show();
       },
 
+      publishModel: function(index) {
 
+        this.publishDialog = getDialog(this, "confirm-dialog", "publish");
+
+        this.publishDialog.onConfirm = function() {
+          publishModel(this.model.id, this.publishLevels[index].url)
+            .then(() => {
+              this.$parent.$broadcast("show-alert", {
+                message: "Changing publish level... It might take a moment before the view is updated.",
+                showTime: 5000,
+                type: "success"
+              });
+              this.waitingForUpdate = true;
+              this.highlightPublishLevel();
+
+              // Immediatly refresh screen:
+              this.$root.$broadcast("updateSearch");
+
+            })
+            .catch(e => {
+              console.log(e);
+            });
+        }.bind(this);
+
+        // Show the dialog
+        this.publishDialog.show();
+      },
 
       downloadOptionsChange: function() {
 
@@ -344,6 +384,24 @@ var exports = (function () {
         var selectedOptions = $(".downloadoption:checked").length;
 
         $("#download-submit").prop("disabled", selectedOptions === 0);
+      },
+
+      isLevelEnabled: function(level) {
+        return level > this.indexOfPublishLevel();
+      },
+
+      isReadOnly: function() {
+        return !this.isLevelEnabled(1);
+      },
+
+      indexOfPublishLevel: function() {
+        return _.map(this.publishLevels, function(level) {
+          return level.indicator;
+        }).indexOf(this.model.shared);
+      },
+
+      highlightPublishLevel: function() {
+        $(".publish-level").addClass("highlighted").delay(1500).removeClass("highlighted");
       }
     }
   });

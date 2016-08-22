@@ -10,12 +10,7 @@ var exports = (function() {
     return new Promise(function(resolve, reject) {
 
       //Load test template data:
-      $.ajax({
-        //url: "sampledata/template.json",
-        url: "/scenario/list",
-        method: "GET",
-        cache: false
-      })
+      $.getJSON("/api/v1/scenarios/")
         .done(function(data) {
           resolve(data);
         })
@@ -26,15 +21,19 @@ var exports = (function() {
     });
   }
 
-  function deleteScenario(id, options) {
+  function deleteScenario(id) {
+
+
     return new Promise(function(resolve, reject) {
       // add extra options to id
-      var postData = _.assign({id: id}, options);
+      //var postData = _.assign({id: id}, options);
+      if (id === undefined) {
+        reject("No scenario id to delete");
+      }
 
       $.ajax({
-        url: "/scenario/delete",
-        data: postData,
-        method: "POST"
+        url: "/api/v1/scenarios/" + id + "/",
+        method: "DELETE"
       })
         .done(function(data) {
           // no data to return, just call the callback
