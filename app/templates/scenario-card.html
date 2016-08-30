@@ -1,0 +1,36 @@
+<div>
+  <div v-if="scenario">
+    <div
+       class="scenario-info">
+      <div class="scenario-name">
+        <span
+           class=" glyphicon glyphicon-chevron-down"
+           data-toggle="collapse">
+        </span>
+        Scenario: {{name}}
+      </div>
+      <div class="progress-holder">
+        <div class="progress">
+          <div
+             data-percentage="{{ scenario.progress }}%"
+             :style="{ width: scenario.progress + '%'}"
+             class="progress-bar progress-bar-success"
+             role="progressbar"
+             aria-valuemin="0"
+             aria-valuemax="100">
+          </div>
+        </div>
+        <span>{{state | lowercase}}</span>
+      </div>
+
+      <div
+         class="scenario-runs "
+         :class="{collapse: collapsed }" >
+        <scene-card v-for="scene in scenes"></scene-card>
+      </div>
+    </div>
+  </div>
+  <div v-else>
+    no scenario available
+  </div>
+</div>

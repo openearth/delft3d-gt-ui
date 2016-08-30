@@ -11,47 +11,21 @@ var exports = (function () {
       "models": {
         type: Array,
         required: true
-      },
-
-      "selectedRuns": {
-        type: Array,
-        required: true
-      },
-
-      "selectedScenarios": {
-        type: Array,
-        required: true
-      },
-
-      "openedScenarios": {
-        type: Array,
-        required: true
       }
-
-
     },
 
     data: function() {
       return {
-        selectedResultId: -1,
-
-        keyControlPressed: false
-
       };
     },
     ready: function() {
-
-
-      // Register changes to the control & command key:
-      // Right now multi select is disabled, as our view at the right does not allow that anyway.
-      // var that = this;
-      // $(document).on("keyup keydown", function (e) {
-      //   that.keyControlPressed = (e.ctrlKey === true || e.metaKey === true);
-      // });
     },
 
     computed: {
 
+      scenarios: {
+
+      },
       // Get the current selected modelid from the routing URL
       selectedModelId: {
         cache: false,

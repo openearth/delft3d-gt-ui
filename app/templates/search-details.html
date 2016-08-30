@@ -2,7 +2,10 @@
 
   <div class="search-details">
     <div>
-      <form v-on:change="startSearch" v-on:input="startSearch">
+      <form
+         @change="search"
+         @input="search"
+         >
         <div class="panel-group" id="run-accordion" role="tablist" aria-multiselectable="true">
           <div class="panel panel-default">
 
@@ -35,7 +38,7 @@
               <div class="form-group clear-left">
                 <label for="search">Search on name:</label>
                 <div class="input-group">
-                  <input type="text" class="form-control" id="search" placeholder="Type to search..." v-model="search">
+                  <input type="text" class="form-control" id="search" placeholder="Type to search..." v-model="searchText">
                   <span class="input-group-btn">
                     <button class="btn btn-default button-empty-input-field" type="button">
                       <i class="fa fa-times" aria-hidden="true"></i>
@@ -44,48 +47,9 @@
                 </div>
               </div>
 
-              <!-- label search is hidden for now, as long a we do not support it.
-                   <div class="form-group clear-left">
-                     <label for="text">Labels:</label>
-                     <div class="input-group stylish-input-group">
-                       <input type="text" class="form-control" id="text" placeholder="Type to seach for labels..." v-model="text">
-                       <span class="input-group-addon">
-                         <button class="button-empty-input-field" type="button">
-                           <span class="glyphicon glyphicon-remove"></span>
-                         </button>
-                       </span>
-                     </div>
-                   </div>
-                   -->
-
-              <!-- date search is hidden for now, as long a we do not support it.
-                   <div class="form-group">
-                     <label for="begin-date">Search period:</label>
-
-                     <div>
-                       <div class="input-group stylish-input-group search-date-input" >
-                         <input type="date" name="begin-date" value="" class="form-control" v-model="endDate" maxlength="10" placeholder="dd-mm-yyyy" />
-                         <span class="input-group-addon">
-                           <button class="button-empty-input-field" type="button">
-                             <span class="glyphicon glyphicon-remove"></span>
-                           </button>
-                         </span>
-                       </div>
-
-                       <div class="search-date-label">until</div>
 
 
-                       <div class="input-group stylish-input-group search-date-input" >
-                         <input type="date" name="end-date" value="" class="form-control" v-model="startDate" maxlength="10" placeholder="dd-mm-yyyy" />
-                         <span class="input-group-addon">
-                           <button class="button-empty-input-field" type="button">
-                             <span class="glyphicon glyphicon-remove"></span>
-                           </button>
-                         </span>
-                       </div>
-                     </div>
-                   </div>
-                   -->
+
 
               <!-- Templates -->
               <div class="form-group">
@@ -163,7 +127,7 @@
                         </template>
 
                         <template v-if="variable.type !== 'numeric' && variable.type !== 'slider' && variable.type !== 'select'">
-                            <div class="input-group">
+                          <div class="input-group">
                             <input
                                type="{{ variable.type }}"
                                class="form-control"
@@ -171,11 +135,11 @@
                                value=""
                                v-model="selectedParameters[variable.id]"
                                />
-                              <span class="input-group-btn">
-                                <button class="btn btn-default button-empty-input-field" type="button">
-                                  <i class="fa fa-times" aria-hidden="true"></i>
-                                </button>
-                              </span>
+                            <span class="input-group-btn">
+                              <button class="btn btn-default button-empty-input-field" type="button">
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                              </button>
+                            </span>
                           </div>
                         </template>
 
