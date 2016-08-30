@@ -1,7 +1,8 @@
 <template id="template-search-details">
 
   <div class="search-details">
-    <div>
+    <!-- disable if we don't have a searchTemplate -->
+    <div v-if="searchTemplate">
       <form
          @change="search"
          @input="search"
@@ -11,28 +12,36 @@
 
             <div class="panel-collapse" role="tabpanel">
 
-              <div class="form-group domain-search-boxes">
-                <label for="options">Search domain:</label>
+              <div class="form-group">
+                <label for="domain">Search domain:</label>
 
                 <!-- break because of the label hack below -->
-                <div class="form-group">
-
-                  <div class="domain-selection-box">
-                    <input type="checkbox" value="private"  v-model="shared"  id="domain-private"  checked="checked"/>
-                    <label for="domain-private" class="domain-private"><span>Private</span></label>
-                  </div>
-
-                  <div class="domain-selection-box">
-                    <input type="checkbox" value="company" v-model="shared" id="domain-company"   checked="checked"/>
-                    <label for="domain-company" class="domain-company"><span>Company</span></label>
-                  </div>
-
-                  <div class="domain-selection-box">
-                    <input type="checkbox" value="public" v-model="shared" id="domain-public"  checked="checked" />
-                    <label for="domain-public" class="domain-public"><span>Public</span></label>
-                  </div>
-
-                </div>
+                <select
+                   v-model="selectedDomains"
+                   class="select-picker form-control"
+                   multiple
+                   id="domain"
+                   data-selected-text-format="count > 3"
+                   data-actions-box="true">
+                  <option
+                     selected
+                     title="<i class='fa fa-user-secret' aria-hidden='true'></i>"
+                     data-content="<i class='fa fa-user-secret' aria-hidden='true'></i> Private">
+                    Private
+                  </option>
+                  <option
+                     selected
+                     title="<i class='fa fa-users' aria-hidden='true'></i>"
+                     data-content="<i class='fa fa-users' aria-hidden='true'></i> Company">
+                    Company
+                  </option>
+                  <option
+                     selected
+                     title="<i class='fa fa-globe' aria-hidden='true'></i>"
+                     data-content="<i class='fa fa-globe' aria-hidden='true'></i> Public">
+                    Public
+                  </option>
+                </select>
               </div>
 
               <div class="form-group clear-left">
@@ -48,14 +57,17 @@
               </div>
 
 
-
-
-
               <!-- Templates -->
               <div class="form-group">
                 <label for="template">Template</label>
-                <select class="select-picker form-control" multiple id="template" v-model="selectedTemplates" data-selected-text-format="count > 3" data-actions-box="true">
-                  <option v-for="template in templates" selected>{{ template.name }}</option>
+                <select
+                   v-model="selectedTemplates"
+                   class="select-picker form-control"
+                   multiple
+                   id="template"
+                   data-selected-text-format="count > 3"
+                   data-actions-box="true">
+                  <option v-for="template in searchTemplate.templates" selected>{{ template.name }}</option>
                 </select>
               </div>
               <!-- end template list -->
@@ -77,7 +89,7 @@
 
           <!-- Variables -->
 
-          <div v-for="section in searchTemplates.sections" v-show="searchTemplates !== undefined">
+          <div v-for="section in searchTemplate.sections" v-show="searchTemplate">
 
             <div class="panel panel-default panel-search">
               <div class="panel-heading list-group-item" role="tab" >

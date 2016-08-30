@@ -12,19 +12,18 @@ var exports = (function () {
         // extra parameters
         searchText: "",
 
-        selectedTemplates: [],
-
-
-
         // Fixed properties
-        templates: [],
         shared: [],
 
         // This object will variables received from the templates.
         selectedParameters: { },
+        selectedTemplates: [],
+        selectedDomains: [],
 
         // Template used for searching (probably always one)
-        searchTemplates: []
+        searchTemplate: null
+
+
       };
     },
 
@@ -33,13 +32,13 @@ var exports = (function () {
       fetchSearchTemplate()
         .then((templates) => {
           // store them
-          this.searchTemplates = templates;
-          // update ui
-          this.updatePickers();
+          this.searchTemplate = templates;
           // after we're done loading the templates in the dom, start searching.
 
           this.$nextTick(
             () => {
+              // update ui
+              this.updatePickers();
               // Keep searching:
               setInterval(this.search, 10000);
             }
@@ -64,7 +63,6 @@ var exports = (function () {
 
         }
       },
-
       parameters: {
         get: function() {
           var parameters = {};

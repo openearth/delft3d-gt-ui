@@ -954,6 +954,15 @@ section {
   width: 100%;
 }
 
+/* hide to get to wide menus  */
+.bootstrap-select {
+  .dropdown-menu li a span.text {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
 /* End left nav */
 
 
@@ -1289,7 +1298,6 @@ section {
       color: $black;
       display: block;
       outline: none;
-      padding: 4px 0; // 4px 0;
       text-decoration: none;
     }
 
