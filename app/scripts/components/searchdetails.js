@@ -184,10 +184,28 @@ var exports = (function () {
           dataType: "json"
         };
       },
-      search: function() {
+      fetchSearch: function() {
         var request = this.buildRequest();
-        console.log('searching for', request);
-        return request;
+        // return a promise
+        return new Promise(function(resolve, reject) {
+
+          //Load test template data:
+          $.ajax(request)
+            .done(function(data) {
+              // return the one and only search template
+              // the backend returns a list but there shall only be one
+              resolve(data);
+            })
+            .fail(function(error) {
+              reject(error);
+            });
+        });
+      },
+      search: function() {
+        this.fetchSearch()
+          .then(function(data) {
+            console.log('search results', data);
+          });
       }
     }
   });
