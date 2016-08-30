@@ -9,14 +9,9 @@ var exports = (function () {
     data: function() {
       return {
 
-        // extra parameters
+        // all the user input that is not in a template parameter
         searchText: "",
-
-        // Fixed properties
-        shared: [],
-
-        // This object will variables received from the templates.
-        selectedParameters: { },
+        selectedParameters: {},
         selectedTemplates: [],
         selectedDomains: [],
 
@@ -66,7 +61,10 @@ var exports = (function () {
       parameters: {
         get: function() {
           var parameters = {};
-          var variables = _.flatMap(_.flatMap(this.templates, "sections"), "variables");
+          var variables = _.flatMap(
+            _.flatMap(this.templates, "sections"),
+            "variables"
+          );
 
           variables.forEach(function(variable) {
             if (_.has(variable, "validators.min") && _.has(variable, "validators.max")) {
@@ -110,7 +108,7 @@ var exports = (function () {
         /*eslint-enable camelcase*/
 
         // Add event handler that allows one to use the X next to inputs to clear the input.
-        $(".button-empty-input-field").on("click", function() {
+        $(".button-empty-input-field").on("click", () => {
           var input = $(this).closest("div").find("input");
 
           // Force update selected parameters.
@@ -118,12 +116,12 @@ var exports = (function () {
           var id = input.attr("id");
 
           if (id === "search") {
-            that.search = "";
+            this.searchText = "";
           } else {
-            that.selectedParameters[id] = "";
+            this.selectedParameters[id] = "";
           }
           // Search up to the div, and then find the input child. This is the actual input field.
-          that.search();
+          this.search();
 
         });
 
@@ -146,7 +144,7 @@ var exports = (function () {
         // for now we just copy everything
 
         var params = {
-          shared: this.shared,
+          shared: this.domains,
           template: this.selectedTemplates,
           search: this.searchText
         };
@@ -201,8 +199,9 @@ var exports = (function () {
       },
       search: function() {
         this.fetchSearch()
-          .then(function(data) {
-            console.log('search results', data);
+          .then((data) => {
+            console.log('got scenes', data);
+            this.$dispatch('scenes-loaded', data);
           });
       }
     }

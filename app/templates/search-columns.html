@@ -18,50 +18,47 @@
 
                 <a class="btn pull-right nav-bar-button" title="Create scenario" href="#/scenarios/create">Create scenario</a>
 
-                <model-control-menu :selected-runs="selectedRuns" :models="models" :selected-scenarios="selectedScenarios" ></model-control-menu>
+                <model-control-menu
+                   :scenarios="scenarios"
+                   :models="models">
+                </model-control-menu>
               </div>
-          </div>
+            </div>
 
-          <div class="col-xs-5" id="column-run-details">
-            <div class="btn-toolbar heading-bar" >
-              Details <span v-if="selectedRuns.length > 0">for &ldquo;{{selectedRunNames}}&rdquo;</span>
+            <div class="col-xs-5" id="column-run-details">
+              <div class="btn-toolbar heading-bar" >Details</div>
             </div>
           </div>
         </div>
-      </div>
-    </nav>
+      </nav>
 
-    <!-- Alert message component for display of timed messages -->
-    <alert-message></alert-message>
+      <!-- Alert message component for display of timed messages -->
+      <alert-message></alert-message>
 
-    <div class="container-fluid full-height">
-      <div class="row full-height">
+      <div class="container-fluid full-height">
+        <div class="row full-height">
 
-        <div class="col-sm-2 column  full-height">
-          <search-details></search-details>
+          <div class="col-sm-2 column  full-height">
+            <search-details></search-details>
+          </div>
+
+          <div class="col-sm-5 column full-height">
+            <search-list :models="models"></search-list>
+          </div>
+
+
+          <div class="col-sm-5 column full-height">
+            <!-- details for selected scenarios first -->
+            <scenario-details :scenario="scenario" v-for="scenario in selectedScenarios"></scenario-details>
+            <!-- then details for selected models -->
+            <model-details :model="model" v-for="model in selectedModels"></model-details>
+          </div>
+
         </div>
-
-        <div class="col-sm-5 column full-height">
-
-        <!-- for debugging, please leave for a moment.
-          runs: {{selectedRuns|json}}
-          cols: {{openedScenarios|json}}
-          scenarios: {{selectedScenarios|json}}
-        -->
-
-        <search-list :models="models"></search-list>
-        </div>
-
-
-        <div class="col-sm-5 column full-height">
-        <model-details></model-details>
-        </div>
-
       </div>
     </div>
-  </div>
 
- <!-- MODALS should be turned into an comopnent?-->
+    <!-- MODALS should be turned into an comopnent?-->
 
     <div class="modal default-hidden fade" id="dialog-confirm-delete-scenario" tabindex="-1" role="dialog">
       <div class="modal-dialog">
@@ -89,7 +86,7 @@
     </div>
     <!-- REMOVE FROM HERE -->
 
-</div>
+  </div>
 
 
 </template>

@@ -9,17 +9,7 @@ var exports = (function () {
     data: function() {
       return {
 
-        // How many scenarios were found?
-        numScenarios: 0,
-
-        // How many runs are in these scenarios?
-        numRuns: 0,
-
-        models: [],
-
-        openedScenarios: [],
-        selectedRuns: [],
-        selectedScenarios: []
+        models: []
       };
     },
     components: {
@@ -27,41 +17,57 @@ var exports = (function () {
       "search-list": SearchList,
       "model-details": ModelDetails
     },
-
+    ready: function() {
+      // TODO, consistent naming
+      this.$on('scenes-loaded', function(scenes) {
+        console.log("got scenes in columns", scenes);
+        this.models = scenes;
+      });
+    },
     route: {
       data: function(transition) {
 
         // Refresh data immediatly if user gets here.
         this.$broadcast("updateSearch");
         transition.next();
-
       }
     },
 
     computed: {
-
-      selectedRunNames: {
-        get: function() {
-
-          // Loop through all selected runs and get the names of these.
-          var names = [];
-          var that = this;
-
-          // We only have scenarios, not a seaprate models (runs) list.. could we improve this somehow?
-          $.each(that.selectedRuns, function(key, value) {
-
-            // Loop through all scenarios.
-            that.models.forEach(function(scenario) {
-
-              var item = _.find(scenario.scene_set, ["id", value]);
-
-              if (item !== undefined) {
-                names.push(item.name);
-              }
-
-            });
+      scenarios: function() {
+        if (!this.models.length) {
+          return [];
+        }
+        var scenarioModelIter = _.flatMap(
+          this.models,
+          function(model) {
+            // yield all combinations
+            // model.scenario is a list
+            // note that this skips the orphans
+            var scenarioModels = _.map(
+              model.scenario,
+              function(scenario) {
+                return {
+                  scenario: scenario,
+                  model: model
+                };
+              });
           });
-
+        var result = _.mapValues(
+          // group by scenario
+          _.groupBy(scenarioModelIter, ['scenario']),
+          // we don't need the scenario (it's the key)
+          function(scenarioModel){ return scenarioModel.model; }
+        );
+        return result;
+      },
+      selectedRunNames: {
+        get: () => {
+          var selectedModels = _.filter(
+            this.models,
+            ['selected', true]
+          );
+          var names = _.map(selectedModels, ['id']);
           return names.join(", ");
         }
       }

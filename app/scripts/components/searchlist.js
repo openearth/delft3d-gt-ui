@@ -19,8 +19,10 @@ var exports = (function () {
       };
     },
     ready: function() {
+      this.$on('scenes-loaded', function(scenes) {
+        console.log('scenes loaded', scenes);
+      });
     },
-
     computed: {
 
       scenarios: {

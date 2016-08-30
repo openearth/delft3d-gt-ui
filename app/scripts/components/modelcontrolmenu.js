@@ -20,22 +20,24 @@ var exports = (function () {
 
     props: {
 
-      "selectedScenarios": {
+      "models": {
         type: Array,
         required: true
       },
-
-      "selectedRuns": {
-        type: Array,
-        required: true
-      },
-
-      "Models": {
-        type: Array,
+      "scenarios": {
+        type: Object,
         required: true
       }
     },
-
+    computed: {
+      selectedModels: function() {
+        return _.filter(this.models, ['selected', true]);
+      },
+      selectedScenarios: function() {
+        console.log('selected scenarios', this);
+        return _.filter(this.scenarios, ['selected', true]);
+      }
+    },
     methods: {
 
       deleteSelectedScenario: function() {
@@ -48,22 +50,22 @@ var exports = (function () {
 
           this.selectedScenarios.forEach(function(id) {
             deleteScenario(id)
-            .then(() => {
-              that.$parent.$broadcast("show-alert", {
-              message: "Deleting scenario... It might take a moment before the view is updated.",
-              showTime: 5000,
-              type: "success"
+              .then(() => {
+                that.$parent.$broadcast("show-alert", {
+                  message: "Deleting scenario... It might take a moment before the view is updated.",
+                  showTime: 5000,
+                  type: "success"
+                });
+
+                // Immediatly refresh screen:
+                that.$root.$broadcast("updateSearch");
+
+              })
+
+
+              .catch(e => {
+                console.log("scenario deletion failed", e);
               });
-
-              // Immediatly refresh screen:
-              that.$root.$broadcast("updateSearch");
-
-            })
-
-
-          .catch(e => {
-            console.log("scenario deletion failed", e);
-          });
 
             // Hide dialog when user presses this accept.:
             $("#dialog-confirm-delete-scenario").modal("hide");
