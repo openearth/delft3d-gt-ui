@@ -241,7 +241,7 @@ input[type=date].form-control {
 
 .search-results {
 
-  padding: 8px;
+  padding: 15px;
 
 
   .scenario-name {
@@ -538,6 +538,7 @@ input[type=date].form-control {
     padding: 4px 0px 4px 0px;
     height: 40px;
     line-height: 32px;
+    margin: 0;
   }
 
   .btn {
@@ -690,7 +691,7 @@ input[type=date].form-control {
 
     // Progressbars in cell are a bit different than Bootstrap ones:
     .progress-incell {
-      margin: 4px;
+      margin: 0;
     }
 
     .progress-type {
@@ -1253,7 +1254,7 @@ section {
     border: 0;
     box-shadow: none;
     padding: 4px;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
   }
 
 
@@ -1304,6 +1305,10 @@ section {
 
 
   }
+}
+
+.search-details {
+  padding: 15px;
 }
 
 .model-details {

@@ -18,16 +18,6 @@
                 <td><strong>{{model.name}}</strong></td>
               </tr>
 
-              <tr v-if="model.owner">
-                <td>Owner of run</td>
-                <td><a href="mailto:{{model.owner.email}}">{{ model.owner.first_name }} {{ model.owner.last_name }}</a> </td>
-              </tr>
-
-              <tr>
-                <td>Model files</td>
-                <td>View <a href="{{model.fileurl}}" target="_blank">working directory</a></td>
-              </tr>
-
               <tr>
                 <td>Status</td>
                 <td><span class="label label-primary label-status">{{model.state | capitalize }}</span></td>
@@ -46,15 +36,21 @@
                 </td>
               </tr>
 
+              <tr v-if="model.owner">
+                <td>Owner of run</td>
+                <td><a href="mailto:{{model.owner.email}}">{{ model.owner.first_name }} {{ model.owner.last_name }}</a> </td>
+              </tr>
+
               <tr class="publish-level">
                 <td>Share level</td>
                 <td><span>{{ publishLevel }}</span></td>
               </tr>
 
               <tr>
-                <td>Identification</td>
-                <td><span class="text-muted">{{ model.id }} {{ model.suid }} </span></td>
+                <td>Simulation output: </td>
+                <td><a href="{{model.fileurl}}" target="_blank">Open in new tab</a></td>
               </tr>
+
             </tbody>
           </table>
         </div>
@@ -69,10 +65,10 @@
             Please select an action to perform on this simulation.
           </p>
 
-          <button type="button" class="btn btn-labeled btn-success btn-spaced-right"  id="simulation-control-start" v-on:click="startModel" v-bind:class="{ 'inputdisabled':  isReadOnly() }" >
+          <button type="button" class="btn btn-labeled btn-spaced-right"  id="simulation-control-start" v-on:click="startModel" v-bind:class="[(isReadOnly() || !(model.state === 'Idle: waiting for user input')) ? 'inputdisabled': 'btn-success']" >
             <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>
-            Restart
-          </button><button type="button" class="btn btn-labeled btn-warning  btn-spaced-right" id="simulation-control-stop" v-on:click="stopModel" v-bind:class="{ 'inputdisabled':  isReadOnly() }">
+            Start
+          </button><button type="button" class="btn btn-labeled btn-spaced-right" id="simulation-control-stop" v-on:click="stopModel" v-bind:class="[(isReadOnly() || !(model.state === 'Running simulation...')) ? 'inputdisabled' : 'btn-warning' ]">
             <span class="btn-label"><i class="glyphicon glyphicon-stop"></i></span>
             Stop
           </button><button type="button" class="btn btn-labeled btn-danger  btn-spaced-right" v-on:click="removeModel(model)" v-bind:class="{ 'inputdisabled':  isReadOnly() }">
