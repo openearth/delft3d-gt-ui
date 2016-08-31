@@ -2,8 +2,8 @@
   <div>
     <div v-if="model">
       <div class="panel panel-default">
-        <div class="panel-heading">
-
+        <div class="panel-heading"
+             :class="{'active': model.active}">
           <div class="row">
             <div class="col-sm-8">
               <input type="checkbox">
@@ -23,7 +23,7 @@
             <div
                data-percentage="{{model.progress}}%"
                :style="{ width: model.progress + '%'}"
-               class="progress-bar progress-bar-success"
+               class="progress-bar"
                role="progressbar"
                aria-valuemin="0"
                aria-valuemax="100"></div>

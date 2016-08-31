@@ -236,8 +236,15 @@ var exports = (function () {
               _.each(scenario.scene_set, (modelId) => {
                 // store model in models
                 var model = modelById[modelId];
+
+                // properties that we need
+                model.active = false;
+
                 scenario.models.push(model);
               });
+
+              // properties that we need
+              scenario.active = false;
               items.push(scenario);
             });
 

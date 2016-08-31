@@ -75,6 +75,29 @@ var exports = (function () {
     },
 
     methods: {
+      clearActives: function() {
+        // clear all active states
+        var scenarios = _.filter(this.items, ['type', 'scenario']);
+        // all models in scenarios
+        var models = _.flatMap(scenarios, "models");
+        _.each(models, (model) => {
+          model.active = false;
+        });
+        // all items on first level (scenarios and orphans)
+        _.each(this.items, (item) => {
+          item.active = false;
+        });
+      },
+      toggleActive: function(item) {
+
+        // was the item active
+        var wasActive = item.active;
+
+        this.clearActives();
+
+        // activate the clicked item
+        item.active = !wasActive;
+      },
 
       // User wants to select a scenario:
       scenarioSelect: function(id, ev) {

@@ -2,13 +2,20 @@
 
   <!-- loop through all scenarios -->
 
-  <div v-for="item in items">
-    <scenario-card
-       :scenario="item"
-       v-if="item.type === 'scenario'"></scenario-card>
-    <model-card
-       :model="item"
-       v-if="item.type === model"></model-card>
+  <div
+     @click="clearActives"
+     >
+    <div v-for="item in items">
+      <scenario-card
+         @click.stop="toggleActive(item)"
+         :scenario="item"
+         v-if="item.type === 'scenario'"></scenario-card>
+      <model-card
+         @click.stop="toggleActive(item)"
+         :model="item"
+         v-if="item.type === model"></model-card>
+    </div>
   </div>
+
   <!-- end search -->
 </template>

@@ -13,7 +13,7 @@ var exports = (function() {
       $.getJSON("/api/v1/scenarios/")
         .done(function(data) {
           _.each(data, function(scenario) {
-            scenario.type = "scenario"";
+            scenario.type = "scenario";
           });
           resolve(data);
         })

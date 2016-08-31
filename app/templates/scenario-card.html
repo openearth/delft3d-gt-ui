@@ -3,9 +3,7 @@
     <div v-if="scenario">
       <div class="panel panel-default">
         <div class="panel-heading"
-             @click="activate(scenario, $event)"
-             >
-
+             :class="{'active': scenario.active}">
           <div
              class="row"
              >
@@ -43,7 +41,11 @@
 
             </div>
             <div v-for="model in scenario.models">
-              <model-card :model="model"></model-card>
+              <model-card
+                 @click="this.$parent.toggleActive(item)"
+                 :model="model"
+                 >
+              </model-card>
             </div>
           </div>
           <div v-else>
