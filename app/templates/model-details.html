@@ -94,7 +94,7 @@
           <!-- This form-inline is normally applied to a form but in this case we have 3 forms as a form group. -->
           <template v-for="level in publishLevels"><button type="button"
                class="btn btn-labeled btn-default  btn-spaced-right"
-               :class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE' || model.state === 'ABORTED') || !isLevelEnabled($index) }"
+               :class="{ 'inputdisabled': !(model.state === 'Idle: waiting for user input') || !isLevelEnabled($index) }"
                v-on:click="publishModel($index)">
               <span class="btn-label">
                 <i class="glyphicon" :class="publishLevels[$index].iconClass"></i>
