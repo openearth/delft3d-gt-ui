@@ -1,0 +1,40 @@
+<template id="template-model-card">
+  <div>
+    <div v-if="model">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+
+          <div class="row">
+            <div class="col-sm-8">
+              <input type="checkbox">
+              Model: {{model.name}}
+            </div>
+            <div class="col-sm-4 text-right">
+              <span class="label label-info">{{model.state | lowercase}}</span>
+              <span v-if="model.shared == 'p'"><i class="fa fa-lock" aria-hidden="true"></i></span>
+              <span v-if="model.shared == 'c'"><i class="fa fa-group" aria-hidden="true"></i></span>
+              <span v-if="model.shared == 'w'"><i class="fa fa-globe" aria-hidden="true"></i></span>
+            </div>
+          </div>
+
+        </div>
+        <div class="panel-body" >
+          <div class="progress">
+            <div
+               data-percentage="{{model.progress}}%"
+               :style="{ width: model.progress + '%'}"
+               class="progress-bar progress-bar-success"
+               role="progressbar"
+               aria-valuemin="0"
+               aria-valuemax="100"></div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-else>
+      model missing
+    </div>
+
+  </div>
+</template>

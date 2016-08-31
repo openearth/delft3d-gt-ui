@@ -1,10 +1,10 @@
 var exports = (function () {
   "use strict";
 
-  var SceneCard = Vue.component("scene-card", {
-    template: "#template-scene-card",
+  var ModelCard = Vue.component("model-card", {
+    template: "#template-model-card",
     props: {
-      scene: {
+      model: {
         required: true
       }
     }

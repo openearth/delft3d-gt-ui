@@ -1,5 +1,5 @@
 /* global Vue, fetchSearchTemplate */
-
+var aa;
 var exports = (function () {
   "use strict";
   var SearchDetails = Vue.component("search-details", {
@@ -18,7 +18,6 @@ var exports = (function () {
         // Template used for searching (probably always one)
         searchTemplate: null
 
-
       };
     },
 
@@ -34,8 +33,8 @@ var exports = (function () {
             () => {
               // update ui
               this.updatePickers();
-              // Keep searching:
-              // setInterval(this.search, 10000);
+              // Keep syncing:
+              setInterval(this.sync, 10000);
             }
           );
 
@@ -51,7 +50,7 @@ var exports = (function () {
           // lookup all variables with id engine (convention)
           var engines = _.filter(variables, ["id", "engine"]);
 
-          // lookup default values (filter on scenes/scenarios later)
+          // lookup default values (filter on model/scenarios later)
           var defaultEngines = _.uniq(_.map(engines, "default"));
 
           return defaultEngines;
@@ -197,20 +196,69 @@ var exports = (function () {
             });
         });
       },
+      sync: function() {
+        // TODO: update items
+        // fetchScenarios()
+        //   .then((data) => {
+        //     this.$dispatch('scenarios-updated', data);
+        //   });
+        // fetchModels()
+        //   .then((data) => {
+        //     this.$dispatch('models-updated', data);
+        //   });
+      },
       search: function() {
+
+        // TODO: searching should be done in search-component, because it needs to update
+        // details and search list
 
         // we want to update the search results and scenarios at the same time
         var promises = [this.fetchSearch(), fetchScenarios()];
+        // once we have everything, we can update the items
         Promise.all(promises).then(
           (values) => {
-            var scenes = values[0];
+            var models = values[0];
             var scenarios = values[1];
-            // fire the two events up the chain (use in searchcomponent)
-            this.$dispatch("scenes-loaded", scenes);
-            this.$dispatch("scenarios-loaded", scenarios);
+
+            models = _.uniqBy(models, "id");
+            scenarios = _.uniqBy(scenarios, "id");
+
+            // drop duplicates
+            // TODO: models has duplicates
+            var modelById = _.keyBy(models, "id");
+            var scenarioById = _.keyBy(scenarios, "id");
+
+            // first loop over all the scenarios
+            var items = [];
+            _.each(scenarios, (scenario) => {
+              scenario.models = [];
+              // loop over all models
+              _.each(scenario.scene_set, (modelId) => {
+                // store model in models
+                var model = modelById[modelId];
+                scenario.models.push(model);
+              });
+              items.push(scenario);
+            });
+
+            // now we can the orphan models
+            // ids that are in a scenario
+            var inScenario = _.uniq(_.flatMap(aa, 'scene_set'));
+            // all ids
+            var allIds = _.uniq(_.map(models, 'id'));
+            // ids that are not in a scenario
+            var orphanIds = _.difference(allIds, inScenario);
+
+            // add the orphans to the list
+            var orphans = _.map(orphanIds, (id) => {return modelById[id]; });
+            _.each(orphans, (model) => {
+              items.push(model);
+            });
+
+            console.log('items-found', items);
+            this.$dispatch('items-found', items);
           }
         );
-
       }
     }
   });

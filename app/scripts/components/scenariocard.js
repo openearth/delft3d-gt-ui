@@ -8,6 +8,12 @@ var exports = (function () {
         type: Object,
         required: true
       }
+    },
+    methods: {
+      activate: function(scenario, evt) {
+        console.log(evt);
+        $(evt.target).toggleClass('active');
+      }
     }
   });
 }());

@@ -194,7 +194,22 @@ $row-height: 32px;
 
 // Default font:
 body {
- font-family: "Open Sans";
+ font-family: "Open Sans", sans-serif;
+}
+
+.panel-heading button:after {
+  color: $dark-gray;
+  content: '\e114';
+  float: right;
+  font-family: 'Glyphicons Halflings';
+}
+
+.panel-heading button.collapsed:after {
+  content: '\e080';
+}
+
+.panel-heading.active {
+  border: 1px solid $brand-primary;
 }
 
 

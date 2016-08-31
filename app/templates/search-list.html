@@ -1,16 +1,14 @@
 <template id="template-search-list" inline-template>
 
   <!-- loop through all scenarios -->
-  <div class="list-group checked-list-box" >
 
-    <div  class="list-group-item">
-
-      <div v-for="item in items">
-        <scenario-card :scenario="item" v-if="item.type === 'scenario'"></scenario-card>
-        <scene-card :scene="item" v-if="item.type === 'scene'"></scene-card>
-      </div>
-    </div>
-
+  <div v-for="item in items">
+    <scenario-card
+       :scenario="item"
+       v-if="item.type === 'scenario'"></scenario-card>
+    <model-card
+       :model="item"
+       v-if="item.type === model"></model-card>
   </div>
   <!-- end search -->
 </template>

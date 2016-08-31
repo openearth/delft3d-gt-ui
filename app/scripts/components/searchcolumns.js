@@ -8,8 +8,8 @@ var exports = (function () {
     template: "#template-search-columns",
     data: function() {
       return {
-        scenarios: [],
-        models: []
+        // items that were found
+        items: []
       };
     },
     components: {
@@ -19,13 +19,9 @@ var exports = (function () {
     },
     ready: function() {
       // TODO, consistent naming
-      this.$on('scenes-loaded', function(scenes) {
-        console.log("got scenes in columns", scenes);
-        this.models = scenes;
-      });
-      this.$on('scenarios-loaded', function(scenarios) {
-        console.log("got scenarios in columns", scenarios);
-        this.scenarios = scenarios;
+      this.$on('items-found', function(items) {
+        console.log('found items', items);
+        this.$set('items', items);
       });
     },
     route: {
@@ -38,46 +34,6 @@ var exports = (function () {
     },
 
     computed: {
-      computedScenarios: function() {
-        if (!this.models.length) {
-          return [];
-        }
-        console.log("models", this.models);
-        // loop over all models and return records with scenarioId and
-        var modelsByScenarioId = {};
-        _.each(this.models, (model) => {
-          _.each(model.scenario, (scenarioId) => {
-            var models = _.get(modelsByScenarioId, scenarioId, []);
-            models.push(model);
-            modelsByScenarioId[scenarioId] = models;
-          });
-        });
-        var scenarioIds = _.keys(modelsByScenarioId);
-        var scenarios = _.map(scenarioIds, (id) => {
-          return {
-            id: id,
-            type: "scenario",
-            models: modelsByScenarioId[id]
-          };
-        });
-        return scenarios;
-      },
-      orphanedModels: function() {
-        return [];
-      },
-      selectedRunNames: {
-        get: () => {
-          if (_.isNil(this.models)) {
-            return '';
-          }
-          var selectedModels = _.filter(
-            this.models,
-            ['selected', true]
-          );
-          var names = _.map(selectedModels, ['id']);
-          return names.join(", ");
-        }
-      }
 
     },
 
@@ -119,19 +75,6 @@ var exports = (function () {
 
 
       // Get a child by name, such that we do not have a fixed index.
-      getChildByName: function(name) {
-        var that = this;
-
-        for(var i = 0; i < that.$children.length; i++) {
-
-          // Check if name matches:
-          if (that.$children[i].$options.name === name) {
-            return that.$children[i];
-          }
-        }
-
-        return null;
-      },
 
       // Update the collapsibles.
       updateCollapsibles: function() {
@@ -160,40 +103,6 @@ var exports = (function () {
 
       }
 
-    },
-    events: {
-
-      // Got some search results:
-      // We receive the models, number of scenarios and number of runs.
-      modelsFound: function (models, numScenarios, numRuns) {
-
-        this.models = models;
-
-        this.numScenarios = numScenarios;
-        this.numRuns = numRuns;
-
-        this.$nextTick(function() {
-
-          // Test, for changing arrow when using collapse
-          // We also manage the tracking of ios here.
-          // This is not the best place for this - refactor later.
-
-          this.updateCollapsibles();
-        });
-
-      },
-
-
-
-      // User clicked on a result item:
-      modelsSelected: function(id) {
-        var modelDetails = this.getChildByName("model-details");
-
-        if (modelDetails !== null) {
-          modelDetails.id = id;
-        }
-
-      }
     }
   });
 

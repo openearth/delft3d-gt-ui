@@ -8,7 +8,7 @@ var exports = (function () {
     template: "#template-search-list",
     props: {
 
-      // can contain scenarios and scenes
+      // can contain scenarios and models
       "items": {
         type: Array,
         required: true
@@ -20,8 +20,8 @@ var exports = (function () {
       };
     },
     ready: function() {
-      this.$on('scenes-loaded', function(scenes) {
-        console.log('scenes loaded', scenes);
+      this.$on('models-loaded', function(models) {
+        console.log('models loaded', models);
       });
     },
     computed: {

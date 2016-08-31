@@ -16,11 +16,8 @@
               <div class="btn-toolbar heading-bar">
                 <span id="results-info">Results</span>  <span id="results-info-stats">({{numRuns}} {{numRuns | pluralize 'run'}} in {{numScenarios}} {{numScenarios | pluralize 'scenario'}})</span>
 
-                <a class="btn pull-right nav-bar-button" title="Create scenario" href="#/scenarios/create">Create scenario</a>
 
-                <model-control-menu
-                   :scenarios="scenarios"
-                   :models="models"></model-control-menu>
+                <model-control-menu :items="items"></model-control-menu>
               </div>
             </div>
 
@@ -42,9 +39,7 @@
           </div>
 
           <div class="col-sm-5 column full-height">
-            <search-list :items="scenarios"></search-list>
-            <hr/>
-            <search-list :items="orphanedModels"></search-list>
+            <search-list :items="items"></search-list>
           </div>
 
 

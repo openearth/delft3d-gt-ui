@@ -19,23 +19,18 @@ var exports = (function () {
 
 
     props: {
-
-      "models": {
-        type: Array,
-        required: true
-      },
-      "scenarios": {
+      items: {
         type: Array,
         required: true
       }
     },
     computed: {
       selectedModels: function() {
-        return _.filter(this.models, ['selected', true]);
+        return _.filter(this.items, ['selected', true, 'type', 'models']);
       },
       selectedScenarios: function() {
         console.log('selected scenarios', this);
-        return _.filter(this.scenarios, ['selected', true]);
+        return _.filter(this.items, ['selected', true, 'type', 'scenarios']);
       }
     },
     methods: {
