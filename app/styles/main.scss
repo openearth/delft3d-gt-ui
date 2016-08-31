@@ -625,7 +625,6 @@ input[type=date].form-control {
 }
 
 .table-default {
-  margin-bottom: 32px;
   width: 100%;
 
   .error {
@@ -635,6 +634,7 @@ input[type=date].form-control {
   td {
     border: 1px solid $row-border-color;
     height: $row-height;
+    padding: 10px 10px;
 
     &.centered {
       text-align: center;
@@ -1253,6 +1253,7 @@ section {
     border: 0;
     box-shadow: none;
     padding: 4px;
+    margin-bottom: 8px;
   }
 
 

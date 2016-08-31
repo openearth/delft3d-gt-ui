@@ -10,16 +10,12 @@
       <!-- model window for deletation -->
 
       <div class="panel panel-default">
-        <div class="panel-heading">
-          <h2 class="panel-title">Summary</h2>
-        </div>
-
         <div class="panel-body" v-if="model">
           <table class="table-default">
             <tbody>
               <tr>
-                <td class="col-md-2">Name</td>
-                <td>{{model.name}} </td>
+                <td class="col-md-2 "><strong>Name</strong></td>
+                <td><strong>{{model.name}}</strong></td>
               </tr>
 
               <tr v-if="model.owner">
@@ -34,7 +30,7 @@
 
               <tr>
                 <td>Status</td>
-                <td><span class="label label-default">{{model.state | capitalize }}</span></td>
+                <td><span class="label label-primary label-status">{{model.state | capitalize }}</span></td>
               </tr>
 
               <tr>

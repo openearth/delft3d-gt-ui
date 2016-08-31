@@ -27,7 +27,7 @@ const reload = browserSync.reload;
 var args = require("yargs").argv;
 // Server used for serving remote url"s
 // "http://136.231.10.175:8888";
-var apiServer = "";
+var apiServer = "http://delft3dgt-local";
 
 // Process optional arguments
 processOptionalArguments();
