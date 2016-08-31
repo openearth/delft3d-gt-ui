@@ -12,6 +12,9 @@ var exports = (function() {
       //Load test template data:
       $.getJSON("/api/v1/scenarios/")
         .done(function(data) {
+          _.each(data, function(scenario) {
+            scenario.type = "scenario"";
+          });
           resolve(data);
         })
         .fail(function(error) {

@@ -35,7 +35,7 @@ var exports = (function () {
               // update ui
               this.updatePickers();
               // Keep searching:
-              setInterval(this.search, 10000);
+              // setInterval(this.search, 10000);
             }
           );
 
@@ -198,11 +198,19 @@ var exports = (function () {
         });
       },
       search: function() {
-        this.fetchSearch()
-          .then((data) => {
-            console.log('got scenes', data);
-            this.$dispatch('scenes-loaded', data);
-          });
+
+        // we want to update the search results and scenarios at the same time
+        var promises = [this.fetchSearch(), fetchScenarios()];
+        Promise.all(promises).then(
+          (values) => {
+            var scenes = values[0];
+            var scenarios = values[1];
+            // fire the two events up the chain (use in searchcomponent)
+            this.$dispatch("scenes-loaded", scenes);
+            this.$dispatch("scenarios-loaded", scenarios);
+          }
+        );
+
       }
     }
   });

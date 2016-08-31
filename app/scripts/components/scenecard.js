@@ -5,7 +5,6 @@ var exports = (function () {
     template: "#template-scene-card",
     props: {
       scene: {
-        type: Object,
         required: true
       }
     }

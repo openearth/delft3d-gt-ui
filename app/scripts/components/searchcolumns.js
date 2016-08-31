@@ -8,7 +8,7 @@ var exports = (function () {
     template: "#template-search-columns",
     data: function() {
       return {
-
+        scenarios: [],
         models: []
       };
     },
@@ -23,6 +23,10 @@ var exports = (function () {
         console.log("got scenes in columns", scenes);
         this.models = scenes;
       });
+      this.$on('scenarios-loaded', function(scenarios) {
+        console.log("got scenarios in columns", scenarios);
+        this.scenarios = scenarios;
+      });
     },
     route: {
       data: function(transition) {
@@ -34,7 +38,7 @@ var exports = (function () {
     },
 
     computed: {
-      scenarios: function() {
+      computedScenarios: function() {
         if (!this.models.length) {
           return [];
         }
@@ -43,14 +47,17 @@ var exports = (function () {
         var modelsByScenarioId = {};
         _.each(this.models, (model) => {
           _.each(model.scenario, (scenarioId) => {
-            modelsByScenarioId[scenarioId] = model;
+            var models = _.get(modelsByScenarioId, scenarioId, []);
+            models.push(model);
+            modelsByScenarioId[scenarioId] = models;
           });
         });
         var scenarioIds = _.keys(modelsByScenarioId);
         var scenarios = _.map(scenarioIds, (id) => {
           return {
             id: id,
-            type: "scenario"
+            type: "scenario",
+            models: modelsByScenarioId[id]
           };
         });
         return scenarios;

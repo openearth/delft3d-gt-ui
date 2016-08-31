@@ -1,6 +1,5 @@
 <template id="template-scenario-card">
   <div>
-
     <div v-if="scenario">
       <div class="scenario-info">
         <div class="form-group">
@@ -18,7 +17,7 @@
              class=" glyphicon glyphicon-chevron-down"
              data-toggle="collapse">
           </span>
-          Scenario: {{name}}
+          Scenario: {{scenario.name}}
         </div>
         <div class="progress-holder">
           <div class="progress">
@@ -37,7 +36,9 @@
         <div
            class="scenario-runs "
            :class="{collapse: collapsed }" >
-          <scene-card v-for="scene in scenes"></scene-card>
+          <div v-for="scene in scenario.scene_set">
+            <scene-card :scene="scene" ></scene-card>
+          </div>
         </div>
       </div>
     </div>
