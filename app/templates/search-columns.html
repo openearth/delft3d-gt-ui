@@ -20,8 +20,7 @@
 
                 <model-control-menu
                    :scenarios="scenarios"
-                   :models="models">
-                </model-control-menu>
+                   :models="models"></model-control-menu>
               </div>
             </div>
 
@@ -43,7 +42,9 @@
           </div>
 
           <div class="col-sm-5 column full-height">
-            <search-list :models="models"></search-list>
+            <search-list :items="scenarios"></search-list>
+            <hr/>
+            <search-list :items="orphanedModels"></search-list>
           </div>
 
 

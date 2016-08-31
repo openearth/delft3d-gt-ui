@@ -8,7 +8,8 @@ var exports = (function () {
     template: "#template-search-list",
     props: {
 
-      "models": {
+      // can contain scenarios and scenes
+      "items": {
         type: Array,
         required: true
       }
@@ -25,9 +26,6 @@ var exports = (function () {
     },
     computed: {
 
-      scenarios: {
-
-      },
       // Get the current selected modelid from the routing URL
       selectedModelId: {
         cache: false,

@@ -38,31 +38,31 @@ var exports = (function () {
         if (!this.models.length) {
           return [];
         }
-        var scenarioModelIter = _.flatMap(
-          this.models,
-          function(model) {
-            // yield all combinations
-            // model.scenario is a list
-            // note that this skips the orphans
-            var scenarioModels = _.map(
-              model.scenario,
-              function(scenario) {
-                return {
-                  scenario: scenario,
-                  model: model
-                };
-              });
+        console.log("models", this.models);
+        // loop over all models and return records with scenarioId and
+        var modelsByScenarioId = {};
+        _.each(this.models, (model) => {
+          _.each(model.scenario, (scenarioId) => {
+            modelsByScenarioId[scenarioId] = model;
           });
-        var result = _.mapValues(
-          // group by scenario
-          _.groupBy(scenarioModelIter, ['scenario']),
-          // we don't need the scenario (it's the key)
-          function(scenarioModel){ return scenarioModel.model; }
-        );
-        return result;
+        });
+        var scenarioIds = _.keys(modelsByScenarioId);
+        var scenarios = _.map(scenarioIds, (id) => {
+          return {
+            id: id,
+            type: "scenario"
+          };
+        });
+        return scenarios;
+      },
+      orphanedModels: function() {
+        return [];
       },
       selectedRunNames: {
         get: () => {
+          if (_.isNil(this.models)) {
+            return '';
+          }
           var selectedModels = _.filter(
             this.models,
             ['selected', true]

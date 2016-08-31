@@ -25,7 +25,7 @@ var exports = (function () {
         required: true
       },
       "scenarios": {
-        type: Object,
+        type: Array,
         required: true
       }
     },

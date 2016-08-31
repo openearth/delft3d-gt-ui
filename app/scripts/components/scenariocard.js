@@ -4,7 +4,7 @@ var exports = (function () {
   var SceneCard = Vue.component("scenario-card", {
     template: "#template-scenario-card",
     props: {
-      scene: {
+      scenario: {
         type: Object,
         required: true
       }
