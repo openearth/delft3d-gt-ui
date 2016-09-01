@@ -5,16 +5,26 @@
   <div
      @click="clearActives"
      >
-    <div v-for="item in items">
-      <scenario-card
-         @click.stop="toggleActive(item)"
-         :scenario="item"
-         v-if="item.type === 'scenario'"></scenario-card>
-      <model-card
-         @click.stop="toggleActive(item)"
-         :model="item"
-         v-if="item.type === model"></model-card>
-    </div>
+    <ul class="list-group" >
+      <li
+         v-for="item in items"
+         @click="toggleActive(item)"
+         :class="{'active': item.active}"
+         class="list-group-item"
+         >
+        <scenario-card
+           v-if="item.type === 'scenario'"
+           :scenario="item"
+           ></scenario-card>
+        <model-card
+           v-if="item.type === 'model'"
+           :model="item"
+           ></model-card>
+        <pre>
+          {{ item | json }}
+        </pre>
+      </li>
+    </ul>
   </div>
 
   <!-- end search -->

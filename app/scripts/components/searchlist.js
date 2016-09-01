@@ -94,9 +94,10 @@ var exports = (function () {
         var wasActive = item.active;
 
         this.clearActives();
-
         // activate the clicked item
         item.active = !wasActive;
+        console.log('toggled', item, 'from', wasActive, item.active);
+
       },
 
       // User wants to select a scenario:
