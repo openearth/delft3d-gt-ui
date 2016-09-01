@@ -1,4 +1,4 @@
-/* global ImageAnimation, ConfirmDialog, getDialog, fetchModel, fetchLog, deleteModel, startModel, exportModel, stopModel, publishModel  */
+/* global  */
 var exports = (function () {
   "use strict";
 

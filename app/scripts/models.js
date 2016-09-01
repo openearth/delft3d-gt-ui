@@ -18,7 +18,7 @@ var exports = (function () {
         .done(function(json) {
           _.map(json, function(model) {
             // add type for introspection
-            model.type = 'scene';
+            model.type = "scene";
             itemsCache[model.id] = model;
           });
           resolve(json);

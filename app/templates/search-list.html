@@ -4,11 +4,9 @@
 
   <div
      >
-    <ul class="list-group" >
+    <ul class="list-group" data-toggle="items">
       <li
          v-for="item in items"
-         @click.self="toggleActive(item)"
-         :class="{'active': item.active}"
          class="list-group-item"
          >
         <scenario-card

@@ -15,6 +15,11 @@ var exports = (function () {
       }
     }
   });
+
+  return {
+    ModelCard: ModelCard
+  };
+
 }());
 
 // If we're in node export to models

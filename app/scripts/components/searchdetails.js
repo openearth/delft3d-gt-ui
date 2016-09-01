@@ -1,4 +1,4 @@
-/* global Vue, fetchSearchTemplate */
+/* global Vue, fetchSearchTemplate, fetchScenarios */
 var aa;
 var exports = (function () {
   "use strict";
@@ -27,7 +27,7 @@ var exports = (function () {
         .then((templates) => {
           // store them
           this.searchTemplate = templates;
-          // after we're done loading the templates in the dom, start searching.
+          // after we"re done loading the templates in the dom, start searching.
 
           this.$nextTick(
             () => {
@@ -181,6 +181,7 @@ var exports = (function () {
       },
       fetchSearch: function() {
         var request = this.buildRequest();
+
         // return a promise
         return new Promise(function(resolve, reject) {
 
@@ -200,11 +201,11 @@ var exports = (function () {
         // TODO: update items
         // fetchScenarios()
         //   .then((data) => {
-        //     this.$dispatch('scenarios-updated', data);
+        //     this.$dispatch("scenarios-updated", data);
         //   });
         // fetchModels()
         //   .then((data) => {
-        //     this.$dispatch('models-updated', data);
+        //     this.$dispatch("models-updated", data);
         //   });
       },
       search: function() {
@@ -214,6 +215,7 @@ var exports = (function () {
 
         // we want to update the search results and scenarios at the same time
         var promises = [this.fetchSearch(), fetchScenarios()];
+
         // once we have everything, we can update the items
         Promise.all(promises).then(
           (values) => {
@@ -224,12 +226,12 @@ var exports = (function () {
             scenarios = _.uniqBy(scenarios, "id");
 
             // drop duplicates
-            // TODO: models has duplicates
+            // TODO: why models has duplicates
             var modelById = _.keyBy(models, "id");
-            var scenarioById = _.keyBy(scenarios, "id");
 
             // first loop over all the scenarios
             var items = [];
+
             _.each(scenarios, (scenario) => {
               scenario.models = [];
               // loop over all models
@@ -238,8 +240,8 @@ var exports = (function () {
                 var model = modelById[modelId];
 
                 // properties that we need
-                model.type = 'model';
                 model.active = false;
+                model.type = "model";
 
                 scenario.models.push(model);
               });
@@ -251,22 +253,25 @@ var exports = (function () {
 
             // now we can the orphan models
             // ids that are in a scenario
-            var inScenario = _.uniq(_.flatMap(aa, 'scene_set'));
+            var inScenario = _.uniq(_.flatMap(aa, "scene_set"));
             // all ids
-            var allIds = _.uniq(_.map(models, 'id'));
+            var allIds = _.uniq(_.map(models, "id"));
             // ids that are not in a scenario
             var orphanIds = _.difference(allIds, inScenario);
 
             // add the orphans to the list
-            var orphans = _.map(orphanIds, (id) => {return modelById[id]; });
+            var orphans = _.map(orphanIds, (id) => {
+              return modelById[id];
+            });
+
             _.each(orphans, (model) => {
-              model.type = 'model';
+              model.type = "model";
               model.active = false;
               items.push(model);
             });
 
-            console.log('items-found', items);
-            this.$dispatch('items-found', items);
+            console.log("items-found", items);
+            this.$dispatch("items-found", items);
           }
         );
       }

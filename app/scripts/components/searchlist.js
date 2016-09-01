@@ -20,9 +20,18 @@ var exports = (function () {
       };
     },
     ready: function() {
-      this.$on('models-loaded', function(models) {
-        console.log('models loaded', models);
+      this.$on("models-loaded", function(models) {
+        console.log("models loaded", models);
       });
+
+    },
+    watch: {
+      items: function() {
+        this.$nextTick(function() {
+          $(".list-group").listgroup();
+        });
+      }
+
     },
     computed: {
 
@@ -77,9 +86,10 @@ var exports = (function () {
     methods: {
       clearActives: function() {
         // clear all active states
-        var scenarios = _.filter(this.items, ['type', 'scenario']);
+        var scenarios = _.filter(this.items, ["type", "scenario"]);
         // all models in scenarios
         var models = _.flatMap(scenarios, "models");
+
         _.each(models, (model) => {
           model.active = false;
         });
@@ -88,8 +98,9 @@ var exports = (function () {
           item.active = false;
         });
       },
-      toggleActive: function(item, index) {
+      toggleActive: function(item) {
         var wasActive = item.active;
+
         this.clearActives();
         // was the item active
         item.active = !wasActive;
@@ -137,42 +148,6 @@ var exports = (function () {
         // Toggle selected id.
         var rundiv = $(ev.target).closest(".run");
 
-        // Is control down? Then we select multiple:
-        /*
-        ** We do not support the control key at the moment
-        ** But please leave this code here, it needs to be activated next sprint.
-
-        if (this.keyControlPressed === true) {
-
-          rundiv.toggleClass("selected");
-
-          // Determine which models have been selected (can be multiple, now we accept one)
-          // Set selected result id:  (for old detail display at the moment)
-          this.selectedResultId = id;
-
-          // Directly select the id in the details list. (no routing)
-          this.$dispatch("modelsSelected", id);
-
-          // Add item to selected array, or remove:
-          if (rundiv.hasClass("selected") === true) {
-            // Did we already have the item? If not, add it.
-            if (_.findIndex(this.selectedRuns, id) === -1) {
-              // Add item to list of selected runs:
-              this.selectedRuns.push(id);
-
-            }
-
-          } else {
-            // Item has been removed... delete it?
-            this.selectedRuns = _.without(this.selectedRuns, id);
-          }
-
-          // Make sure list is always unique:
-          this.selectedRuns = _.uniq(this.selectedRuns);
-
-
-        } else {
-        */
         // Control is not pressed, so we deselect all checkboxes, and only set the one we selected.
         rundiv.toggleClass("selected");
 

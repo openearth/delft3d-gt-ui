@@ -1,4 +1,4 @@
-re<template id="template-scenario-card">
+<template id="template-scenario-card">
   <div class="scenario">
     <div v-if="scenario">
       <div
@@ -13,17 +13,12 @@ re<template id="template-scenario-card">
           <button
              class="btn btn-default btn-xs collapsed"
              type="button"
-             data-toggle="collapse"
-             data-target="#collapse-{{ scenario.id }}"
-             aria-expanded="false"
-             aria-controls="collapse-{{ scenario.id }}">
-
-
-
+             @click.stop="collapse"
+             data-target="collapse-{{ scenario.id }}"
+             >
         </div>
       </div>
-      <div class="row"
-           class="collapse"
+      <div class="row collapse"
            id="collapse-{{ scenario.id }}"
            >
         <div
@@ -42,11 +37,9 @@ re<template id="template-scenario-card">
               </div>
 
             </div>
-            <ul class="list-group">
+            <ul class="list-group" data-toggle="items">
               <li
                  class="list-group-item"
-                 :class="{active: model.active}"
-                 @click="this.toggleActive(model)"
                  v-for="model in scenario.models">
                 <model-card
                    :model="model"

@@ -19,9 +19,9 @@ var exports = (function () {
     },
     ready: function() {
       // TODO, consistent naming
-      this.$on('items-found', function(items) {
-        console.log('found items', items);
-        this.$set('items', items);
+      this.$on("items-found", function(items) {
+        console.log("found items", items);
+        this.$set("items", items);
       });
     },
     route: {
@@ -35,7 +35,7 @@ var exports = (function () {
 
     computed: {
       activeItem: function() {
-        return _.first(_.filter(this.items, ['active', true]));
+        return _.first(_.filter(this.items, ["active", true]));
       }
     },
 

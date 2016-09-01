@@ -26,11 +26,11 @@ var exports = (function () {
     },
     computed: {
       selectedModels: function() {
-        return _.filter(this.items, ['selected', true, 'type', 'models']);
+        return _.filter(this.items, ["selected", true, "type", "models"]);
       },
       selectedScenarios: function() {
-        console.log('selected scenarios', this);
-        return _.filter(this.items, ['selected', true, 'type', 'scenarios']);
+        console.log("selected scenarios", this);
+        return _.filter(this.items, ["selected", true, "type", "scenarios"]);
       }
     },
     methods: {
