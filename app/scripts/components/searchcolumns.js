@@ -34,7 +34,9 @@ var exports = (function () {
     },
 
     computed: {
-
+      activeItem: function() {
+        return _.first(_.filter(this.items, ['active', true]));
+      }
     },
 
     methods: {

@@ -45,9 +45,19 @@
 
           <div class="col-sm-5 column full-height">
             <!-- details for selected scenarios first -->
-            <scenario-details :scenario="scenario" v-for="scenario in selectedScenarios"></scenario-details>
-            <!-- then details for selected models -->
-            <model-details :model="model" v-for="model in selectedModels"></model-details>
+            <div v-if="activeItem">
+              <scenario-details
+                 :scenario="activeItem"
+                 v-if="activeItem.type == 'scenario'"></scenario-details>
+              <model-details
+                 :model="activeItem"
+                 v-if="activeItem.type == 'model'"></model-details>
+            </div>
+            <div v-else>
+              <p class="text-info">
+                Select an item in the middle column.
+              </p>
+            </div>
           </div>
 
         </div>

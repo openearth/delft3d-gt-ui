@@ -197,20 +197,21 @@ body {
  font-family: "Open Sans", sans-serif;
 }
 
-.panel-heading button:after {
+
+.scenario .row {
+  margin-bottom: 5px;
+}
+.scenario-header button:after {
   color: $dark-gray;
   content: '\e114';
   float: right;
   font-family: 'Glyphicons Halflings';
 }
 
-.panel-heading button.collapsed:after {
+.scenario-header button.collapsed:after {
   content: '\e080';
 }
 
-.panel-heading.active {
-  border: 1px solid $brand-primary;
-}
 
 
 .fa-top-right {

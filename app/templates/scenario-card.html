@@ -1,33 +1,35 @@
 re<template id="template-scenario-card">
-  <div>
+  <div class="scenario">
     <div v-if="scenario">
-      <div class="panel panel-default">
-        <div class="panel-heading"
-             :class="{'active': scenario.active}">
-          <div
-             class="row"
-             >
-            <div class="col-sm-8">
-              <input type="checkbox">
-              Scenario: {{scenario.name}}
-            </div>
-            <div class="col-sm-4 text-right">
-              <span class="label label-info">{{scenario.state | lowercase}}</span>
-              <button
-                 class="btn btn-default btn-xs collapsed"
-                 type="button"
-                 data-toggle="collapse"
-                 data-target="#collapse-{{ scenario.id }}"
-                 aria-expanded="false"
-                 aria-controls="collapse-{{ scenario.id }}">
-            </div>
-          </div>
+      <div
+         class="row scenario-header"
+         >
+        <div class="col-sm-8">
+          <input type="checkbox">
+          Scenario: {{scenario.name}}
+        </div>
+        <div class="col-sm-4 text-right">
+          <span class="label label-info">{{scenario.state | lowercase}}</span>
+          <button
+             class="btn btn-default btn-xs collapsed"
+             type="button"
+             data-toggle="collapse"
+             data-target="#collapse-{{ scenario.id }}"
+             aria-expanded="false"
+             aria-controls="collapse-{{ scenario.id }}">
 
 
 
         </div>
-        <div class="panel-body collapse"
-             id="collapse-{{ scenario.id }}">
+      </div>
+      <div class="row"
+           class="collapse"
+           id="collapse-{{ scenario.id }}"
+           >
+        <div
+           class="col-sm-12"
+
+           >
           <div v-if="scenario.models && scenario.models.length > 0">
             <div class="progress">
               <div
@@ -59,6 +61,7 @@ re<template id="template-scenario-card">
           </div>
         </div>
       </div>
+
     </div>
     <div v-else>
       no scenario available

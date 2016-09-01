@@ -7,7 +7,7 @@
     <ul class="list-group" >
       <li
          v-for="item in items"
-         @click.self.stop="toggleActive(item)"
+         @click.self="toggleActive(item)"
          :class="{'active': item.active}"
          class="list-group-item"
          >
