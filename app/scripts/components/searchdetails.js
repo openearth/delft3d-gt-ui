@@ -252,7 +252,7 @@ var exports = (function () {
 
             // now we can the orphan models
             // ids that are in a scenario
-            var inScenario = _.uniq(_.flatMap(aa, "scene_set"));
+            var inScenario = _.uniq(_.flatMap(scenarios, "scene_set"));
             // all ids
             var allIds = _.uniq(_.map(models, "id"));
             // ids that are not in a scenario
