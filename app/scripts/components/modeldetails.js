@@ -49,7 +49,7 @@ var exports = (function () {
     },
 
     created: function() {
-      if (this.model.id !== -1) {
+      if (_.has(this.model, "id") && this.model.id !== -1) {
         this.updateData(this.model.id);
       }
     },

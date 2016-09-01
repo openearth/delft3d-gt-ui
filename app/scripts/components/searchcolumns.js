@@ -73,37 +73,9 @@ var exports = (function () {
 
         this.$broadcast("clearSearch");
 
-      },
-
-
-      // Get a child by name, such that we do not have a fixed index.
-
-      // Update the collapsibles.
-      updateCollapsibles: function() {
-
-        var that = this;
-
-
-        $(".scenario-runs").on("hide.bs.collapse", function() {
-
-          that.openedScenarios.push($(this).data("scenarioid"));
-
-          $(this).parent().find(".glyphicon-chevron-down:first-child").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
-
-          that.openedScenarios = _.uniq(that.openedScenarios);
-
-
-        });
-
-        $(".scenario-runs").on("show.bs.collapse", function() {
-
-          $(this).parent().find(".glyphicon-chevron-right:first-child").removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
-
-          that.openedScenarios = _.uniq(_.without(that.openedScenarios, $(this).data("scenarioid")));
-
-        });
-
       }
+
+
 
     }
   });

@@ -24,9 +24,9 @@ var exports = (function () {
     ready: function() {
       // get search templates
       fetchSearchTemplate()
-        .then((templates) => {
+        .then((template) => {
           // store them
-          this.searchTemplate = templates;
+          this.searchTemplate = template;
           // after we"re done loading the templates in the dom, start searching.
 
           this.$nextTick(
@@ -143,7 +143,7 @@ var exports = (function () {
         // for now we just copy everything
 
         var params = {
-          shared: this.domains,
+          shared: this.selectedDomains,
           template: this.selectedTemplates,
           search: this.searchText
         };
