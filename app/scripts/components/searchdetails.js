@@ -1,5 +1,4 @@
 /* global Vue, fetchSearchTemplate, fetchScenarios */
-var aa;
 var exports = (function () {
   "use strict";
   var SearchDetails = Vue.component("search-details", {
