@@ -88,16 +88,11 @@ var exports = (function () {
           item.active = false;
         });
       },
-      toggleActive: function(item) {
-
-        // was the item active
+      toggleActive: function(item, index) {
         var wasActive = item.active;
-
         this.clearActives();
-        // activate the clicked item
+        // was the item active
         item.active = !wasActive;
-        console.log('toggled', item, 'from', wasActive, item.active);
-
       },
 
       // User wants to select a scenario:

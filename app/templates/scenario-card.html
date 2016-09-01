@@ -1,4 +1,4 @@
-<template id="template-scenario-card">
+re<template id="template-scenario-card">
   <div>
     <div v-if="scenario">
       <div class="panel panel-default">
@@ -40,13 +40,19 @@
               </div>
 
             </div>
-            <div v-for="model in scenario.models">
-              <model-card
-                 @click="this.$parent.toggleActive(item)"
-                 :model="model"
-                 >
-              </model-card>
-            </div>
+            <ul class="list-group">
+              <li
+                 class="list-group-item"
+                 :class="{active: model.active}"
+                 @click="this.toggleActive(model)"
+                 v-for="model in scenario.models">
+                <model-card
+                   :model="model"
+                   >
+                </model-card>
+              </li>
+            </ul>
+
           </div>
           <div v-else>
             <p class="text-info">This scenario is empty</p>

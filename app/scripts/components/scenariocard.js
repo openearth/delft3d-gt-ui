@@ -10,9 +10,9 @@ var exports = (function () {
       }
     },
     methods: {
-      activate: function(scenario, evt) {
-        console.log(evt);
-        $(evt.target).toggleClass('active');
+      toggleActive: function(scenario) {
+        // we can only toggle on the parent, because we have to clear other actives
+        this.$parent.toggleActive(scenario);
       }
     }
   });

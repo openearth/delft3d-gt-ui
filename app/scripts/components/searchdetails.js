@@ -238,6 +238,7 @@ var exports = (function () {
                 var model = modelById[modelId];
 
                 // properties that we need
+                model.type = 'model';
                 model.active = false;
 
                 scenario.models.push(model);
@@ -259,6 +260,8 @@ var exports = (function () {
             // add the orphans to the list
             var orphans = _.map(orphanIds, (id) => {return modelById[id]; });
             _.each(orphans, (model) => {
+              model.type = 'model';
+              model.active = false;
               items.push(model);
             });
 

@@ -7,6 +7,12 @@ var exports = (function () {
       model: {
         required: true
       }
+    },
+    methods: {
+      toggleActive: function(model) {
+        // we can only toggle on the parent, because we have to clear other actives
+        this.$parent.toggleActive(model);
+      }
     }
   });
 }());
