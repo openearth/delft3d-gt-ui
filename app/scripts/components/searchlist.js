@@ -63,7 +63,7 @@ var exports = (function () {
     },
 
     methods: {
-      toggleItem: function(item) {
+      toggleActive: function(item) {
         if (item.type === "scenario") {
           _.each(item.models, function(model) {
             model.active = !item.active;

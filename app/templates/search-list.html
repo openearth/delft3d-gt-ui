@@ -9,7 +9,7 @@
       <li
          v-for="item in items"
          class="list-group-item"
-         @click.stop="toggleItem(item)"
+         @click.stop="toggleActive(item)"
          :class="{active: item.active}"
          >
         <scenario-card

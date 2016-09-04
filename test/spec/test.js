@@ -2995,17 +2995,19 @@
       // Add an artificial sene with a model in scene_set with id 1.
       var aSearchList = new SearchList();
 
-      aSearchList.models = [];
+      aSearchList.items = [];
 
-       /*eslint-disable camelcase*/
-      aSearchList.models.push({id: 123, scene_set: [{ id: 1}]});
-       /*eslint-enable camelcase*/
+      var scenario = {
+        id: 123,
+        active: true
+      };
 
-      aSearchList.selectedRuns = [1]; // Assume we test #1
+      aSearchList.items.push(scenario);
 
-      aSearchList.deselectAllRuns();
+      // Assume we test #1
+      scenario.active = false;
 
-      assert.isTrue(aSearchList.selectedRuns.length === 0, "selectedRuns are correct.");
+      assert.equal(aSearchList.selectedItems.length, 0, "selected items are empty");
       done();
     });
 
@@ -3015,15 +3017,14 @@
       // Add an artificial sene with a model in scene_set with id 1.
       var aSearchList = new SearchList();
 
-      // Add some scenario info:
-      $("#scenario-container").html("<div class='scenario' data-scenarioid='354'>");
+      var scenario = {
+        id: 123,
+        active: false
+      };
 
-      // Fake a html event.
-      var ev = { target: $(".scenario") };
-
-      aSearchList.scenarioSelect(354, ev);
-
-      assert.isTrue($(".scenario").hasClass("selected") && aSearchList.selectedScenarios[0] === 354, "selectedRuns are correct.");
+      aSearchList.items = [scenario];
+      aSearchList.toggleActive(scenario);
+      assert.equal(aSearchList.selectedItems.length, 1, "selected items equal to 1");
       done();
     });
 
@@ -3032,17 +3033,16 @@
       // Add an artificial sene with a model in scene_set with id 1.
       var aSearchList = new SearchList();
 
-      aSearchList.models = [];
+      aSearchList.items = [];
 
-       /*eslint-disable camelcase*/
-      aSearchList.models.push({id: 123, scene_set: [{ id: 1}]});
+      /*eslint-disable camelcase*/
+      var scenario = {id: 123, active: true, scene_set: [{ id: 1}]};
+
+      aSearchList.items.push(scenario);
        /*eslint-enable camelcase*/
 
-      aSearchList.selectedRuns = [1]; // Assume we test #1
 
-      var models = aSearchList.selectedModels;
-
-      assert.isTrue((models.length === 1 && models[0] === 1), "selectedRun is correct.");
+      assert.equal([scenario].length, aSearchList.selectedItems.length, "selected models is correct.");
       done();
     });
 
@@ -3051,54 +3051,18 @@
       // Add an artificial sene with a model in scene_set with id 1.
       var aSearchList = new SearchList();
 
-      aSearchList.models = [];
+      aSearchList.items = [];
 
        /*eslint-disable camelcase*/
-      aSearchList.models.push({id: 123, scene_set: [{ id: 1}]});
+      aSearchList.items.push({id: 123, active: false, type: "model"});
        /*eslint-enable camelcase*/
 
-      aSearchList.selectedRuns = []; // Assume we test #1
+      var models = _.filter(aSearchList.selectedItems, ["type", "model"]);
 
-      var models = aSearchList.selectedModels;
-
-      assert.isTrue((models.length === 0), "selectedRun is correct.");
+      assert.isTrue((models.length === 0), "selected items is correct.");
       done();
     });
 
-    it("Should be possible get selectedModelid", function(done) {
-
-      var aSearchList = new SearchList();
-
-      // Add an artificial sene with a model in scene_set with id 1.
-      aSearchList.selectedResultId = 1;
-
-      assert.isTrue((aSearchList.selectedResultId === aSearchList.selectedModelId), "selectedResultId matches selectedModelid");
-      done();
-    });
-
-
-    it("Should be possible select an item without control key pressed ", function(done) {
-
-      var aSearchList = new SearchList();
-      var selectedId = 123;
-      var fakeEvent = {};
-
-      aSearchList.keyControlPressed = false;
-
-      fakeEvent.target = "somediv"; // We cannot match html yet?
-
-      // Start a run with the selected id.
-      aSearchList.runSelected(selectedId, fakeEvent);
-
-      // Start another run with the selected id +1;
-      selectedId++;
-      aSearchList.runSelected(selectedId, fakeEvent);
-
-      // Without control key we expect only the last item selected.
-      assert.isTrue(aSearchList.selectedRuns[0] === selectedId, "selectedResultId matches expected value");
-
-      done();
-    });
 
 
     // Todo, but required DOM.
