@@ -14,7 +14,6 @@ var exports = (function () {
 
     ready: function() {
 
-      console.log(this.$refs);
     },
 
 
@@ -29,7 +28,6 @@ var exports = (function () {
         return _.filter(this.items, ["selected", true, "type", "models"]);
       },
       selectedScenarios: function() {
-        console.log("selected scenarios", this);
         return _.filter(this.items, ["selected", true, "type", "scenarios"]);
       }
     },
@@ -59,7 +57,7 @@ var exports = (function () {
 
 
               .catch(e => {
-                console.log("scenario deletion failed", e);
+                console.warn("scenario deletion failed", e);
               });
 
             // Hide dialog when user presses this accept.:
@@ -106,8 +104,6 @@ var exports = (function () {
           return (value.id === scenarioId);
         });
 
-        console.log(scenario);
-
         // Ignore if we did not find anything.
         if (scenario === undefined) {
           return;
@@ -121,7 +117,6 @@ var exports = (function () {
           scenario.parameters
         );
 
-        console.log("TEMPLATE:" + scenario.template);
         // These parameters are passed to the other view
         // alternative would be to store them in the app or to call an event
         var req = {

@@ -3,11 +3,14 @@
   <!-- loop through all scenarios -->
 
   <div
+     class="search-list"
      >
     <ul class="list-group" data-toggle="items">
       <li
          v-for="item in items"
          class="list-group-item"
+         @click.stop="toggleItem(item, $event)"
+         :class="{active: item.active}"
          >
         <scenario-card
            v-if="item.type === 'scenario'"

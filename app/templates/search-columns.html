@@ -39,7 +39,7 @@
           </div>
 
           <div class="col-sm-5 column full-height">
-            <search-list :items="items"></search-list>
+            <search-list :items="items" v-ref:search-list></search-list>
           </div>
 
 
@@ -47,10 +47,10 @@
             <!-- details for selected scenarios first -->
             <div v-if="activeItem">
               <scenario-details
-                 :scenario="activeItem"
+                 :scenario.sync="activeItem"
                  v-if="activeItem.type == 'scenario'"></scenario-details>
               <model-details
-                 :model="activeItem"
+                 :model.sync="activeItem"
                  v-if="activeItem.type == 'model'"></model-details>
             </div>
             <div v-else>

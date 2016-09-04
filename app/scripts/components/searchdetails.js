@@ -236,6 +236,10 @@ var exports = (function () {
               // loop over all models
               _.each(scenario.scene_set, (modelId) => {
                 // store model in models
+                if (!_.has(modelById, modelId)) {
+                  console.warn('Model', modelId, 'in scenario but not in model overview');
+                  return;
+                }
                 var model = modelById[modelId];
 
                 // properties that we need
@@ -269,7 +273,6 @@ var exports = (function () {
               items.push(model);
             });
 
-            console.log("items-found", items);
             this.$dispatch("items-found", items);
           }
         );

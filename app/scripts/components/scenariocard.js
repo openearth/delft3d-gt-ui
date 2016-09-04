@@ -1,7 +1,7 @@
 var exports = (function () {
   "use strict";
 
-  var SceneCard = Vue.component("scenario-card", {
+  var ScenarioCard = Vue.component("scenario-card", {
     template: "#template-scenario-card",
     props: {
       scenario: {
@@ -10,9 +10,8 @@ var exports = (function () {
       }
     },
     methods: {
-      toggleActive: function(scenario) {
-        // we can only toggle on the parent, because we have to clear other actives
-        this.$parent.toggleActive(scenario);
+      toggleActive: function(item, evt) {
+        item.active = !item.active;
       },
       collapse: function(evt) {
         // toggle the collapsed icon
@@ -29,7 +28,7 @@ var exports = (function () {
   });
 
   return {
-    SceneCard: SceneCard
+    ScenarioCard: ScenarioCard
   };
 
 }());

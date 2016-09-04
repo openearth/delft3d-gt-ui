@@ -40,7 +40,10 @@
             <ul class="list-group" data-toggle="items">
               <li
                  class="list-group-item"
-                 v-for="model in scenario.models">
+                 v-for="model in scenario.models"
+                 @click.stop="toggleActive(model, $event)"
+                 :class="{active: model.active}"
+                 >
                 <model-card
                    :model="model"
                    >

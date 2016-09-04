@@ -197,7 +197,10 @@ body {
  font-family: "Open Sans", sans-serif;
 }
 
-
+.scenario {
+  /* arrow everywhere */
+  cursor: default;
+}
 .scenario .row {
   margin-bottom: 5px;
 }
@@ -1055,72 +1058,6 @@ section {
 }
 
 
-.scenario-list,
-.model-list,
-.model-details,
-.search-details {
-  min-height: 100%;
-  overflow: auto;
-  padding: 0;
-
-
-  // Disable some of the default panel stylings:
-  .panel {
-    //-webkit-box-shadow: none;
-    //-moz-box-shadow: none;
-    border: 0;
-    box-shadow: none;
-    padding: 4px;
-  }
-
-
-
-  .alert {
-    border-radius: 0;
-    margin: 1px;
-    margin-top: 8px;
-  }
-
-  .alert-small {
-    display: inline-block;
-    margin-top: 8px;
-  }
-
-
-  .list-group-item {
-
-    padding: 0;
-
-    &:hover {
-      cursor: pointer;
-    }
-
-    &.selected {
-      background-color: $selected-item-color;
-    }
-
-    // A href becomes block
-    a,
-    .search-result {
-      @include truncate();
-      // hide the selection focus (dotted lines)
-      color: $black;
-      display: block;
-      outline: none;
-      text-decoration: none;
-    }
-
-    .model-state {
-      @include model-state-colors();
-      border: 1px solid $gray-lighter;
-      bottom: 30%;
-      position: absolute;
-      right: 4px;
-    }
-
-
-  }
-}
 
 .model-details {
   .panel-default {
@@ -1140,18 +1077,6 @@ section {
   a:hover {
     color: $brand-primary;
     text-decoration: none;
-  }
-}
-
-.scenario-list {
-  background-color: darken($gray-lighter, 10%);
-}
-
-.model-list {
-  background-color: $model-list-background;
-
-  .list-group {
-    margin-bottom: 8px;
   }
 }
 
@@ -1211,6 +1136,16 @@ For later... align the buttons.
   // Hide the results information screen (how many results we got) - it's fairly big, and removing it makes space for the buttons on the navbar.
   #results-info {
     display: none;
+  }
+
+}
+.search-list {
+
+  .list-group-item.active,
+  .list-group-item.active:hover,
+  .list-group-item.active:focus {
+    color: inherit;
+    background-color: inherit;
   }
 
 }
