@@ -133,7 +133,7 @@ $company-scenario-item-selected-background: $scenario-selected-background;
   /*
   Introduced in IE 10.
   See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
-  */
+ */
   //-ms-user-select: none;
   user-select: none;
 }
@@ -194,7 +194,7 @@ $row-height: 32px;
 
 // Default font:
 body {
- font-family: "Open Sans", sans-serif;
+  font-family: "Open Sans", sans-serif;
 }
 
 .scenario {
@@ -337,7 +337,7 @@ input[type=date].form-control {
 }
 
 .container-fluid {
-   border-bottom: 1px solid lighten($gray-dark, 60%);
+  border-bottom: 1px solid lighten($gray-dark, 60%);
 }
 
 .tool-bar {
@@ -366,7 +366,9 @@ input[type=date].form-control {
       color: $white;
       font-weight: normal;
       height: 28px;
-      margin: 2px;
+      margin-left: 1px;
+      margin-top: 2px;
+      margin-bottom: 2px;
     }
 
     &.default {
@@ -865,7 +867,7 @@ section {
 
     @include unselectable();
 
-     // Hide the actual checkbox.
+    // Hide the actual checkbox.
     input[type=checkbox] {
       display: none;
       height: 62px;
@@ -1111,7 +1113,7 @@ For later... align the buttons.
   .search-details .domain-search-boxes input[type=checkbox] + label {
     height: 54px;
     width: 54px;
-   }
+  }
 
   // Hide the label at these screens:
   .search-details .domain-search-boxes input[type=checkbox] + label span {
@@ -1131,7 +1133,7 @@ For later... align the buttons.
   .search-details .domain-search-boxes input[type=checkbox] + label {
     height: 42px;
     width: 42px;
-   }
+  }
 
   // Hide the results information screen (how many results we got) - it's fairly big, and removing it makes space for the buttons on the navbar.
   #results-info {
@@ -1148,4 +1150,70 @@ For later... align the buttons.
     background-color: inherit;
   }
 
+}
+.scenario-list,
+.model-list,
+.model-details,
+.search-details {
+  min-height: 100%;
+  overflow: auto;
+  padding: 0;
+
+
+  // Disable some of the default panel stylings:
+  .panel {
+    //-webkit-box-shadow: none;
+    //-moz-box-shadow: none;
+    border: 0;
+    box-shadow: none;
+    padding: 4px;
+  }
+
+
+
+  .alert {
+    border-radius: 0;
+    margin: 1px;
+    margin-top: 8px;
+  }
+
+  .alert-small {
+    display: inline-block;
+    margin-top: 8px;
+  }
+
+
+  .list-group-item {
+
+    padding: 0;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &.selected {
+      background-color: $selected-item-color;
+    }
+
+    // A href becomes block
+    a,
+    .search-result {
+      @include truncate();
+      // hide the selection focus (dotted lines)
+      color: $black;
+      display: block;
+      outline: none;
+      text-decoration: none;
+    }
+
+    .model-state {
+      @include model-state-colors();
+      border: 1px solid $gray-lighter;
+      bottom: 30%;
+      position: absolute;
+      right: 4px;
+    }
+
+
+  }
 }
