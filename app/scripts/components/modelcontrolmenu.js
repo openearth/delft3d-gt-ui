@@ -25,10 +25,10 @@ var exports = (function () {
     },
     computed: {
       selectedModels: function() {
-        return _.filter(this.items, ["selected", true, "type", "models"]);
+        return _.filter(this.items, ["active", true, "type", "models"]);
       },
       selectedScenarios: function() {
-        return _.filter(this.items, ["selected", true, "type", "scenarios"]);
+        return _.filter(this.items, ["active", true, "type", "scenarios"]);
       }
     },
     methods: {
@@ -41,8 +41,8 @@ var exports = (function () {
         // User accepts deletion:
         $("#dialog-remove-scenario-response-accept").on("click", () => {
 
-          this.selectedScenarios.forEach(function(id) {
-            deleteScenario(id)
+          this.selectedScenarios.forEach(function(scenario) {
+            deleteScenario(scenario.id)
               .then(() => {
                 that.$parent.$broadcast("show-alert", {
                   message: "Deleting scenario... It might take a moment before the view is updated.",
@@ -76,33 +76,27 @@ var exports = (function () {
       startSelectedModels: function() {
 
         // Start these models:
-        startModels(this.selectedRuns);
+        startModels(_.map(this.selectedModels, "id"));
 
       },
 
       stopSelectedModels: function() {
 
         // Stop models:
-        stopModels(this.selectedRuns);
+        stopModels(_.map(this.selectedModels, "id"));
       },
 
       deleteSelectedModels: function() {
 
         // Delete models
-        deleteModels(this.selectedRuns);
+        deleteModels(_.map(this.selectedModels, "id"));
       },
 
       cloneScenario: function() {
 
+        var scenario = this.selectedScenarios[0];
         // Get scenario id:
-        var scenarioId = this.selectedScenarios[0];
-
-        // Find it:
-        var scenario = _.find(this.Models, function(value) {
-
-          // Is our id in this
-          return (value.id === scenarioId);
-        });
+        var scenarioId = scenario.id;
 
         // Ignore if we did not find anything.
         if (scenario === undefined) {

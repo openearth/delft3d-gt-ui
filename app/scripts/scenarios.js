@@ -26,7 +26,7 @@ var exports = (function() {
 
   function deleteScenario(id) {
 
-
+    console.log("deleting scenario", id);
     return new Promise(function(resolve, reject) {
       // add extra options to id
       //var postData = _.assign({id: id}, options);

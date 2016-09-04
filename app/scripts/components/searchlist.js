@@ -44,7 +44,6 @@ var exports = (function () {
           return firstModel;
         }
       },
-
       selectedItems: {
         cache: false,
         get: function() {
