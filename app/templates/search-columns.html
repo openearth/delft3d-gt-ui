@@ -16,52 +16,55 @@
               <div class="btn-toolbar heading-bar">
                 <span id="results-info">Results</span>  <span id="results-info-stats">({{numRuns}} {{numRuns | pluralize 'run'}} in {{numScenarios}} {{numScenarios | pluralize 'scenario'}})</span>
 
-                <a class="btn pull-right nav-bar-button" title="Create scenario" href="#/scenarios/create">Create scenario</a>
 
-                <model-control-menu :selected-runs="selectedRuns" :models="models" :selected-scenarios="selectedScenarios" ></model-control-menu>
+                <model-control-menu :items="items"></model-control-menu>
               </div>
-          </div>
+            </div>
 
-          <div class="col-xs-5" id="column-run-details">
-            <div class="btn-toolbar heading-bar" >
-              Details <span v-if="selectedRuns.length > 0">for &ldquo;{{selectedRunNames}}&rdquo;</span>
+            <div class="col-xs-5" id="column-run-details">
+              <div class="btn-toolbar heading-bar" >Details</div>
             </div>
           </div>
         </div>
-      </div>
-    </nav>
+      </nav>
 
-    <!-- Alert message component for display of timed messages -->
-    <alert-message></alert-message>
+      <!-- Alert message component for display of timed messages -->
+      <alert-message></alert-message>
 
-    <div class="container-fluid full-height">
-      <div class="row full-height">
+      <div class="container-fluid full-height">
+        <div class="row full-height">
 
-        <div class="col-sm-2 column  full-height">
-          <search-details></search-details>
+          <div class="col-sm-2 column  full-height">
+            <search-details></search-details>
+          </div>
+
+          <div class="col-sm-5 column full-height">
+            <search-list :items="items" v-ref:search-list></search-list>
+          </div>
+
+
+          <div class="col-sm-5 column full-height">
+            <!-- details for selected scenarios first -->
+            <div v-if="activeItem">
+              <scenario-details
+                 :scenario.sync="activeItem"
+                 v-if="activeItem.type == 'scenario'"></scenario-details>
+              <model-details
+                 :model.sync="activeItem"
+                 v-if="activeItem.type == 'model'"></model-details>
+            </div>
+            <div v-else>
+              <p class="text-info">
+                Select an item in the middle column.
+              </p>
+            </div>
+          </div>
+
         </div>
-
-        <div class="col-sm-5 column full-height">
-
-        <!-- for debugging, please leave for a moment.
-          runs: {{selectedRuns|json}}
-          cols: {{openedScenarios|json}}
-          scenarios: {{selectedScenarios|json}}
-        -->
-
-         <search-list v-bind:opened-scenarios.sync="openedScenarios" filter="" :models="models" :selected-runs.sync="selectedRuns" :selected-scenarios.sync="selectedScenarios"></search-list>
-        </div>
-
-
-        <div class="col-sm-5 column full-height">
-        <model-details></model-details>
-        </div>
-
       </div>
     </div>
-  </div>
 
- <!-- MODALS should be turned into an comopnent?-->
+    <!-- MODALS should be turned into an comopnent?-->
 
     <div class="modal default-hidden fade" id="dialog-confirm-delete-scenario" tabindex="-1" role="dialog">
       <div class="modal-dialog">
@@ -89,7 +92,7 @@
     </div>
     <!-- REMOVE FROM HERE -->
 
-</div>
+  </div>
 
 
 </template>

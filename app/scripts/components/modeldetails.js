@@ -10,13 +10,16 @@ var exports = (function () {
       "image-animation": ImageAnimation,
       "confirm-dialog": ConfirmDialog
     },
-
+    props: {
+      model: {
+        type: Object,
+        required: true
+      }
+    },
     // Show the details of one model
     data: function() {
       return {
         timerId: -1,
-        model: {
-        },
         publishLevels: [
           {
             "indicator": "p",
@@ -46,7 +49,7 @@ var exports = (function () {
     },
 
     created: function() {
-      if (this.model.id !== -1) {
+      if (_.has(this.model, "id") && this.model.id !== -1) {
         this.updateData(this.model.id);
       }
     },

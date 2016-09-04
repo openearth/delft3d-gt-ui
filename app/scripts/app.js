@@ -7,7 +7,6 @@ var exports = (function() {
 
   // wait for page to load
   $(document).ready(function() {
-    console.log("document loaded");
 
     // Main javascript code, initialize components, there shouldn"t be much here.
 
@@ -19,8 +18,6 @@ var exports = (function() {
     $("#template-container").load(
       "templates/templates.html",
       function() {
-        console.log("templates loaded, starting vue application");
-
         // Just an empty main application
         // (selected model is done using routing)
         var App = Vue.extend({

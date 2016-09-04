@@ -1,83 +1,28 @@
 <template id="template-search-list" inline-template>
 
-  <div class="model-list">
+  <!-- loop through all scenarios -->
 
-    <!--
-    For debugging, uncomments to see.
-    sel: {{selectedRuns|json}} / col: {{openedScenarios|json}}
-    -->
-
-    <!-- new search block -->
-    <div class="search-results"  v-show="models.length > 0">
-
-      <!-- loop through all scenarios -->
-      <div class="list-group checked-list-box" v-for="entry in models">
-
-        <div  class="list-group-item">
-
-          <!-- scenario info -->
-          <div class="scenario"  data-scenarioid="{{entry.id}}"  v-bind:class="{ 'selected': this.selectedScenarios.indexOf(entry.id) !== -1, 'worldscenario': entry.type === 'world', 'companyscenario': entry.type === 'company'}">
-            <div class="scenario-info"  v-on:click="scenarioSelect(entry.id, $event)">
-
-              <span class="scenario-name"><span class=" glyphicon glyphicon-chevron-down" data-toggle="collapse" data-target="#scenario-{{entry.id}}" aria-controls="scenario-{{$index}}"   data-scenarioid="{{entry.id}}"></span> Scenario: {{entry.name}}</span>
-              <small style="display:none">({{entry.id}})</small> <!-- = for debugging -->
-              <div class="progress-holder">
-                <div class="progress">
-                  <div data-percentage="{{entry.progress}}%" v-bind:style="{ width: entry.progress + '%'}" class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <span>{{entry.state  | lowercase}}</span>
-              </div>
-
-              <!-- Matched vars on scenario -->
-              <!-- we do not support this yet...
-              <div class="matched-vars">
-               <span class="badge inverted">Template</span> <span class="badge">Model version</span>
-             </div>
-             -->
-
-            <!-- hiding the arrow to the right, as users think it means something?
-            <span class="arrow-right glyphicon glyphicon-chevron-right"></span>
-            -->
-
-           </div>
-           <!-- end scenario info block -->
-
-           <div class="scenario-runs collapse" id="scenario-{{entry.id}}" data-scenarioid="{{entry.id}}" v-bind:class="{in: openedScenarios.indexOf(entry.id) === -1 }" >
-
-              <!-- LOOP: runs under this scenario -->
-              <div class="run" v-on:click="runSelected(run.id, $event)" v-for="run in entry.scene_set" v-bind:class="{ 'selected': this.selectedModels.indexOf(run.id) !== -1 }">
-
-              <!--  <input type="checkbox"  class="checkbox-run-selected hidden"  /> -->
-                <span class="run-name">{{run.name}}</span><div class="share-status" v-bind:class="{ 'private': run.shared === 'p', 'public': run.shared === 'w', 'company': run.shared === 'c'}"></div>
-
-                <div class="progress-holder">
-                  <div class="progress">
-                    <div data-percentage="{{run.progress}}%" v-bind:style="{ width: run.progress + '%'}" class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-                  <span>{{run.state  | lowercase}}</span>
-                </div>
-
-<!-- We do not support this yet :-/
-                <div class="matched-vars">
-                  <span class="badge">Template</span> <span class="badge">Model version</span>
-                </div>
--->
-                <!-- hiding the arrow to the right, as users think it means something?
-                <span class="arrow-right  glyphicon glyphicon-chevron-right"></span>
-                -->
-
-              </div>
-             <!-- end LOOP runs -->
-
-            </div>
-
-          </div>
-        </div>
-
-      </div>
-
-
-    </div>
+  <div
+     class="search-list"
+     >
+    <ul class="list-group" data-toggle="items">
+      <li
+         v-for="item in items"
+         class="list-group-item"
+         @click.stop="toggleActive(item)"
+         :class="{active: item.active}"
+         >
+        <scenario-card
+           v-if="item.type === 'scenario'"
+           :scenario="item"
+           ></scenario-card>
+        <model-card
+           v-if="item.type === 'model'"
+           :model="item"
+           ></model-card>
+      </li>
+    </ul>
   </div>
-<!-- end search -->
+
+  <!-- end search -->
 </template>

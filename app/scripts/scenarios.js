@@ -12,6 +12,9 @@ var exports = (function() {
       //Load test template data:
       $.getJSON("/api/v1/scenarios/")
         .done(function(data) {
+          _.each(data, function(scenario) {
+            scenario.type = "scenario";
+          });
           resolve(data);
         })
         .fail(function(error) {
@@ -23,7 +26,7 @@ var exports = (function() {
 
   function deleteScenario(id) {
 
-
+    console.log("deleting scenario", id);
     return new Promise(function(resolve, reject) {
       // add extra options to id
       //var postData = _.assign({id: id}, options);

@@ -103,6 +103,7 @@
   _.assign(global, require("../../app/scripts/models.js"));
   _.assign(global, require("../../app/scripts/templates.js"));
   _.assign(global, require("../../app/scripts/scenarios.js"));
+  _.assign(global, require("../../app/scripts/templates.js"));
 
 
   // This is all needed to make the select picker object work (in searchdetails)
@@ -279,9 +280,6 @@
 
 
     });
-
-
-
 
 
     describe("If we can query the model list", function() {
@@ -653,20 +651,15 @@
 
       var searchDetails = new SearchDetails();
       var defaultData = {
-        selectedTemplates: [],
 
         // Fixed properties
-        templates: [],
-        shared: [],
-        startDate: null,
-        endDate: null,
-        search: "",
-
+        searchText: "",
         // This object will variables received from the templates.
         selectedParameters: { },
-
+        selectedTemplates: [],
+        selectedDomains: [],
         // Template used for searching (probably always one)
-        searchTemplates: []
+        searchTemplate: null
       };
 
       /*eslint-disable no-underscore-dangle*/
@@ -677,10 +670,8 @@
 
     });
 
-    it("Searchdetails - loadSearchTemplates", function(done) {
+    it("fetchSearchtemplate", function(done) {
 
-      var searchDetails = new SearchDetails();
-      var expectedTemplates = 2; // Number of templates we expected to load.
 
       nock("http://0.0.0.0")
         .log(console.log)
@@ -694,18 +685,11 @@
           return "[{\"id\":1,\"name\":\"MAIN\",\"sections\":[{\"variables\":[{\"validators\":{},\"type\":\"text\",\"id\":\"name\",\"name\":\"Name\"},{\"disabled\":true,\"type\":\"text\",\"id\":\"engine\",\"name\":\"Model Engine\",\"validators\":{}},{\"disabled\":true,\"type\":\"semver\",\"id\":\"version\",\"name\":\"Version\",\"validators\":{}}],\"name\":\"Scenario\"},{\"variables\":[{\"units\":\"days\",\"type\":\"numeric\",\"id\":\"simstoptime\",\"name\":\"Stop time\",\"validators\":{\"max\":160,\"min\":0}},{\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\",\"validators\":{\"max\":2,\"min\":0.5},\"units\":\"days\",\"type\":\"numeric\",\"id\":\"outputinterval\",\"name\":\"Output timestep\"}],\"name\":\"Parameters\"},{\"variables\":[{\"name\":\"Basin slope\",\"validators\":{\"max\":0.3,\"min\":0.01},\"factor\":true,\"units\":\"deg\",\"type\":\"numeric\",\"id\":\"basinslope\"},{\"name\":\"River width\",\"validators\":{\"max\":1000,\"min\":100},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"riverwidth\"}],\"name\":\"Geometry\"},{\"variables\":[{\"name\":\"River discharge\",\"validators\":{\"max\":2000,\"min\":0},\"factor\":true,\"units\":\"mÂ³/s\",\"type\":\"numeric\",\"id\":\"riverdischarge\"},{\"name\":\"Tidal amplitude\",\"validators\":{\"max\":3,\"min\":0},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"tidalamplitude\"}],\"name\":\"Forces\"},{\"variables\":[{\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\",\"id\":\"composition\",\"validators\":{},\"type\":\"select\",\"options\":[{\"text\":\"coarse-sand\",\"value\":\"coarse-sand\"},{\"text\":\"medium-sand\",\"value\":\"medium-sand\"},{\"text\":\"fine-sand\",\"value\":\"fine-sanday\"},{\"text\":\"coarse-silt\",\"value\":\"coarse-silt\"},{\"text\":\"medium-silt\",\"value\":\"medium-silt\"},{\"text\":\"fine-silt\",\"value\":\"fine-silt\"}],\"name\":\"Sediment classes\"}],\"name\":\"Sediment composition\",\"description\":\"Sediment can consist of a mixture of different classes. Read <a href='more'>more</a> about the sediment composition clasess.\"}],\"templates\":[{\"name\":\"Basin fill\",\"id\":3},{\"name\":\"Basin fill with marine reworking\",\"id\":4}]}]";
         });
 
-      searchDetails.loadSearchTemplates();
-
-      // we expect two replies.
-      window.setTimeout(function() {
-        try {
-          assert.isTrue(searchDetails.templates.length === expectedTemplates, "Did not get expected templates");
+      global.fetchSearchTemplate()
+        .then(function(template) {
+          assert.equal(template.id, 1, "Did not get the expected template");
           done();
-        } catch (e) {
-          done(e);
-        }
-      }, 100);
-
+        });
 
 
     });
@@ -804,7 +788,7 @@
           return "[{'id':897,'name':'New Delta Plain Scenario: Run 1','state':'INACTIVE','progress':0,'owner':{'id':500,'username':'foo','first_name':'Foo','last_name':'User','email':'foo@bar.com','groups':[42,500]},'shared':'p','suid':'cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e','scenario':[357],'fileurl':'/files/cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e/','info':{'channel_network_images':{'images':[],'location':'process/'},'logfile':{'location':'simulation/','file':''},'delta_fringe_images':{'images':[],'location':'process/'},'procruns':0,'sediment_fraction_images':{'images':[],'location':'process/'}},'parameters':{'engine':{'name':'Model Engine','value':'Delft3D Curvilinear'},'simstoptime':{'units':'days','name':'Stop time','value':60},'clayvolcomposition':{'units':'%','name':'Clay volumetric composition','value':1},'sandvolcomposition':{'units':'%','name':'Sand volumetric composition','value':1},'version':{'name':'Version','value':'v0.1'},'riverdischarge':{'units':'m³/s','name':'River discharge','value':1000},'riverwidth':{'units':'m','name':'River width','value':555},'dt':{'units':'min','name':'Timestep','value':1},'tidalamplitude':{'units':'m','name':'Tidal amplitude','value':1},'outputinterval':{'units':'days','name':'Output timestep','value':1,'description':'Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.'},'basinslope':{'units':'deg','name':'Basin slope','value':0.0143}},'task_id':'afbc3296-1679-450a-8c5e-5b6431c5cf20','workingdir':'/data/container/files/cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e/'}]";
         });
 
-      searchDetails.startSearch();
+      searchDetails.search();
 
       // we expect two replies.
       window.setTimeout(function() {
@@ -852,11 +836,11 @@
       searchDetails.$dispatch = function(ev) {
 
         // We should measure the run or sdcenario count knowing the above. But somehow the arguments are not accessible right now?
-        assert.isTrue(ev === "modelsFound", "event has been dispatched");
+        assert.isTrue(ev === "items-found", "event has been dispatched");
         done();
       };
 
-      searchDetails.startSearch();
+      searchDetails.search();
 
       // we expect two replies.
       window.setTimeout(function() {
@@ -1263,7 +1247,7 @@
 
       global.fetchModel(id)
         .then(function(data) {
-
+          modelDetails.model = data;
           // Now test the log
           modelDetails.model.id = id;
 
@@ -1878,6 +1862,7 @@
       var correctReply = false;
 
       modelDetails = new ModelDetails();
+      modelDetails.model = {};
 
       modelDetails.$parent = {};
       modelDetails.$parent.$broadcast = function() {
@@ -2076,7 +2061,7 @@
       var correctReply = false;
 
       modelDetails = new ModelDetails();
-
+      modelDetails.model = {};
       modelDetails.$parent = {};
       modelDetails.$parent.$broadcast = function() {
       };
@@ -2139,7 +2124,7 @@
     it("Should be possible to publish a model private using Confirm - FAILURE test", function(done) {
 
       modelDetails = new ModelDetails();
-
+      modelDetails.model = {};
       modelDetails.$parent = {};
       modelDetails.$parent.$broadcast = function() {
         done("Broadcast should not have been called");
@@ -2214,7 +2199,7 @@
       var correctReply = false;
 
       modelDetails = new ModelDetails();
-
+      modelDetails.model = {};
       modelDetails.$parent = {};
       modelDetails.$parent.$broadcast = function() {
       };
@@ -2514,6 +2499,10 @@
 
       var aModelDetails = new ModelDetails();
 
+      aModelDetails.model = {
+        publishLevel: "nope"
+      };
+
       var publishLevel = aModelDetails.publishLevel;
 
       // When nothing is set, should return "unknown"
@@ -2565,6 +2554,7 @@
       var correctReply = false;
 
       modelDetails = new ModelDetails();
+      modelDetails.model = {};
 
       modelDetails.$parent = {};
       modelDetails.$parent.$broadcast = function() {
@@ -3005,17 +2995,19 @@
       // Add an artificial sene with a model in scene_set with id 1.
       var aSearchList = new SearchList();
 
-      aSearchList.models = [];
+      aSearchList.items = [];
 
-       /*eslint-disable camelcase*/
-      aSearchList.models.push({id: 123, scene_set: [{ id: 1}]});
-       /*eslint-enable camelcase*/
+      var scenario = {
+        id: 123,
+        active: true
+      };
 
-      aSearchList.selectedRuns = [1]; // Assume we test #1
+      aSearchList.items.push(scenario);
 
-      aSearchList.deselectAllRuns();
+      // Assume we test #1
+      scenario.active = false;
 
-      assert.isTrue(aSearchList.selectedRuns.length === 0, "selectedRuns are correct.");
+      assert.equal(aSearchList.selectedItems.length, 0, "selected items are empty");
       done();
     });
 
@@ -3025,15 +3017,14 @@
       // Add an artificial sene with a model in scene_set with id 1.
       var aSearchList = new SearchList();
 
-      // Add some scenario info:
-      $("#scenario-container").html("<div class='scenario' data-scenarioid='354'>");
+      var scenario = {
+        id: 123,
+        active: false
+      };
 
-      // Fake a html event.
-      var ev = { target: $(".scenario") };
-
-      aSearchList.scenarioSelect(354, ev);
-
-      assert.isTrue($(".scenario").hasClass("selected") && aSearchList.selectedScenarios[0] === 354, "selectedRuns are correct.");
+      aSearchList.items = [scenario];
+      aSearchList.toggleActive(scenario);
+      assert.equal(aSearchList.selectedItems.length, 1, "selected items equal to 1");
       done();
     });
 
@@ -3042,17 +3033,16 @@
       // Add an artificial sene with a model in scene_set with id 1.
       var aSearchList = new SearchList();
 
-      aSearchList.models = [];
+      aSearchList.items = [];
 
-       /*eslint-disable camelcase*/
-      aSearchList.models.push({id: 123, scene_set: [{ id: 1}]});
+      /*eslint-disable camelcase*/
+      var scenario = {id: 123, active: true, scene_set: [{ id: 1}]};
+
+      aSearchList.items.push(scenario);
        /*eslint-enable camelcase*/
 
-      aSearchList.selectedRuns = [1]; // Assume we test #1
 
-      var models = aSearchList.selectedModels;
-
-      assert.isTrue((models.length === 1 && models[0] === 1), "selectedRun is correct.");
+      assert.equal([scenario].length, aSearchList.selectedItems.length, "selected models is correct.");
       done();
     });
 
@@ -3061,54 +3051,18 @@
       // Add an artificial sene with a model in scene_set with id 1.
       var aSearchList = new SearchList();
 
-      aSearchList.models = [];
+      aSearchList.items = [];
 
        /*eslint-disable camelcase*/
-      aSearchList.models.push({id: 123, scene_set: [{ id: 1}]});
+      aSearchList.items.push({id: 123, active: false, type: "model"});
        /*eslint-enable camelcase*/
 
-      aSearchList.selectedRuns = []; // Assume we test #1
+      var models = _.filter(aSearchList.selectedItems, ["type", "model"]);
 
-      var models = aSearchList.selectedModels;
-
-      assert.isTrue((models.length === 0), "selectedRun is correct.");
+      assert.isTrue((models.length === 0), "selected items is correct.");
       done();
     });
 
-    it("Should be possible get selectedModelid", function(done) {
-
-      var aSearchList = new SearchList();
-
-      // Add an artificial sene with a model in scene_set with id 1.
-      aSearchList.selectedResultId = 1;
-
-      assert.isTrue((aSearchList.selectedResultId === aSearchList.selectedModelId), "selectedResultId matches selectedModelid");
-      done();
-    });
-
-
-    it("Should be possible select an item without control key pressed ", function(done) {
-
-      var aSearchList = new SearchList();
-      var selectedId = 123;
-      var fakeEvent = {};
-
-      aSearchList.keyControlPressed = false;
-
-      fakeEvent.target = "somediv"; // We cannot match html yet?
-
-      // Start a run with the selected id.
-      aSearchList.runSelected(selectedId, fakeEvent);
-
-      // Start another run with the selected id +1;
-      selectedId++;
-      aSearchList.runSelected(selectedId, fakeEvent);
-
-      // Without control key we expect only the last item selected.
-      assert.isTrue(aSearchList.selectedRuns[0] === selectedId, "selectedResultId matches expected value");
-
-      done();
-    });
 
 
     // Todo, but required DOM.
@@ -3143,22 +3097,7 @@
 
       // Expected properties that should match with actual properties.
       var expectedProps = {
-        "models": {
-          type: Array,
-          required: true
-        },
-
-        "selectedRuns": {
-          type: Array,
-          required: true
-        },
-
-        "selectedScenarios": {
-          type: Array,
-          required: true
-        },
-
-        "openedScenarios": {
+        "items": {
           type: Array,
           required: true
         }
@@ -3176,8 +3115,6 @@
       var aSearchList = new SearchList();
 
       var defaultInfo = {
-        selectedResultId: -1,
-        keyControlPressed: false
       };
 
       /*eslint-disable no-underscore-dangle*/
@@ -3203,93 +3140,13 @@
       var aSearchColumns = new SearchColumns();
 
       // Check default values:
-      assert.isTrue(aSearchColumns.numScenarios === 0, "numScenarios matches");
-      assert.isTrue(aSearchColumns.numRuns === 0, "numRuns matches");
-      assert.isTrue(aSearchColumns.openedScenarios.length === 0, "openedScenarios matches");
-      assert.isTrue(aSearchColumns.selectedRuns.length === 0, "selectedRuns matches");
-      assert.isTrue(aSearchColumns.selectedScenarios.length === 0, "selectedScenarios matches");
-      assert.isTrue(aSearchColumns.models.length === 0, "models matches");
+      assert.isTrue(aSearchColumns.items.length === 0, "models matches");
 
 
       done();
     });
 
 
-    it("Should be possible to call getChildByName", function(done) {
-
-      var aSearchColumns = new SearchColumns();
-
-      // Add fake compnent
-      var modelDetails = new ModelDetails();
-
-      aSearchColumns.$children.push(modelDetails);
-
-      var component = aSearchColumns.getChildByName("model-details");
-
-      // We expect not null in this case, as the model-details is not loaded.
-      assert.isTrue(component !== null);
-
-      done();
-    });
-
-    it("Should be possible to call updateCollapsibles", function(done) {
-
-      var aSearchColumns = new SearchColumns();
-
-      // We cannot really test the bootstrap events right now.
-      assert.isOk(aSearchColumns.updateCollapsibles, "updateCollapsibles can be called");
-
-      done();
-    });
-
-    it("Should be possible to get names of selected models ", function(done) {
-
-      var aSearchColumns = new SearchColumns();
-
-      // Names should be empty right now.
-      var names = aSearchColumns.selectedRunNames;
-
-      assert.isTrue(names.length === 0, "textfield is not empty");
-
-      done();
-    });
-
-
-    it("Should be possible to get names of selected models with items selected", function(done) {
-
-      var aSearchColumns = new SearchColumns();
-
-      // Names should be empty right now.
-      aSearchColumns.selectedRuns = [1, 2, 3];
-
-
-      aSearchColumns.models = [];
-
-      /*eslint-disable camelcase*/
-      // Add few test items.
-      aSearchColumns.models.push({
-        id: 100,
-        scene_set: [{ id: 1, name: "a"}]
-      });
-
-      aSearchColumns.models.push({
-        id: 101,
-        scene_set: [{ id: 2, name: "b"}]
-      });
-
-      aSearchColumns.models.push({
-        id: 102,
-        scene_set: [{ id: 3, name: "c"}]
-      });
-
-      var names = aSearchColumns.selectedRunNames;
-
-       /*eslint-enable camelcase*/
-
-      assert.isTrue(names === "a, b, c", "selectedrunnames match");
-
-      done();
-    });
 
     // Ignores the selectpicker though.
     it("Should be possible to reset the form fields", function(done) {
@@ -3314,26 +3171,6 @@
 
       done();
     });
-
-    it("Should be possible to call modelsFound", function(done) {
-
-      var aSearchColumns = new SearchColumns();
-
-      // A fake model array..
-      var models = [ { id: 123} ];
-      var numScenarios = 1;
-      var numRuns = 2;
-
-      aSearchColumns.$dispatch("modelsFound", models, numScenarios, numRuns);
-
-      assert.isTrue(aSearchColumns.numScenarios === numScenarios, "numScenarios matches");
-      assert.isTrue(aSearchColumns.numRuns === numRuns, "numRuns matches");
-      assert.deepEqual(aSearchColumns.models, models, "models matches");
-
-
-      done();
-    });
-
 
     it("Should be possible to call event modelsSelected", function(done) {
 
@@ -3406,7 +3243,7 @@
           return "[{\"id\":1,\"name\":\"MAIN\",\"sections\":[{\"variables\":[{\"validators\":{},\"type\":\"text\",\"id\":\"name\",\"name\":\"Name\"},{\"disabled\":true,\"type\":\"text\",\"id\":\"engine\",\"name\":\"Model Engine\",\"validators\":{}},{\"disabled\":true,\"type\":\"semver\",\"id\":\"version\",\"name\":\"Version\",\"validators\":{}}],\"name\":\"Scenario\"},{\"variables\":[{\"units\":\"days\",\"type\":\"numeric\",\"id\":\"simstoptime\",\"name\":\"Stop time\",\"validators\":{\"max\":160,\"min\":0}},{\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\",\"validators\":{\"max\":2,\"min\":0.5},\"units\":\"days\",\"type\":\"numeric\",\"id\":\"outputinterval\",\"name\":\"Output timestep\"}],\"name\":\"Parameters\"},{\"variables\":[{\"name\":\"Basin slope\",\"validators\":{\"max\":0.3,\"min\":0.01},\"factor\":true,\"units\":\"deg\",\"type\":\"numeric\",\"id\":\"basinslope\"},{\"name\":\"River width\",\"validators\":{\"max\":1000,\"min\":100},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"riverwidth\"}],\"name\":\"Geometry\"},{\"variables\":[{\"name\":\"River discharge\",\"validators\":{\"max\":2000,\"min\":0},\"factor\":true,\"units\":\"mÂ³/s\",\"type\":\"numeric\",\"id\":\"riverdischarge\"},{\"name\":\"Tidal amplitude\",\"validators\":{\"max\":3,\"min\":0},\"factor\":true,\"units\":\"m\",\"type\":\"numeric\",\"id\":\"tidalamplitude\"}],\"name\":\"Forces\"},{\"variables\":[{\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\",\"id\":\"composition\",\"validators\":{},\"type\":\"select\",\"options\":[{\"text\":\"coarse-sand\",\"value\":\"coarse-sand\"},{\"text\":\"medium-sand\",\"value\":\"medium-sand\"},{\"text\":\"fine-sand\",\"value\":\"fine-sanday\"},{\"text\":\"coarse-silt\",\"value\":\"coarse-silt\"},{\"text\":\"medium-silt\",\"value\":\"medium-silt\"},{\"text\":\"fine-silt\",\"value\":\"fine-silt\"}],\"name\":\"Sediment classes\"}],\"name\":\"Sediment composition\",\"description\":\"Sediment can consist of a mixture of different classes. Read <a href='more'>more</a> about the sediment composition clasess.\"}],\"templates\":[{\"name\":\"Basin fill\",\"id\":3},{\"name\":\"Basin fill with marine reworking\",\"id\":4}]}]";
         });
 
-      global.fetchSearchTemplates();
+      global.fetchSearchTemplate();
 
       // Make sure the nock server had the time to reply
       window.setTimeout(function() {
@@ -3436,7 +3273,7 @@
           return "";
         });
 
-      global.fetchSearchTemplates();
+      global.fetchSearchTemplate();
 
       // Make sure the nock server had the time to reply
       window.setTimeout(function() {
@@ -3676,4 +3513,3 @@
 
 
 })();
-
