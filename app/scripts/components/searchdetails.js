@@ -237,7 +237,7 @@ var exports = (function () {
               _.each(scenario.scene_set, (modelId) => {
                 // store model in models
                 if (!_.has(modelById, modelId)) {
-                  console.warn('Model', modelId, 'in scenario but not in model overview');
+                  console.warn("Model", modelId, "in scenario but not in model overview");
                   return;
                 }
                 var model = modelById[modelId];

@@ -95,8 +95,6 @@ var exports = (function () {
       cloneScenario: function() {
 
         var scenario = this.selectedScenarios[0];
-        // Get scenario id:
-        var scenarioId = scenario.id;
 
         // Ignore if we did not find anything.
         if (scenario === undefined) {

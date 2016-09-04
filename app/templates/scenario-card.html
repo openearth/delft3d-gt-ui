@@ -41,7 +41,7 @@
               <li
                  class="list-group-item"
                  v-for="model in scenario.models"
-                 @click.stop="toggleActive(model, $event)"
+                 @click.stop="toggleActive(model)"
                  :class="{active: model.active}"
                  >
                 <model-card

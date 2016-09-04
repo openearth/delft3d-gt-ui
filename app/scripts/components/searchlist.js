@@ -38,7 +38,7 @@ var exports = (function () {
       selectedModel: {
         cache: false,
         get: function() {
-          var models = _.filter(this.selectedItems, ['type', 'model']);
+          var models = _.filter(this.selectedItems, ["type", "model"]);
           var firstModel = _.first(models);
 
           return firstModel;
@@ -48,11 +48,11 @@ var exports = (function () {
         cache: false,
         get: function() {
           // we have models in scenarios
-          var models = _.flatMap(this.items, 'models');
+          var models = _.flatMap(this.items, "models");
           // combine them with scenarios and orphans
           var allItems = _.concat(models, this.items);
           // we only want the active ones
-          var activeItems = _.filter(allItems, ['active', true]);
+          var activeItems = _.filter(allItems, ["active", true]);
 
           return activeItems;
         }
@@ -63,12 +63,12 @@ var exports = (function () {
     },
 
     methods: {
-      toggleItem: function(item, evt) {
-        if (item.type === 'scenario') {
+      toggleItem: function(item) {
+        if (item.type === "scenario") {
           _.each(item.models, function(model) {
             model.active = !item.active;
           });
-        };
+        }
         item.active = !item.active;
       }
     }

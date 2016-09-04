@@ -10,7 +10,7 @@ var exports = (function () {
       }
     },
     methods: {
-      toggleActive: function(item, evt) {
+      toggleActive: function(item) {
         item.active = !item.active;
       },
       collapse: function(evt) {

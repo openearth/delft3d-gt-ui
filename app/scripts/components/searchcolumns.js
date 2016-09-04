@@ -36,7 +36,7 @@ var exports = (function () {
       activeItem: {
         cache: false,
         get: function() {
-          if (_.has(this.$refs, ['searchList', 'selectedModel'])) {
+          if (_.has(this.$refs, ["searchList", "selectedModel"])) {
             return this.$refs.searchList.selectedModel;
           } else {
             return null;
@@ -90,7 +90,7 @@ var exports = (function () {
 
 }());
 
-// If we're in node export to models
+// If were in node export to models
 if (typeof module !== "undefined" && module.exports) {
   module.exports = exports;
 } else {
