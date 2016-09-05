@@ -73,13 +73,13 @@
             Please select an action to perform on this simulation.
           </p>
 
-          <button type="button" class="btn btn-labeled btn-success btn-spaced-right"  id="simulation-control-start" v-on:click="startModel" v-bind:class="{ 'inputdisabled':  isReadOnly() }" >
+          <button type="button" class="btn btn-labeled btn-success btn-spaced-right"  id="simulation-control-start" v-on:click="startModel" v-bind:class="{ 'disabled':  isReadOnly() }" >
             <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>
             Restart
-          </button><button type="button" class="btn btn-labeled btn-warning  btn-spaced-right" id="simulation-control-stop" v-on:click="stopModel" v-bind:class="{ 'inputdisabled':  isReadOnly() }">
+          </button><button type="button" class="btn btn-labeled btn-warning  btn-spaced-right" id="simulation-control-stop" v-on:click="stopModel" v-bind:class="{ 'disabled':  isReadOnly() }">
             <span class="btn-label"><i class="glyphicon glyphicon-stop"></i></span>
             Stop
-          </button><button type="button" class="btn btn-labeled btn-danger  btn-spaced-right" v-on:click="removeModel(model)" v-bind:class="{ 'inputdisabled':  isReadOnly() }">
+          </button><button type="button" class="btn btn-labeled btn-danger  btn-spaced-right" v-on:click="removeModel(model)" v-bind:class="{ 'disabled':  isReadOnly() }">
             <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
             Remove run
           </button>
@@ -103,7 +103,8 @@
 
           <!-- These are now links, replace by post requests later, otherwise a search engine will start publishing models -->
           <!-- This form-inline is normally applied to a form but in this case we have 3 forms as a form group. -->
-          <template v-for="level in publishLevels"><button type="button"
+          <template v-for="level in publishLevels">
+            <button type="button"
                class="btn btn-labeled btn-default  btn-spaced-right"
                :class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE' || model.state === 'ABORTED') || !isLevelEnabled($index) }"
                v-on:click="publishModel($index)">
@@ -111,7 +112,8 @@
                 <i class="glyphicon" :class="publishLevels[$index].iconClass"></i>
               </span>
               {{ publishLevels[$index].description }}
-            </button></template>
+            </button>
+          </template>
 
         </div>
       </div>
