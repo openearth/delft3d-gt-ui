@@ -106,7 +106,7 @@
           <template v-for="level in publishLevels">
             <button type="button"
                class="btn btn-labeled btn-default  btn-spaced-right"
-               :class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE' || model.state === 'ABORTED') || !isLevelEnabled($index) }"
+               :class="{ 'disabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE' || model.state === 'ABORTED') || !isLevelEnabled($index) }"
                v-on:click="publishModel($index)">
               <span class="btn-label">
                 <i class="glyphicon" :class="publishLevels[$index].iconClass"></i>
@@ -185,7 +185,7 @@
             <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_images" v-on:change="downloadOptionsChange()"></span>
             <span class="form-control no-fixed-height">Download generated output images</span>
           </div>
-          <div class="form-group input-group" v-bind:class="{ 'inputdisabled': model.info.export === false}">
+          <div class="form-group input-group" v-bind:class="{ 'disabled': model.info.export === false}">
             <span class="input-group-addon"><input type="checkbox" class="downloadoption"  value="export_thirdparty" v-on:change="downloadOptionsChange()" ></span>
             <span class="form-control no-fixed-height">Include export for RMS / Petrel <span v-if="model.info.export === false">. <small>Please use <strong>"Start export"</strong> first at Simulation controls. After export completes, this option is available.</small></span></span>
           </div>
@@ -200,7 +200,7 @@
             Download
           </button>
 
-          <button class="btn btn-primary" type="button" v-bind:class="{ 'inputdisabled': model.state === 'PROCESSING' }"  v-on:click="exportModel">
+          <button class="btn btn-primary" type="button" v-bind:class="{ 'disabled': model.state === 'PROCESSING' }"  v-on:click="exportModel">
             Start export
           </button>
 
