@@ -55,7 +55,7 @@ $panel-background: #dfdfda;
 $slider-handle-border: #999;
 $progress-bar-color: #c44;
 $badge-color-unselected: #989a9a;
-$navigation-button-background: #999;
+$navigation-button-background: #008bbf;
 $navigation-button-background-default: #008bbf;
 
 $color-left-column-background: #dfdfda;
@@ -1236,9 +1236,8 @@ section {
 
   .alert {
     margin: 15px !important;
+    padding: 9px;
   }
-
-
 }
 
 .label-status {
