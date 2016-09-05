@@ -32,8 +32,6 @@ var exports = (function () {
             () => {
               // update ui
               this.updatePickers();
-              // Keep syncing:
-              setInterval(this.sync, 10000);
             }
           );
 
@@ -196,17 +194,6 @@ var exports = (function () {
             });
         });
       },
-      sync: function() {
-        // TODO: update items
-        // fetchScenarios()
-        //   .then((data) => {
-        //     this.$dispatch("scenarios-updated", data);
-        //   });
-        // fetchModels()
-        //   .then((data) => {
-        //     this.$dispatch("models-updated", data);
-        //   });
-      },
       search: function() {
 
         // TODO: searching should be done in search-component, because it needs to update
@@ -242,9 +229,9 @@ var exports = (function () {
                 }
                 var model = modelById[modelId];
 
-                // properties that we need
-                model.active = false;
+                // properties that we need for search columns
                 model.type = "model";
+                model.active = false;
 
                 scenario.models.push(model);
               });
