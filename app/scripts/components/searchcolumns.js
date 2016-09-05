@@ -1,4 +1,4 @@
-/* global Vue, SearchDetails, SearchList, ModelDetails */
+/* global Vue, SearchDetails, SearchList, ModelDetails, fetchScenarios, fetchModels */
 
 var exports = (function () {
   "use strict";
@@ -64,7 +64,7 @@ var exports = (function () {
             var allScenarios = _.filter(this.items, ["type", "scenario"]);
 
             _.each(allScenarios, function(scenario) {
-              if (_.has(scenariosById, scenario.id) ) {
+              if (_.has(scenariosById, scenario.id)) {
                 var update = scenariosById[scenario.id];
 
                 // update scenario with new values
@@ -84,8 +84,9 @@ var exports = (function () {
             var allModels = _.concat(orphans, nestedModels);
 
             _.each(allModels, function(model) {
-              if (_.has(modelsById, model.id) ) {
+              if (_.has(modelsById, model.id)) {
                 var update = modelsById[model.id];
+
                 // update model with new values
                 _.assign(model, update);
               }
