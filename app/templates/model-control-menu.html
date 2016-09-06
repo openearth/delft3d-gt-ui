@@ -10,20 +10,15 @@
 
       <!-- optioons based on scenarios -->
       <li :class="{disabled: selectedScenarios.length !== 1 }">
-        <a @click="cloneScenario()">Clone scenario</a>
+        <a @click="cloneScenario">Clone scenario</a>
       </li>
       <li :class="{disabled: selectedScenarios.length === 0 }">
-        <a :click="deleteSelectedScenario()">
+        <a @click="deleteSelectedScenario">
           Delete scenario(s)
         </a>
       </li>
-      <li :class="{disabled: selectedModels.length !== 0 }">
-        <a @click="addRunToScenario()">
-          Create scenario from runs
-        </a>
-      </li>
       <li :class="{disabled: selectedModels.length === 0 }">
-        <a :click="deleteSelectedModels()">
+        <a @click="deleteSelectedModels">
           Delete models(s)
         </a>
       </li>
