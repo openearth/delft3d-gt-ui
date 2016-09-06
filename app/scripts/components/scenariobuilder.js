@@ -319,7 +319,11 @@ var exports = (function() {
             } else {
 
               var valuearray = _.map(("" + variable.value).split(","), function(d) {
-                return parseFloat(d) || d;
+                // try and parse
+                var parsed = parseFloat(d);
+                // if we have a number return parsed otherwise original string
+                var result = _.isNumber(parsed) ? parsed : d;
+                return result;
               });
 
               parameters[variable.id] = {
