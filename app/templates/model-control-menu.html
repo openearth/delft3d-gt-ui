@@ -1,7 +1,6 @@
 <template id="template-model-control-menu" inline-template>
 
   <div class="btn-group pull-right">
-    <a class="btn nav-bar-button" title="Create scenario" href="#/scenarios/create">Create scenario</a>
     <button type="button" class="btn btn-default dropdown-toggle nav-bar-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
     </button>
@@ -10,20 +9,15 @@
 
       <!-- optioons based on scenarios -->
       <li :class="{disabled: selectedScenarios.length !== 1 }">
-        <a @click="cloneScenario()">Clone scenario</a>
+        <a @click="cloneScenario">Clone scenario</a>
       </li>
       <li :class="{disabled: selectedScenarios.length === 0 }">
-        <a :click="deleteSelectedScenario()">
+        <a @click="deleteSelectedScenario">
           Delete scenario(s)
         </a>
       </li>
-      <li :class="{disabled: selectedModels.length !== 0 }">
-        <a @click="addRunToScenario()">
-          Create scenario from runs
-        </a>
-      </li>
       <li :class="{disabled: selectedModels.length === 0 }">
-        <a :click="deleteSelectedModels()">
+        <a @click="deleteSelectedModels">
           Delete models(s)
         </a>
       </li>
