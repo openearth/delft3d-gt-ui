@@ -180,7 +180,7 @@
           <div class="form-group input-group" v-bind:class="{ 'inputdisabled': !(model.state === 'Finished')}">
             <span class="input-group-addon"><input type="checkbox" class="downloadoption"  value="export_thirdparty" v-on:change="downloadOptionsChange()" ></span>
             <span class="form-control no-fixed-height" v-bind:class="{ 'hidden': !(model.state === 'Finished')}">Export: files for RMS / Petrel</span>
-            <span class="form-control no-fixed-height" v-bind:class="{ 'hidden': (model.state === 'Finished')}">Exports are enabled when the run is 'Finished'</span>
+            <span class="form-control no-fixed-height" v-bind:class="{ 'hidden': (model.state === 'Finished')}">Export to RMS / Petrel is enabled when the run is 'Finished'</span>
           </div>
 
           <button class="btn btn-primary" type="button"  id="download-submit" v-on:click="downloadFiles()" value="">
