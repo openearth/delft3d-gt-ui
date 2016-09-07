@@ -21,12 +21,6 @@
 
               <span class="scenario-name"><span class=" glyphicon glyphicon-chevron-down" data-toggle="collapse" data-target="#scenario-{{entry.id}}" aria-controls="scenario-{{$index}}"   data-scenarioid="{{entry.id}}"></span> Scenario: {{entry.name}}</span>
               <small style="display:none">({{entry.id}})</small> <!-- = for debugging -->
-              <div class="progress-holder">
-                <div class="progress">
-                  <div data-percentage="{{entry.progress}}%" v-bind:style="{ width: entry.progress + '%'}" class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <span>{{entry.state  | lowercase}}</span>
-              </div>
 
               <!-- Matched vars on scenario -->
               <!-- we do not support this yet...

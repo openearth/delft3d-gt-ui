@@ -55,7 +55,7 @@ $panel-background: #dfdfda;
 $slider-handle-border: #999;
 $progress-bar-color: #c44;
 $badge-color-unselected: #989a9a;
-$navigation-button-background: #999;
+$navigation-button-background: #008bbf;
 $navigation-button-background-default: #008bbf;
 
 $color-left-column-background: #dfdfda;
@@ -241,7 +241,7 @@ input[type=date].form-control {
 
 .search-results {
 
-  padding: 8px;
+  padding: 15px;
 
 
   .scenario-name {
@@ -538,6 +538,7 @@ input[type=date].form-control {
     padding: 4px 0px 4px 0px;
     height: 40px;
     line-height: 32px;
+    margin: 0;
   }
 
   .btn {
@@ -625,7 +626,6 @@ input[type=date].form-control {
 }
 
 .table-default {
-  margin-bottom: 32px;
   width: 100%;
 
   .error {
@@ -635,6 +635,7 @@ input[type=date].form-control {
   td {
     border: 1px solid $row-border-color;
     height: $row-height;
+    padding: 10px 10px;
 
     &.centered {
       text-align: center;
@@ -690,7 +691,7 @@ input[type=date].form-control {
 
     // Progressbars in cell are a bit different than Bootstrap ones:
     .progress-incell {
-      margin: 4px;
+      margin: 0;
     }
 
     .progress-type {
@@ -1025,7 +1026,7 @@ section {
   }
 
   .panel-title {
-    font-size: 11px;
+    font-size: 11p15;
   }
 
   .control-label,
@@ -1233,7 +1234,19 @@ section {
     padding-right: 0px;
   }
 
+  .alert {
+    margin: 15px !important;
+    padding: 9px;
+  }
+}
 
+.label-status {
+  font-size: 1em;
+}
+
+.panel-heading {
+  border-top: 1px solid transparent;
+  border-bottom: none;
 }
 
 
@@ -1253,6 +1266,7 @@ section {
     border: 0;
     box-shadow: none;
     padding: 4px;
+    margin-bottom: 16px;
   }
 
 
@@ -1305,13 +1319,17 @@ section {
   }
 }
 
+.search-details {
+  padding: 15px;
+}
+
 .model-details {
   .panel-default {
     padding: 0px;
   }
 
   .panel-title {
-    padding-left: 8px;
+    padding-left: 15px;
   }
 }
 

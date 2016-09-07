@@ -1,40 +1,23 @@
 <template id="template-model-details">
 
   <div class="model-details">
-    <div class="alert alert-info" v-if="(model.id === undefined)">
-      No run selected.
-    </div>
 
     <div v-if="(model.id !== undefined)">
 
       <!-- model window for deletation -->
 
       <div class="panel panel-default">
-        <div class="panel-heading">
-          <h2 class="panel-title">Summary</h2>
-        </div>
-
         <div class="panel-body" v-if="model">
           <table class="table-default">
             <tbody>
               <tr>
-                <td class="col-md-2">Name</td>
-                <td>{{model.name}} </td>
-              </tr>
-
-              <tr v-if="model.owner">
-                <td>Owner of run</td>
-                <td><a href="mailto:{{model.owner.email}}">{{ model.owner.first_name }} {{ model.owner.last_name }}</a> </td>
-              </tr>
-
-              <tr>
-                <td>Model files</td>
-                <td>View <a href="{{model.fileurl}}" target="_blank">working directory</a></td>
+                <td class="col-md-2 "><strong>Name</strong></td>
+                <td><strong>{{model.name}}</strong></td>
               </tr>
 
               <tr>
                 <td>Status</td>
-                <td><span class="label label-default">{{model.state | capitalize }}</span></td>
+                <td><span class="label label-info label-status">{{model.state | capitalize }}</span></td>
               </tr>
 
               <tr>
@@ -50,15 +33,21 @@
                 </td>
               </tr>
 
+              <tr v-if="model.owner">
+                <td>Owner of run</td>
+                <td><a href="mailto:{{model.owner.email}}">{{ model.owner.first_name }} {{ model.owner.last_name }}</a> </td>
+              </tr>
+
               <tr class="publish-level">
                 <td>Share level</td>
                 <td><span>{{ publishLevel }}</span></td>
               </tr>
 
               <tr>
-                <td>Identification</td>
-                <td><span class="text-muted">{{ model.id }} {{ model.suid }} </span></td>
+                <td>Simulation output: </td>
+                <td><a href="{{model.fileurl}}" target="_blank">Open in new tab</a></td>
               </tr>
+
             </tbody>
           </table>
         </div>
@@ -69,25 +58,24 @@
           <h2 class="panel-title">Simulation control</h2>
         </div>
         <div class="panel-body">
-          <p>
-            Please select an action to perform on this simulation.
+          <p v-bind:class="{ 'hidden': isReadOnly() }">
+            You can select an action to perform on this simulation:
           </p>
 
-          <button type="button" class="btn btn-labeled btn-success btn-spaced-right"  id="simulation-control-start" v-on:click="startModel" v-bind:class="{ 'inputdisabled':  isReadOnly() }" >
+          <p v-bind:class="{ 'hidden': !isReadOnly() }">
+            Simulation controls are disabled for already published runs.
+          </p>
+
+          <button type="button" class="btn btn-labeled btn-spaced-right"  id="simulation-control-start" v-on:click="startModel" v-bind:class="[(isReadOnly() || !(model.state === 'Idle: waiting for user input' || model.state === 'Finished')) ? 'inputdisabled': 'btn-success']" >
             <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>
-            Restart
-          </button><button type="button" class="btn btn-labeled btn-warning  btn-spaced-right" id="simulation-control-stop" v-on:click="stopModel" v-bind:class="{ 'inputdisabled':  isReadOnly() }">
+            Start
+          </button><button type="button" class="btn btn-labeled btn-spaced-right" id="simulation-control-stop" v-on:click="stopModel" v-bind:class="[(isReadOnly() || !(model.state === 'Running simulation...')) ? 'inputdisabled' : 'btn-warning' ]">
             <span class="btn-label"><i class="glyphicon glyphicon-stop"></i></span>
             Stop
-          </button><button type="button" class="btn btn-labeled btn-danger  btn-spaced-right" v-on:click="removeModel(model)" v-bind:class="{ 'inputdisabled':  isReadOnly() }">
+          </button><button type="button" class="btn btn-labeled btn-spaced-right" v-on:click="removeModel(model)" v-bind:class="[ (isReadOnly()) ? 'inputdisabled' : 'btn-danger']">
             <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
             Remove run
           </button>
-
-          <span class="alert alert-info alert-small" role="alert" v-if="isReadOnly()" >
-
-            Simulation control is only available when runs are not published.
-          </span>
 
         </div>
       </div>
@@ -97,21 +85,26 @@
           <h2 class="panel-title">Share controls</h2>
         </div>
         <div class="panel-body">
-          <p>
-            You can change the rights of your simulation results. You can share them with everybody, only your company or keep them private (default).
+          <p v-bind:class="{ 'hidden': user.id != model.owner.id }">
+            You can select who to share your results with:
+          </p>
+          <p v-bind:class="{ 'hidden': user.id == model.owner.id }">
+            You cannot share runs owned by another user.
           </p>
 
           <!-- These are now links, replace by post requests later, otherwise a search engine will start publishing models -->
           <!-- This form-inline is normally applied to a form but in this case we have 3 forms as a form group. -->
-          <template v-for="level in publishLevels"><button type="button"
+          <template v-for="level in publishLevels">
+            <button type="button"
                class="btn btn-labeled btn-default  btn-spaced-right"
-               :class="{ 'inputdisabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE' || model.state === 'ABORTED') || !isLevelEnabled($index) }"
+               :class="{ 'inputdisabled': !(model.state == 'Finished') || !isLevelEnabled($index) || user.id != model.owner.id, 'hidden': $index == 0 }"
                v-on:click="publishModel($index)">
               <span class="btn-label">
                 <i class="glyphicon" :class="publishLevels[$index].iconClass"></i>
               </span>
               {{ publishLevels[$index].description }}
-            </button></template>
+            </button>
+          </template>
 
         </div>
       </div>
@@ -171,38 +164,33 @@
 
           <div class="form-group input-group">
             <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_d3dinput" v-on:change="downloadOptionsChange()"></span>
-            <span class="form-control no-fixed-height">Download Delft3D input</span>
+            <span class="form-control no-fixed-height">Delft3D: input files</span>
           </div>
 
           <div class="form-group input-group">
             <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_d3doutput" v-on:change="downloadOptionsChange()"></span>
-            <span class="form-control no-fixed-height">Download Delft3D output</span>
+            <span class="form-control no-fixed-height">Delft3D: output files</span>
           </div>
 
           <div class="form-group input-group">
             <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_images" v-on:change="downloadOptionsChange()"></span>
-            <span class="form-control no-fixed-height">Download generated output images</span>
-          </div>
-          <div class="form-group input-group" v-bind:class="{ 'inputdisabled': model.info.export === false}">
-            <span class="input-group-addon"><input type="checkbox" class="downloadoption"  value="export_thirdparty" v-on:change="downloadOptionsChange()" ></span>
-            <span class="form-control no-fixed-height">Include export for RMS / Petrel <span v-if="model.info.export === false">. <small>Please use <strong>"Start export"</strong> first at Simulation controls. After export completes, this option is available.</small></span></span>
+            <span class="form-control no-fixed-height">Media: generated output images</span>
           </div>
 
           <div class="form-group input-group">
             <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_movie" v-on:change="downloadOptionsChange()"></span>
-            <span class="form-control no-fixed-height">Download output movie</span>
+            <span class="form-control no-fixed-height">Media: generated output movies</span>
           </div>
 
+          <div class="form-group input-group" v-bind:class="{ 'inputdisabled': !(model.state === 'Finished')}">
+            <span class="input-group-addon"><input type="checkbox" class="downloadoption"  value="export_thirdparty" v-on:change="downloadOptionsChange()" ></span>
+            <span class="form-control no-fixed-height" v-bind:class="{ 'hidden': !(model.state === 'Finished')}">Export: files for RMS / Petrel</span>
+            <span class="form-control no-fixed-height" v-bind:class="{ 'hidden': (model.state === 'Finished')}">Export to RMS / Petrel is enabled when the run is 'Finished'</span>
+          </div>
 
           <button class="btn btn-primary" type="button"  id="download-submit" v-on:click="downloadFiles()" value="">
             Download
           </button>
-
-          <button class="btn btn-primary" type="button" v-bind:class="{ 'inputdisabled': model.state === 'PROCESSING' }"  v-on:click="exportModel">
-            Start export
-          </button>
-
-          <h5 v-bind:class="{ 'default-hidden': model.state === 'PROCESSING' }">&ldquo;<i>Start export</i>&rdquo; becomes available after a simulation has finished and not published.</h5>
 
         </div>
       </div>
