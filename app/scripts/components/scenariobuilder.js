@@ -321,8 +321,10 @@ var exports = (function() {
               var valuearray = _.map(("" + variable.value).split(","), function(d) {
                 // try and parse
                 var parsed = parseFloat(d);
+
                 // if we have a number return parsed otherwise original string
-                var result = _.isNumber(parsed) ? parsed : d;
+                var result = (_.isNumber(parsed) && !isNaN(parsed)) ? parsed : d;
+
                 return result;
               });
 
