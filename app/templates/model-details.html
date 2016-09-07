@@ -85,15 +85,18 @@
           <h2 class="panel-title">Share controls</h2>
         </div>
         <div class="panel-body">
-          <p>
+          <p v-bind:class="{ 'hidden': user.id != model.owner.id }">
             You can change the rights of your simulation results. You can share them with everybody, only your company or keep them private (default).
+          </p>
+          <p v-bind:class="{ 'hidden': user.id == model.owner.id }">
+            You cannot change the rights of simulation results of other users.
           </p>
 
           <!-- These are now links, replace by post requests later, otherwise a search engine will start publishing models -->
           <!-- This form-inline is normally applied to a form but in this case we have 3 forms as a form group. -->
           <template v-for="level in publishLevels"><button type="button"
                class="btn btn-labeled btn-default  btn-spaced-right"
-               :class="{ 'inputdisabled': !(model.state == 'Finished') || !isLevelEnabled($index) }"
+               :class="{ 'inputdisabled': !(model.state == 'Finished') || !isLevelEnabled($index) || user.id != model.owner.id }"
                v-on:click="publishModel($index)">
               <span class="btn-label">
                 <i class="glyphicon" :class="publishLevels[$index].iconClass"></i>

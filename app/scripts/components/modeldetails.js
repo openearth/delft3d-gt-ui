@@ -1,4 +1,4 @@
-/* global ImageAnimation, ConfirmDialog, getDialog, fetchModel, fetchLog, deleteModel, startModel, exportModel, stopModel, publishModel  */
+/* global ImageAnimation, ConfirmDialog, UserDetails, getDialog, fetchModel, fetchLog, deleteModel, startModel, exportModel, stopModel, publishModel  */
 var exports = (function () {
   "use strict";
 
@@ -8,7 +8,8 @@ var exports = (function () {
     components: {
       // <my-component> will only be available in Parent's template
       "image-animation": ImageAnimation,
-      "confirm-dialog": ConfirmDialog
+      "confirm-dialog": ConfirmDialog,
+      "user-details": UserDetails
     },
 
     // Show the details of one model
@@ -40,9 +41,14 @@ var exports = (function () {
         waitingForUpdate: false,
         publishDialog: null,
         deleteDialog: null,
-        stopDialog: null
+        stopDialog: null,
+        user: {
+          /*eslint-disable camelcase*/
+          first_name: "Unknown",
+          last_name: "User"
+          /*eslint-enable camelcase*/
+        }
       };
-
     },
 
     created: function() {
@@ -62,6 +68,7 @@ var exports = (function () {
         e.clearSelection();
       });
 
+      this.fetchUserInfo();
     },
     computed: {
       id: {
@@ -402,6 +409,25 @@ var exports = (function () {
 
       highlightPublishLevel: function() {
         $(".publish-level").addClass("highlighted").delay(1500).removeClass("highlighted");
+      },
+
+      fetchUserInfo: function() {
+        var that = this;
+
+        return new Promise(function(resolve, reject) {
+          $.getJSON("/api/v1/users/me/")
+          .done(function(data) {
+
+            that.user = _.first(data);
+
+            resolve();
+          })
+          .fail((e) => {
+
+            reject(e);
+          });
+
+        });
       }
     }
   });
