@@ -29,13 +29,13 @@ var exports = (function () {
             "indicator": "c",
             "url": "company",
             "iconClass": "glyphicon-blackboard",
-            "description": "Company"
+            "description": "Share with your company"
           },
           {
             "indicator": "w",
             "url": "world",
             "iconClass": "glyphicon-globe",
-            "description": "Public"
+            "description": "Share with all Delft3D-GT users"
           }
         ],
         waitingForUpdate: false,

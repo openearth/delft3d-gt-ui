@@ -58,8 +58,12 @@
           <h2 class="panel-title">Simulation control</h2>
         </div>
         <div class="panel-body">
-          <p>
-            Please select an action to perform on this simulation.
+          <p v-bind:class="{ 'hidden': isReadOnly() }">
+            You can select an action to perform on this simulation:
+          </p>
+
+          <p v-bind:class="{ 'hidden': !isReadOnly() }">
+            Simulation controls are disabled for already published runs.
           </p>
 
           <button type="button" class="btn btn-labeled btn-spaced-right"  id="simulation-control-start" v-on:click="startModel" v-bind:class="[(isReadOnly() || !(model.state === 'Idle: waiting for user input' || model.state === 'Finished')) ? 'inputdisabled': 'btn-success']" >
@@ -73,10 +77,6 @@
             Remove run
           </button>
 
-          <span class="alert alert-info alert-button" role="alert" v-if="isReadOnly()" >
-            Simulation controls are disabled when runs are published.
-          </span>
-
         </div>
       </div>
 
@@ -86,23 +86,25 @@
         </div>
         <div class="panel-body">
           <p v-bind:class="{ 'hidden': user.id != model.owner.id }">
-            You can change the rights of your simulation results. You can share them with everybody, only your company or keep them private (default).
+            You can select who to share your results with:
           </p>
           <p v-bind:class="{ 'hidden': user.id == model.owner.id }">
-            You cannot change the rights of simulation results of other users.
+            You cannot share runs owned by another user.
           </p>
 
           <!-- These are now links, replace by post requests later, otherwise a search engine will start publishing models -->
           <!-- This form-inline is normally applied to a form but in this case we have 3 forms as a form group. -->
-          <template v-for="level in publishLevels"><button type="button"
+          <template v-for="level in publishLevels">
+            <button type="button"
                class="btn btn-labeled btn-default  btn-spaced-right"
-               :class="{ 'inputdisabled': !(model.state == 'Finished') || !isLevelEnabled($index) || user.id != model.owner.id }"
+               :class="{ 'inputdisabled': !(model.state == 'Finished') || !isLevelEnabled($index) || user.id != model.owner.id, 'hidden': $index == 0 }"
                v-on:click="publishModel($index)">
               <span class="btn-label">
                 <i class="glyphicon" :class="publishLevels[$index].iconClass"></i>
               </span>
               {{ publishLevels[$index].description }}
-            </button></template>
+            </button>
+          </template>
 
         </div>
       </div>
