@@ -59,37 +59,32 @@
   global.Vue = Vue;
   global.VueRouter = VueRouter;
 
-  // load the components
+  // Load components
+  var UserDetails = require("../../app/scripts/components/userdetails.js").UserDetails;
+
+  global.UserDetails = UserDetails;
+
   var ImageAnimation = require("../../app/scripts/components/imageanimation.js").ImageAnimation;
 
-  // this is needed because this object is used as a global variable
-  // used by other component
   global.ImageAnimation = ImageAnimation;
+
   var ConfirmDialog = require("../../app/scripts/components/confirmdialog.js").ConfirmDialog;
 
   global.ConfirmDialog = ConfirmDialog;
+
   var getDialog = require("../../app/scripts/components/confirmdialog.js").getDialog;
 
   global.getDialog = getDialog;
 
   var ModelDetails = require("../../app/scripts/components/modeldetails.js").ModelDetails;
 
-  // used by other component
   global.ModelDetails = ModelDetails;
 
-
-  // used by other component
   var ScenarioCreate = require("../../app/scripts/components/scenariobuilder.js").ScenarioCreate;
+
   var SearchDetails = require("../../app/scripts/components/searchdetails.js").SearchDetails;
-  var UserDetails = require("../../app/scripts/components/userdetails.js").UserDetails;
 
-
-
-
-  // used by other component
-  global.UserDetails = UserDetails;
   global.SearchDetails = SearchDetails;
-
 
   var SearchList = require("../../app/scripts/components/searchlist.js").SearchList;
 
@@ -99,6 +94,7 @@
 
   // why is this necessary....
   var factorToArray = require("../../app/scripts/components/scenariobuilder.js").factorToArray;
+
 
   _.assign(global, require("../../app/scripts/models.js"));
   _.assign(global, require("../../app/scripts/templates.js"));
@@ -2409,13 +2405,13 @@
           "indicator": "c",
           "url": "company",
           "iconClass": "glyphicon-blackboard",
-          "description": "Company"
+          "description": "Share with your company"
         },
         {
           "indicator": "w",
           "url": "world",
           "iconClass": "glyphicon-globe",
-          "description": "Public"
+          "description": "Share with all Delft3D-GT users"
         }
       ];
 
@@ -2535,7 +2531,7 @@
       var publishLevel = aModelDetails.publishLevel;
 
       // We expect public
-      assert.isTrue(publishLevel === "Public", "Match wtih public");
+      assert.isTrue(publishLevel === "Share with all Delft3D-GT users", "Match with public");
 
       done();
 
@@ -2554,7 +2550,7 @@
       var publishLevel = aModelDetails.nextPublishLevel;
 
       // We expect public (private->company->public)
-      assert.isTrue(publishLevel === "Public", "Match wtih public");
+      assert.isTrue(publishLevel === "Share with all Delft3D-GT users", "Match with public");
 
       done();
 
