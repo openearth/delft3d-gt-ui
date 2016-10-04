@@ -97,11 +97,7 @@
           <template v-for="level in publishLevels">
             <button type="button"
                     class="btn btn-labeled btn-default  btn-spaced-right"
-                    <<<<<<< HEAD
-                            :class="{ 'inputdisabled': !(model.state == 'Finished') || !isLevelEnabled($index) || user.id != model.owner.id, 'hidden': $index == 0 }"
-                            =======
-                            :class="{ 'disabled': !(model.state === 'SUCCESS' || model.state === 'FAILURE' || model.state === 'ABORTED') || !isLevelEnabled($index) }"
-                            >>>>>>> develop
+                    :class="{ 'disabled': !(model.state == 'Finished') || !isLevelEnabled($index) || user.id != model.owner.id, 'hidden': $index == 0 }"
                       v-on:click="publishModel($index)">
               <span class="btn-label">
                 <i class="glyphicon" :class="publishLevels[$index].iconClass"></i>
@@ -178,15 +174,7 @@
               -->
           <div class="form-group input-group">
             <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_images" v-on:change="downloadOptionsChange()"></span>
-            <<<<<<< HEAD
-                    <span class="form-control no-fixed-height">Media: generated output images</span>
-                    =======
-                    <span class="form-control no-fixed-height">Download generated output images</span>
-          </div>
-          <div class="form-group input-group" v-bind:class="{ 'disabled': model.info.export === false}">
-            <span class="input-group-addon"><input type="checkbox" class="downloadoption"  value="export_thirdparty" v-on:change="downloadOptionsChange()" ></span>
-            <span class="form-control no-fixed-height">Include export for RMS / Petrel <span v-if="model.info.export === false">. <small>Please use <strong>"Start export"</strong> first at Simulation controls. After export completes, this option is available.</small></span></span>
-            >>>>>>> develop
+            <span class="form-control no-fixed-height">Media: generated output images</span>
           </div>
 
           <div class="form-group input-group">
@@ -204,15 +192,10 @@
             Download
           </button>
 
-          <<<<<<< HEAD
-                  =======
-                  <button class="btn btn-primary" type="button" v-bind:class="{ 'disabled': model.state === 'PROCESSING' }"  v-on:click="exportModel">
-                    Start export
-                  </button>
+          <button class="btn btn-primary" type="button" v-bind:class="{ 'disabled': model.state === 'PROCESSING' }"  v-on:click="exportModel">
+            Start export
+          </button>
 
-                  <h5 v-bind:class="{ 'default-hidden': model.state === 'PROCESSING' }">&ldquo;<i>Start export</i>&rdquo; becomes available after a simulation has finished and not published.</h5>
-
-                  >>>>>>> develop
         </div>
       </div>
 
