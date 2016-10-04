@@ -14,28 +14,23 @@ var exports = (function () {
 
     ready: function() {
 
-      console.log(this.$refs);
     },
 
 
     props: {
-
-      "selectedScenarios": {
-        type: Array,
-        required: true
-      },
-
-      "selectedRuns": {
-        type: Array,
-        required: true
-      },
-
-      "Models": {
+      items: {
         type: Array,
         required: true
       }
     },
-
+    computed: {
+      selectedModels: function() {
+        return _.filter(this.items, ["active", true, "type", "models"]);
+      },
+      selectedScenarios: function() {
+        return _.filter(this.items, ["active", true, "type", "scenarios"]);
+      }
+    },
     methods: {
 
       deleteSelectedScenario: function() {
@@ -46,24 +41,24 @@ var exports = (function () {
         // User accepts deletion:
         $("#dialog-remove-scenario-response-accept").on("click", () => {
 
-          this.selectedScenarios.forEach(function(id) {
-            deleteScenario(id)
-            .then(() => {
-              that.$parent.$broadcast("show-alert", {
-              message: "Deleting scenario... It might take a moment before the view is updated.",
-              showTime: 5000,
-              type: "success"
+          this.selectedScenarios.forEach(function(scenario) {
+            deleteScenario(scenario.id)
+              .then(() => {
+                that.$parent.$broadcast("show-alert", {
+                  message: "Deleting scenario... It might take a moment before the view is updated.",
+                  showTime: 5000,
+                  type: "success"
+                });
+
+                // Immediatly refresh screen:
+                that.$root.$broadcast("updateSearch");
+
+              })
+
+
+              .catch(e => {
+                console.warn("scenario deletion failed", e);
               });
-
-              // Immediatly refresh screen:
-              that.$root.$broadcast("updateSearch");
-
-            })
-
-
-          .catch(e => {
-            console.log("scenario deletion failed", e);
-          });
 
             // Hide dialog when user presses this accept.:
             $("#dialog-confirm-delete-scenario").modal("hide");
@@ -81,35 +76,25 @@ var exports = (function () {
       startSelectedModels: function() {
 
         // Start these models:
-        startModels(this.selectedRuns);
+        startModels(_.map(this.selectedModels, "id"));
 
       },
 
       stopSelectedModels: function() {
 
         // Stop models:
-        stopModels(this.selectedRuns);
+        stopModels(_.map(this.selectedModels, "id"));
       },
 
       deleteSelectedModels: function() {
 
         // Delete models
-        deleteModels(this.selectedRuns);
+        deleteModels(_.map(this.selectedModels, "id"));
       },
 
       cloneScenario: function() {
 
-        // Get scenario id:
-        var scenarioId = this.selectedScenarios[0];
-
-        // Find it:
-        var scenario = _.find(this.Models, function(value) {
-
-          // Is our id in this
-          return (value.id === scenarioId);
-        });
-
-        console.log(scenario);
+        var scenario = this.selectedScenarios[0];
 
         // Ignore if we did not find anything.
         if (scenario === undefined) {
@@ -124,7 +109,6 @@ var exports = (function () {
           scenario.parameters
         );
 
-        console.log("TEMPLATE:" + scenario.template);
         // These parameters are passed to the other view
         // alternative would be to store them in the app or to call an event
         var req = {

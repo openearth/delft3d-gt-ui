@@ -133,7 +133,7 @@ $company-scenario-item-selected-background: $scenario-selected-background;
   /*
   Introduced in IE 10.
   See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
-  */
+ */
   //-ms-user-select: none;
   user-select: none;
 }
@@ -194,8 +194,27 @@ $row-height: 32px;
 
 // Default font:
 body {
- font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
 }
+
+.scenario {
+  /* arrow everywhere */
+  cursor: default;
+}
+.scenario .row {
+  margin-bottom: 5px;
+}
+.scenario-header button:after {
+  color: $dark-gray;
+  content: '\e114';
+  float: right;
+  font-family: 'Glyphicons Halflings';
+}
+
+.scenario-header button.collapsed:after {
+  content: '\e080';
+}
+
 
 
 .fa-top-right {
@@ -236,213 +255,6 @@ input[type=date].form-control {
 
 
 
-/* Search results list */
-
-
-.search-results {
-
-  padding: 15px;
-
-
-  .scenario-name {
-    font-size: 16px;
-    font-weight: 600;
-
-    .glyphicon {
-      font-size: 14px;
-    }
-  }
-
-  .run-name {
-    font-size: 12px;
-    font-weight: 600;
-
-  }
-
-  .scenario {
-    background-color: $scenario-item-background;
-    border: 2px solid $scenario-selected-border;
-    min-height: 64px;
-
-    // Special coloring for the fixed scenario groups.
-    &.worldscenario {
-      border-color: $world-scenario-selected-border;
-      background-color: $world-scenario-item-background;
-    }
-
-    &.companyscenario {
-      border-color: $company-scenario-selected-border;
-      background-color: $company-scenario-item-background;
-    }
-
-  }
-
-  .scenario-info {
-    border-bottom: 1px solid $scenario-info-border;
-    min-height: 64px;
-    padding: 4px 4px 8px 8px;
-  }
-
-  .run {
-    background-color: $white;
-    color: $black;
-    min-height: 64px;
-    padding: 4px 4px 8px 8px;
-    position: relative;
-
-    &:hover {
-      background-color: darken($white, 2%);
-    }
-  }
-
-  .matched-vars {
-    margin-bottom: 0;
-    margin-top: 14px;
-  }
-
-  .progress-holder {
-
-    float: right;
-    font-size: 10px;
-    font-weight: 800;
-    margin-right: 32px;
-    text-align: left;
-    width: 85px;
-
-    .progress {
-      background-color: $dark-gray;
-      height: 6px;
-      margin-bottom: 0;
-    }
-
-    .progress-bar {
-      //-webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
-      //-webkit-transition: width .6s ease;
-      background-color: $progress-bar-color;
-      box-shadow: inset 0 -1px 0 $shadow-color;
-      transition: width .6s ease;
-    }
-
-
-  }
-
-
-
-  .badge {
-
-
-    background-color: transparent;
-    border: 1px solid $badge-color-unselected;
-
-    border-radius: 8px;
-    color: $badge-color-unselected;
-    font-size: 10px;
-    height: 18px;
-    line-height: 10px;
-    vertical-align: middle;
-  }
-
-  .share-status {
-
-    background-repeat: no-repeat;
-
-    display: inline-block;
-    height: 21px;
-    margin-left: 4px;
-    text-align: left;
-    vertical-align: bottom;
-    width: 21px;
-
-    // Icons as SVG
-    &.private {
-      background-image: url('../images/ui/sm-private-black.png');
-    }
-
-    &.public {
-      background-image: url('../images/ui/sm-public-black.png');
-    }
-
-    &.company {
-      background-image: url('../images/ui/sm-company-black.png');
-    }
-
-  }
-
-  // Arrow shown at right of list
-  .arrow-right {
-    position: absolute;
-    right: 8px;
-    top: 32px;
-  }
-
-  .scenario.selected {
-    background-color: $scenario-selected-background;
-    color: $white;
-
-    // Special coloring for the fixed scenario groups.
-    &.worldscenario {
-      background-color: $world-scenario-item-selected-background;
-    }
-
-    &.companyscenario {
-      background-color: $company-scenario-item-selected-background;
-    }
-
-  }
-
-  // When an item is selected some things change. that happens here
-  .run.selected {
-
-    background-color: $scenario-selected-background;
-    color: $white;
-
-
-
-    .share-status {
-      &.private {
-        background-image: url('../images/ui/sm-private-white.png');
-      }
-
-      &.public {
-        background-image: url('../images/ui/sm-public-white.png');
-      }
-
-      &.company {
-        background-image: url('../images/ui/sm-company-white.png');
-      }
-
-    }
-
-    .badge {
-      border: 1px solid $white;
-      color: $white;
-    }
-
-    &:hover {
-      background-color: lighten($scenario-selected-background, 2%);
-    }
-  }
-
-    // Special coloring for the fixed scenario groups.
-    .worldscenario {
-      .run.selected {
-
-        background-color: $world-scenario-item-selected-background;
-      }
-    }
-
-    .companyscenario {
-       .run.selected {
-          background-color: $company-scenario-item-selected-background;
-       }
-    }
-
-
-}
-
-
-
-/* End */
 
 
 .clear-left {
@@ -525,7 +337,7 @@ input[type=date].form-control {
 }
 
 .container-fluid {
-   border-bottom: 1px solid lighten($gray-dark, 60%);
+  border-bottom: 1px solid lighten($gray-dark, 60%);
 }
 
 .tool-bar {
@@ -555,7 +367,9 @@ input[type=date].form-control {
       color: $white;
       font-weight: normal;
       height: 28px;
-      margin: 2px;
+      margin-left: 1px;
+      margin-top: 2px;
+      margin-bottom: 2px;
     }
 
     &.default {
@@ -955,6 +769,15 @@ section {
   width: 100%;
 }
 
+/* hide to get to wide menus  */
+.bootstrap-select {
+  .dropdown-menu li a span.text {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
 /* End left nav */
 
 
@@ -1045,7 +868,7 @@ section {
 
     @include unselectable();
 
-     // Hide the actual checkbox.
+    // Hide the actual checkbox.
     input[type=checkbox] {
       display: none;
       height: 62px;
@@ -1250,6 +1073,7 @@ section {
 }
 
 
+<<<<<<< HEAD
 .scenario-list,
 .model-list,
 .model-details,
@@ -1318,6 +1142,8 @@ section {
 
   }
 }
+=======
+>>>>>>> develop
 
 .search-details {
   padding: 15px;
@@ -1341,18 +1167,6 @@ section {
   a:hover {
     color: $brand-primary;
     text-decoration: none;
-  }
-}
-
-.scenario-list {
-  background-color: darken($gray-lighter, 10%);
-}
-
-.model-list {
-  background-color: $model-list-background;
-
-  .list-group {
-    margin-bottom: 8px;
   }
 }
 
@@ -1387,7 +1201,7 @@ For later... align the buttons.
   .search-details .domain-search-boxes input[type=checkbox] + label {
     height: 54px;
     width: 54px;
-   }
+  }
 
   // Hide the label at these screens:
   .search-details .domain-search-boxes input[type=checkbox] + label span {
@@ -1407,11 +1221,87 @@ For later... align the buttons.
   .search-details .domain-search-boxes input[type=checkbox] + label {
     height: 42px;
     width: 42px;
-   }
+  }
 
   // Hide the results information screen (how many results we got) - it's fairly big, and removing it makes space for the buttons on the navbar.
   #results-info {
     display: none;
   }
 
+}
+.search-list {
+
+  .list-group-item.active,
+  .list-group-item.active:hover,
+  .list-group-item.active:focus {
+    color: inherit;
+    background-color: inherit;
+  }
+
+}
+.scenario-list,
+.model-list,
+.model-details,
+.search-details {
+  min-height: 100%;
+  overflow: auto;
+  padding: 0;
+
+
+  // Disable some of the default panel stylings:
+  .panel {
+    //-webkit-box-shadow: none;
+    //-moz-box-shadow: none;
+    border: 0;
+    box-shadow: none;
+    padding: 4px;
+  }
+
+
+
+  .alert {
+    border-radius: 0;
+    margin: 1px;
+    margin-top: 8px;
+  }
+
+  .alert-small {
+    display: inline-block;
+    margin-top: 8px;
+  }
+
+
+  .list-group-item {
+
+    padding: 0;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &.selected {
+      background-color: $selected-item-color;
+    }
+
+    // A href becomes block
+    a,
+    .search-result {
+      @include truncate();
+      // hide the selection focus (dotted lines)
+      color: $black;
+      display: block;
+      outline: none;
+      text-decoration: none;
+    }
+
+    .model-state {
+      @include model-state-colors();
+      border: 1px solid $gray-lighter;
+      bottom: 30%;
+      position: absolute;
+      right: 4px;
+    }
+
+
+  }
 }

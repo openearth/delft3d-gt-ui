@@ -1,16 +1,27 @@
 <template id="template-model-control-menu" inline-template>
 
-  <div class="btn-group dropdown pull-right">
+  <div class="btn-group pull-right">
     <button type="button" class="btn btn-default dropdown-toggle nav-bar-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
-</span></button>
+    </button>
 
     <ul class="dropdown-menu">
 
-      <!-- clone item, enabled only if one item is selected -->
-      <!-- disabled pointer is on the parent (as pointer events:none disable mouse cursor changes) -->
-      <li v-bind:class="{disabledpointer: selectedScenarios.length !== 1 }"><a v-bind:class="{inputdisabled: selectedScenarios.length !== 1 }" v-on:click="cloneScenario()">Clone scenario</a></li>
-      <li v-bind:class="{disabledpointer: selectedScenarios.length === 0 }"><a v-bind:class="{inputdisabled: selectedScenarios.length === 0 }" v-on:click="deleteSelectedScenario()">Delete scenario(s)</a></li>
+      <!-- optioons based on scenarios -->
+      <li :class="{disabled: selectedScenarios.length !== 1 }">
+        <a @click="cloneScenario">Clone scenario</a>
+      </li>
+      <li :class="{disabled: selectedScenarios.length === 0 }">
+        <a @click="deleteSelectedScenario">
+          Delete scenario(s)
+        </a>
+      </li>
+      <li :class="{disabled: selectedModels.length === 0 }">
+        <a @click="deleteSelectedModels">
+          Delete models(s)
+        </a>
+      </li>
+
     </ul>
   </div>
 

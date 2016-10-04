@@ -17,6 +17,8 @@ var exports = (function () {
       $.getJSON("/api/v1/scenes/", {})
         .done(function(json) {
           _.map(json, function(model) {
+            // add type for introspection
+            model.type = "scene";
             itemsCache[model.id] = model;
           });
           resolve(json);
