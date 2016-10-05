@@ -1,3 +1,4 @@
+// scss-lint:disable all
 @mixin fontdef($OpenSansPath, $OpenSansVersion, $FontType:"Regular") {
   src:  url('#{$OpenSansPath}/OpenSans-#{$FontType}.eot?v=#{$OpenSansVersion}');
   src:  url('#{$OpenSansPath}/OpenSans-#{$FontType}.eot?#iefix&v=#{$OpenSansVersion}') format('embedded-opentype'),
@@ -6,3 +7,4 @@
         url('#{$OpenSansPath}/OpenSans-#{$FontType}.ttf?v=#{$OpenSansVersion}') format('truetype'),
         url('#{$OpenSansPath}/OpenSans-#{$FontType}.svg?v=#{$OpenSansVersion}##{$FontType}') format('svg');
 }
+// scss-lint:enable all

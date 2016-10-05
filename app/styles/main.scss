@@ -87,6 +87,8 @@ $company-scenario-item-selected-background: $scenario-selected-background;
 
 // See issue: https://discourse.roots.io/t/adding-open-sans-via-fontfacekit-bower-isnt-working-with-gulp/3562/2
 // Override our font settings from here:
+// this code is not scsslint conforming, that's ok
+// scss-lint:disable all
 @import '_mixins.scss';
 @import '_variables.scss';
 @import 'bower_components/open-sans-fontface/sass/_Bold.scss';
@@ -99,6 +101,8 @@ $company-scenario-item-selected-background: $scenario-selected-background;
 @import 'bower_components/open-sans-fontface/sass/_Regular.scss';
 @import 'bower_components/open-sans-fontface/sass/_Semibold.scss';
 @import 'bower_components/open-sans-fontface/sass/_SemiboldItalic.scss';
+// scss-lint:enable all
+
 
 
 /* Utilities */
@@ -200,18 +204,22 @@ body {
 .scenario {
   /* arrow everywhere */
   cursor: default;
+
+  .row {
+    margin-bottom: 5px;
+  }
+
 }
-.scenario .row {
-  margin-bottom: 5px;
-}
-.scenario-header button:after {
+
+
+.scenario-header button::after {
   color: $dark-gray;
   content: '\e114';
   float: right;
   font-family: 'Glyphicons Halflings';
 }
 
-.scenario-header button.collapsed:after {
+.scenario-header button.collapsed::after {
   content: '\e080';
 }
 
@@ -347,10 +355,10 @@ input[type=date].form-control {
 
 
   .btn-toolbar {
-    padding: 4px 0px 4px 0px;
     height: 40px;
     line-height: 32px;
     margin: 0;
+    padding: 4px 0;
   }
 
   .btn {
@@ -361,15 +369,14 @@ input[type=date].form-control {
     margin-top: 10px;
 
     &.nav-bar-button {
-
       background-color: $navigation-button-background;
       border: 0;
       color: $white;
       font-weight: normal;
       height: 28px;
+      margin-bottom: 2px;
       margin-left: 1px;
       margin-top: 2px;
-      margin-bottom: 2px;
     }
 
     &.default {
@@ -412,29 +419,6 @@ input[type=date].form-control {
 }
 
 
-
-// Generic disabled element
-.inputdisabled {
-
-  color: $gray-dark;
-  pointer-events: none;
-
-  // Textbox gets a gray background and border
-  &input[type='text'] {
-    background: $gray-lighter;
-    border-color: $gray-light;
-  }
-
-}
-
-.btn  {
-  &.inputdisabled {
-    color: $gray-lighter;
-  }
-
-}
-
-
 .disabledpointer {
   cursor: not-allowed;
 }
@@ -449,7 +433,7 @@ input[type=date].form-control {
   td {
     border: 1px solid $row-border-color;
     height: $row-height;
-    padding: 10px 10px;
+    padding: 10px;
 
     &.centered {
       text-align: center;
@@ -843,13 +827,14 @@ section {
 .search-details {
 
   background-color: $panel-background;
+  padding: 15px;
 
   .panel {
     background-color: $panel-background;
   }
 
   .panel-title {
-    font-size: 11p15;
+    font-size: 11px;
   }
 
   .control-label,
@@ -873,6 +858,39 @@ section {
       display: none;
       height: 62px;
       width: 62px;
+      // Style when unchecked. Note: Label MUST follow immediately after the input element.
+      + label {
+
+        background-color: $white;
+        background-position: center center;
+        background-repeat: no-repeat;
+        color: $black;
+        cursor: pointer;
+        display: block;
+        font-size: 12px;
+        height: 62px;
+        padding-top: 44px;
+        text-align: center;
+        width: 62px;
+
+        &:hover {
+          background-color: lighten($white, 5%);
+        }
+
+        // Images should be SVG instead!
+        &.domain-private {
+          background-image: url('../images/ui/private-black.png');
+        }
+
+        &.domain-company {
+          background-image: url('../images/ui/company-black.png');
+        }
+
+        &.domain-public {
+          background-image: url('../images/ui/public-black.png');
+        }
+
+      }
     }
 
     .domain-selection-box {
@@ -887,39 +905,6 @@ section {
     }
 
 
-    // Style when unchecked. Note: Label MUST follow immediately after the input element.
-    input[type=checkbox] + label {
-
-      background-color: $white;
-      background-position: center center;
-      background-repeat: no-repeat;
-      color: $black;
-      cursor: pointer;
-      display: block;
-      font-size: 12px;
-      height: 62px;
-      padding-top: 44px;
-      text-align: center;
-      width: 62px;
-
-      &:hover {
-        background-color: lighten($white, 5%);
-      }
-
-      // Images should be SVG instead!
-      &.domain-private {
-        background-image: url('../images/ui/private-black.png');
-      }
-
-      &.domain-company {
-        background-image: url('../images/ui/company-black.png');
-      }
-
-      &.domain-public {
-        background-image: url('../images/ui/public-black.png');
-      }
-
-    }
 
     // Style when checked. Note: Label MUST follow immediately after the input element.
     input[type=checkbox]:checked + label {
@@ -955,7 +940,7 @@ section {
 .search-date-label {
   float: left;
   line-height: 32px;
-  margin: 0 4px 0 4px;
+  margin: 0 4px;
   vertical-align: middle;
 }
 
@@ -985,15 +970,11 @@ section {
   }
 
   .irs-bar-edge {
-    background-color: $brand-primary;
+    background: $brand-primary;
   }
 
   .irs-slider,
   .irs-bar {
-    background: $brand-primary;
-  }
-
-  .irs-bar-edge {
     background: $brand-primary;
   }
 
@@ -1052,13 +1033,22 @@ section {
 .model-details {
   background-color: $color-right-column-background;
 
+  .panel-default {
+    padding: 0;
+  }
+
+  .panel-title {
+    padding-left: 15px;
+  }
+
+
   .panel-heading {
-    padding-left: 0px;
-    padding-right: 0px;
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .alert {
-    margin: 15px !important;
+    margin: 15px;
     padding: 9px;
   }
 }
@@ -1068,23 +1058,10 @@ section {
 }
 
 .panel-heading {
+  border-bottom: 0;
   border-top: 1px solid transparent;
-  border-bottom: none;
 }
 
-.search-details {
-  padding: 15px;
-}
-
-.model-details {
-  .panel-default {
-    padding: 0px;
-  }
-
-  .panel-title {
-    padding-left: 15px;
-  }
-}
 
 .user-details {
   a {
@@ -1156,16 +1133,17 @@ For later... align the buttons.
   }
 
 }
+
 .search-list {
 
   .list-group-item.active,
   .list-group-item.active:hover,
   .list-group-item.active:focus {
-    color: inherit;
     background-color: inherit;
+    color: inherit;
   }
-
 }
+
 .scenario-list,
 .model-list,
 .model-details,
