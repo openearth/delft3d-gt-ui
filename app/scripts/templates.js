@@ -21,13 +21,15 @@ var exports = (function() {
     });
   }
 
-  function fetchSearchTemplates() {
+  function fetchSearchTemplate() {
     return new Promise(function(resolve, reject) {
 
       //Load test template data:
       $.getJSON("/api/v1/searchforms/")
         .done(function(data) {
-          resolve(data);
+          // return the one and only search template
+          // the backend returns a list but there shall only be one
+          resolve(_.first(data));
         })
         .fail(function(error) {
           reject(error);
@@ -38,7 +40,7 @@ var exports = (function() {
 
   return {
     fetchTemplates: fetchTemplates,
-    fetchSearchTemplates: fetchSearchTemplates
+    fetchSearchTemplate: fetchSearchTemplate
   };
 
 }());

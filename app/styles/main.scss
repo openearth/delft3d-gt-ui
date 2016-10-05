@@ -87,6 +87,8 @@ $company-scenario-item-selected-background: $scenario-selected-background;
 
 // See issue: https://discourse.roots.io/t/adding-open-sans-via-fontfacekit-bower-isnt-working-with-gulp/3562/2
 // Override our font settings from here:
+// this code is not scsslint conforming, that's ok
+// scss-lint:disable all
 @import '_mixins.scss';
 @import '_variables.scss';
 @import 'bower_components/open-sans-fontface/sass/_Bold.scss';
@@ -99,6 +101,8 @@ $company-scenario-item-selected-background: $scenario-selected-background;
 @import 'bower_components/open-sans-fontface/sass/_Regular.scss';
 @import 'bower_components/open-sans-fontface/sass/_Semibold.scss';
 @import 'bower_components/open-sans-fontface/sass/_SemiboldItalic.scss';
+// scss-lint:enable all
+
 
 
 /* Utilities */
@@ -133,7 +137,7 @@ $company-scenario-item-selected-background: $scenario-selected-background;
   /*
   Introduced in IE 10.
   See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
-  */
+ */
   //-ms-user-select: none;
   user-select: none;
 }
@@ -194,8 +198,31 @@ $row-height: 32px;
 
 // Default font:
 body {
- font-family: "Open Sans";
+  font-family: "Open Sans", sans-serif;
 }
+
+.scenario {
+  /* arrow everywhere */
+  cursor: default;
+
+  .row {
+    margin-bottom: 5px;
+  }
+
+}
+
+
+.scenario-header button::after {
+  color: $dark-gray;
+  content: '\e114';
+  float: right;
+  font-family: 'Glyphicons Halflings';
+}
+
+.scenario-header button.collapsed::after {
+  content: '\e080';
+}
+
 
 
 .fa-top-right {
@@ -236,213 +263,6 @@ input[type=date].form-control {
 
 
 
-/* Search results list */
-
-
-.search-results {
-
-  padding: 15px;
-
-
-  .scenario-name {
-    font-size: 16px;
-    font-weight: 600;
-
-    .glyphicon {
-      font-size: 14px;
-    }
-  }
-
-  .run-name {
-    font-size: 12px;
-    font-weight: 600;
-
-  }
-
-  .scenario {
-    background-color: $scenario-item-background;
-    border: 2px solid $scenario-selected-border;
-    min-height: 64px;
-
-    // Special coloring for the fixed scenario groups.
-    &.worldscenario {
-      border-color: $world-scenario-selected-border;
-      background-color: $world-scenario-item-background;
-    }
-
-    &.companyscenario {
-      border-color: $company-scenario-selected-border;
-      background-color: $company-scenario-item-background;
-    }
-
-  }
-
-  .scenario-info {
-    border-bottom: 1px solid $scenario-info-border;
-    min-height: 64px;
-    padding: 4px 4px 8px 8px;
-  }
-
-  .run {
-    background-color: $white;
-    color: $black;
-    min-height: 64px;
-    padding: 4px 4px 8px 8px;
-    position: relative;
-
-    &:hover {
-      background-color: darken($white, 2%);
-    }
-  }
-
-  .matched-vars {
-    margin-bottom: 0;
-    margin-top: 14px;
-  }
-
-  .progress-holder {
-
-    float: right;
-    font-size: 10px;
-    font-weight: 800;
-    margin-right: 32px;
-    text-align: left;
-    width: 85px;
-
-    .progress {
-      background-color: $dark-gray;
-      height: 6px;
-      margin-bottom: 0;
-    }
-
-    .progress-bar {
-      //-webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
-      //-webkit-transition: width .6s ease;
-      background-color: $progress-bar-color;
-      box-shadow: inset 0 -1px 0 $shadow-color;
-      transition: width .6s ease;
-    }
-
-
-  }
-
-
-
-  .badge {
-
-
-    background-color: transparent;
-    border: 1px solid $badge-color-unselected;
-
-    border-radius: 8px;
-    color: $badge-color-unselected;
-    font-size: 10px;
-    height: 18px;
-    line-height: 10px;
-    vertical-align: middle;
-  }
-
-  .share-status {
-
-    background-repeat: no-repeat;
-
-    display: inline-block;
-    height: 21px;
-    margin-left: 4px;
-    text-align: left;
-    vertical-align: bottom;
-    width: 21px;
-
-    // Icons as SVG
-    &.private {
-      background-image: url('../images/ui/sm-private-black.png');
-    }
-
-    &.public {
-      background-image: url('../images/ui/sm-public-black.png');
-    }
-
-    &.company {
-      background-image: url('../images/ui/sm-company-black.png');
-    }
-
-  }
-
-  // Arrow shown at right of list
-  .arrow-right {
-    position: absolute;
-    right: 8px;
-    top: 32px;
-  }
-
-  .scenario.selected {
-    background-color: $scenario-selected-background;
-    color: $white;
-
-    // Special coloring for the fixed scenario groups.
-    &.worldscenario {
-      background-color: $world-scenario-item-selected-background;
-    }
-
-    &.companyscenario {
-      background-color: $company-scenario-item-selected-background;
-    }
-
-  }
-
-  // When an item is selected some things change. that happens here
-  .run.selected {
-
-    background-color: $scenario-selected-background;
-    color: $white;
-
-
-
-    .share-status {
-      &.private {
-        background-image: url('../images/ui/sm-private-white.png');
-      }
-
-      &.public {
-        background-image: url('../images/ui/sm-public-white.png');
-      }
-
-      &.company {
-        background-image: url('../images/ui/sm-company-white.png');
-      }
-
-    }
-
-    .badge {
-      border: 1px solid $white;
-      color: $white;
-    }
-
-    &:hover {
-      background-color: lighten($scenario-selected-background, 2%);
-    }
-  }
-
-    // Special coloring for the fixed scenario groups.
-    .worldscenario {
-      .run.selected {
-
-        background-color: $world-scenario-item-selected-background;
-      }
-    }
-
-    .companyscenario {
-       .run.selected {
-          background-color: $company-scenario-item-selected-background;
-       }
-    }
-
-
-}
-
-
-
-/* End */
 
 
 .clear-left {
@@ -525,7 +345,7 @@ input[type=date].form-control {
 }
 
 .container-fluid {
-   border-bottom: 1px solid lighten($gray-dark, 60%);
+  border-bottom: 1px solid lighten($gray-dark, 60%);
 }
 
 .tool-bar {
@@ -535,10 +355,10 @@ input[type=date].form-control {
 
 
   .btn-toolbar {
-    padding: 4px 0px 4px 0px;
     height: 40px;
     line-height: 32px;
     margin: 0;
+    padding: 4px 0;
   }
 
   .btn {
@@ -549,13 +369,14 @@ input[type=date].form-control {
     margin-top: 10px;
 
     &.nav-bar-button {
-
       background-color: $navigation-button-background;
       border: 0;
       color: $white;
       font-weight: normal;
       height: 28px;
-      margin: 2px;
+      margin-bottom: 2px;
+      margin-left: 1px;
+      margin-top: 2px;
     }
 
     &.default {
@@ -598,29 +419,6 @@ input[type=date].form-control {
 }
 
 
-
-// Generic disabled element
-.inputdisabled {
-
-  color: $gray-dark;
-  pointer-events: none;
-
-  // Textbox gets a gray background and border
-  &input[type='text'] {
-    background: $gray-lighter;
-    border-color: $gray-light;
-  }
-
-}
-
-.btn  {
-  &.inputdisabled {
-    color: $gray-lighter;
-  }
-
-}
-
-
 .disabledpointer {
   cursor: not-allowed;
 }
@@ -635,7 +433,7 @@ input[type=date].form-control {
   td {
     border: 1px solid $row-border-color;
     height: $row-height;
-    padding: 10px 10px;
+    padding: 10px;
 
     &.centered {
       text-align: center;
@@ -955,6 +753,15 @@ section {
   width: 100%;
 }
 
+/* hide to get to wide menus  */
+.bootstrap-select {
+  .dropdown-menu li a span.text {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
 /* End left nav */
 
 
@@ -1020,13 +827,14 @@ section {
 .search-details {
 
   background-color: $panel-background;
+  padding: 15px;
 
   .panel {
     background-color: $panel-background;
   }
 
   .panel-title {
-    font-size: 11p15;
+    font-size: 11px;
   }
 
   .control-label,
@@ -1045,11 +853,44 @@ section {
 
     @include unselectable();
 
-     // Hide the actual checkbox.
+    // Hide the actual checkbox.
     input[type=checkbox] {
       display: none;
       height: 62px;
       width: 62px;
+      // Style when unchecked. Note: Label MUST follow immediately after the input element.
+      + label {
+
+        background-color: $white;
+        background-position: center center;
+        background-repeat: no-repeat;
+        color: $black;
+        cursor: pointer;
+        display: block;
+        font-size: 12px;
+        height: 62px;
+        padding-top: 44px;
+        text-align: center;
+        width: 62px;
+
+        &:hover {
+          background-color: lighten($white, 5%);
+        }
+
+        // Images should be SVG instead!
+        &.domain-private {
+          background-image: url('../images/ui/private-black.png');
+        }
+
+        &.domain-company {
+          background-image: url('../images/ui/company-black.png');
+        }
+
+        &.domain-public {
+          background-image: url('../images/ui/public-black.png');
+        }
+
+      }
     }
 
     .domain-selection-box {
@@ -1064,39 +905,6 @@ section {
     }
 
 
-    // Style when unchecked. Note: Label MUST follow immediately after the input element.
-    input[type=checkbox] + label {
-
-      background-color: $white;
-      background-position: center center;
-      background-repeat: no-repeat;
-      color: $black;
-      cursor: pointer;
-      display: block;
-      font-size: 12px;
-      height: 62px;
-      padding-top: 44px;
-      text-align: center;
-      width: 62px;
-
-      &:hover {
-        background-color: lighten($white, 5%);
-      }
-
-      // Images should be SVG instead!
-      &.domain-private {
-        background-image: url('../images/ui/private-black.png');
-      }
-
-      &.domain-company {
-        background-image: url('../images/ui/company-black.png');
-      }
-
-      &.domain-public {
-        background-image: url('../images/ui/public-black.png');
-      }
-
-    }
 
     // Style when checked. Note: Label MUST follow immediately after the input element.
     input[type=checkbox]:checked + label {
@@ -1132,7 +940,7 @@ section {
 .search-date-label {
   float: left;
   line-height: 32px;
-  margin: 0 4px 0 4px;
+  margin: 0 4px;
   vertical-align: middle;
 }
 
@@ -1162,15 +970,11 @@ section {
   }
 
   .irs-bar-edge {
-    background-color: $brand-primary;
+    background: $brand-primary;
   }
 
   .irs-slider,
   .irs-bar {
-    background: $brand-primary;
-  }
-
-  .irs-bar-edge {
     background: $brand-primary;
   }
 
@@ -1229,13 +1033,22 @@ section {
 .model-details {
   background-color: $color-right-column-background;
 
+  .panel-default {
+    padding: 0;
+  }
+
+  .panel-title {
+    padding-left: 15px;
+  }
+
+
   .panel-heading {
-    padding-left: 0px;
-    padding-right: 0px;
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .alert {
-    margin: 15px !important;
+    margin: 15px;
     padding: 9px;
   }
 }
@@ -1245,10 +1058,91 @@ section {
 }
 
 .panel-heading {
+  border-bottom: 0;
   border-top: 1px solid transparent;
-  border-bottom: none;
 }
 
+
+.user-details {
+  a {
+    color: $white;
+  }
+
+  a:hover {
+    color: $brand-primary;
+    text-decoration: none;
+  }
+}
+
+.publish-level {
+  transition-duration: 500ms;
+  transition-property: all;
+  transition-timing-function: ease-in;
+}
+
+.highlighted {
+  background-color: $deltares-groen; // !important;
+}
+
+/*
+For later... align the buttons.
+.bootstrap-select > .dropdown-toggle {
+  padding-right: 37px;
+
+  span {
+    height: 100px;
+  }
+}
+*/
+
+
+@media screen and (max-width: 1250px) {
+
+  .search-details .domain-search-boxes .domain-selection-box {
+    margin-right: 2px;
+  }
+
+  .search-details .domain-search-boxes input[type=checkbox] + label {
+    height: 54px;
+    width: 54px;
+  }
+
+  // Hide the label at these screens:
+  .search-details .domain-search-boxes input[type=checkbox] + label span {
+    display: none;
+  }
+}
+
+
+// Smalles screen we take care of.
+@media screen and (max-width: 1024px) {
+
+  body {
+    // Allow scrollbars again.
+    overflow-y: auto;
+  }
+
+  .search-details .domain-search-boxes input[type=checkbox] + label {
+    height: 42px;
+    width: 42px;
+  }
+
+  // Hide the results information screen (how many results we got) - it's fairly big, and removing it makes space for the buttons on the navbar.
+  #results-info {
+    display: none;
+  }
+
+}
+
+.search-list {
+
+  .list-group-item.active,
+  .list-group-item.active:hover,
+  .list-group-item.active:focus {
+    background-color: inherit;
+    color: inherit;
+  }
+}
 
 .scenario-list,
 .model-list,
@@ -1266,7 +1160,6 @@ section {
     border: 0;
     box-shadow: none;
     padding: 4px;
-    margin-bottom: 16px;
   }
 
 
@@ -1303,7 +1196,6 @@ section {
       color: $black;
       display: block;
       outline: none;
-      padding: 4px 0; // 4px 0;
       text-decoration: none;
     }
 
@@ -1317,101 +1209,4 @@ section {
 
 
   }
-}
-
-.search-details {
-  padding: 15px;
-}
-
-.model-details {
-  .panel-default {
-    padding: 0px;
-  }
-
-  .panel-title {
-    padding-left: 15px;
-  }
-}
-
-.user-details {
-  a {
-    color: $white;
-  }
-
-  a:hover {
-    color: $brand-primary;
-    text-decoration: none;
-  }
-}
-
-.scenario-list {
-  background-color: darken($gray-lighter, 10%);
-}
-
-.model-list {
-  background-color: $model-list-background;
-
-  .list-group {
-    margin-bottom: 8px;
-  }
-}
-
-.publish-level {
-  transition-duration: 500ms;
-  transition-property: all;
-  transition-timing-function: ease-in;
-}
-
-.highlighted {
-  background-color: $deltares-groen; // !important;
-}
-
-/*
-For later... align the buttons.
-.bootstrap-select > .dropdown-toggle {
-  padding-right: 37px;
-
-  span {
-    height: 100px;
-  }
-}
-*/
-
-
-@media screen and (max-width: 1250px) {
-
-  .search-details .domain-search-boxes .domain-selection-box {
-    margin-right: 2px;
-  }
-
-  .search-details .domain-search-boxes input[type=checkbox] + label {
-    height: 54px;
-    width: 54px;
-   }
-
-  // Hide the label at these screens:
-  .search-details .domain-search-boxes input[type=checkbox] + label span {
-    display: none;
-  }
-}
-
-
-// Smalles screen we take care of.
-@media screen and (max-width: 1024px) {
-
-  body {
-    // Allow scrollbars again.
-    overflow-y: auto;
-  }
-
-  .search-details .domain-search-boxes input[type=checkbox] + label {
-    height: 42px;
-    width: 42px;
-   }
-
-  // Hide the results information screen (how many results we got) - it's fairly big, and removing it makes space for the buttons on the navbar.
-  #results-info {
-    display: none;
-  }
-
 }

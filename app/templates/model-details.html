@@ -66,13 +66,13 @@
             Simulation controls are disabled for already published runs.
           </p>
 
-          <button type="button" class="btn btn-labeled btn-spaced-right"  id="simulation-control-start" v-on:click="startModel" v-bind:class="[(isReadOnly() || !(model.state === 'Idle: waiting for user input' || model.state === 'Finished')) ? 'inputdisabled': 'btn-success']" >
+          <button type="button" class="btn btn-labeled btn-spaced-right"  id="simulation-control-start" v-on:click="startModel" v-bind:class="[(isReadOnly() || !(model.state === 'Idle: waiting for user input' || model.state === 'Finished')) ? 'disabled': 'btn-success']" >
             <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>
             Start
-          </button><button type="button" class="btn btn-labeled btn-spaced-right" id="simulation-control-stop" v-on:click="stopModel" v-bind:class="[(isReadOnly() || !(model.state === 'Running simulation...')) ? 'inputdisabled' : 'btn-warning' ]">
+          </button><button type="button" class="btn btn-labeled btn-spaced-right" id="simulation-control-stop" v-on:click="stopModel" v-bind:class="[(isReadOnly() || !(model.state === 'Running simulation...')) ? 'disabled' : 'btn-warning' ]">
             <span class="btn-label"><i class="glyphicon glyphicon-stop"></i></span>
             Stop
-          </button><button type="button" class="btn btn-labeled btn-spaced-right" v-on:click="removeModel(model)" v-bind:class="[ (isReadOnly()) ? 'inputdisabled' : 'btn-danger']">
+          </button><button type="button" class="btn btn-labeled btn-spaced-right" v-on:click="removeModel(model)" v-bind:class="[ (isReadOnly()) ? 'disabled' : 'btn-danger']">
             <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
             Remove run
           </button>
@@ -96,9 +96,9 @@
           <!-- This form-inline is normally applied to a form but in this case we have 3 forms as a form group. -->
           <template v-for="level in publishLevels">
             <button type="button"
-               class="btn btn-labeled btn-default  btn-spaced-right"
-               :class="{ 'inputdisabled': !(model.state == 'Finished') || !isLevelEnabled($index) || user.id != model.owner.id, 'hidden': $index == 0 }"
-               v-on:click="publishModel($index)">
+                    class="btn btn-labeled btn-default  btn-spaced-right"
+                    :class="{ 'disabled': !(model.state == 'Finished') || !isLevelEnabled($index) || user.id != model.owner.id, 'hidden': $index == 0 }"
+                      v-on:click="publishModel($index)">
               <span class="btn-label">
                 <i class="glyphicon" :class="publishLevels[$index].iconClass"></i>
               </span>
@@ -166,12 +166,12 @@
             <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_d3dinput" v-on:change="downloadOptionsChange()"></span>
             <span class="form-control no-fixed-height">Delft3D: input files</span>
           </div>
-<!--
-          <div class="form-group input-group">
-            <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_d3doutput" v-on:change="downloadOptionsChange()"></span>
-            <span class="form-control no-fixed-height">Delft3D: output files</span>
-          </div>
- -->
+          <!--
+              <div class="form-group input-group">
+                <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_d3doutput" v-on:change="downloadOptionsChange()"></span>
+                <span class="form-control no-fixed-height">Delft3D: output files</span>
+              </div>
+              -->
           <div class="form-group input-group">
             <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_images" v-on:change="downloadOptionsChange()"></span>
             <span class="form-control no-fixed-height">Media: generated output images</span>
@@ -250,10 +250,10 @@
           <p>Are you sure you want to stop this model?</p>
         </template>
         <template slot="alert">
-		You will need to restart the model if you want to continue the simulation
+		      You will need to restart the model if you want to continue the simulation
         </template>
       </confirm-dialog>
 
-  </div>
+    </div>
 
 </template>
