@@ -24,19 +24,16 @@
                    data-selected-text-format="count > 3"
                    data-actions-box="true">
                   <option
-                     selected
                      title="<i class='fa fa-lock aria-hidden='true'></i>"
                      data-content="<i class='fa fa-lock aria-hidden='true'></i> Private">
                     private
                   </option>
                   <option
-                     selected
                      title="<i class='fa fa-users' aria-hidden='true'></i>"
                      data-content="<i class='fa fa-users' aria-hidden='true'></i> Company">
                     company
                   </option>
                   <option
-                     selected
                      title="<i class='fa fa-globe' aria-hidden='true'></i>"
                      data-content="<i class='fa fa-globe' aria-hidden='true'></i> Public">
                     public
@@ -165,8 +162,6 @@
                               <option
                                  v-for="option in variable.options"
                                  v-bind:value="option.text"
-                                 selected="selected"
-
                                  >
                                 {{ option.text }}
                               </option>
