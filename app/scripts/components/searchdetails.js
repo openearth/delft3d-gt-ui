@@ -132,7 +132,6 @@ var exports = (function () {
 
         // Set event handlers for search collapsibles.
         $(".panel-search").on("show.bs.collapse", function() {
-
           $(this).find(".glyphicon-triangle-right").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
         });
 

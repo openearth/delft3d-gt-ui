@@ -1,37 +1,34 @@
 <template id="template-search-columns">
+
   <div class="search-columns">
     <div class="full-height">
 
-      <!-- the grey toolbar for main screen-->
-      <nav class="navbar navbar-default navbar-static-top tool-bar">
-        <div class="container-fluid">
-          <div class="row" >
-            <div class="col-xs-2" id="column-search-details">
-              <div class="btn-toolbar heading-bar" >
-                Search <button type="button" class="btn pull-right nav-bar-button" id="btn-reset-search-form" v-on:click="resetFields">Reset</button>
-              </div>
-            </div>
+      <!-- ======================== TOOLBAR ======================== -->
 
-            <div class="col-xs-5" id="column-search-results">
-              <div class="btn-toolbar heading-bar">
-                <span id="results-info">Database (search results)</span>  <span id="results-info-stats">({{numRuns}} {{numRuns | pluralize 'run'}} in {{numScenarios}} {{numScenarios | pluralize 'scenario'}})</span>
+      <div class="container-fluid">
+        <div class="row action-bar">
 
-                <a class="btn pull-right nav-bar-button nav-bar-button-custom" title="Create scenario" href="#/scenarios/create">Create scenario</a>
+          <div class="col-xs-1">
+            <span class="btn-text">Search</span>
+          </div>
+          <div class="col-xs-1 text-right">
+            <button type="button" class="btn btn-default" id="btn-reset-search-form" v-on:click="resetFields">Reset</button>
+          </div>
 
-                <model-control-menu :items="items"></model-control-menu>
-              </div>
-            </div>
+          <div class="col-xs-4">
+            <span class="btn-text">Database (search results)</span>
+          </div>
+          <div class="col-xs-1">
+            <model-control-menu :items="items"></model-control-menu>
+          </div>
 
-          <div class="col-xs-5" id="column-run-details">
-            <div class="btn-toolbar heading-bar" >
-              Details
-            </div>
+          <div class="col-xs-5">
+            <span class="btn-text">Details</span>
           </div>
         </div>
-      </nav>
+      </div>
 
-      <!-- Alert message component for display of timed messages -->
-      <alert-message></alert-message>
+      <!-- ======================== COLUMNS ======================== -->
 
       <div class="container-fluid full-height">
         <div class="row full-height">
@@ -43,7 +40,6 @@
           <div class="col-sm-5 column full-height">
             <search-list :items="items" v-ref:search-list></search-list>
           </div>
-
 
           <div class="col-sm-5 column full-height">
             <!-- details for selected scenarios first -->
@@ -66,8 +62,11 @@
       </div>
     </div>
 
-    <!-- MODALS should be turned into an comopnent?-->
 
+    <!-- Alert message component for display of timed messages -->
+    <alert-message></alert-message>
+
+    <!-- MODALS should be turned into an comopnent?-->
     <div class="modal default-hidden fade" id="dialog-confirm-delete-scenario" tabindex="-1" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">

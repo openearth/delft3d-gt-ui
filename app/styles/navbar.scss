@@ -1,0 +1,12 @@
+@import 'variables';
+
+.navbar {
+  margin-bottom: $padding;  // override default bootstrap value
+
+  img {
+    float: left;
+    height: 51px;
+    margin: -15px 15px 15px -15px;
+  }
+
+}

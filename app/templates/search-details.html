@@ -7,44 +7,12 @@
          @change="search"
          @input="search"
          >
+
         <div class="panel-group" id="run-accordion" role="tablist" aria-multiselectable="true">
-          <div class="panel panel-default">
-
-            <div class="panel-collapse" role="tabpanel">
-
-              <div class="form-group">
-                <label for="domain">Search domain:</label>
-
-                <!-- break because of the label hack below -->
-                <select
-                   v-model="selectedDomains"
-                   class="select-picker form-control"
-                   multiple
-                   id="domain"
-                   data-selected-text-format="count > 3"
-                   data-actions-box="true">
-                  <option
-                     title="<i class='fa fa-lock aria-hidden='true'></i>"
-                     data-content="<i class='fa fa-lock aria-hidden='true'></i> Private">
-                    private
-                  </option>
-                  <option
-                     title="<i class='fa fa-users' aria-hidden='true'></i>"
-                     data-content="<i class='fa fa-users' aria-hidden='true'></i> Company">
-                    company
-                  </option>
-                  <option
-                     title="<i class='fa fa-globe' aria-hidden='true'></i>"
-                     data-content="<i class='fa fa-globe' aria-hidden='true'></i> Public">
-                    public
-                  </option>
-                </select>
-              </div>
 
               <div class="form-group clear-left">
-                <label for="search">Search on name:</label>
                 <div class="input-group">
-                  <input type="text" class="form-control" id="search" placeholder="Type to search..." v-model="searchText">
+                  <input type="text" class="form-control" id="search" placeholder="Search name..." v-model="searchText">
                   <span class="input-group-btn">
                     <button class="btn btn-default button-empty-input-field" type="button">
                       <i class="fa fa-times" aria-hidden="true"></i>
@@ -53,89 +21,74 @@
                 </div>
               </div>
 
-
-              <!-- Templates disabled as we do not yet support it
               <div class="form-group">
-                <label for="template">Template</label>
+                <!-- break because of the label hack below -->
                 <select
-                   v-model="selectedTemplates"
+                   v-model="selectedDomains"
+                   id="domain"
                    class="select-picker form-control"
+                   title="Choose publication domain..."
                    multiple
-                   id="template"
                    data-selected-text-format="count > 3"
                    data-actions-box="true">
-                  <option v-for="template in searchTemplate.templates" selected>{{ template.name }}</option>
+                  <option
+                    data-content="<i class='fa fa-lock aria-hidden='true'></i> Private">
+                    private
+                  </option>
+                  <option
+                    data-content="<i class='fa fa-users' aria-hidden='true'></i> Company">
+                    company
+                  </option>
+                  <option
+                    data-content="<i class='fa fa-globe' aria-hidden='true'></i> Public">
+                    public
+                  </option>
                 </select>
               </div>
-              -->
-
-
-
-
-            </div>
-
-
-
-
-          </div>
 
           <!-- Dynamically generated HTML using incoming template from API -->
-
-
-
 
           <!-- Variables -->
 
           <div v-for="section in searchTemplate.sections" v-show="searchTemplate">
 
             <div class="panel panel-default panel-search">
-              <div class="panel-heading list-group-item" role="tab" >
-                <a role="button" class="section-collapse-link" data-toggle="collapse" data-parent="#template-{{$index}}" href="#template-{{$index}}" aria-expanded="true" aria-controls="template-collapse">
-                  <h3 class="panel-title"><span class="glyphicon glyphicon-triangle-right"></span> {{section.name | uppercase }}</h3>
-                </a>
+
+              <div class="panel-body" role="tab" >
+
+                <div class="panel-collapse-header">
+                  <a role="button" class="section-collapse-link" data-toggle="collapse" data-parent="#template-{{$index}}" href="#template-{{$index}}" aria-expanded="true" aria-controls="template-collapse">
+                    <span class="glyphicon glyphicon-triangle-right"></span> {{section.name}}
+                  </a>
+                </div>
 
                 <div class="panel-collapse collapse" role="tabpanel" aria-labelledby="template-{{$index}}" id="template-{{$index}}">
 
                   <div class="form-group" v-for="variable in section.variables">
+
                     <label class="control-label" for="{{variable.id}}">{{ variable.name }}: <span v-if="variable.units" >({{ variable.units }})</span></label>
 
-
-                    <div :class="{slider: variable.type === 'slider'}">
+                    <div v-bind:class="{ numeric: variable.type === 'numeric' }">
                       <!-- two types of input for now: textarea and other -->
+
                       <!-- other first -->
                       <template v-if="variable.type !== 'textarea'">
 
-                        <template v-if="variable.type === 'slider'">
-                          <div>
-                            <input
-                               type="text"
-                               class="ion-range"
-                               id="{{ variable.id }}"
-                               data-min="{{ variable.validators.min }}"
-                               data-max="{{ variable.validators.max }}"
-                               data-type="double"
-                               v-model="selectedParameters[variable.id]"
-                               />
-                          </div>
-                        </template>
-
                         <!-- the 0.01 makes the floating point values work -->
                         <template v-if="variable.type === 'numeric'">
-                          <div>
-                            <input
-                               type="text"
-                               class="ion-range"
-                               id="{{ variable.id }}"
-                               data-step="0.01"
-                               data-min="{{ variable.validators.min }}"
-                               data-max="{{ variable.validators.max }}"
-                               data-type="double"
-                               v-model="selectedParameters[variable.id]"
-                               />
-                          </div>
+                          <input
+                             type="text"
+                             class="ion-range"
+                             id="{{ variable.id }}"
+                             data-step="0.01"
+                             data-min="{{ variable.validators.min }}"
+                             data-max="{{ variable.validators.max }}"
+                             data-type="double"
+                             v-model="selectedParameters[variable.id]"
+                             />
                         </template>
 
-                        <template v-if="variable.type !== 'numeric' && variable.type !== 'slider' && variable.type !== 'select'">
+                        <template v-if="variable.type !== 'numeric' && variable.type !== 'select'">
                           <div class="input-group">
                             <input
                                type="{{ variable.type }}"
@@ -167,11 +120,9 @@
                               </option>
                             </select>
                           </div>
-
-
                         </template>
-
                       </template>
+
                       <!-- text area -->
                       <template
                          v-if="variable.type === 'textarea'">
@@ -182,14 +133,17 @@
 
                            ></textarea>
                       </template>
+
                     </div>
 
-                  </div>
+                  </div> <!-- form-group -->
 
-                </div>
-              </div>
-            </div>
-          </div>
+                </div> <!-- panel-collapse -->
+
+              </div> <!-- panel-body            </div> <!-- panel -->
+
+          </div> <!-- section -->
+
       </form>
 
 

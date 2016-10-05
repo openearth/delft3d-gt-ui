@@ -1,0 +1,11 @@
+.scenario-card {
+
+  button::after {
+    content: '\e114';
+  }
+
+  .collapsed::after {
+    content: '\e080';
+  }
+
+}
