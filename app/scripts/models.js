@@ -1,11 +1,19 @@
 /* global  */
 
-// Store items in this cache
-var itemsCache = {};
+
 
 var exports = (function () {
   "use strict";
 
+  // Store items in this cache
+  var store = {
+    // models are stored in this object, by id
+    models: {},
+    // params for the search query
+    params: {},
+    // an interval used for syncing
+    interval: null
+  };
 
   /**
    * Fetch all models.
@@ -13,20 +21,30 @@ var exports = (function () {
    * @return {Promise}
    */
   function fetchModels() {
+    var request = {
+      // NEw url:
+      url: "/api/v1/scenes/",
+      data: store.params,
+      // no [] in params
+      traditional: true,
+      dataType: "json"
+    };
+
     return new Promise(function(resolve, reject) {
-      $.getJSON("/api/v1/scenes/", {})
+
+      //Load test template data:
+      $.ajax(request)
         .done(function(json) {
-          _.map(json, function(model) {
+          _.each(json, function(model) {
             // add type for introspection
             model.type = "scene";
-            itemsCache[model.id] = model;
+            store.models[model.id] = model;
           });
           resolve(json);
         })
         .fail(function(error) {
           reject(error);
         });
-
     });
   }
 
@@ -43,10 +61,10 @@ var exports = (function () {
     return new Promise(function(resolve, reject) {
 
       if (isNaN(id) === true) {
-        return reject(new Error("Model not found, even after updating"));
+        reject(new Error("Model not found, even after updating"));
       }
 
-      // There was  a cache check here (if (_.has(itemsCache, id)) ) - but if we always get old data, and it never refreshes.
+      // There was  a cache check here (if (_.has(store.models, id)) ) - but if we always get old data, and it never refreshes.
       // Maybe there should be a timed removal of cached items. But for now, we do not cache it - as we specifically ask to update one model.
       fetchModels()
         .then(mymodels => {
@@ -220,7 +238,7 @@ var exports = (function () {
   function fetchLog(id) {
     return new Promise(function(resolve, reject) {
       try {
-        var model = itemsCache[id];
+        var model = store.models[id];
 
 
       } catch(e) {
@@ -253,8 +271,28 @@ var exports = (function () {
 
   }
 
+  function startSyncModels() {
+    // Keep syncing:
+    store.interval = setInterval(fetchModels, 10000);
+
+  }
+
+  function stopSyncModels() {
+    // Keep syncing:
+    clearInterval(store.interval);
+    store.interval = null;
+  }
+
+  function filterModels(params) {
+    store.params = params;
+  }
+
+  function getModelStore() {
+    return store;
+  }
+
   // exposed objects and functions
-  return {
+  var functions = {
     fetchModels: fetchModels,
     fetchModel: fetchModel,
     fetchLog: fetchLog,
@@ -263,11 +301,20 @@ var exports = (function () {
     exportModel: exportModel,
     stopModel: stopModel,
     publishModel: publishModel,
-
     startModels: startModels,
     stopModels: stopModels,
-    deleteModels: deleteModels
+    deleteModels: deleteModels,
+    startSyncModels: startSyncModels,
+    stopSyncModels: stopSyncModels,
+    filterModels: filterModels
   };
+
+  if (typeof module !== "undefined" && module.exports) {
+    // Only for debugging (node) purposes
+    functions.getModelStore = getModelStore;
+  }
+
+  return functions;
 }());
 
 // If we're in node export to models
