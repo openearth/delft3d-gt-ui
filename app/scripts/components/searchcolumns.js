@@ -65,18 +65,6 @@ var exports = (function () {
           });
         });
 
-        // Enable all items in the select pickers chooser.
-        var pickers = $(".select-picker");
-
-        // This if statement is necessary for the testing library. Bit redundant, but it does not hurt to test anyway.
-        if (pickers.selectpicker !== undefined) {
-          pickers.selectpicker("refresh");
-          pickers.selectpicker("selectAll");
-        }
-
-        // Domain selection boxes - enable all.
-        $(".domain-selection-box input[type='checkbox']").prop("checked", "checked");
-
         this.$broadcast("clearSearch");
 
       }

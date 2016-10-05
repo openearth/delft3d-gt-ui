@@ -21,17 +21,22 @@ var exports = (function () {
     },
 
     ready: function() {
+
       // get search templates
       fetchSearchTemplate()
         .then((template) => {
           // store them
           this.searchTemplate = template;
-          // after we"re done loading the templates in the dom, start searching.
 
+          // after we"re done loading the templates in the dom, start searching.
           this.$nextTick(
             () => {
               // update ui
-              this.updatePickers();
+              this.initializeForm();
+
+              // update the search results
+              this.search();
+
               // Keep syncing:
               setInterval(this.sync, 10000);
             }
@@ -82,16 +87,17 @@ var exports = (function () {
     },
 
     methods: {
-      updatePickers: function() {
+      initializeForm: function() {
         // once the dom is updated, update the select pickers by hand
         // template data is computed into modelEngine
         var pickers = $(".select-picker");
 
         if (pickers.selectpicker !== undefined) {
           pickers.selectpicker("refresh");
-          pickers.selectpicker("selectAll");
         }
 
+        // Domain selection boxes - enable all.
+        $(".domain-selection-box input[type='checkbox']").prop("checked", "checked");
 
         /*eslint-disable camelcase*/
         if ($(".ion-range").ionRangeSlider !== undefined) {
@@ -208,7 +214,6 @@ var exports = (function () {
         //   });
       },
       search: function() {
-
         // TODO: searching should be done in search-component, because it needs to update
         // details and search list
 
