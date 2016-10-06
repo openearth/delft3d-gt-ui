@@ -7,49 +7,44 @@
       <!-- model window for deletation -->
 
       <div class="panel panel-default">
+
+        <div class="panel-heading" v-if="model">
+          <h2 class="panel-title">{{model.name}}</h2>
+        </div>
+
         <div class="panel-body" v-if="model">
-          <table class="table-default">
-            <tbody>
-              <tr>
-                <td class="col-md-2 "><strong>Name</strong></td>
-                <td><strong>{{model.name}}</strong></td>
-              </tr>
 
-              <tr>
-                <td>Status</td>
-                <td><span class="label label-info label-status">{{model.state | capitalize }}</span></td>
-              </tr>
+          <dl class="dl-horizontal">
+            <dt>Owner of run</dt><dd><a href="mailto:{{model.owner.email}}">{{ model.owner.first_name }} {{ model.owner.last_name }}</a> </dd>
+            <dt>Share level</dt><dd><span>{{ publishLevel }}</span></dd>
+            <dt>Simulation output:</dt><dd><a href="{{model.fileurl}}" target="_blank">Open in new tab</a></dd>
+          </dl>
 
-              <tr>
-                <td>Progress</td>
-                <td>
+          <hr>
 
-                  <div class="progress progress-incell">
-                    <div class="progress-bar" role="progressbar" aria-valuenow="{{progress}}" aria-valuemin="0" aria-valuemax="100" v-bind:style="{width: progress + '%'}" data-toggle="tooltip" data-placement="top" title="Progress">
-                      <span class="sr-only">{{progress}}% Complete</span>
-                      <span class="progress-type">{{progress}}%</span>
-                    </div>
-                  </div>
-                </td>
-              </tr>
+          <dl class="dl-horizontal">
+            <dt>Progress</dt>
+            <dd>
+              <div class="progress progress-incell">
+                <div class="progress-bar progress-bar-info"
+                     :class="{'progress-bar-striped active': (model.state == 'Running simulation...')}"
+                     role="progressbar"
+                     aria-valuenow="{{progress}}"
+                     aria-valuemin="0"
+                     aria-valuemax="100"
+                     v-bind:style="{width: progress + '%'}"
+                     data-toggle="tooltip"
+                     data-placement="top"
+                     title="Progress"
+                >
+                  <span class="sr-only">{{progress}}% Complete</span>
+                  <span class="progress-type">{{progress}}%</span>
+                </div>
+              </div>
+            </dd>
+            <dt>Status</dt><dd><span class="label label-default label-status">{{model.state | capitalize }}</span></dd>
+          </dl>
 
-              <tr v-if="model.owner">
-                <td>Owner of run</td>
-                <td><a href="mailto:{{model.owner.email}}">{{ model.owner.first_name }} {{ model.owner.last_name }}</a> </td>
-              </tr>
-
-              <tr class="publish-level">
-                <td>Share level</td>
-                <td><span>{{ publishLevel }}</span></td>
-              </tr>
-
-              <tr>
-                <td>Simulation output: </td>
-                <td><a href="{{model.fileurl}}" target="_blank">Open in new tab</a></td>
-              </tr>
-
-            </tbody>
-          </table>
         </div>
       </div>
 
@@ -115,7 +110,7 @@
           <h2 class="panel-title">Run input parameters</h2>
         </div>
         <div class="panel-body">
-          <table class="table-default">
+          <table class="table table-striped">
             <thead>
               <tr>
                 <th>Parameter</th>
@@ -200,19 +195,18 @@
           <h2 class="panel-title">Log output</h2>
         </div>
         <div class="panel-body">
-
-          <button class="btn btn-primary" type="button" id="btn-copy-log-output" data-clipboard-target="#model-log-output">
-            Copy log
-          </button>
-          <button class="btn btn-primary" type="button" id="btn-refresh-log-output" v-on:click="fetchLog">
-            Refresh log
-          </button>
+          <p>
+            <button class="btn btn-primary" type="button" id="btn-copy-log-output" data-clipboard-target="#model-log-output">
+              Copy log
+            </button>
+            <button class="btn btn-primary" type="button" id="btn-refresh-log-output" v-on:click="fetchLog">
+              Refresh log
+            </button>
+          </p>
 
           <div id="model-log-output-wrap">
             <!-- fill this directly cause debugging views with 3MB text are a bit slow -->
-
             <pre><code id="model-log-output">Press "Refresh log" to load the log file. It might take a few seconds for a large log file to show.</code></pre>
-
           </div>
         </div>
       </div>

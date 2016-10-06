@@ -1,10 +1,14 @@
-// ===================== imports
+// ===================== variables
 @import 'variables';
+
+// ===================== imports
 
 // it's better to include the main package
 @import 'bower_components/bootstrap-sass/assets/stylesheets/bootstrap';
 @import 'bower_components/font-awesome/scss/font-awesome';
 
+@import 'modelcard';
+@import 'modeldetails';
 @import 'navbar';
 @import 'scenariocard';
 @import 'searchcolumns';
@@ -13,8 +17,14 @@
 
 // ===================== app-wide styling
 
+html,
 body {
-  font-family: "Open Sans", sans-serif;
+  height: 100%;
+  overflow-y: hidden;
+}
+
+body {
+  background-color: $col-bg-main;
 }
 
 .btn-text {
@@ -27,4 +37,22 @@ body {
   padding: 6px 0;
   vertical-align: middle;
   white-space: nowrap;
+}
+
+.full-height {
+  height: 100%;
+}
+
+.info-secondary {
+  color: $col-bw-4;
+}
+
+.label-default {
+  background-color: $col-bw-2;
+  color: $col-bw-5;
+}
+
+.panel-default .panel-heading {
+  background-color: $col-bw-1;
+  padding: 15px;
 }

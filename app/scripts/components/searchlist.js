@@ -7,9 +7,13 @@ var exports = (function () {
 
     template: "#template-search-list",
     props: {
-
       // can contain scenarios and models
       "items": {
+        type: Array,
+        required: true
+      },
+
+      "models": {
         type: Array,
         required: true
       }

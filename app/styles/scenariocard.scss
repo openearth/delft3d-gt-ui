@@ -1,11 +1,39 @@
-.scenario-card {
+@import 'variables';
 
-  button::after {
-    content: '\e114';
+.scenario-card {
+  cursor: pointer;
+  user-select: none;
+
+  li {
+    padding: 0;
   }
 
-  .collapsed::after {
-    content: '\e080';
+  .list-group {
+    border: 0;
+    margin-bottom: 0;
+  }
+
+  .list-group-item {
+    border: 0;
+    border-top: 1px solid $col-bw-2;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  .message {
+    padding: $padding;
+  }
+
+  .panel-heading-scenario {
+    background: $col-bw-1;
+  }
+
+  .panel-body-scenario {
+    padding: 0;
+  }
+
+  .progress {
+    margin-bottom: 0;
   }
 
 }

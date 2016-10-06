@@ -13,11 +13,9 @@ var exports = (function () {
       toggleActive: function(item) {
         item.active = !item.active;
       },
-      collapse: function(evt) {
-        // toggle the collapsed icon
-        $(evt.target).toggleClass("collapsed");
+      collapse: function(element) {
         // lookup the target
-        var t = $(evt.target).data("target");
+        var t = $(element.$el).data("target");
         // lookup the target element
         var el = $("#" + t);
 

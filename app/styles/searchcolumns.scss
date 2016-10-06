@@ -1,11 +1,22 @@
 @import 'variables';
 
 .search-columns {
+  margin-top: -100px;
+  padding-top: 100px;
+  position: static;
 
   .action-bar {
-    border-bottom: 1px solid $col-bw-1;
+    border-bottom: $border;
     margin-bottom: $padding;
     padding-bottom: $padding;
+  }
+
+  .bordered {
+    border-right: $border;
+  }
+
+  .scrollable {
+    overflow-y: scroll;
   }
 
 }

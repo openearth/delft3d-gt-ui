@@ -9,7 +9,7 @@
   .panel-collapse-header {
 
     a {
-      color: $col-bw-4;
+      color: $col-bw-5;
       text-decoration: none;
     }
 
@@ -39,31 +39,31 @@
   }
 
   .input-group-addon {
-    border-left: 1px solid $col-bw-1;
+    border-left: 1px solid $col-bw-2;
   }
 
   .irs-from,
   .irs-to,
   .irs-single {
-    background-color: $col-bw-1;
+    background-color: $col-bw-2;
     color: $col-bw-5;
     padding: 2px 8px 8px; // 8px;
     top: -14px;
   }
 
   .irs-bar-edge {
-    background: $col-bw-4;
+    background: $col-bw-5;
   }
 
   .irs-slider,
   .irs-bar {
-    background: $col-bw-3;
+    background: $col-bw-4;
   }
 
   .irs-from::after,
   .irs-to::after,
   .irs-single::after {
-    border-top-color: $col-bw-1; //The arrow down part.
+    border-top-color: $col-bw-2; //The arrow down part.
   }
 
   .irs-bar {
@@ -74,7 +74,7 @@
   .to,
   .from {
     background-color: $col-bw-0;
-    border: 1px solid $col-bw-4;
+    border: 1px solid $col-bw-5;
     border-radius: 10px;
     height: 20px;
     top: 16px;
@@ -84,7 +84,7 @@
   // Horizontal background bar.
   .irs-line span {
     background: none;
-    background-color: $col-bw-1;
+    background-color: $col-bw-2;
     height: 4px;
   }
 

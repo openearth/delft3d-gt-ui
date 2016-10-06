@@ -64,7 +64,7 @@
 
                 <div class="panel-collapse collapse" role="tabpanel" aria-labelledby="template-{{$index}}" id="template-{{$index}}">
 
-                  <div class="form-group" v-for="variable in section.variables">
+                  <div class="form-group" v-for="variable in section.variables" v-if="variable.name !== 'Name'"> <!-- Name should be excluded: already included above -->
 
                     <label class="control-label" for="{{variable.id}}">{{ variable.name }}: <span v-if="variable.units" >({{ variable.units }})</span></label>
 
@@ -88,6 +88,23 @@
                              />
                         </template>
 
+                        <template v-if="variable.type === 'select' && !variable.factor">
+                          <div class="form-group">
+                            <select class="select-picker form-control" multiple
+                                    id="{{ variable.id }}"
+                                    v-model="selectedParameters[variable.id]"
+                                    data-selected-text-format="count > 3" data-actions-box="true"
+                                    >
+                              <option
+                                 v-for="option in variable.options"
+                                 v-bind:value="option.text"
+                                 >
+                                {{ option.text }}
+                              </option>
+                            </select>
+                          </div>
+                        </template>
+
                         <template v-if="variable.type !== 'numeric' && variable.type !== 'select'">
                           <div class="input-group">
                             <input
@@ -105,22 +122,6 @@
                           </div>
                         </template>
 
-                        <template v-if="variable.type === 'select' && !variable.factor">
-                          <div class="form-group">
-                            <select class="select-picker form-control" multiple
-                                    id="{{ variable.id }}"
-                                    v-model="selectedParameters[variable.id]"
-                                    data-selected-text-format="count > 3" data-actions-box="true"
-                                    >
-                              <option
-                                 v-for="option in variable.options"
-                                 v-bind:value="option.text"
-                                 >
-                                {{ option.text }}
-                              </option>
-                            </select>
-                          </div>
-                        </template>
                       </template>
 
                       <!-- text area -->

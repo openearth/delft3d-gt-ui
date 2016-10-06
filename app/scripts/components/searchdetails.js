@@ -277,7 +277,7 @@ var exports = (function () {
               items.push(model);
             });
 
-            this.$dispatch("items-found", items);
+            this.$dispatch("items-found", items, models);
           }
         );
       }
