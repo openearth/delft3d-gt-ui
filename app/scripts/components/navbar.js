@@ -5,7 +5,7 @@ var exports = (function () {
   // Our alert message component
   var NavBar = Vue.component("navbar", {
 
-    template: "#template-navbar",
+    template: "#template-navbar"
 
   });
 
