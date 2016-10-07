@@ -33,7 +33,6 @@ var exports = (function () {
 
     },
     computed: {
-
       // Get the current selected modelid from the routing URL
       selectedModel: {
         cache: false,
@@ -66,6 +65,12 @@ var exports = (function () {
           });
         }
         item.active = !item.active;
+      },
+      hasCompanyModels: function () {
+        return (_.filter(this.models, ["shared", "c"]).length > 0);
+      },
+      hasWorldModels: function () {
+        return (_.filter(this.models, ["shared", "w"]).length > 0);
       }
     },
     events: {
