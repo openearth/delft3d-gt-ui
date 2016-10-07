@@ -19,23 +19,27 @@ var exports = (function () {
         $("#collapse-" + this.scenario.id).collapse("show");
 
         if (this.allModelsSelected()) {
-          this.$broadcast('unselect-all');
+          this.$broadcast("unselect-all");
         } else {
-          this.$broadcast('select-all');
+          this.$broadcast("select-all");
         }
       },
       someModelsSelected: function() {
         var someSelected = false;
+
         _.each(this.$refs.modelcards, (modelcard) => {
           someSelected = someSelected || modelcard.selected;
         });
+
         return someSelected;
       },
       allModelsSelected: function() {
         var allSelected = true;
+
         _.each(this.$refs.modelcards, (modelcard) => {
           allSelected = allSelected && modelcard.selected;
         });
+
         return allSelected;
       }
     }

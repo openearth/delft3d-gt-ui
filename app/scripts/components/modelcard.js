@@ -7,7 +7,7 @@ var exports = (function () {
     data: function() {
       return {
         selected: false
-      }
+      };
     },
 
     props: {
@@ -22,13 +22,13 @@ var exports = (function () {
     methods: {
       toggleActive: function() {
         this.model.active = !this.model.active;
-        this.$dispatch('deactivateall', this.model);
+        this.$dispatch("deactivateall", this.model);
       }
     },
 
     events: {
       "deactivate": function(clickedmodel) {
-        if (this.model != clickedmodel) {
+        if (this.model !== clickedmodel) {
           this.model.active = false;
         }
       },
