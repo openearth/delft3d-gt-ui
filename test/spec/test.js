@@ -390,7 +390,6 @@
         var store = global.getModelStore();
 
         global.startSyncModels();
-        console.log(store);
         assert.isNumber(store.interval);
         global.stopSyncModels();
         assert.isNull(store.interval);
