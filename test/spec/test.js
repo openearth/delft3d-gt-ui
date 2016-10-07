@@ -6,6 +6,7 @@
   global.setInterval = function() {
     // args: callback, time
     // "setInterval override " + callback + " time " + time
+    return 1;
   };
 
 
@@ -385,6 +386,15 @@
           });
       });
 
+      it("Should be possible to start and stop sync models", function() {
+        var store = global.getModelStore();
+
+        global.startSyncModels();
+        assert.isNumber(store.interval);
+        global.stopSyncModels();
+        assert.isNull(store.interval);
+      });
+
 
     });
 
@@ -739,19 +749,14 @@
       var searchDetails = new SearchDetails();
 
       // no values set
-      var comp = {
-        data: {
-          parameter: [],
-          shared: [],
-          template: [],
-          search: ""
-        },
-        dataType: "json",
-        traditional: true,
-        url: "/api/v1/scenes/"
+      var params = {
+        shared: [],
+        template: [],
+        search: "",
+        parameter: []
       };
 
-      assert.deepEqual(searchDetails.buildRequest(), comp);
+      assert.deepEqual(searchDetails.buildParams(), params);
       done();
     });
 
