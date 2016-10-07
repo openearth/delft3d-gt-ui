@@ -3096,6 +3096,10 @@
         "items": {
           type: Array,
           required: true
+        },
+        "models": {
+          type: Array,
+          required: true
         }
       };
 
