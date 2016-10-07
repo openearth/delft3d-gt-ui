@@ -3,17 +3,43 @@ var exports = (function () {
 
   var ModelCard = Vue.component("model-card", {
     template: "#template-model-card",
+
+    data: function() {
+      return {
+        selected: false
+      }
+    },
+
     props: {
       model: {
         required: true
+      },
+      selectable: {
+        required: false
       }
     },
+
     methods: {
-      toggleActive: function(model) {
-        // we can only toggle on the parent, because we have to clear other actives
-        this.$parent.toggleActive(model);
+      toggleActive: function() {
+        this.model.active = !this.model.active;
+        this.$dispatch('deactivateall', this.model);
+      }
+    },
+
+    events: {
+      "deactivate": function(clickedmodel) {
+        if (this.model != clickedmodel) {
+          this.model.active = false;
+        }
+      },
+      "select-all": function () {
+        this.selected = true;
+      },
+      "unselect-all": function () {
+        this.selected = false;
       }
     }
+
   });
 
   return {

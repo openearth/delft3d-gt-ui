@@ -44,7 +44,14 @@ var exports = (function () {
             return null;
           }
 
-        }}
+        }
+      },
+      checkedBoxes: {
+        cache: false,
+        get: function() {
+          return 1;
+        }
+      }
     },
 
     methods: {

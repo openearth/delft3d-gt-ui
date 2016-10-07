@@ -1,6 +1,6 @@
 <template id="template-model-card">
 
-  <div class="model-card" @click.stop="toggleActive(model)">
+  <div class="model-card" :class="{'activated': model.active}" @click.stop="toggleActive">
 
     <template v-if="model">
 
@@ -8,7 +8,7 @@
 
         <div class="row">
 
-          <div class="col-sm-5">
+          <div class="col-sm-4">
             <span v-if="model.shared == 'p'"><i class="fa fa-lock" aria-hidden="true"></i></span>
             <span v-if="model.shared == 'c'"><i class="fa fa-group" aria-hidden="true"></i></span>
             <span v-if="model.shared == 'w'"><i class="fa fa-globe" aria-hidden="true"></i></span>
@@ -33,11 +33,15 @@
           </div>
 
           <div class="col-sm-1 text-center">
-            <form class="form-inline">
+            <form class="form-inline" v-if="selectable">
               <div class="checkbox">
-                <input type="checkbox">
+                <input type="checkbox" v-model="selected">
               </div>
             </form>
+          </div>
+
+          <div class="col-sm-1 text-center">
+            <i v-if="model.active" class="fa fa-chevron-right" aria-hidden="true"></i>
           </div>
 
         </div>

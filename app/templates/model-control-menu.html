@@ -1,21 +1,18 @@
 <template id="template-model-control-menu" inline-template>
 
   <div class="btn-group pull-right">
-    <button type="button" class="btn btn-default dropdown-toggle nav-bar-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled>
+    <button type="button"
+            class="btn btn-default dropdown-toggle nav-bar-button"
+            :class="{disabled: true }"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false">
       Selected (0)
     </button>
 
     <ul class="dropdown-menu">
 
       <!-- optioons based on scenarios -->
-      <li :class="{disabled: selectedScenarios.length !== 1 }">
-        <a @click="cloneScenario">Clone scenario</a>
-      </li>
-      <li :class="{disabled: selectedScenarios.length === 0 }">
-        <a @click="deleteSelectedScenario">
-          Delete scenario(s)
-        </a>
-      </li>
       <li :class="{disabled: selectedModels.length === 0 }">
         <a @click="deleteSelectedModels">
           Delete models(s)

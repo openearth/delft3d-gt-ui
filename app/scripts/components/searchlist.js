@@ -19,10 +19,6 @@ var exports = (function () {
       }
     },
 
-    data: function() {
-      return {
-      };
-    },
     ready: function() {
       this.$on("models-loaded", function(models) {
         console.log("models loaded", models);
@@ -61,11 +57,7 @@ var exports = (function () {
           return activeItems;
         }
       }
-
-
-
     },
-
     methods: {
       toggleActive: function(item) {
         if (item.type === "scenario") {
@@ -74,6 +66,11 @@ var exports = (function () {
           });
         }
         item.active = !item.active;
+      }
+    },
+    events: {
+      "deactivateall": function (model) {
+        this.$broadcast("deactivate", model);
       }
     }
   });

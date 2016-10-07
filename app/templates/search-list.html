@@ -8,20 +8,8 @@
       your scenarios
     </div>
 
-    <div
-       v-for="item in items"
-       class="panel panel-default"
-       @click.stop="toggleActive(item)"
-       >
-       <scenario-card
-          v-if="item.type === 'scenario'"
-          :scenario="item"
-          ></scenario-card>
-
-       <model-card
-          v-if="item.type === 'model'"
-          :model="item"
-          ></model-card>
+    <div v-for="item in items"class="panel panel-default">
+       <scenario-card :scenario="item"></scenario-card>
     </div>
 
     <div class="list-divider">
@@ -34,7 +22,7 @@
        class="panel panel-default"
        @click.stop="toggleActive(item)"
        >
-       <model-card :model="model"></model-card>
+       <model-card :model="model" :selectable="false"></model-card>
     </div>
 
     <div class="list-divider">
@@ -47,7 +35,7 @@
        class="panel panel-default"
        @click.stop="toggleActive(item)"
        >
-       <model-card :model="model"></model-card>
+       <model-card :model="model" :selectable="false"></model-card>
     </div>
 
   </ul>

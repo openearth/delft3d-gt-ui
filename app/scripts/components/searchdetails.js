@@ -282,6 +282,7 @@ var exports = (function () {
         );
       }
     }
+
   });
 
   return {
