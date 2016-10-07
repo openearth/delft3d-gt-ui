@@ -29,8 +29,8 @@
           <div class="col-sm-1 text-center">
             <form class="form-inline">
               <div class="checkbox">
-                <button type="button" class="btn btn-default btn-xs">
-                  <span class="glyphicon" :class="[someModelsSelected() ? 'glyphicon-check' : 'glyphicon-unchecked']" @click.stop="selectAll"></span>
+                <button type="button" class="btn btn-default btn-xs" @click.stop="selectAll">
+                  <span class="glyphicon" :class="[someModelsSelected() ? 'glyphicon-check' : 'glyphicon-unchecked']"></span>
                 </button>
               </div>
             </form>
