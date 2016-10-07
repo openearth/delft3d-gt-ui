@@ -1,4 +1,4 @@
-/* global Vue, fetchSearchTemplate, fetchScenarios */
+/* global Vue, fetchSearchTemplate, fetchScenarios, startSyncModels, fetchModels, filterModels */
 var exports = (function () {
   "use strict";
   var SearchDetails = Vue.component("search-details", {
@@ -37,8 +37,8 @@ var exports = (function () {
               // update the search results
               this.search();
 
-              // Keep syncing:
-              setInterval(this.sync, 10000);
+              // as soon as this component is loaded we can start to sync models
+              startSyncModels();
             }
           );
 
@@ -144,7 +144,7 @@ var exports = (function () {
 
 
       },
-      buildRequest: function() {
+      buildParams: function() {
         // for now we just copy everything
 
         var params = {
@@ -175,50 +175,19 @@ var exports = (function () {
             return result;
           }
         );
-        return {
-          // NEw url:
-          url: "/api/v1/scenes/",
-          data: params,
-          // no [] in params
-          traditional: true,
-          dataType: "json"
-        };
-      },
-      fetchSearch: function() {
-        var request = this.buildRequest();
-
-        // return a promise
-        return new Promise(function(resolve, reject) {
-
-          //Load test template data:
-          $.ajax(request)
-            .done(function(data) {
-              // return the one and only search template
-              // the backend returns a list but there shall only be one
-              resolve(data);
-            })
-            .fail(function(error) {
-              reject(error);
-            });
-        });
-      },
-      sync: function() {
-        // TODO: update items
-        // fetchScenarios()
-        //   .then((data) => {
-        //     this.$dispatch("scenarios-updated", data);
-        //   });
-        // fetchModels()
-        //   .then((data) => {
-        //     this.$dispatch("models-updated", data);
-        //   });
+        return params;
       },
       search: function() {
         // TODO: searching should be done in search-component, because it needs to update
         // details and search list
 
+        var params = this.buildParams();
+
+        // store the filter parameters in the store
+        filterModels(params);
+
         // we want to update the search results and scenarios at the same time
-        var promises = [this.fetchSearch(), fetchScenarios()];
+        var promises = [fetchModels(), fetchScenarios()];
 
         // once we have everything, we can update the items
         Promise.all(promises).then(
