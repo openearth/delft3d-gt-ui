@@ -48,165 +48,176 @@
         </div>
       </div>
 
-      <div class="panel panel-default">
+      <div class="panel panel-default" @click.stop="collapseToggle">
         <div class="panel-heading">
-          <h2 class="panel-title">Simulation control</h2>
+          <h2 class="panel-title">Simulation controls</h2>
         </div>
-        <div class="panel-body">
-          <p v-bind:class="{ 'hidden': isReadOnly() }">
-            You can select an action to perform on this simulation:
-          </p>
 
-          <p v-bind:class="{ 'hidden': !isReadOnly() }">
-            Simulation controls are disabled for already published runs.
-          </p>
+        <div class="collapse">
 
-          <button type="button" class="btn btn-labeled btn-spaced-right"  id="simulation-control-start" v-on:click="startModel" v-bind:class="[(isReadOnly() || !(model.state === 'Idle: waiting for user input' || model.state === 'Finished')) ? 'disabled': 'btn-success']" >
-            <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>
-            Start
-          </button><button type="button" class="btn btn-labeled btn-spaced-right" id="simulation-control-stop" v-on:click="stopModel" v-bind:class="[(isReadOnly() || !(model.state === 'Running simulation...')) ? 'disabled' : 'btn-warning' ]">
-            <span class="btn-label"><i class="glyphicon glyphicon-stop"></i></span>
-            Stop
-          </button><button type="button" class="btn btn-labeled btn-spaced-right" v-on:click="removeModel(model)" v-bind:class="[ (isReadOnly()) ? 'disabled' : 'btn-danger']">
-            <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
-            Remove run
-          </button>
+          <div class="panel-body">
+            <p v-bind:class="{ 'hidden': isReadOnly() }">
+              You can select an action to perform on this simulation:
+            </p>
 
+            <p v-bind:class="{ 'hidden': !isReadOnly() }">
+              Simulation controls are disabled for already published runs.
+            </p>
+
+            <button type="button" class="btn btn-labeled btn-spaced-right"  id="simulation-control-start" v-on:click="startModel" v-bind:class="[(isReadOnly() || !(model.state === 'Idle: waiting for user input' || model.state === 'Finished')) ? 'disabled': 'btn-success']" >
+              <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>
+              Start
+            </button><button type="button" class="btn btn-labeled btn-spaced-right" id="simulation-control-stop" v-on:click="stopModel" v-bind:class="[(isReadOnly() || !(model.state === 'Running simulation...')) ? 'disabled' : 'btn-warning' ]">
+              <span class="btn-label"><i class="glyphicon glyphicon-stop"></i></span>
+              Stop
+            </button><button type="button" class="btn btn-labeled btn-spaced-right" v-on:click="removeModel(model)" v-bind:class="[ (isReadOnly()) ? 'disabled' : 'btn-danger']">
+              <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
+              Remove run
+            </button>
+
+          </div>
         </div>
+
       </div>
 
-      <div class="panel panel-default">
+      <div class="panel panel-default" @click.stop="collapseToggle">
         <div class="panel-heading">
           <h2 class="panel-title">Share controls</h2>
         </div>
-        <div class="panel-body">
-          <p v-bind:class="{ 'hidden': user.id != model.owner.id }">
-            You can select who to share your results with:
-          </p>
-          <p v-bind:class="{ 'hidden': user.id == model.owner.id }">
-            You cannot share runs owned by another user.
-          </p>
+        <div class="collapse">
+          <div class="panel-body">
+            <p v-bind:class="{ 'hidden': user.id != model.owner.id }">
+              You can select who to share your results with:
+            </p>
+            <p v-bind:class="{ 'hidden': user.id == model.owner.id }">
+              You cannot share runs owned by another user.
+            </p>
 
-          <!-- These are now links, replace by post requests later, otherwise a search engine will start publishing models -->
-          <!-- This form-inline is normally applied to a form but in this case we have 3 forms as a form group. -->
-          <template v-for="level in publishLevels">
-            <button type="button"
-                    class="btn btn-labeled btn-default  btn-spaced-right"
-                    :class="{ 'disabled': !(model.state == 'Finished') || !isLevelEnabled($index) || user.id != model.owner.id, 'hidden': $index == 0 }"
-                      v-on:click="publishModel($index)">
-              <span class="btn-label">
-                <i class="glyphicon" :class="publishLevels[$index].iconClass"></i>
-              </span>
-              {{ publishLevels[$index].description }}
-            </button>
-          </template>
+            <!-- These are now links, replace by post requests later, otherwise a search engine will start publishing models -->
+            <!-- This form-inline is normally applied to a form but in this case we have 3 forms as a form group. -->
+            <template v-for="level in publishLevels">
+              <button type="button"
+                      class="btn btn-labeled btn-default  btn-spaced-right"
+                      :class="{ 'disabled': !(model.state == 'Finished') || !isLevelEnabled($index) || user.id != model.owner.id, 'hidden': $index == 0 }"
+                        v-on:click="publishModel($index)">
+                <span class="btn-label">
+                  <i class="glyphicon" :class="publishLevels[$index].iconClass"></i>
+                </span>
+                {{ publishLevels[$index].description }}
+              </button>
+            </template>
 
+          </div>
         </div>
       </div>
 
 
-      <div class="panel panel-default">
+      <div class="panel panel-default" @click.stop="collapseToggle">
         <div class="panel-heading">
           <h2 class="panel-title">Run input parameters</h2>
         </div>
-        <div class="panel-body">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Parameter</th>
-                <th>Value</th>
-                <th>Units</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(key, param) in model.parameters | orderBy '$key'">
-                <td>{{ (param.name || key) | capitalize }}</td>
-                <td>{{param.value}}</td>
-                <td>
-                  <!-- we add this as we might have some older models not having the units var yet. -->
-                  <span v-if="param.units !== undefined">
-                    {{param.units}}
-                  </span>
-                </td>
-              </tr>
-            </tbody>
+        <div class="collapse">
+          <div class="panel-body">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Value</th>
+                  <th>Units</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(key, param) in model.parameters | orderBy '$key'">
+                  <td>{{ (param.name || key) | capitalize }}</td>
+                  <td>{{param.value}}</td>
+                  <td>
+                    <!-- we add this as we might have some older models not having the units var yet. -->
+                    <span v-if="param.units !== undefined">
+                      {{param.units}}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
 
-          </table>
+            </table>
+          </div>
         </div>
       </div>
 
-      <div class="panel panel-default">
+      <div class="panel panel-default" @click.stop="collapseToggle">
         <div class="panel-heading">
           <h2 class="panel-title">Generated images</h2>
         </div>
-        <div class="panel-body">
-          <image-animation :model="model"></image-animation>
+        <div class="collapse">
+          <div class="panel-body">
+            <image-animation :model="model"></image-animation>
+          </div>
         </div>
       </div>
 
-
-
-
-
-      <div class="panel panel-default">
+      <div class="panel panel-default" @click.stop="collapseToggle">
         <div class="panel-heading">
           <h2 class="panel-title">Download files</h2>
         </div>
-        <div class="panel-body">
-          <p>
-            Please check what you would like to download. Your download will be a ZIP file which contains the requested files.
-          </p>
+        <div class="collapse">
+          <div class="panel-body">
+            <p>
+              Please check what you would like to download. Your download will be a ZIP file which contains the requested files.
+            </p>
 
-          <div class="form-group input-group">
-            <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_d3dinput" v-on:change="downloadOptionsChange()"></span>
-            <span class="form-control no-fixed-height">Delft3D: input files</span>
+            <div class="form-group input-group">
+              <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_d3dinput" v-on:change="downloadOptionsChange()"></span>
+              <span class="form-control no-fixed-height">Delft3D: input files</span>
+            </div>
+            <!--
+                <div class="form-group input-group">
+                  <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_d3doutput" v-on:change="downloadOptionsChange()"></span>
+                  <span class="form-control no-fixed-height">Delft3D: output files</span>
+                </div>
+                -->
+            <div class="form-group input-group">
+              <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_images" v-on:change="downloadOptionsChange()"></span>
+              <span class="form-control no-fixed-height">Media: generated output images</span>
+            </div>
+
+            <div class="form-group input-group">
+              <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_movie" v-on:change="downloadOptionsChange()"></span>
+              <span class="form-control no-fixed-height">Media: generated output movies</span>
+            </div>
+
+            <div class="form-group input-group" v-bind:class="{ 'inputdisabled': !(model.state === 'Finished')}">
+              <span class="input-group-addon"><input type="checkbox" class="downloadoption"  value="export_thirdparty" v-on:change="downloadOptionsChange()" ></span>
+              <span class="form-control no-fixed-height" v-bind:class="{ 'hidden': !(model.state === 'Finished')}">Export: files for RMS / Petrel</span>
+              <span class="form-control no-fixed-height" v-bind:class="{ 'hidden': (model.state === 'Finished')}">Export to RMS / Petrel is enabled when the run is 'Finished'</span>
+            </div>
+
+            <button class="btn btn-primary" type="button"  id="download-submit" v-on:click="downloadFiles()" value="">
+              Download
+            </button>
+
           </div>
-          <!--
-              <div class="form-group input-group">
-                <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_d3doutput" v-on:change="downloadOptionsChange()"></span>
-                <span class="form-control no-fixed-height">Delft3D: output files</span>
-              </div>
-              -->
-          <div class="form-group input-group">
-            <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_images" v-on:change="downloadOptionsChange()"></span>
-            <span class="form-control no-fixed-height">Media: generated output images</span>
-          </div>
-
-          <div class="form-group input-group">
-            <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_movie" v-on:change="downloadOptionsChange()"></span>
-            <span class="form-control no-fixed-height">Media: generated output movies</span>
-          </div>
-
-          <div class="form-group input-group" v-bind:class="{ 'inputdisabled': !(model.state === 'Finished')}">
-            <span class="input-group-addon"><input type="checkbox" class="downloadoption"  value="export_thirdparty" v-on:change="downloadOptionsChange()" ></span>
-            <span class="form-control no-fixed-height" v-bind:class="{ 'hidden': !(model.state === 'Finished')}">Export: files for RMS / Petrel</span>
-            <span class="form-control no-fixed-height" v-bind:class="{ 'hidden': (model.state === 'Finished')}">Export to RMS / Petrel is enabled when the run is 'Finished'</span>
-          </div>
-
-          <button class="btn btn-primary" type="button"  id="download-submit" v-on:click="downloadFiles()" value="">
-            Download
-          </button>
-
         </div>
       </div>
 
-      <div class="panel panel-default">
+      <div class="panel panel-default" @click.stop="collapseToggle">
         <div class="panel-heading">
           <h2 class="panel-title">Log output</h2>
         </div>
-        <div class="panel-body">
-          <p>
-            <button class="btn btn-primary" type="button" id="btn-copy-log-output" data-clipboard-target="#model-log-output">
-              Copy log
-            </button>
-            <button class="btn btn-primary" type="button" id="btn-refresh-log-output" v-on:click="fetchLog">
-              Refresh log
-            </button>
-          </p>
+        <div class="collapse">
+          <div class="panel-body">
+            <p>
+              <button class="btn btn-primary" type="button" id="btn-copy-log-output" data-clipboard-target="#model-log-output">
+                Copy log
+              </button>
+              <button class="btn btn-primary" type="button" id="btn-refresh-log-output" v-on:click="fetchLog">
+                Refresh log
+              </button>
+            </p>
 
-          <div id="model-log-output-wrap">
-            <!-- fill this directly cause debugging views with 3MB text are a bit slow -->
-            <pre><code id="model-log-output">Press "Refresh log" to load the log file. It might take a few seconds for a large log file to show.</code></pre>
+            <div id="model-log-output-wrap">
+              <!-- fill this directly cause debugging views with 3MB text are a bit slow -->
+              <pre><code id="model-log-output">Press "Refresh log" to load the log file. It might take a few seconds for a large log file to show.</code></pre>
+            </div>
           </div>
         </div>
       </div>
