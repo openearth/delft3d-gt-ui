@@ -53,7 +53,7 @@ var exports = (function () {
       animationIndex: {
         cache: false,
         get: function() {
-          return this.currentAnimationIndex;
+          return Math.min(this.currentAnimationIndex, this.frameCount - 1);
         }
       },
 
@@ -67,7 +67,7 @@ var exports = (function () {
             var imgs = this.model.info[animationKey];
 
             if (imgs !== undefined) {
-              return this.model.fileurl + imgs.location + imgs.images[this.currentAnimationIndex];
+              return this.model.fileurl + imgs.location + imgs.images[this.animationIndex];
             }
           }
 
@@ -116,7 +116,7 @@ var exports = (function () {
           return;
         }
 
-
+        this.currentAnimationIndex = this.animationIndex
         this.currentAnimationIndex--;
 
         var imgs = this.model.info[this.currentAnimationKey];
@@ -124,7 +124,7 @@ var exports = (function () {
 
         // Probably wrap with active key.
         if (this.currentAnimationIndex < 0) {
-          this.currentAnimationIndex = imgs.images.length - 1;
+          this.currentAnimationIndex = 0;
         }
       },
 
