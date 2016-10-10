@@ -57,11 +57,6 @@ var exports = (function() {
       this.fetchTemplateList();
     },
 
-    ready: function() {
-
-      this.initFixedToolbar();
-    },
-
     route: {
       data: function(transition) {
 
@@ -394,44 +389,6 @@ var exports = (function() {
         });
 
         return scenario;
-      },
-
-      // Some code to keep the bar on the top.
-      // TODO: replace by css or css framework.
-      initFixedToolbar: function() {
-        var that = this;
-
-        this.navBars = {
-          topBar: document.getElementById("top-bar"),
-          toolBar: document.getElementById("tool-bar"),
-          belowToolBar: document.getElementById("below-tool-bar")
-        };
-
-        $(window).on("scroll touchmove load", that.updateFixedToolbarStyle);
-
-        this.updateFixedToolbarStyle();
-      },
-
-      updateFixedToolbarStyle: function() {
-        var top = this.getTop();
-
-        if (this.navBars === null) {
-          return 0;
-        }
-
-        if (top > this.navBars.topBar.clientHeight) {
-          this.navBars.belowToolBar.style.paddingTop = this.navBars.toolBar.clientHeight + "px";
-          this.navBars.toolBar.style.position = "fixed";
-          this.navBars.toolBar.style.top = "0";
-        } else {
-          this.navBars.belowToolBar.style.paddingTop = "0px";
-          this.navBars.toolBar.style.position = "relative";
-        }
-      },
-
-      getTop: function() {
-
-        return $(window).scrollTop();
       }
     }
   });

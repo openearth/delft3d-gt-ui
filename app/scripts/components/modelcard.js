@@ -21,7 +21,7 @@ var exports = (function () {
 
     methods: {
       toggleActive: function() {
-        this.model.active = !this.model.active;
+        this.model.active = true;
         this.$dispatch("deactivateall", this.model);
       }
     },
