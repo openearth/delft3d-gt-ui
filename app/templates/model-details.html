@@ -66,13 +66,13 @@
             Simulation controls are disabled for already published runs.
           </p>
 
-          <button type="button" class="btn btn-labeled btn-spaced-right"  id="simulation-control-start" v-on:click="startModel" v-bind:class="[(isReadOnly() || !(model.state === 'Idle: waiting for user input' || model.state === 'Finished')) ? 'disabled': 'btn-success']" >
+          <button type="button" class="btn btn-labeled btn-spaced-right"  id="simulation-control-start" v-on:click="startModel" :disabled="(isReadOnly() || !(model.state === 'Idle: waiting for user input' || model.state === 'Finished'))"  v-bind:class="[(isReadOnly() || !(model.state === 'Idle: waiting for user input' || model.state === 'Finished')) ? 'disabled': 'btn-success']" >
             <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>
             Start
-          </button><button type="button" class="btn btn-labeled btn-spaced-right" id="simulation-control-stop" v-on:click="stopModel" v-bind:class="[(isReadOnly() || !(model.state === 'Running simulation...')) ? 'disabled' : 'btn-warning' ]">
+          </button><button type="button" class="btn btn-labeled btn-spaced-right" id="simulation-control-stop" v-on:click="stopModel" :disabled="(isReadOnly() || !(model.state === 'Running simulation...'))" v-bind:class="[(isReadOnly() || !(model.state === 'Running simulation...')) ? 'disabled' : 'btn-warning' ]">
             <span class="btn-label"><i class="glyphicon glyphicon-stop"></i></span>
             Stop
-          </button><button type="button" class="btn btn-labeled btn-spaced-right" v-on:click="removeModel(model)" v-bind:class="[ (isReadOnly()) ? 'disabled' : 'btn-danger']">
+          </button><button type="button" class="btn btn-labeled btn-spaced-right" v-on:click="removeModel(model)" :disabled="(isReadOnly()) ? 'disabled' : 'btn-danger']" v-bind:class="[ (isReadOnly()) ? 'disabled' : 'btn-danger']">
             <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
             Remove run
           </button>
