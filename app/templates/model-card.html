@@ -2,30 +2,30 @@
 
   <div class="model-card" :class="{'activated': model.active}" @click.stop="toggleActive">
 
-    <template v-if="model">
+    <template v-if="model.data">
 
       <div class="panel-body" :class="{ 'active-class': model.active }">
 
         <div class="row">
 
           <div class="col-sm-4">
-            <span v-if="model.shared == 'p'"><i class="fa fa-lock" aria-hidden="true"></i></span>
-            <span v-if="model.shared == 'c'"><i class="fa fa-group" aria-hidden="true"></i></span>
-            <span v-if="model.shared == 'w'"><i class="fa fa-globe" aria-hidden="true"></i></span>
-            &nbsp;{{model.name}}
+            <span v-if="model.data.shared == 'p'"><i class="fa fa-lock" aria-hidden="true"></i></span>
+            <span v-if="model.data.shared == 'c'"><i class="fa fa-group" aria-hidden="true"></i></span>
+            <span v-if="model.data.shared == 'w'"><i class="fa fa-globe" aria-hidden="true"></i></span>
+            &nbsp;{{model.data.name}}
           </div>
 
           <div class="col-sm-4 text-right">
-            <span class="label label-default label-status">{{model.state | capitalize }}</span>
+            <span class="label label-default label-status">{{model.data.state | capitalize }}</span>
           </div>
 
           <div class="col-sm-2">
             <div class="progress text-center">
               <div
-                 data-percentage="{{model.progress}}%"
-                 :style="{ width: model.progress + '%'}"
+                 data-percentage="{{model.data.progress}}%"
+                 :style="{ width: model.data.progress + '%'}"
                  class="progress-bar progress-bar-info"
-                 :class="{'progress-bar-striped active': (model.state == 'Running simulation...')}"
+                 :class="{'progress-bar-striped active': (model.data.state == 'Running simulation...')}"
                  role="progressbar"
                  aria-valuemin="0"
                  aria-valuemax="100"></div>
@@ -35,7 +35,7 @@
           <div class="col-sm-1 text-center">
             <form class="form-inline" v-if="selectable">
               <div class="checkbox">
-                <input type="checkbox" v-model="selected">
+                <input type="checkbox" v-model="model.selected">
               </div>
             </form>
           </div>

@@ -3,13 +3,6 @@ var exports = (function () {
 
   var ModelCard = Vue.component("model-card", {
     template: "#template-model-card",
-
-    data: function() {
-      return {
-        selected: false
-      };
-    },
-
     props: {
       model: {
         required: true
@@ -22,7 +15,7 @@ var exports = (function () {
     methods: {
       toggleActive: function() {
         this.model.active = true;
-        this.$dispatch("deactivate-all", this.model);
+        this.$dispatch("activated", this.model);
       }
     },
 
@@ -33,10 +26,10 @@ var exports = (function () {
         }
       },
       "select-all": function () {
-        this.selected = true;
+        this.model.selected = true;
       },
       "unselect-all": function () {
-        this.selected = false;
+        this.model.selected = false;
       }
     }
 

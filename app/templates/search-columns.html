@@ -40,20 +40,7 @@
         </div>
 
         <div class="col-sm-6 column full-height scrollable">
-          <!-- details for selected scenarios first -->
-          <div v-if="activeItem">
-            <scenario-details
-               :scenario.sync="activeItem"
-               v-if="activeItem.type == 'scenario'"></scenario-details>
-            <model-details
-               :model.sync="activeItem"
-               v-if="activeItem.type == 'model'"></model-details>
-          </div>
-          <div v-else>
-            <p class="info-secondary">
-              Clicking a model will show details here.
-            </p>
-          </div>
+          <model-details></model-details>
         </div>
 
       </div>

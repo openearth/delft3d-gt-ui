@@ -83,8 +83,9 @@ var exports = (function () {
       }
     },
     events: {
-      "deactivate-all": function (model) {
+      "activated": function (model) {
         this.$broadcast("deactivate", model);
+        this.sharedState.selectedModelContainer = model;
       }
     }
   });

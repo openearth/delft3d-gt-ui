@@ -25,10 +25,10 @@ var exports = (function () {
         }
       },
       someModelsSelected: function() {
-        return _.some(this.$refs.modelcards, ["selected", true]);
+        return _.some(this.scenario.models, ["selected", true]);
       },
       allModelsSelected: function() {
-        return _.every(this.$refs.modelcards, ["selected", true]);
+        return _.every(this.scenario.models, ["selected", true]);
       }
     }
   });
