@@ -8,8 +8,10 @@
       your scenarios
     </div>
 
-    <div v-for="scenario in sharedState.scenarioContainers"class="panel panel-default">
-       <scenario-card :scenario="scenario"></scenario-card>
+    <div
+      v-for="scenario in sharedState.scenarioContainers"
+      class="panel panel-default">
+      <scenario-card :scenario="scenario"></scenario-card>
     </div>
 
     <div class="list-divider" v-if="hasCompanyModels()">

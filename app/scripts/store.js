@@ -15,6 +15,8 @@ var exports = (function() {
       user: {id: -1}
     },
 
+    // ================================ SYNCHRONISATION
+
     startSync: function () {
       this.update(this)
       this.interval = setInterval(this.update.bind(this), this.state.updateInterval);
@@ -38,6 +40,8 @@ var exports = (function() {
         console.error('Promise rejected: ' + reason);
       });
     },
+
+    // ================================ API FETCH CALLS
 
     fetchModels: function () {
       this.state.modelsFetched = false;
@@ -65,6 +69,8 @@ var exports = (function() {
           });
       }.bind(this));
     },
+
+    // ================================ CONTAINER UPDATES
 
     updateContainers: function () {
       if(!this.state.scenariosFetched || !this.state.modelsFetched) {
@@ -105,29 +111,76 @@ var exports = (function() {
         }
       }.bind(this));
 
+      _.each(this.state.scenarioContainers, function (container) {
+        if (container.models.length == 0) {
+          this.deleteScenario(container);
+        }
+      }.bind(this));
+    },
 
-      // TODO: remove containers for which there are no scenarios
+    // ================================ API MODELS UPDATE CALLS
+
+    deleteModel: function (modelContainer) {
+      // snappyness: remove modelContainer from store
+      if(this.state.selectedModelContainer === modelContainer) {
+        this.state.selectedModelContainer = undefined;
+      }
+      this.state.modelContainers = _.without(this.state.modelContainers, modelContainer)
+      _.each(this.state.scenariosContainers, function (container) {
+        container.models = _.without(container.models, modelContainer);
+      });
+
+      // update backend
+      $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/", method: "DELETE", data: [], traditional: true, dataType: "json"})
+        .done(function() {})
+        .fail(function(error) {
+          console.log(error);
+        });
+    },
+
+    publishModel: function (modelContainer) {
+      // TODO: write publish method
     },
 
     startModel: function (modelContainer) {
       modelContainer.data.state = 'Queued';
       $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/start/", method: "PUT", data: [], traditional: true, dataType: "json"})
-        .done(function() {}.bind(this))
+        .done(function() {})
         .fail(function(error) {
           console.log(error);
         });
     },
+
     stopModel: function (modelContainer) {
       modelContainer.data.state = 'Stopping simulation...';
       $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/stop/", method: "PUT", data: [], traditional: true, dataType: "json"})
-        .done(function() {}.bind(this))
+        .done(function() {})
         .fail(function(error) {
           console.log(error);
         });
+    },
+
+    // ================================ API SCENARIOS UPDATE CALLS
+
+    deleteScenario: function (scenarioContainer) {
+      // snappyness: remove scenarioContainer from store
+      this.state.scenarioContainers = _.without(this.state.scenarioContainers, scenarioContainer)
+      $.ajax({url: "/api/v1/scenarios/" + scenarioContainer.id + "/", method: "DELETE", data: [], traditional: true, dataType: "json"})
+        .done(function() {})
+        .fail(function(error) {
+          console.log(error);
+        });
+    },
+
+    // ================================ OTHER SUPPORT METHODS
+
+    fetchLog: function (modelContainer) {
+      // TODO: write fetchlog
     }
 
   };
 
+  // get this baby up and running:
   store.startSync();
 
   return {

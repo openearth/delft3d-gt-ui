@@ -47,6 +47,7 @@ var exports = (function () {
       },
       fetchLog: function () {},
       removeModel: function () {
+        store.deleteModel(this.selectedModel);
       },
       startModel: function () {
         store.startModel(this.selectedModel);
