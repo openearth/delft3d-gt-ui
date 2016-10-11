@@ -83,7 +83,7 @@ var exports = (function () {
       }
     },
     events: {
-      "deactivateall": function (model) {
+      "deactivate-all": function (model) {
         this.$broadcast("deactivate", model);
       }
     }
