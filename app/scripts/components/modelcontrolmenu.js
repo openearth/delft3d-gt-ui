@@ -25,10 +25,7 @@ var exports = (function () {
     },
     computed: {
       selectedModels: function() {
-        return _.filter(this.items, ["active", true, "type", "models"]);
-      },
-      selectedScenarios: function() {
-        return _.filter(this.items, ["active", true, "type", "scenarios"]);
+        return _.filter(this.items, ["selected", true]);
       }
     },
     methods: {

@@ -2,27 +2,43 @@
 
   <!-- loop through all scenarios -->
 
-  <div
-     class="search-list"
-     >
-    <ul class="list-group" data-toggle="items">
-      <li
-         v-for="item in items"
-         class="list-group-item"
-         @click.stop="toggleActive(item)"
-         :class="{active: item.active}"
-         >
-        <scenario-card
-           v-if="item.type === 'scenario'"
-           :scenario="item"
-           ></scenario-card>
-        <model-card
-           v-if="item.type === 'model'"
-           :model="item"
-           ></model-card>
-      </li>
-    </ul>
-  </div>
+  <div class="search-list" data-toggle="items">
+
+    <div class="list-divider">
+      your scenarios
+    </div>
+
+    <div v-for="item in items"class="panel panel-default">
+       <scenario-card :scenario="item"></scenario-card>
+    </div>
+
+    <div class="list-divider" v-if="hasCompanyModels()">
+      shared with company
+    </div>
+
+    <div
+       v-for="model in models"
+       v-if="model.shared == 'c'"
+       class="panel panel-default"
+       @click.stop="toggleActive(item)"
+       >
+       <model-card :model="model" :selectable="false"></model-card>
+    </div>
+
+    <div class="list-divider" v-if="hasWorldModels()">
+      shared with world
+    </div>
+
+    <div
+       v-for="model in models"
+       v-if="model.shared == 'w'"
+       class="panel panel-default"
+       @click.stop="toggleActive(item)"
+       >
+       <model-card :model="model" :selectable="false"></model-card>
+    </div>
+
+  </ul>
 
   <!-- end search -->
 </template>

@@ -9,7 +9,8 @@ var exports = (function () {
     data: function() {
       return {
         // items that were found
-        items: []
+        items: [],
+        models: []
       };
     },
     components: {
@@ -19,8 +20,9 @@ var exports = (function () {
     },
     ready: function() {
       // TODO, consistent naming
-      this.$on("items-found", function(items) {
+      this.$on("items-found", function(items, models) {
         this.$set("items", items);
+        this.$set("models", models);
       });
     },
     route: {
@@ -42,7 +44,14 @@ var exports = (function () {
             return null;
           }
 
-        }}
+        }
+      },
+      checkedBoxes: {
+        cache: false,
+        get: function() {
+          return 1;
+        }
+      }
     },
 
     methods: {

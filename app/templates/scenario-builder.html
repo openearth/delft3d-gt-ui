@@ -1,34 +1,13 @@
 <template id="template-scenario-builder">
-  <div class="scenario-builder">
 
-    <!-- the grey toolbar for scenario builder -->
-    <nav class="navbar navbar-default navbar-static-top tool-bar" id="tool-bar">
-      <div class="container-fluid">
-        <div class="row" >
-          <div class="col-xs-12">
-            <div class="btn-toolbar">
-              <!-- mixed button and a tags will be fixed soon! -->
-              <button  type="button" class="btn btn-primary nav-bar-button default" id="scenario-submit" v-on:click="submitScenario" value="" v-bind:class="{ 'inputdisabled': !(totalRuns <= 20 && validForm) }" >
-                Submit
-              </button>
-
-              <a class="btn btn-primary pull-left nav-bar-button" v-link="{ path: '/' }">Cancel</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </nav>
+  <div class="scenario-builder full-height">
 
     <!-- User has to select a template first -->
 
-    <div class="container-fluid" id="below-tool-bar">
-      <div class="row">
-        <div class="col-sm-12">
-          <h2>Scenario builder</h2>
-        </div>
-      </div>
+    <div class="container-fluid full-height scrollable" id="below-tool-bar">
 
       <div class="row">
+
         <!-- 2 column layout, 1st column scenario properties -->
         <div class="col-sm-5">
           <!--  -->
@@ -174,6 +153,18 @@
                 <!-- </pre> -->
 
               </validator>
+
+              <div class="panel panel-default">
+                <div class="panel-body text-right">
+
+                  <a class="btn btn-default nav-bar-button" v-link="{ path: '/' }">Cancel</a>
+                  <button  type="button" class="btn btn-primary nav-bar-button default" id="scenario-submit" v-on:click="submitScenario" value="" v-bind:class="{ 'inputdisabled': !(totalRuns <= 20 && validForm) }" >
+                    Submit
+                  </button>
+
+                </div>
+              </div>
+
             </div>
 
 

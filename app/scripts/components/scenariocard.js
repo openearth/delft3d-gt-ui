@@ -10,19 +10,37 @@ var exports = (function () {
       }
     },
     methods: {
-      toggleActive: function(item) {
-        item.active = !item.active;
+      collapse: function(e) {
+        e.stopPropagation();
+        $("#collapse-" + this.scenario.id).collapse("toggle");
       },
-      collapse: function(evt) {
-        // toggle the collapsed icon
-        $(evt.target).toggleClass("collapsed");
-        // lookup the target
-        var t = $(evt.target).data("target");
-        // lookup the target element
-        var el = $("#" + t);
+      selectAll: function(e) {
+        e.stopPropagation();
+        $("#collapse-" + this.scenario.id).collapse("show");
 
-        // collapse it
-        $(el).collapse("toggle");
+        if (this.allModelsSelected()) {
+          this.$broadcast("unselect-all");
+        } else {
+          this.$broadcast("select-all");
+        }
+      },
+      someModelsSelected: function() {
+        var someSelected = false;
+
+        _.each(this.$refs.modelcards, (modelcard) => {
+          someSelected = someSelected || modelcard.selected;
+        });
+
+        return someSelected;
+      },
+      allModelsSelected: function() {
+        var allSelected = true;
+
+        _.each(this.$refs.modelcards, (modelcard) => {
+          allSelected = allSelected && modelcard.selected;
+        });
+
+        return allSelected;
       }
     }
   });
