@@ -28,7 +28,7 @@ var exports = (function () {
           return this.selectedModel.data.shared != 'p';
         }
       },
-      shareLevelNice: {
+      shareLevelText: {
         cache: false,
         get: function () {
           var niceStrings = {
@@ -46,6 +46,8 @@ var exports = (function () {
         $(e.target).closest(".panel").children(".collapse").collapse("toggle");
       },
       fetchLog: function () {},
+      removeModel: function () {
+      },
       startModel: function () {
         store.startModel(this.selectedModel);
       },

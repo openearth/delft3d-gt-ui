@@ -16,7 +16,7 @@
 
           <dl class="dl-horizontal">
             <dt>Owner of run</dt><dd><a href="mailto:{{selectedModel.data.owner.email}}">{{ selectedModel.data.owner.first_name }} {{ selectedModel.data.owner.last_name }}</a> </dd>
-            <dt>Share level</dt><dd><span>{{ shareLevelNice }}</span></dd>
+            <dt>Share level</dt><dd><span>{{ shareLevelText }}</span></dd>
             <dt>Simulation output:</dt><dd><a href="{{selectedModel.data.fileurl}}" target="_blank">Open in new tab</a></dd>
           </dl>
 
@@ -71,8 +71,9 @@
               <span class="btn-label"><i class="fa fa-fw fa-check" aria-hidden="true"></i></span>
               Start
             </button>
-            <button type="button" class="btn btn-labeled btn-spaced-right" id="simulation-control-stop"
+            <button type="button"
                     v-on:click="stopModel"
+                    class="btn btn-labeled btn-spaced-right" id="simulation-control-stop"
                     :class="[(isReadOnly || !(selectedModel.data.state === 'Running simulation...')) ? 'disabled' : 'btn-warning' ]"
                     :disabled="(isReadOnly || !(selectedModel.data.state === 'Running simulation...'))">
               <span class="btn-label"><i class="fa fa-fw fa-stop" aria-hidden="true"></i></span>
@@ -82,7 +83,7 @@
                     class="btn btn-labeled btn-spaced-right"
                     v-on:click="removeModel(model)"
                     :class="[ (isReadOnly) ? 'disabled' : 'btn-danger']"
-                    :disabled="(isReadOnly)">
+                    :disabled="isReadOnly">
               <span class="btn-label"><i class="fa fa-fw fa-times" aria-hidden="true"></i></span>
               Remove run
             </button>
@@ -106,11 +107,13 @@
             </p>
             <button type="button" class="btn btn-labeled btn-default"
                     :class="{ 'disabled': !(selectedModel.data.state == 'Finished') || sharedState.user.id != selectedModel.data.owner.id}"
+                    :disabled="!(selectedModel.data.state == 'Finished') || sharedState.user.id != selectedModel.data.owner.id"
                     >
               <i class="fa fa-group" aria-hidden="true"></i> Share with Company
             </button>
             <button type="button" class="btn btn-labeled btn-default"
                     :class="{ 'disabled': !(selectedModel.data.state == 'Finished') || sharedState.user.id != selectedModel.data.owner.id}"
+                    :disabled="!(selectedModel.data.state == 'Finished') || sharedState.user.id != selectedModel.data.owner.id"
                     >
               <i class="fa fa-globe" aria-hidden="true"></i> Share with World
             </button>
