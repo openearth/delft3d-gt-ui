@@ -155,30 +155,33 @@
               </validator>
 
               <div class="panel panel-default">
-                <div class="panel-body text-right">
 
-                  <a class="btn btn-default nav-bar-button" v-link="{ path: '/' }">Cancel</a>
-                  <button  type="button" class="btn btn-primary nav-bar-button default" id="scenario-submit" v-on:click="submitScenario" value="" v-bind:class="{ 'inputdisabled': !(totalRuns <= 20 && validForm) }" >
-                    Submit
-                  </button>
+                <div class="panel-body">
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div v-bind:class="{ 'text-warning': totalRuns > 20}" class="align-with-button" >
+                        Expected runs: <strong>{{totalRuns}}</strong>
+                        <p v-if="totalRuns > 20">
+                          At the moment you cannot submit more than 20 runs in one scenario.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div class="col-md-6">
+                      <div class="text-right">
+                        <a class="btn btn-default nav-bar-button" v-link="{ path: '/' }">Cancel</a>
+                        <button  type="button" class="btn btn-primary nav-bar-button default" id="scenario-submit" v-on:click="submitScenario" value="" v-bind:class="{ 'inputdisabled': !(totalRuns <= 20 && validForm) }" >
+                          Submit
+                        </button>
+                      </div>
+                    </div>
+                  </div>
 
                 </div>
+
               </div>
 
-            </div>
-
-
-            <!-- expected runs indicator. It becomes a different color if the totalRuns exceed 20 -->
-            <div class="row" >
-              <div class="col-sm-12">
-                <div class="alert alert-info" v-bind:class="{ 'alert-warning': totalRuns > 20}" role="alert">
-                  <p class="lead">Expected runs: <strong>{{totalRuns}}</strong></p>
-                  <p v-if="totalRuns > 20">
-                    At the moment you cannot submit more than 20 runs in one scenario.
-                  </p>
-
-                </div>
-              </div>
             </div>
 
           </div>

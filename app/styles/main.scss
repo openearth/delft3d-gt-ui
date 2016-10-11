@@ -57,3 +57,8 @@ body {
   background-color: $col-bw-1;
   padding: 15px;
 }
+
+// OpenSans and default font-weight of bootstrap is quite ugly. Therefore we change the weight from "bold" to 600.
+label, dt {
+  font-weight: 600;
+}
