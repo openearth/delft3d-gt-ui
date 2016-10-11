@@ -2822,7 +2822,7 @@
       done();
     });
 
-    it("Should be possible to previousImageFrame - No model info", function(done) {
+    xit("Should be possible to previousImageFrame - No model info", function(done) {
 
       // index should become 0
        /*eslint-disable camelcase*/
@@ -2841,7 +2841,7 @@
       done();
     });
 
-    it("Should be possible to previousImageFrame ", function(done) {
+    xit("Should be possible to previousImageFrame ", function(done) {
 
       // index should become 0
        /*eslint-disable camelcase*/
@@ -2856,7 +2856,7 @@
       done();
     });
 
-    it("Should be possible to previousImageFrame - no animation key ", function(done) {
+    xit("Should be possible to previousImageFrame - no animation key ", function(done) {
 
       // index should become 0
        /*eslint-disable camelcase*/
@@ -2886,7 +2886,7 @@
       done();
     });
 
-    it("Should be possible to gotoLastFrame - number wrap", function(done) {
+    xit("Should be possible to gotoLastFrame - number wrap", function(done) {
 
       // index should become 0.. we do not have any images. Maybe test later using an fake array.
        /*eslint-disable camelcase*/
