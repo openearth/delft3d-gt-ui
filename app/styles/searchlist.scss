@@ -16,4 +16,12 @@
     padding-bottom: $padding;
   }
 
+  .red {
+    color: $brand-primary;
+  }
+
+  .thing {
+    cursor: pointer;
+    margin: $padding 0;
+  }
 }

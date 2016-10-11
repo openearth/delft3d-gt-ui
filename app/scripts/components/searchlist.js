@@ -6,13 +6,19 @@ var exports = (function () {
   var SearchList = Vue.component("search-list", {
 
     template: "#template-search-list",
+
+    data: function () {
+      return {
+        sharedState: store.state
+      };
+    },
+
     props: {
       // can contain scenarios and models
       "items": {
         type: Array,
         required: true
       },
-
       "models": {
         type: Array,
         required: true
@@ -71,6 +77,9 @@ var exports = (function () {
       },
       hasWorldModels: function () {
         return (_.filter(this.models, ["shared", "w"]).length > 0);
+      },
+      action: function (thing) {
+        thing.active = !thing.active
       }
     },
     events: {

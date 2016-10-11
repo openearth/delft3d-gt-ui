@@ -5,6 +5,14 @@
   <div class="search-list" data-toggle="items">
 
     <div class="list-divider">
+      things
+    </div>
+
+    <div v-for="thing in sharedState.thingArray" @click.stop="action(thing)" class="thing">
+      <div :class="{'red': thing.active}">{{thing.name}} : {{thing.subobject.name}}</div>
+    </div>
+
+    <div class="list-divider">
       your scenarios
     </div>
 

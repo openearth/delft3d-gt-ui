@@ -4,6 +4,10 @@
 
     <div v-if="(model.id !== undefined)">
 
+      <div>
+        {{sharedState.selectedThing | json}}
+      </div>
+
       <!-- model window for deletation -->
 
       <div class="panel panel-default">

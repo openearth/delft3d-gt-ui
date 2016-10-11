@@ -5,4 +5,9 @@
   .progress {
     margin-bottom: 0;
   }
+
+  .active {
+    background-color: $brand-primary;
+    color: $col-bw-0;
+  }
 }

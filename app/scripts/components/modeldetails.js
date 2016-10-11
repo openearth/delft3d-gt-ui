@@ -50,7 +50,8 @@ var exports = (function () {
           first_name: "Unknown",
           last_name: "User"
           /*eslint-enable camelcase*/
-        }
+        },
+        sharedState: store.state
       };
     },
 
