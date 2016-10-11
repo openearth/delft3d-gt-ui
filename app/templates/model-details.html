@@ -65,13 +65,13 @@
             </p>
 
             <button type="button" class="btn btn-labeled btn-spaced-right"  id="simulation-control-start" v-on:click="startModel" v-bind:class="[(isReadOnly() || !(model.state === 'Idle: waiting for user input' || model.state === 'Finished')) ? 'disabled': 'btn-success']" >
-              <span class="btn-label"><i class="glyphicon glyphicon-ok"></i></span>
+              <span class="btn-label"><i class="fa fa-fw fa-check" aria-hidden="true"></i></span>
               Start
             </button><button type="button" class="btn btn-labeled btn-spaced-right" id="simulation-control-stop" v-on:click="stopModel" v-bind:class="[(isReadOnly() || !(model.state === 'Running simulation...')) ? 'disabled' : 'btn-warning' ]">
-              <span class="btn-label"><i class="glyphicon glyphicon-stop"></i></span>
+              <span class="btn-label"><i class="fa fa-fw fa-stop" aria-hidden="true"></i></span>
               Stop
             </button><button type="button" class="btn btn-labeled btn-spaced-right" v-on:click="removeModel(model)" v-bind:class="[ (isReadOnly()) ? 'disabled' : 'btn-danger']">
-              <span class="btn-label"><i class="glyphicon glyphicon-remove"></i></span>
+              <span class="btn-label"><i class="fa fa-fw fa-times" aria-hidden="true"></i></span>
               Remove run
             </button>
 
