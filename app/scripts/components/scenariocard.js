@@ -25,22 +25,10 @@ var exports = (function () {
         }
       },
       someModelsSelected: function() {
-        var someSelected = false;
-
-        _.each(this.$refs.modelcards, (modelcard) => {
-          someSelected = someSelected || modelcard.selected;
-        });
-
-        return someSelected;
+        return _.some(this.$refs.modelcards, ['selected', true])
       },
       allModelsSelected: function() {
-        var allSelected = true;
-
-        _.each(this.$refs.modelcards, (modelcard) => {
-          allSelected = allSelected && modelcard.selected;
-        });
-
-        return allSelected;
+        return _.every(this.$refs.modelcards, ['selected', true])
       }
     }
   });

@@ -22,7 +22,7 @@ var exports = (function () {
     methods: {
       toggleActive: function() {
         this.model.active = true;
-        this.$dispatch("deactivateall", this.model);
+        this.$dispatch("deactivate-all", this.model);
       }
     },
 

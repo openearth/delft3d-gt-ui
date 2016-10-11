@@ -3,7 +3,7 @@
 var exports = (function () {
   "use strict";
   // Our alert message component
-  var NavBar = Vue.component("navbar", {
+  var NavBar = Vue.component("navigation-bar", {
 
     template: "#template-navbar"
 
