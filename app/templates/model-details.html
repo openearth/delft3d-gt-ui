@@ -99,21 +99,26 @@
         </div>
         <div class="collapse">
           <div class="panel-body">
-            <p v-bind:class="{ 'hidden': sharedState.user.id != selectedModel.data.owner.id }">
+            <p v-if="'shouldCheckForUser' == 'shouldCheckForUser' && selectedModel.data.state == 'Finished'">
               You can select who to share your results with:
             </p>
-            <p v-bind:class="{ 'hidden': sharedState.user.id == selectedModel.data.owner.id }">
+            <p v-if="'shouldCheckForUser' == 'shouldCheckForUser' && selectedModel.data.state != 'Finished'">
+              When the run is finished, you can select who to share your results with:
+            </p>
+            <p v-else>
               You cannot share runs owned by another user.
             </p>
             <button type="button" class="btn btn-labeled btn-default"
-                    :class="{ 'disabled': !(selectedModel.data.state == 'Finished') || sharedState.user.id != selectedModel.data.owner.id}"
-                    :disabled="!(selectedModel.data.state == 'Finished') || sharedState.user.id != selectedModel.data.owner.id"
+                    :class="{ 'disabled': !(selectedModel.data.state == 'Finished') || 'shouldCheckForUser' != 'shouldCheckForUser'}"
+                    :disabled="!(selectedModel.data.state == 'Finished') || 'shouldCheckForUser' != 'shouldCheckForUser'"
+                    @click.stop="publishModel('company')"
                     >
               <i class="fa fa-group" aria-hidden="true"></i> Share with Company
             </button>
             <button type="button" class="btn btn-labeled btn-default"
-                    :class="{ 'disabled': !(selectedModel.data.state == 'Finished') || sharedState.user.id != selectedModel.data.owner.id}"
-                    :disabled="!(selectedModel.data.state == 'Finished') || sharedState.user.id != selectedModel.data.owner.id"
+                    :class="{ 'disabled': !(selectedModel.data.state == 'Finished') || 'shouldCheckForUser' != 'shouldCheckForUser'}"
+                    :disabled="!(selectedModel.data.state == 'Finished') || 'shouldCheckForUser' != 'shouldCheckForUser'"
+                    @click.stop="publishModel('world')"
                     >
               <i class="fa fa-globe" aria-hidden="true"></i> Share with World
             </button>

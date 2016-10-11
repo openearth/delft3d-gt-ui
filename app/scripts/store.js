@@ -134,12 +134,17 @@ var exports = (function() {
       $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/", method: "DELETE", data: [], traditional: true, dataType: "json"})
         .done(function() {})
         .fail(function(error) {
-          console.log(error);
+          console.error(error);
         });
     },
 
-    publishModel: function (modelContainer) {
-      // TODO: write publish method
+    publishModel: function (modelContainer, target) {
+      modelContainer.data.shared = 'u';
+      $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/publish_" + target + "/", method: "POST"})
+        .done(function () {})
+        .fail(function(error) {
+          console.error(error);
+        });
     },
 
     startModel: function (modelContainer) {
@@ -147,7 +152,7 @@ var exports = (function() {
       $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/start/", method: "PUT", data: [], traditional: true, dataType: "json"})
         .done(function() {})
         .fail(function(error) {
-          console.log(error);
+          console.error(error);
         });
     },
 
@@ -156,7 +161,7 @@ var exports = (function() {
       $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/stop/", method: "PUT", data: [], traditional: true, dataType: "json"})
         .done(function() {})
         .fail(function(error) {
-          console.log(error);
+          console.error(error);
         });
     },
 
@@ -168,7 +173,7 @@ var exports = (function() {
       $.ajax({url: "/api/v1/scenarios/" + scenarioContainer.id + "/", method: "DELETE", data: [], traditional: true, dataType: "json"})
         .done(function() {})
         .fail(function(error) {
-          console.log(error);
+          console.error(error);
         });
     },
 

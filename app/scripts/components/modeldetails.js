@@ -34,7 +34,8 @@ var exports = (function () {
           var niceStrings = {
             "p": "private",
             "c": "company",
-            "w": "world"
+            "w": "world",
+            "u": "updating..."
           };
           return niceStrings[this.selectedModel.data.shared];
         }
@@ -46,6 +47,9 @@ var exports = (function () {
         $(e.target).closest(".panel").children(".collapse").collapse("toggle");
       },
       fetchLog: function () {},
+      publishModel: function (level) {
+        store.publishModel(this.selectedModel, level);
+      },
       removeModel: function () {
         store.deleteModel(this.selectedModel);
       },
