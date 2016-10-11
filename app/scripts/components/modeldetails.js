@@ -225,7 +225,6 @@ var exports = (function () {
           });
 
       },
-
       downloadFiles: function() {
         // Open download window
         var id = this.model.id;
@@ -287,7 +286,6 @@ var exports = (function () {
         this.deleteDialog.show();
 
       },
-
       fetchLog: function() {
 
         // Working dir is at: modeldata.fileurl + delf3d + delft3d.log
@@ -301,7 +299,6 @@ var exports = (function () {
             $("#model-log-output").text("No log available");
           });
       },
-
       // User wants to start a model. We just do not do anything now, as this needs to be implemented.
       startModel: function() {
 
@@ -321,7 +318,6 @@ var exports = (function () {
             console.log(e);
           });
       },
-
       exportModel: function() {
         exportModel(this.model.id)
           .then(msg => {
@@ -331,7 +327,6 @@ var exports = (function () {
             console.log(e);
           });
       },
-
       // Stop a model.
       stopModel: function() {
         var deletedId = this.model.id;
@@ -359,7 +354,6 @@ var exports = (function () {
 
         this.stopDialog.show();
       },
-
       publishModel: function(index) {
 
         this.publishDialog = getDialog(this, "confirm-dialog", "publish");
@@ -387,7 +381,6 @@ var exports = (function () {
         // Show the dialog
         this.publishDialog.show();
       },
-
       downloadOptionsChange: function() {
 
         //Determine if there is any download option enabled, if not, disable button
@@ -395,25 +388,20 @@ var exports = (function () {
 
         $("#download-submit").prop("disabled", selectedOptions === 0);
       },
-
       isLevelEnabled: function(level) {
         return level > this.indexOfPublishLevel();
       },
-
       isReadOnly: function() {
         return !this.isLevelEnabled(1);
       },
-
       indexOfPublishLevel: function() {
         return _.map(this.publishLevels, function(level) {
           return level.indicator;
         }).indexOf(this.model.shared);
       },
-
       highlightPublishLevel: function() {
         $(".publish-level").addClass("highlighted").delay(1500).removeClass("highlighted");
       },
-
       fetchUserInfo: function() {
         var that = this;
 
@@ -431,6 +419,10 @@ var exports = (function () {
           });
 
         });
+      },
+      collapseToggle: function (e) {
+        e.stopPropagation();
+        $(e.target).closest(".panel").children(".collapse").collapse("toggle");
       }
     }
   });
