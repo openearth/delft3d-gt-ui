@@ -1,0 +1,30 @@
+@import 'variables';
+
+.scenario-builder {
+  margin-top: -50px;
+  padding-top: 50px;
+  position: static;
+
+  img {
+    height: 800px;
+  }
+
+  .bootstrap-tagsinput {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    width: 100%;
+  }
+
+  .btn {
+    margin-right: $padding;
+  }
+
+  .row {
+    padding-top: $padding;
+  }
+
+  .scrollable {
+    overflow-y: auto;
+  }
+
+}

@@ -7,18 +7,18 @@ var exports = (function () {
 
     template: "#template-search-list",
     props: {
-
       // can contain scenarios and models
       "items": {
+        type: Array,
+        required: true
+      },
+
+      "models": {
         type: Array,
         required: true
       }
     },
 
-    data: function() {
-      return {
-      };
-    },
     ready: function() {
       this.$on("models-loaded", function(models) {
         console.log("models loaded", models);
@@ -33,7 +33,6 @@ var exports = (function () {
 
     },
     computed: {
-
       // Get the current selected modelid from the routing URL
       selectedModel: {
         cache: false,
@@ -57,11 +56,7 @@ var exports = (function () {
           return activeItems;
         }
       }
-
-
-
     },
-
     methods: {
       toggleActive: function(item) {
         if (item.type === "scenario") {
@@ -70,6 +65,17 @@ var exports = (function () {
           });
         }
         item.active = !item.active;
+      },
+      hasCompanyModels: function () {
+        return (_.filter(this.models, ["shared", "c"]).length > 0);
+      },
+      hasWorldModels: function () {
+        return (_.filter(this.models, ["shared", "w"]).length > 0);
+      }
+    },
+    events: {
+      "deactivate-all": function (model) {
+        this.$broadcast("deactivate", model);
       }
     }
   });

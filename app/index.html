@@ -34,45 +34,23 @@
 
   </head>
   <body id="app">
+
     <!--[if lt IE 10]>
         <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
+    <![endif]-->
+
+    <!-- ==============================   APP   ============================== -->
 
     <!-- black bar on the top -->
-    <nav class="navbar navbar-default navbar-static-top navbar-inverse" id="top-bar">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <!-- Title -->
-          <a href="/" class="navbar-brand">
-            <img src="images/logo/delft3d-gt.svg" alt="logo"/>
-          </a>
-        </div>
-        <div class="collapse navbar-collapse">
-          <!-- Items -->
-          <ul class="navbar-nav nav">
-            <li><a href="#"><h3>Delft3D<br /><small>Geological Tool</small></h3></a></li>
-          </ul>
-          <ul class="navbar-nav nav navbar-right">
-            <li><user-details></user-details></li>
-            <li><a class="btn btn-primary navbar-btn" title="Create scenario" href="#/scenarios/create">Create scenario</a></li>
-            <li><a class="btn btn-primary navbar-btn" href="/api/v1/" title="rest api documentation (for developers)"><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span></a></li>
-            <li><a class="btn btn-primary navbar-btn" href="/logout/">Logout</a></li>
-          </ul>
+    <navigation-bar></navigation-bar>
 
-        </div>
-      </div>
-    </nav>
-
-
-    <div  class="full-height">
-      <!-- This will be filled by app.js (vue-router) -->
-      <router-view keep-alive></router-view>
-      <!-- and no footer. -->
-    </div>
-
+    <!-- This will be filled by app.js (vue-router) -->
+    <router-view keep-alive></router-view>
+    <!-- and no footer. -->
 
     <div id="template-container"></div>
 
+    <!-- ============================== SCRIPTS ============================== -->
 
     <!-- build:js scripts/vendor.js -->
     <!-- bower:js -->
@@ -124,6 +102,7 @@
     <!-- load components, these provide webcomponents (with corresponding templates in app/templates)-->
     <!-- mainly tested using integration tests -->
     <!-- these should be replaceable if someone wants to switch to a different webcomponent platform -->
+    <script src="scripts/components/navbar.js"></script>
     <script src="scripts/components/modelcontrolmenu.js"></script>
     <script src="scripts/components/confirmdialog.js"></script>
     <script src="scripts/components/imageanimation.js"></script>
@@ -139,7 +118,6 @@
     <script src="scripts/components/scenariobuilder.js"></script>
     <script src="scripts/components/scenariodelete.js"></script>
     <script src="scripts/components/alert.js"></script>
-
 
     <!-- and the application (router and loading of components goes in here)-->
     <!-- this should contain only loading of the app code. -->
