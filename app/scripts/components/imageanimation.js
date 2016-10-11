@@ -116,11 +116,8 @@ var exports = (function () {
           return;
         }
 
-        this.currentAnimationIndex = this.animationIndex
+        this.currentAnimationIndex = this.animationIndex;
         this.currentAnimationIndex--;
-
-        var imgs = this.model.info[this.currentAnimationKey];
-
 
         // Probably wrap with active key.
         if (this.currentAnimationIndex < 0) {
