@@ -7,6 +7,7 @@ var exports = (function() {
       activeModelContainer: undefined,
       modelContainers: [],
       models: [],
+      params: [],
       scenarioContainers: [],
       scenarios: [],
       updateInterval: 2000,
@@ -51,7 +52,7 @@ var exports = (function() {
 
     fetchUser: function () {
       return new Promise(function(resolve, reject) {
-        $.ajax({url: "/api/v1/users/me/", data: [], traditional: true, dataType: "json"})
+        $.ajax({url: "/api/v1/users/me/", data: this.state.params, traditional: true, dataType: "json"})
           .done(function(json) {
             resolve(json[0]);
           }.bind(this))
@@ -62,7 +63,7 @@ var exports = (function() {
     },
     fetchModels: function () {
       return new Promise(function(resolve, reject) {
-        $.ajax({url: "/api/v1/scenes/", data: [], traditional: true, dataType: "json"})
+        $.ajax({url: "/api/v1/scenes/", data:  this.state.params, traditional: true, dataType: "json"})
           .done(function(json) {
             resolve(json);
           }.bind(this))
@@ -73,7 +74,7 @@ var exports = (function() {
     },
     fetchScenarios: function () {
       return new Promise(function(resolve, reject) {
-        $.ajax({url: "/api/v1/scenarios/", data: [], traditional: true, dataType: "json"})
+        $.ajax({url: "/api/v1/scenarios/", data:  this.state.params, traditional: true, dataType: "json"})
           .done(function(json) {
             resolve(json);
           }.bind(this))
@@ -102,7 +103,9 @@ var exports = (function() {
         }
       }.bind(this));
 
-      // TODO: remove containers for which there are no models
+      // remove containers that have no associated model
+      var modelIds = _.map(this.state.models, function (model) { return model.id; });
+      _.remove(this.state.modelContainers, function(container) { return _.indexOf(modelIds, container.id) == -1; });
     },
     updateScenarioContainers: function () {
       _.each(this.state.scenarios, function (scenario, index) {
@@ -121,11 +124,9 @@ var exports = (function() {
         }
       }.bind(this));
 
-      _.each(this.state.scenarioContainers, function (container) {
-        if (container.models.length == 0) {
-          this.deleteScenario(container);
-        }
-      }.bind(this));
+      // remove containers that have no associated scenario
+      var scenarioIds = _.map(this.state.scenarios, function (scenario) { return scenario.id; });
+      _.remove(this.state.scenarioContainers, function(container) { return _.indexOf(scenarioIds, container.id) == -1; });
     },
 
     // ================================ API MODELS UPDATE CALLS
@@ -141,7 +142,7 @@ var exports = (function() {
       });
 
       // update backend
-      $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/", method: "DELETE", data: [], traditional: true, dataType: "json"})
+      $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/", method: "DELETE", traditional: true, dataType: "json"})
         .done(function() {})
         .fail(function(error) {
           console.error(error);
@@ -159,7 +160,7 @@ var exports = (function() {
 
     startModel: function (modelContainer) {
       modelContainer.data.state = 'Queued';
-      $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/start/", method: "PUT", data: [], traditional: true, dataType: "json"})
+      $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/start/", method: "PUT", traditional: true, dataType: "json"})
         .done(function() {})
         .fail(function(error) {
           console.error(error);
@@ -168,7 +169,7 @@ var exports = (function() {
 
     stopModel: function (modelContainer) {
       modelContainer.data.state = 'Stopping simulation...';
-      $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/stop/", method: "PUT", data: [], traditional: true, dataType: "json"})
+      $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/stop/", method: "PUT", traditional: true, dataType: "json"})
         .done(function() {})
         .fail(function(error) {
           console.error(error);
@@ -180,7 +181,7 @@ var exports = (function() {
     deleteScenario: function (scenarioContainer) {
       // snappyness: remove scenarioContainer from store
       this.state.scenarioContainers = _.without(this.state.scenarioContainers, scenarioContainer)
-      $.ajax({url: "/api/v1/scenarios/" + scenarioContainer.id + "/", method: "DELETE", data: [], traditional: true, dataType: "json"})
+      $.ajax({url: "/api/v1/scenarios/" + scenarioContainer.id + "/", method: "DELETE", traditional: true, dataType: "json"})
         .done(function() {})
         .fail(function(error) {
           console.error(error);
@@ -210,6 +211,12 @@ var exports = (function() {
     deleteSelectedModels: function () {
       _.each(this.getSelectedModels(), this.deleteModel.bind(this));
     },
+
+    // ================================ SEARCH METHODS
+
+    updateParams: function (params) {
+      this.state.params = params;
+    }
 
   };
 
