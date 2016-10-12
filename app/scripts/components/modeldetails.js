@@ -1,31 +1,30 @@
-/* global ImageAnimation, ConfirmDialog, UserDetails, getDialog, fetchModel, fetchLog, deleteModel, startModel, exportModel, stopModel, publishModel  */
+/* global ImageAnimation, ConfirmDialog, UserDetails, store  */
 var exports = (function () {
   "use strict";
 
   var ModelDetails = Vue.component("model-details", {
     template: "#template-model-details",
     components: {
-      // <my-component> will only be available in Parent's template
+      // <my-component> will only be available in Parent"s template
       "image-animation": ImageAnimation,
       "confirm-dialog": ConfirmDialog,
       "user-details": UserDetails
     },
     data: function() {
       return {
-        sharedState: store.state,
       };
     },
+    props: {
+      model: {
+        type: Object,
+        required: true
+      }
+    },
     computed: {
-      selectedModel: {
-        cached: false,
-        get: function () {
-          return this.sharedState.selectedModelContainer;
-        }
-      },
       isReadOnly: {
         cache: false,
         get: function () {
-          return this.selectedModel.data.shared != 'p';
+          return this.model.data.shared !== "p";
         }
       },
       shareLevelText: {
@@ -37,7 +36,8 @@ var exports = (function () {
             "w": "world",
             "u": "updating..."
           };
-          return niceStrings[this.selectedModel.data.shared];
+
+          return niceStrings[this.model.data.shared];
         }
       }
     },
@@ -48,16 +48,16 @@ var exports = (function () {
       },
       fetchLog: function () {},
       publishModel: function (level) {
-        store.publishModel(this.selectedModel, level);
+        store.publishModel(this.model, level);
       },
       removeModel: function () {
-        store.deleteModel(this.selectedModel);
+        store.deleteModel(this.model);
       },
       startModel: function () {
-        store.startModel(this.selectedModel);
+        store.startModel(this.model);
       },
       stopModel: function () {
-        store.stopModel(this.selectedModel);
+        store.stopModel(this.model);
       }
     }
   });

@@ -4,33 +4,42 @@ var exports = (function () {
   var ModelCard = Vue.component("model-card", {
     template: "#template-model-card",
     props: {
+      selection: {
+        type: Object,
+        required: true
+      },
       model: {
+        type: Object,
         required: true
       },
       selectable: {
+        type: Boolean,
         required: false
       }
     },
-
+    computed: {
+      active: {
+        get: () => {
+          return this.selection.activeModelId === this.model.id;
+        }
+      },
+      selected: {
+        get: () => {
+          _.includes(this.selection.selectedModelIds, this.model.id);
+        }
+      }
+    },
     methods: {
       toggleActive: function() {
-        this.model.active = true;
-        this.$dispatch("activated", this.model);
+        if (this.selection.selectedModelId !== this.model.id) {
+          this.selection.selectedModelId = this.model.id;
+        } else {
+          this.selection.selectedModelId = null;
+        }
       }
     },
 
     events: {
-      "deactivate": function(clickedmodel) {
-        if (this.model !== clickedmodel) {
-          this.model.active = false;
-        }
-      },
-      "select-all": function () {
-        this.model.selected = true;
-      },
-      "unselect-all": function () {
-        this.model.selected = false;
-      }
     }
 
   });
