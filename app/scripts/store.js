@@ -66,7 +66,6 @@ var exports = (function() {
 
     updateUser: function () {
       this.fetchUser().then(function (json) {
-        console.log(json);
         this.state.user = json;
       }.bind(this)).catch(function (reason) {
         console.error('Promise rejected: ' + reason);
@@ -96,7 +95,6 @@ var exports = (function() {
           traditional: true,
           dataType: "json"
         };
-        console.log("searching", request);
         $.ajax(request)
           .done((json) => {
             resolve(json);
