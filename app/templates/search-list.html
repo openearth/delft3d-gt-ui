@@ -9,7 +9,7 @@
     </div>
 
     <div
-      v-for="scenario in sharedState.scenarioContainers"
+      v-for="scenario in scenarios"
       class="panel panel-default">
       <scenario-card :scenario="scenario"></scenario-card>
     </div>
@@ -19,12 +19,11 @@
     </div>
 
     <div
-       v-for="model in sharedState.modelContainers"
+       v-for="model in models"
        v-if="model.data.shared == 'c'"
        class="panel panel-default"
-       @click.stop="toggleActive(item)"
        >
-       <model-card :model="model" :selectable="false"></model-card>
+       <model-card :model="model" :selected="selected" :selectable="false"></model-card>
     </div>
 
     <div class="list-divider" v-if="hasWorldModels()">
@@ -32,7 +31,7 @@
     </div>
 
     <div
-       v-for="model in sharedState.modelContainers"
+       v-for="model in models"
        v-if="model.data.shared == 'w'"
        class="panel panel-default"
        @click.stop="toggleActive(item)"
