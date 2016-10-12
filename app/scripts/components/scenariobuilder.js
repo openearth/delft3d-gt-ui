@@ -176,7 +176,6 @@ var exports = (function() {
               var templateId = parseInt(this.$route.query.template);
 
               template = _.first(_.filter(this.availableTemplates, ["id", templateId]));
-              console.log("setting template", template);
             }
 
             // set the template, somehow a computed setter was not working...
