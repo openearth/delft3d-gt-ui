@@ -6,6 +6,8 @@ var exports = (function() {
     state: {
       models: {},
       scenarios: {},
+      // search params
+      params: {},
       updateInterval: 2000,
       interval: null,
       user: {id: -1, first_name: "Anonymous", last_name: "User"}
@@ -15,6 +17,13 @@ var exports = (function() {
 
     startSync: function () {
       this.update();
+      if (this.state.interval) {
+        // please clean up
+        console.warn("startSync requested with old sync active", this.state.interval);
+        // remove old interval
+        clearInterval(this.state.interval);
+      }
+      // start a new one
       this.state.interval = setInterval(this.update.bind(this), this.state.updateInterval);
     },
     stopSync: function () {
@@ -79,7 +88,16 @@ var exports = (function() {
     },
     fetchModels: function () {
       return new Promise((resolve, reject) => {
-        $.ajax({url: "/api/v1/scenes/", data: [], traditional: true, dataType: "json"})
+        var request = {
+          // NEw url:
+          url: "/api/v1/scenes/",
+          data: this.state.params,
+          // no [] in params
+          traditional: true,
+          dataType: "json"
+        };
+        console.log("searching", request);
+        $.ajax(request)
           .done((json) => {
             resolve(json);
           })
