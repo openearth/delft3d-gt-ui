@@ -44,9 +44,9 @@ var exports = (function() {
     },
 
     updateUser: function () {
-      this.fetchUser().then(function (json) {
+      this.fetchUser().then((json) => {
         this.state.user = json;
-      }.bind(this)).catch(function (reason) {
+      }).catch(function (reason) {
         console.error("Promise rejected: " + reason);
       });
     },
@@ -54,7 +54,7 @@ var exports = (function() {
     // ================================ API FETCH CALLS
 
     fetchUser: function () {
-      return new Promise(function(resolve, reject) {
+      return new Promise((resolve, reject) => {
         $.ajax({url: "/api/v1/users/me/", data: this.state.params, traditional: true, dataType: "json"})
           .done(function(json) {
             resolve(json[0]);
@@ -62,10 +62,10 @@ var exports = (function() {
           .fail(function(error) {
             reject(error);
           });
-      }.bind(this));
+      });
     },
     fetchModels: function () {
-      return new Promise(function(resolve, reject) {
+      return new Promise((resolve, reject) => {
         $.ajax({url: "/api/v1/scenes/", data: this.state.params, traditional: true, dataType: "json"})
           .done(function(json) {
             resolve(json);
@@ -73,10 +73,10 @@ var exports = (function() {
           .fail(function(error) {
             reject(error);
           });
-      }.bind(this));
+      });
     },
     fetchScenarios: function () {
-      return new Promise(function(resolve, reject) {
+      return new Promise((resolve, reject) => {
         $.ajax({url: "/api/v1/scenarios/", data: this.state.params, traditional: true, dataType: "json"})
           .done(function(json) {
             resolve(json);
@@ -84,7 +84,7 @@ var exports = (function() {
           .fail(function(error) {
             reject(error);
           });
-      }.bind(this));
+      });
     },
 
     // ================================ CONTAINER UPDATES
@@ -94,7 +94,7 @@ var exports = (function() {
       this.updateScenarioContainers();
     },
     updateModelContainers: function () {
-      _.each(this.state.models, function (model) {
+      _.each(this.state.models, (model) => {
         var container = _.find(this.state.modelContainers, ["id", model.id]);
 
         if(container === undefined) {
@@ -105,7 +105,7 @@ var exports = (function() {
           // update model in container
           container.data = model;
         }
-      }.bind(this));
+      });
 
       // remove containers that have no associated model
       var modelIds = _.map(this.state.models, function (model) {
@@ -117,7 +117,7 @@ var exports = (function() {
       });
     },
     updateScenarioContainers: function () {
-      _.each(this.state.scenarios, function (scenario) {
+      _.each(this.state.scenarios, (scenario) => {
         var scenarioContainer = _.find(this.state.scenarioContainers, ["id", scenario.id]);
 
         var modelContainerSet = _.filter(this.state.modelContainers, function (o) {
@@ -133,7 +133,7 @@ var exports = (function() {
           scenarioContainer.data = scenario;
           scenarioContainer.models = modelContainerSet;
         }
-      }.bind(this));
+      });
 
       // remove containers that have no associated scenario
       var scenarioIds = _.map(this.state.scenarios, function (scenario) {
