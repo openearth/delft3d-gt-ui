@@ -11,7 +11,7 @@ var exports = (function () {
         // items that were found
         selection: {
           selectedModelIds: [],
-          activeModel: null
+          activeModelId: null
         },
         models: store.state.models,
         scenarios: store.state.scenarios
@@ -36,6 +36,12 @@ var exports = (function () {
     },
 
     computed: {
+      selectedModel: {
+        cache: false,
+        get: function() {
+          return _.get(this.models, this.selection.activeModelId);
+        }
+      },
       checkedBoxes: {
         cache: false,
         get: function() {
