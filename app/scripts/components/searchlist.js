@@ -1,6 +1,6 @@
+/* global Vue, store */
 var exports = (function () {
   "use strict";
-  /* global Vue */
 
   // register the grid component
   var SearchList = Vue.component("search-list", {
@@ -79,7 +79,7 @@ var exports = (function () {
         return (_.filter(this.sharedState.models, ["shared", "w"]).length > 0);
       },
       action: function (thing) {
-        thing.active = !thing.active
+        thing.active = !thing.active;
       }
     },
     events: {

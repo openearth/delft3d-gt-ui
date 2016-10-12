@@ -1,3 +1,4 @@
+/* global store  */
 var exports = (function () {
   "use strict";
 
@@ -11,13 +12,26 @@ var exports = (function () {
     },
     computed: {
       modelStatuses: function () {
-        var array = _.map(this.scenario.models, function (model) { return {state: model.data.state}; });
-        _.each(array, function (status) { status.width = 100 / array.length; });
+        var array = _.map(this.scenario.models, function (model) {
+          return {state: model.data.state};
+        });
+
+        _.each(array, function (status) {
+          status.width = 100 / array.length;
+        });
         array = _.sortBy(array, function(status) {
-          if (status.state === "Finished") { return 0; }
-          if (status.state === "Running simulation...") { return 1; }
-          if (status.state === "Queued") { return 2; }
-          if (status.state === "Idle: waiting for user input") { return 3; }
+          if (status.state === "Finished") {
+            return 0;
+          }
+          if (status.state === "Running simulation...") {
+            return 1;
+          }
+          if (status.state === "Queued") {
+            return 2;
+          }
+          if (status.state === "Idle: waiting for user input") {
+            return 3;
+          }
           return 2;
         });
         return array;

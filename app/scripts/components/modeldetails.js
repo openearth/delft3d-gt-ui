@@ -1,4 +1,4 @@
-/* global ImageAnimation, ConfirmDialog, UserDetails, getDialog, fetchModel, fetchLog, deleteModel, startModel, exportModel, stopModel, publishModel  */
+/* global ImageAnimation, ConfirmDialog, UserDetails, store  */
 var exports = (function () {
   "use strict";
 
@@ -12,7 +12,7 @@ var exports = (function () {
     },
     data: function() {
       return {
-        sharedState: store.state,
+        sharedState: store.state
       };
     },
     computed: {
@@ -25,7 +25,7 @@ var exports = (function () {
       isReadOnly: {
         cache: false,
         get: function () {
-          return this.activeModel.data.shared != 'p';
+          return this.activeModel.data.shared !== "p";
         }
       },
       shareLevelText: {
@@ -37,6 +37,7 @@ var exports = (function () {
             "w": "world",
             "u": "updating..."
           };
+
           return niceStrings[this.activeModel.data.shared];
         }
       }
@@ -69,7 +70,7 @@ var exports = (function () {
 }());
 
 
-// If we're in node export to models
+// If we"re in node export to models
 if (typeof module !== "undefined" && module.exports) {
   module.exports = exports;
 } else {

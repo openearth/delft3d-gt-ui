@@ -1,4 +1,4 @@
-/* global Vue, fetchSearchTemplate, fetchScenarios, startSyncModels, fetchModels, filterModels */
+/* global Vue, fetchSearchTemplate, store  */
 var exports = (function () {
   "use strict";
   var SearchDetails = Vue.component("search-details", {
@@ -176,6 +176,7 @@ var exports = (function () {
       },
       search: function() {
         var params = this.buildParams();
+
         store.updateParams(params);
         store.update();
       }

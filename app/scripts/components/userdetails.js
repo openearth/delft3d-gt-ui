@@ -1,5 +1,4 @@
-/* global Vue */
-
+/* global Vue, store */
 var exports = (function () {
   "use strict";
 

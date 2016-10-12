@@ -1,4 +1,4 @@
-/* global Vue startModels, stopModels, deleteModels, router,  deleteScenario */
+/* global Vue, store */
 
 var exports = (function () {
   "use strict";

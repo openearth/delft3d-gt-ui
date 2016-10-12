@@ -11,13 +11,16 @@ var exports = (function() {
       scenarioContainers: [],
       scenarios: [],
       updateInterval: 2000,
-      user: {id: -1, first_name: "Anonymous", last_name: "User"}
+      user: {id: -1,
+        /*eslint-disable camelcase*/
+        first_name: "Anonymous", last_name: "User"}
+        /*eslint-ensable camelcase*/
     },
 
     // ================================ SYNCHRONISATION
 
     startSync: function () {
-      this.update(this)
+      this.update(this);
       this.interval = setInterval(this.update.bind(this), this.state.updateInterval);
     },
     stopSync: function () {
@@ -30,13 +33,13 @@ var exports = (function() {
         this.fetchModels(),
         this.fetchScenarios()
       ])
-      .then(function(jsons){
-        this.state.models  = jsons[0];
+      .then((jsons) => {
+        this.state.models = jsons[0];
         this.state.scenarios = jsons[1];
         this.updateContainers();
-      }.bind(this))
+      })
       .catch(function(reason) {
-        console.error('Promise rejected: ' + reason);
+        console.error("Promise rejected: " + reason);
       });
     },
 
@@ -44,7 +47,7 @@ var exports = (function() {
       this.fetchUser().then(function (json) {
         this.state.user = json;
       }.bind(this)).catch(function (reason) {
-        console.error('Promise rejected: ' + reason);
+        console.error("Promise rejected: " + reason);
       });
     },
 
@@ -55,7 +58,7 @@ var exports = (function() {
         $.ajax({url: "/api/v1/users/me/", data: this.state.params, traditional: true, dataType: "json"})
           .done(function(json) {
             resolve(json[0]);
-          }.bind(this))
+          })
           .fail(function(error) {
             reject(error);
           });
@@ -63,10 +66,10 @@ var exports = (function() {
     },
     fetchModels: function () {
       return new Promise(function(resolve, reject) {
-        $.ajax({url: "/api/v1/scenes/", data:  this.state.params, traditional: true, dataType: "json"})
+        $.ajax({url: "/api/v1/scenes/", data: this.state.params, traditional: true, dataType: "json"})
           .done(function(json) {
             resolve(json);
-          }.bind(this))
+          })
           .fail(function(error) {
             reject(error);
           });
@@ -74,10 +77,10 @@ var exports = (function() {
     },
     fetchScenarios: function () {
       return new Promise(function(resolve, reject) {
-        $.ajax({url: "/api/v1/scenarios/", data:  this.state.params, traditional: true, dataType: "json"})
+        $.ajax({url: "/api/v1/scenarios/", data: this.state.params, traditional: true, dataType: "json"})
           .done(function(json) {
             resolve(json);
-          }.bind(this))
+          })
           .fail(function(error) {
             reject(error);
           });
@@ -92,10 +95,11 @@ var exports = (function() {
     },
     updateModelContainers: function () {
       _.each(this.state.models, function (model) {
-        var container = _.find(this.state.modelContainers, ['id', model.id]);
+        var container = _.find(this.state.modelContainers, ["id", model.id]);
+
         if(container === undefined) {
           // create new container
-          container = {'id': model.id, active: false, selected: false, data:model};
+          container = {"id": model.id, active: false, selected: false, data: model};
           this.state.modelContainers.push(container);
         } else {
           // update model in container
@@ -104,18 +108,25 @@ var exports = (function() {
       }.bind(this));
 
       // remove containers that have no associated model
-      var modelIds = _.map(this.state.models, function (model) { return model.id; });
-      _.remove(this.state.modelContainers, function(container) { return _.indexOf(modelIds, container.id) == -1; });
+      var modelIds = _.map(this.state.models, function (model) {
+        return model.id;
+      });
+
+      _.remove(this.state.modelContainers, function(container) {
+        return _.indexOf(modelIds, container.id) === -1;
+      });
     },
     updateScenarioContainers: function () {
-      _.each(this.state.scenarios, function (scenario, index) {
-        var scenarioContainer = _.find(this.state.scenarioContainers, ['id', scenario.id]);
+      _.each(this.state.scenarios, function (scenario) {
+        var scenarioContainer = _.find(this.state.scenarioContainers, ["id", scenario.id]);
+
         var modelContainerSet = _.filter(this.state.modelContainers, function (o) {
-          return _.includes(scenario.scene_set, o.id)
+          return _.includes(scenario.scene_set, o.id);
         });
+
         if(scenarioContainer === undefined) {
           // create new scenarioContainer
-          scenarioContainer = {'id': scenario.id, data:scenario, models: modelContainerSet};
+          scenarioContainer = {"id": scenario.id, data: scenario, models: modelContainerSet};
           this.state.scenarioContainers.push(scenarioContainer);
         } else {
           // update scenario in scenarioContainer
@@ -125,8 +136,13 @@ var exports = (function() {
       }.bind(this));
 
       // remove containers that have no associated scenario
-      var scenarioIds = _.map(this.state.scenarios, function (scenario) { return scenario.id; });
-      _.remove(this.state.scenarioContainers, function(container) { return _.indexOf(scenarioIds, container.id) == -1; });
+      var scenarioIds = _.map(this.state.scenarios, function (scenario) {
+        return scenario.id;
+      });
+
+      _.remove(this.state.scenarioContainers, function(container) {
+        return _.indexOf(scenarioIds, container.id) === -1;
+      });
     },
 
     // ================================ API MODELS UPDATE CALLS
@@ -136,7 +152,7 @@ var exports = (function() {
       if(this.state.activeModelContainer === modelContainer) {
         this.state.activeModelContainer = undefined;
       }
-      this.state.modelContainers = _.without(this.state.modelContainers, modelContainer)
+      this.state.modelContainers = _.without(this.state.modelContainers, modelContainer);
       _.each(this.state.scenariosContainers, function (container) {
         container.models = _.without(container.models, modelContainer);
       });
@@ -150,7 +166,7 @@ var exports = (function() {
     },
 
     publishModel: function (modelContainer, target) {
-      modelContainer.data.shared = 'u';
+      modelContainer.data.shared = "u";
       $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/publish_" + target + "/", method: "POST"})
         .done(function () {})
         .fail(function(error) {
@@ -159,7 +175,7 @@ var exports = (function() {
     },
 
     startModel: function (modelContainer) {
-      modelContainer.data.state = 'Queued';
+      modelContainer.data.state = "Queued";
       $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/start/", method: "PUT", traditional: true, dataType: "json"})
         .done(function() {})
         .fail(function(error) {
@@ -168,7 +184,7 @@ var exports = (function() {
     },
 
     stopModel: function (modelContainer) {
-      modelContainer.data.state = 'Stopping simulation...';
+      modelContainer.data.state = "Stopping simulation...";
       $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/stop/", method: "PUT", traditional: true, dataType: "json"})
         .done(function() {})
         .fail(function(error) {
@@ -180,7 +196,7 @@ var exports = (function() {
 
     deleteScenario: function (scenarioContainer) {
       // snappyness: remove scenarioContainer from store
-      this.state.scenarioContainers = _.without(this.state.scenarioContainers, scenarioContainer)
+      this.state.scenarioContainers = _.without(this.state.scenarioContainers, scenarioContainer);
       $.ajax({url: "/api/v1/scenarios/" + scenarioContainer.id + "/", method: "DELETE", traditional: true, dataType: "json"})
         .done(function() {})
         .fail(function(error) {
@@ -190,7 +206,7 @@ var exports = (function() {
 
     // ================================ OTHER SUPPORT METHODS
 
-    fetchLog: function (modelContainer) {
+    fetchLog: function () {
       // TODO: write fetchlog
     },
 
