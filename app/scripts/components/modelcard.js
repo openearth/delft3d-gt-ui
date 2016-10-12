@@ -19,14 +19,36 @@ var exports = (function () {
     },
     computed: {
       active: {
-        get: () => {
-          return this.selection.activeModelId === this.model.id;
+        get: function () {
+          var isActive = false;
+          if (this.selection.activeModelId === null) {
+            isActive = false;
+          } else {
+            if (this.selection.activeModelId === this.model.id) {
+              isActive = true;
+            }
+          }
+          return isActive;
         }
       },
       selected: {
-        get: () => {
-          _.includes(this.selection.selectedModelIds, this.model.id);
+        cache: false,
+        get: function () {
+          return _.includes(this.selection.selectedModelIds, this.model.id);
+        },
+        set: (val) => {
+          if (val) {
+            // if selected is not set
+            if (!_.includes(this.selection.selectedModelIds, this.model.id)) {
+              this.selection.selectedModelIds.push(this.model.id);
+            }
+          }
+          else {
+            // deselect
+            _.pull(this.selection.selectedModelIds, this.model.id);
+          }
         }
+
       }
     },
     methods: {
