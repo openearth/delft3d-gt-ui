@@ -11,12 +11,9 @@ var exports = (function () {
         deleteDialog: null
       };
     },
-
     ready: function() {
 
     },
-
-
     props: {
       items: {
         type: Array,

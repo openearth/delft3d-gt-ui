@@ -4,13 +4,13 @@ var exports = (function() {
   var store = {
 
     state: {
+      activeModelContainer: undefined,
       modelContainers: [],
       models: [],
       modelsFetched: false,
       scenarioContainers: [],
       scenarios: [],
       scenariosFetched: false,
-      selectedModelContainer: undefined,
       updateInterval: 2000,
       user: {id: -1, first_name: "Anonymous", last_name: "User"}
     },
@@ -43,7 +43,6 @@ var exports = (function() {
 
     updateUser: function () {
       this.fetchUser().then(function (json) {
-        console.log(json);
         this.state.user = json;
       }.bind(this)).catch(function (reason) {
         console.error('Promise rejected: ' + reason);
@@ -142,8 +141,8 @@ var exports = (function() {
 
     deleteModel: function (modelContainer) {
       // snappyness: remove modelContainer from store
-      if(this.state.selectedModelContainer === modelContainer) {
-        this.state.selectedModelContainer = undefined;
+      if(this.state.activeModelContainer === modelContainer) {
+        this.state.activeModelContainer = undefined;
       }
       this.state.modelContainers = _.without(this.state.modelContainers, modelContainer)
       _.each(this.state.scenariosContainers, function (container) {
@@ -201,6 +200,12 @@ var exports = (function() {
 
     fetchLog: function (modelContainer) {
       // TODO: write fetchlog
+    },
+
+    // ================================ MULTISELECTED MODEL UPDATE METHODS
+
+    getNumSelectedModels: function () {
+      return _.filter(this.state.modelContainers, ["selected", true]).length;
     }
 
   };

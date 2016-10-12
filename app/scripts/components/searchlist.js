@@ -85,7 +85,7 @@ var exports = (function () {
     events: {
       "activated": function (model) {
         this.$broadcast("deactivate", model);
-        this.sharedState.selectedModelContainer = model;
+        this.sharedState.activeModelContainer = model;
       }
     }
   });

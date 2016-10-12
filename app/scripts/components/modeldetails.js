@@ -16,16 +16,16 @@ var exports = (function () {
       };
     },
     computed: {
-      selectedModel: {
+      activeModel: {
         cached: false,
         get: function () {
-          return this.sharedState.selectedModelContainer;
+          return this.sharedState.activeModelContainer;
         }
       },
       isReadOnly: {
         cache: false,
         get: function () {
-          return this.selectedModel.data.shared != 'p';
+          return this.activeModel.data.shared != 'p';
         }
       },
       shareLevelText: {
@@ -37,7 +37,7 @@ var exports = (function () {
             "w": "world",
             "u": "updating..."
           };
-          return niceStrings[this.selectedModel.data.shared];
+          return niceStrings[this.activeModel.data.shared];
         }
       }
     },
@@ -48,16 +48,16 @@ var exports = (function () {
       },
       fetchLog: function () {},
       publishModel: function (level) {
-        store.publishModel(this.selectedModel, level);
+        store.publishModel(this.activeModel, level);
       },
       removeModel: function () {
-        store.deleteModel(this.selectedModel);
+        store.deleteModel(this.activeModel);
       },
       startModel: function () {
-        store.startModel(this.selectedModel);
+        store.startModel(this.activeModel);
       },
       stopModel: function () {
-        store.stopModel(this.selectedModel);
+        store.stopModel(this.activeModel);
       }
     }
   });
