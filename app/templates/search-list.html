@@ -8,7 +8,7 @@
       your scenarios
     </div>
     <div
-       v-for="(id, scenario) in scenarios"
+       v-for="scenario in scenariosWithModels"
        class="panel panel-default">
       <scenario-card :scenario="scenario" :selection="selection"></scenario-card>
     </div>
