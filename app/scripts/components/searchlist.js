@@ -32,10 +32,23 @@ var exports = (function () {
     ready: function() {
     },
     computed: {
-      scenarioList: {
+      scenariosWithModels: {
         cache: false,
         get: function() {
-          return _.values(this.scenarios);
+          var allScenarios = _.values(this.scenarios);
+          var nonEmptyScenarios = _.filter(
+            allScenarios,
+            (scenario) => {
+              var modelIds = _.intersection(
+                scenario.scene_set,
+                // get keys in original form (like Object.keys, but preserve type)
+                _.map(this.models, "id")
+              );
+              return modelIds.length > 0;
+            }
+          );
+
+          return nonEmptyScenarios;
         }
       },
       // Get the current selected modelid from the routing URL
