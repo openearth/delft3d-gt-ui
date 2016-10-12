@@ -18,37 +18,39 @@ var exports = (function () {
 
 
     props: {
-      items: {
-        type: Array,
+      selection: {
+        type: Object,
         required: true
+      },
+      models: {
+        type: Object
       }
     },
     computed: {
-      selectedModels: function() {
-        return _.filter(this.items, ["selected", true]);
+      selectedModels: {
+        cache: false,
+        get: function() {
+          return _.pick(this.models, this.selection.selectedModelIds);
+        }
+
       }
     },
     methods: {
 
-      deleteSelectedScenario: function() {
+      deleteSelectedScenario: () => {
 
         // Right now we use the old dialog from before. Should be turned into a component.
-        var that = this;
-
         // User accepts deletion:
         $("#dialog-remove-scenario-response-accept").on("click", () => {
 
           this.selectedScenarios.forEach(function(scenario) {
             deleteScenario(scenario.id)
               .then(() => {
-                that.$parent.$broadcast("show-alert", {
+                this.$parent.$broadcast("show-alert", {
                   message: "Deleting scenario... It might take a moment before the view is updated.",
                   showTime: 5000,
                   type: "success"
                 });
-
-                // Immediatly refresh screen:
-                that.$root.$broadcast("updateSearch");
 
               })
 

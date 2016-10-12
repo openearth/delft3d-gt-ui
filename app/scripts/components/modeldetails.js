@@ -17,14 +17,14 @@ var exports = (function () {
     props: {
       model: {
         type: Object,
-        required: true
+        required: false
       }
     },
     computed: {
       isReadOnly: {
         cache: false,
         get: function () {
-          return this.model.data.shared !== "p";
+          return this.model.shared !== "p";
         }
       },
       shareLevelText: {
@@ -37,7 +37,7 @@ var exports = (function () {
             "u": "updating..."
           };
 
-          return niceStrings[this.model.data.shared];
+          return niceStrings[this.model.shared];
         }
       }
     },

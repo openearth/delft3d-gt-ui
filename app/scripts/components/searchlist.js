@@ -19,30 +19,45 @@ var exports = (function () {
         type: Object,
         required: true
       },
-      "items": {
-        type: Array,
+      "models": {
+        type: Object,
+        required: true
+      },
+      "scenarios": {
+        type: Object,
         required: true
       }
     },
 
     ready: function() {
     },
-    watch: {
-      items: function() {
-        this.$nextTick(function() {
-        });
-      }
-
-    },
     computed: {
+      scenarioList: {
+        cache: false,
+        get: function() {
+          return _.values(this.scenarios);
+        }
+      },
       // Get the current selected modelid from the routing URL
+      companyModels: {
+        cache: false,
+        get: function() {
+          return _.filter(_.values(this.models), ["shared", "c"]);
+        }
+      },
+      worldModels: {
+        cache: false,
+        get: function() {
+          return _.filter(_.values(this.models), ["shared", "w"]);
+        }
+      }
     },
     methods: {
       hasCompanyModels: function () {
-        return (_.filter(this.models, ["shared", "c"]).length > 0);
+        return this.companyModels.length > 0;
       },
       hasWorldModels: function () {
-        return (_.filter(this.models, ["shared", "w"]).length > 0);
+        return this.worldModels.length > 0;
       }
     },
     events: {

@@ -1,4 +1,4 @@
-/* global Vue, SearchDetails, SearchList, ModelDetails */
+/* global Vue, SearchDetails, SearchList, ModelDetails, store */
 
 var exports = (function () {
   "use strict";
@@ -7,14 +7,16 @@ var exports = (function () {
     // not much in here.
     template: "#template-search-columns",
     data: function() {
-      return {
+      var data = {
         // items that were found
-        items: [],
         selection: {
           selectedModelIds: [],
           activeModel: null
-        }
+        },
+        models: store.state.models,
+        scenarios: store.state.scenarios
       };
+      return data;
     },
     components: {
       "search-details": SearchDetails,
@@ -22,10 +24,14 @@ var exports = (function () {
       "model-details": ModelDetails
     },
     ready: function() {
+      console.log("scenarios ready", this.scenarios);
+      // make sure the state is merged with our scenarios and models
+
     },
     route: {
       data: function(transition) {
         transition.next();
+        console.log("scenarios transition", this.scenarios);
       }
     },
 
@@ -39,7 +45,6 @@ var exports = (function () {
     },
 
     methods: {
-
       // Reset all input fields.
       resetFields: function() {
         // Empty all fields:

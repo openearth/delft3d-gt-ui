@@ -7,11 +7,10 @@
     <div class="list-divider">
       your scenarios
     </div>
-
     <div
-      v-for="scenario in scenarios"
-      class="panel panel-default">
-      <scenario-card :scenario="scenario"></scenario-card>
+       v-for="(id, scenario) in scenarios"
+       class="panel panel-default">
+      <scenario-card :scenario="scenario" :selection="selection"></scenario-card>
     </div>
 
     <div class="list-divider" v-if="hasCompanyModels()">
@@ -19,11 +18,10 @@
     </div>
 
     <div
-       v-for="model in models"
-       v-if="model.data.shared == 'c'"
+       v-for="model in companyModels"
        class="panel panel-default"
        >
-       <model-card :model="model" :selected="selected" :selectable="false"></model-card>
+       <model-card :model="model" :selection="selection" :selectable="false"></model-card>
     </div>
 
     <div class="list-divider" v-if="hasWorldModels()">
@@ -31,12 +29,11 @@
     </div>
 
     <div
-       v-for="model in models"
-       v-if="model.data.shared == 'w'"
+       v-for="model in worldModels"
        class="panel panel-default"
        @click.stop="toggleActive(item)"
        >
-       <model-card :model="model" :selectable="false"></model-card>
+       <model-card :model="model" :selection="selection" :selectable="false"></model-card>
     </div>
 
   </ul>

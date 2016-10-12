@@ -19,20 +19,36 @@ var exports = (function() {
     },
     stopSync: function () {
       clearInterval(this.state.interval);
-      this.stete.interval = null;
+      this.state.interval = null;
     },
 
     update: function () {
       this.fetchModels()
         .then((json) => {
-          this.state.models = json;
+          _.each(json, (model) => {
+            if (model.id in this.state.models) {
+              // recursively update
+              _.merge(this.state.models[model.id], model);
+            } else {
+              // set and notify vue of object change
+              Vue.set(this.state.models, model.id, model);
+            }
+          });
         })
         .catch(function(reason) {
           console.error("Promise rejected: " + reason);
         });
       this.fetchScenarios()
         .then((json) => {
-          this.state.scenarios = json;
+          _.each(json, (scenario) => {
+            if (scenario.id in this.state.scenarios) {
+              // recursively update
+              _.merge(this.state.scenarios[scenario.id], scenario);
+            } else {
+              // set and notify vue of object change
+              Vue.set(this.state.scenarios, scenario.id, scenario);
+            }
+          });
         })
         .catch(function(reason) {
           console.error("Promise rejected: " + reason);

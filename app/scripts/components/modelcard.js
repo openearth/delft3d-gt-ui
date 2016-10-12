@@ -31,10 +31,10 @@ var exports = (function () {
     },
     methods: {
       toggleActive: function() {
-        if (this.selection.selectedModelId !== this.model.id) {
-          this.selection.selectedModelId = this.model.id;
+        if (this.selection.activeModelId !== this.model.id) {
+          this.selection.activeModelId = this.model.id;
         } else {
-          this.selection.selectedModelId = null;
+          this.selection.activeModelId = null;
         }
       }
     },

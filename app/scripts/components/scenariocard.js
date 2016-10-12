@@ -1,5 +1,9 @@
 var exports = (function () {
   "use strict";
+  // some models are not visible, but there is an id
+  var hiddenModel = {
+    name: "Hidden Model"
+  };
 
   var ScenarioCard = Vue.component("scenario-card", {
     template: "#template-scenario-card",
@@ -7,6 +11,24 @@ var exports = (function () {
       scenario: {
         type: Object,
         required: true
+      },
+      selection: {
+        type: Object,
+        required: true
+      }
+    },
+    computed: {
+      models: {
+        cache: false,
+        get: function() {
+          return _.map(this.scenario.scene_set, (modelId) => {
+            if (modelId in store.state.models) {
+              return store.state.models[modelId];
+            } else {
+              return hiddenModel;
+            }
+          });
+        }
       }
     },
     methods: {
