@@ -97,9 +97,8 @@
   var factorToArray = require("../../app/scripts/components/scenariobuilder.js").factorToArray;
 
 
-  _.assign(global, require("../../app/scripts/models.js"));
-  _.assign(global, require("../../app/scripts/templates.js"));
-  _.assign(global, require("../../app/scripts/scenarios.js"));
+  _.assign(global, require("../../app/scripts/store.js"));
+  _.assign(global, require("../../app/scripts/login.js"));
   _.assign(global, require("../../app/scripts/templates.js"));
 
 
