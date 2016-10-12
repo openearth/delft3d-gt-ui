@@ -10,7 +10,10 @@ var exports = (function () {
       return {
         // items that were found
         items: [],
-        models: []
+        selection: {
+          selectedModelIds: [],
+          activeModel: null
+        }
       };
     },
     components: {
@@ -19,17 +22,9 @@ var exports = (function () {
       "model-details": ModelDetails
     },
     ready: function() {
-      // TODO, consistent naming
-      this.$on("items-found", function(items, models) {
-        this.$set("items", items);
-        this.$set("models", models);
-      });
     },
     route: {
       data: function(transition) {
-
-        // Refresh data immediatly if user gets here.
-        this.$broadcast("updateSearch");
         transition.next();
       }
     },
