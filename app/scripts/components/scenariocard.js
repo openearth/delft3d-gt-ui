@@ -28,6 +28,10 @@ var exports = (function () {
         e.stopPropagation();
         $("#collapse-" + this.scenario.id).collapse("toggle");
       },
+      delete: function(e) {
+        e.stopPropagation();
+        store.deleteScenario(this.scenario);
+      },
       selectAll: function(e) {
         e.stopPropagation();
         $("#collapse-" + this.scenario.id).collapse("show");
