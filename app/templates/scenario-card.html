@@ -16,13 +16,15 @@
           <div class="col-sm-2 text-center">
             <div class="progress">
               <div
-                 data-percentage="{{ scenario.progress }}%"
-                 :style="{ width: scenario.progress + '%'}"
-                 class="progress-bar"
-                 role="progressbar"
-                 aria-valuemin="0"
-                 aria-valuemax="100">
-              </div>
+                v-for="status in modelStatuses"
+                class="progress-bar"
+                :style="{ width: status.width + '%'}"
+                :class="[
+                    (status.state == 'Running simulation...') ? 'progress-bar-striped active' : '',
+                    (status.state == 'Finished') ? 'progress-bar-success' : '',
+                    (status.state == 'Idle: waiting for user input') ? 'progress-bar-warning' : '',
+                ]"
+                role="progressbar"></div>
             </div>
           </div>
 

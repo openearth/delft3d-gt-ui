@@ -22,13 +22,16 @@
           <div class="col-sm-2">
             <div class="progress text-center">
               <div
-                 data-percentage="{{model.data.progress}}%"
-                 :style="{ width: model.data.progress + '%'}"
-                 class="progress-bar progress-bar-info"
-                 :class="{'progress-bar-striped active': (model.data.state == 'Running simulation...')}"
-                 role="progressbar"
-                 aria-valuemin="0"
-                 aria-valuemax="100"></div>
+                data-percentage="{{model.data.progress}}%"
+                :style="{ width: model.data.progress + '%'}"
+                class="progress-bar"
+                :class="[
+                    (model.data.state == 'Running simulation...') ? 'progress-bar-striped active' : '',
+                    (model.data.state == 'Finished') ? 'progress-bar-success' : '',
+                ]"
+                role="progressbar"
+                aria-valuemin="0"
+                aria-valuemax="100"></div>
             </div>
           </div>
 

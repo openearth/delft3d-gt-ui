@@ -22,7 +22,6 @@
        v-for="model in sharedState.modelContainers"
        v-if="model.data.shared == 'c'"
        class="panel panel-default"
-       @click.stop="toggleActive(item)"
        >
        <model-card :model="model" :selectable="false"></model-card>
     </div>
@@ -35,7 +34,6 @@
        v-for="model in sharedState.modelContainers"
        v-if="model.data.shared == 'w'"
        class="panel panel-default"
-       @click.stop="toggleActive(item)"
        >
        <model-card :model="model" :selectable="false"></model-card>
     </div>
