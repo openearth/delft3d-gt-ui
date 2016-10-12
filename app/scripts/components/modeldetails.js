@@ -24,7 +24,15 @@ var exports = (function () {
       isReadOnly: {
         cache: false,
         get: function () {
-          return this.model.shared !== "p";
+          return _.get(this.model, "shared") !== "p";
+        }
+      },
+      user: {
+        cache: false,
+        get: function() {
+          // TODO: check if this works when user is changed
+          // TODO: replace by property and application level user (app.js)
+          return store.state.user;
         }
       },
       shareLevelText: {
