@@ -39,18 +39,20 @@ var exports = (function () {
       selectAll: function(e) {
         e.stopPropagation();
         $("#collapse-" + this.scenario.id).collapse("show");
-
-        if (this.allModelsSelected()) {
-          this.$broadcast("unselect-all");
-        } else {
-          this.$broadcast("select-all");
-        }
+        // clear the array
+        this.selection.selectedModelIds.splice(0);
+        // select all models
+        _.each(this.scenario.scene_set, (modelId) => {
+          this.selection.selectedModelIds.push(modelId);
+        });
       },
       someModelsSelected: function() {
-        return _.some(this.scenario.models, ["selected", true]);
+        return (_.intersection(this.scenario.scene_set, this.selection.selectedModelIds)).length > 0;
+
       },
       allModelsSelected: function() {
-        return _.every(this.scenario.models, ["selected", true]);
+        // all models are in selectedModelIds
+        return !(_.difference(this.scenario.scene_set, this.selection.selectedModelIds));
       }
     }
   });
