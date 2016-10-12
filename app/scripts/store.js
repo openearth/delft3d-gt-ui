@@ -7,10 +7,8 @@ var exports = (function() {
       activeModelContainer: undefined,
       modelContainers: [],
       models: [],
-      modelsFetched: false,
       scenarioContainers: [],
       scenarios: [],
-      scenariosFetched: false,
       updateInterval: 2000,
       user: {id: -1, first_name: "Anonymous", last_name: "User"}
     },
@@ -27,16 +25,16 @@ var exports = (function() {
     },
 
     update: function () {
-      this.fetchModels().then(function (json) {
-        this.state.models = json;
+      Promise.all([
+        this.fetchModels(),
+        this.fetchScenarios()
+      ])
+      .then(function(jsons){
+        this.state.models  = jsons[0];
+        this.state.scenarios = jsons[1];
         this.updateContainers();
-      }.bind(this)).catch(function(reason) {
-        console.error('Promise rejected: ' + reason);
-      });
-      this.fetchScenarios().then(function (json) {
-        this.state.scenarios = json;
-        this.updateContainers();
-      }.bind(this)).catch(function(reason) {
+      }.bind(this))
+      .catch(function(reason) {
         console.error('Promise rejected: ' + reason);
       });
     },
@@ -63,11 +61,9 @@ var exports = (function() {
       }.bind(this));
     },
     fetchModels: function () {
-      this.state.modelsFetched = false;
       return new Promise(function(resolve, reject) {
         $.ajax({url: "/api/v1/scenes/", data: [], traditional: true, dataType: "json"})
           .done(function(json) {
-            this.state.modelsFetched = true;
             resolve(json);
           }.bind(this))
           .fail(function(error) {
@@ -76,11 +72,9 @@ var exports = (function() {
       }.bind(this));
     },
     fetchScenarios: function () {
-      this.state.scenariosFetched = false;
       return new Promise(function(resolve, reject) {
         $.ajax({url: "/api/v1/scenarios/", data: [], traditional: true, dataType: "json"})
           .done(function(json) {
-            this.state.scenariosFetched = true;
             resolve(json);
           }.bind(this))
           .fail(function(error) {
@@ -92,9 +86,6 @@ var exports = (function() {
     // ================================ CONTAINER UPDATES
 
     updateContainers: function () {
-      if(!this.state.scenariosFetched || !this.state.modelsFetched) {
-        return;
-      }
       this.updateModelContainers();
       this.updateScenarioContainers();
     },
