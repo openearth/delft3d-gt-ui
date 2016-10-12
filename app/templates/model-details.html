@@ -99,23 +99,23 @@
         </div>
         <div class="collapse">
           <div class="panel-body">
-            <p v-if="sharedState.user.id == model.owner.id && model.state == 'Finished'">
+            <p v-if="user.id == model.owner.id && model.state == 'Finished'">
               You can select who to share your results with:
             </p>
-            <p v-if="sharedState.user.id == model.owner.id && model.state != 'Finished'">
+            <p v-if="user.id == model.owner.id && model.state != 'Finished'">
               When the run is finished, you can select who to share your results with:
             </p>
-            <p v-if="sharedState.user.id != model.owner.id">
+            <p v-if="user.id != model.owner.id">
               You cannot share runs owned by another user.
             </p>
             <button type="button" class="btn btn-labeled btn-default"
-                    :disabled="!(model.state == 'Finished') || sharedState.user.id != model.owner.id || model.shared == 'c' ||  model.shared == 'w'"
+                    :disabled="!(model.state == 'Finished') || user.id != model.owner.id || model.shared == 'c' ||  model.shared == 'w'"
                     @click.stop="publishModel('company')"
                     >
               <i class="fa fa-group" aria-hidden="true"></i> Share with Company
             </button>
             <button type="button" class="btn btn-labeled btn-default"
-                    :disabled="!(model.state == 'Finished') || sharedState.user.id != model.owner.id || model.shared == 'w'"
+                    :disabled="!(model.state == 'Finished') || user.id != model.owner.id || model.shared == 'w'"
                     @click.stop="publishModel('world')"
                     >
               <i class="fa fa-globe" aria-hidden="true"></i> Share with World
