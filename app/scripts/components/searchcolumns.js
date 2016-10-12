@@ -1,4 +1,4 @@
-/* global Vue, SearchDetails, SearchList, ModelDetails */
+/* global Vue, SearchDetails, SearchList, ModelDetails, store */
 
 var exports = (function () {
   "use strict";
@@ -7,11 +7,17 @@ var exports = (function () {
     // not much in here.
     template: "#template-search-columns",
     data: function() {
-      return {
+      var data = {
         // items that were found
-        items: [],
-        models: []
+        selection: {
+          selectedModelIds: [],
+          activeModelId: null
+        },
+        models: store.state.models,
+        scenarios: store.state.scenarios
       };
+
+      return data;
     },
     components: {
       "search-details": SearchDetails,
@@ -19,31 +25,20 @@ var exports = (function () {
       "model-details": ModelDetails
     },
     ready: function() {
-      // TODO, consistent naming
-      this.$on("items-found", function(items, models) {
-        this.$set("items", items);
-        this.$set("models", models);
-      });
+      // make sure the state is merged with our scenarios and models
+
     },
     route: {
       data: function(transition) {
-
-        // Refresh data immediatly if user gets here.
-        this.$broadcast("updateSearch");
         transition.next();
       }
     },
 
     computed: {
-      activeItem: {
+      activeModel: {
         cache: false,
         get: function() {
-          if (_.has(this.$refs, ["searchList", "selectedModel"])) {
-            return this.$refs.searchList.selectedModel;
-          } else {
-            return null;
-          }
-
+          return _.get(this.models, this.selection.activeModelId);
         }
       },
       checkedBoxes: {
@@ -55,7 +50,6 @@ var exports = (function () {
     },
 
     methods: {
-
       // Reset all input fields.
       resetFields: function() {
         // Empty all fields:

@@ -51,14 +51,14 @@
 
             <div class="col-sm-12">
 
-              <div v-if="scenario.models && scenario.models.length > 0">
+              <div v-if="models && models.length > 0">
 
                 <ul class="list-group" data-toggle="items">
 
                   <model-card
-                     v-for="model in scenario.models"
-                     v-ref:modelcards
+                     v-for="model in models"
                      :selectable="true"
+                     :selection="selection"
                      :model="model"
                      >
                   </model-card>

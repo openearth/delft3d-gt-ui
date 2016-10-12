@@ -1,95 +1,84 @@
 <template id="template-search-columns">
+  <div class="search-columns">
+    <div class="full-height">
+      <!-- ======================== TOOLBAR ======================== -->
 
-  <div class="search-columns full-height">
-    <!-- ======================== TOOLBAR ======================== -->
+      <div class="container-fluid">
+        <div class="row action-bar">
 
-    <div class="container-fluid">
-      <div class="row action-bar">
+          <div class="col-xs-1">
+            <span class="btn-text">Search</span>
+          </div>
+          <div class="col-xs-1 text-right bordered">
+            <button type="button" class="btn btn-default" id="btn-reset-search-form" v-on:click="resetFields">Reset</button>
+          </div>
 
-        <div class="col-xs-1">
-          <span class="btn-text">Search</span>
+          <div class="col-xs-3">
+            <span class="btn-text">Database (search results)</span>
+          </div>
+          <div class="col-xs-1 bordered">
+            <model-control-menu :models="models" :selection="selection"></model-control-menu>
+          </div>
+
+          <div class="col-xs-6">
+            <span class="btn-text">Model details</span>
+          </div>
         </div>
-        <div class="col-xs-1 text-right bordered">
-          <button type="button" class="btn btn-default" id="btn-reset-search-form" v-on:click="resetFields">Reset</button>
-        </div>
+      </div>
 
-        <div class="col-xs-3">
-          <span class="btn-text">Database (search results)</span>
-        </div>
-        <div class="col-xs-1 bordered">
-          <model-control-menu :items="items" :models="models"></model-control-menu>
-        </div>
+      <!-- ======================== COLUMNS ======================== -->
 
-        <div class="col-xs-6">
-          <span class="btn-text">Model details</span>
+      <div class="container-fluid full-height">
+        <div class="row full-height">
+
+          <div class="col-sm-2 column  full-height bordered scrollable">
+            <search-details></search-details>
+          </div>
+
+          <div class="col-sm-4 column full-height bordered scrollable">
+            <search-list :scenarios="scenarios" :models="models" :selection="selection"></search-list>
+          </div>
+
+          <div class="col-sm-6 column full-height scrollable">
+            <model-details :model="activeModel"></model-details>
+          </div>
+
         </div>
       </div>
     </div>
 
-    <!-- ======================== COLUMNS ======================== -->
 
-    <div class="container-fluid full-height">
-      <div class="row full-height">
+    <!-- Alert message component for display of timed messages -->
+    <alert-message></alert-message>
 
-        <div class="col-sm-2 column  full-height bordered scrollable">
-          <search-details></search-details>
-        </div>
-
-        <div class="col-sm-4 column full-height bordered scrollable">
-          <search-list :items="items" :models="models" v-ref:search-list></search-list>
-        </div>
-
-        <div class="col-sm-6 column full-height scrollable">
-          <!-- details for selected scenarios first -->
-          <div v-if="activeItem">
-            <scenario-details
-               :scenario.sync="activeItem"
-               v-if="activeItem.type == 'scenario'"></scenario-details>
-            <model-details
-               :model.sync="activeItem"
-               v-if="activeItem.type == 'model'"></model-details>
+    <!-- MODALS should be turned into an comopnent?-->
+    <div class="modal default-hidden fade" id="dialog-confirm-delete-scenario" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Remove scenario?</h4>
           </div>
-          <div v-else>
-            <p class="info-secondary">
-              Clicking a model will show details here.
+          <div class="modal-body">
+            <p>
+              Are you sure you want to remove this scenario?
             </p>
-          </div>
-        </div>
 
-      </div>
+            <div class="alert alert-info" role="alert">
+              <strong>All</strong> associated runs will also be removed.
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-warning" id="dialog-remove-scenario-response-accept">Delete</button>
+            <button type="button" class="btn btn-primary" id="dialog-remove-scenario-response-cancel" data-dismiss="modal">Cancel</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+
     </div>
-  </div>
 
-
-  <!-- Alert message component for display of timed messages -->
-  <alert-message></alert-message>
-
-  <!-- MODALS should be turned into an comopnent?-->
-  <div class="modal default-hidden fade" id="dialog-confirm-delete-scenario" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">Remove scenario?</h4>
-        </div>
-        <div class="modal-body">
-          <p>
-            Are you sure you want to remove this scenario?
-          </p>
-
-          <div class="alert alert-info" role="alert">
-            <strong>All</strong> associated runs will also be removed.
-          </div>
-
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-warning" id="dialog-remove-scenario-response-accept">Delete</button>
-          <button type="button" class="btn btn-primary" id="dialog-remove-scenario-response-cancel" data-dismiss="modal">Cancel</button>
-        </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
 
   </div>
-
 
 </template>

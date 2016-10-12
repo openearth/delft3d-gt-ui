@@ -1,82 +1,80 @@
+/* global Vue */
 var exports = (function () {
   "use strict";
-  /* global Vue */
 
   // register the grid component
   var SearchList = Vue.component("search-list", {
 
     template: "#template-search-list",
+
+
+    data: function () {
+      return {
+      };
+    },
+
     props: {
       // can contain scenarios and models
-      "items": {
-        type: Array,
+      "selection": {
+        type: Object,
         required: true
       },
-
       "models": {
-        type: Array,
+        type: Object,
+        required: true
+      },
+      "scenarios": {
+        type: Object,
         required: true
       }
     },
 
     ready: function() {
-      this.$on("models-loaded", function(models) {
-        console.log("models loaded", models);
-      });
-
-    },
-    watch: {
-      items: function() {
-        this.$nextTick(function() {
-        });
-      }
-
     },
     computed: {
-      // Get the current selected modelid from the routing URL
-      selectedModel: {
+      scenariosWithModels: {
         cache: false,
         get: function() {
-          var models = _.filter(this.selectedItems, ["type", "model"]);
-          var firstModel = _.first(models);
+          var allScenarios = _.values(this.scenarios);
+          var nonEmptyScenarios = _.filter(
+            allScenarios,
+            (scenario) => {
+              var modelIds = _.intersection(
+                scenario.scene_set,
+                // get keys in original form (like Object.keys, but preserve type)
+                _.map(this.models, "id")
+              );
 
-          return firstModel;
+              return modelIds.length > 0;
+            }
+          );
+
+          return nonEmptyScenarios;
         }
       },
-      selectedItems: {
+      // Get the current selected modelid from the routing URL
+      companyModels: {
         cache: false,
         get: function() {
-          // we have models in scenarios
-          var models = _.flatMap(this.items, "models");
-          // combine them with scenarios and orphans
-          var allItems = _.concat(models, this.items);
-          // we only want the active ones
-          var activeItems = _.filter(allItems, ["active", true]);
-
-          return activeItems;
+          return _.filter(_.values(this.models), ["shared", "c"]);
+        }
+      },
+      worldModels: {
+        cache: false,
+        get: function() {
+          return _.filter(_.values(this.models), ["shared", "w"]);
         }
       }
     },
     methods: {
-      toggleActive: function(item) {
-        if (item.type === "scenario") {
-          _.each(item.models, function(model) {
-            model.active = !item.active;
-          });
-        }
-        item.active = !item.active;
-      },
       hasCompanyModels: function () {
-        return (_.filter(this.models, ["shared", "c"]).length > 0);
+        return this.companyModels.length > 0;
       },
       hasWorldModels: function () {
-        return (_.filter(this.models, ["shared", "w"]).length > 0);
+        return this.worldModels.length > 0;
       }
     },
     events: {
-      "deactivate-all": function (model) {
-        this.$broadcast("deactivate", model);
-      }
     }
   });
 

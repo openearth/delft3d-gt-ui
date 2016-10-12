@@ -3,41 +3,65 @@ var exports = (function () {
 
   var ModelCard = Vue.component("model-card", {
     template: "#template-model-card",
-
-    data: function() {
-      return {
-        selected: false
-      };
-    },
-
     props: {
+      selection: {
+        type: Object,
+        required: true
+      },
       model: {
+        type: Object,
         required: true
       },
       selectable: {
+        type: Boolean,
         required: false
       }
     },
+    computed: {
+      active: {
+        get: function () {
+          var isActive = false;
 
+          if (this.selection.activeModelId === null) {
+            isActive = false;
+          } else {
+            if (this.selection.activeModelId === this.model.id) {
+              isActive = true;
+            }
+          }
+          return isActive;
+        }
+      },
+      selected: {
+        cache: false,
+        get: function () {
+          return _.includes(this.selection.selectedModelIds, this.model.id);
+        },
+        set: (val) => {
+          if (val) {
+            // if selected is not set
+            if (!_.includes(this.selection.selectedModelIds, this.model.id)) {
+              this.selection.selectedModelIds.push(this.model.id);
+            }
+          } else {
+            // deselect
+            _.pull(this.selection.selectedModelIds, this.model.id);
+          }
+        }
+
+      }
+    },
     methods: {
       toggleActive: function() {
-        this.model.active = true;
-        this.$dispatch("deactivate-all", this.model);
+        if (this.selection.activeModelId !== this.model.id) {
+          this.selection.activeModelId = this.model.id;
+        } else {
+          this.selection.activeModelId = null;
+        }
       }
     },
 
     events: {
-      "deactivate": function(clickedmodel) {
-        if (this.model !== clickedmodel) {
-          this.model.active = false;
-        }
-      },
-      "select-all": function () {
-        this.selected = true;
-      },
-      "unselect-all": function () {
-        this.selected = false;
-      }
     }
 
   });

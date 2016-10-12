@@ -1,4 +1,4 @@
-/* global Vue, fetchSearchTemplate, fetchScenarios, startSyncModels, fetchModels, filterModels */
+/* global Vue, fetchSearchTemplate, store */
 var exports = (function () {
   "use strict";
   var SearchDetails = Vue.component("search-details", {
@@ -33,12 +33,6 @@ var exports = (function () {
             () => {
               // update ui
               this.initializeForm();
-
-              // update the search results
-              this.search();
-
-              // as soon as this component is loaded we can start to sync models
-              startSyncModels();
             }
           );
 
@@ -87,6 +81,14 @@ var exports = (function () {
     },
 
     methods: {
+      search: function() {
+        var params = this.buildParams();
+
+        // TODO: these parameters don't result in a filtered search result.... What to do??
+        store.state.params = params;
+        // update search
+        store.update();
+      },
       initializeForm: function() {
         // once the dom is updated, update the select pickers by hand
         // template data is computed into modelEngine
@@ -175,80 +177,6 @@ var exports = (function () {
           }
         );
         return params;
-      },
-      search: function() {
-        // TODO: searching should be done in search-component, because it needs to update
-        // details and search list
-
-        var params = this.buildParams();
-
-        // store the filter parameters in the store
-        filterModels(params);
-
-        // we want to update the search results and scenarios at the same time
-        var promises = [fetchModels(), fetchScenarios()];
-
-        // once we have everything, we can update the items
-        Promise.all(promises).then(
-          (values) => {
-            var models = values[0];
-            var scenarios = values[1];
-
-            models = _.uniqBy(models, "id");
-            scenarios = _.uniqBy(scenarios, "id");
-
-            // drop duplicates
-            // TODO: why models has duplicates
-            var modelById = _.keyBy(models, "id");
-
-            // first loop over all the scenarios
-            var items = [];
-
-            _.each(scenarios, (scenario) => {
-              scenario.models = [];
-              // loop over all models
-              _.each(scenario.scene_set, (modelId) => {
-                // store model in models
-                if (!_.has(modelById, modelId)) {
-                  console.warn("Model", modelId, "in scenario but not in model overview");
-                  return;
-                }
-                var model = modelById[modelId];
-
-                // properties that we need
-                model.active = false;
-                model.type = "model";
-
-                scenario.models.push(model);
-              });
-
-              // properties that we need
-              scenario.active = false;
-              items.push(scenario);
-            });
-
-            // now we can the orphan models
-            // ids that are in a scenario
-            var inScenario = _.uniq(_.flatMap(scenarios, "scene_set"));
-            // all ids
-            var allIds = _.uniq(_.map(models, "id"));
-            // ids that are not in a scenario
-            var orphanIds = _.difference(allIds, inScenario);
-
-            // add the orphans to the list
-            var orphans = _.map(orphanIds, (id) => {
-              return modelById[id];
-            });
-
-            _.each(orphans, (model) => {
-              model.type = "model";
-              model.active = false;
-              items.push(model);
-            });
-
-            this.$dispatch("items-found", items, models);
-          }
-        );
       }
     }
 

@@ -4,7 +4,7 @@
 
     <template v-if="model">
 
-      <div class="panel-body">
+      <div class="panel-body" :class="{ 'active-class': model.active }">
 
         <div class="row">
 
@@ -40,8 +40,8 @@
             </form>
           </div>
 
-          <div class="col-sm-1 text-center">
-            <i v-if="model.active" class="fa fa-chevron-right" aria-hidden="true"></i>
+           <div class="col-sm-1 text-center">
+            <i v-if="model.id === selection.activeModelId" class="fa fa-chevron-right" aria-hidden="true"></i>
           </div>
 
         </div>
