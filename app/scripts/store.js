@@ -197,6 +197,9 @@ var exports = (function() {
     deleteScenario: function (scenarioContainer) {
       // snappyness: remove scenarioContainer from store
       this.state.scenarioContainers = _.without(this.state.scenarioContainers, scenarioContainer);
+      if (_.indexOf(scenarioContainer.models, this.state.activeModelContainer) > -1) {
+        this.state.activeModelContainer = undefined;
+      }
       $.ajax({url: "/api/v1/scenarios/" + scenarioContainer.id + "/", method: "DELETE", traditional: true, dataType: "json"})
         .done(function() {})
         .fail(function(error) {
