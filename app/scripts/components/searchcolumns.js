@@ -16,6 +16,7 @@ var exports = (function () {
         models: store.state.models,
         scenarios: store.state.scenarios
       };
+
       return data;
     },
     components: {

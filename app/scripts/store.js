@@ -10,7 +10,9 @@ var exports = (function() {
       params: {},
       updateInterval: 2000,
       interval: null,
+      /*eslint-disable camelcase*/
       user: {id: -1, first_name: "Anonymous", last_name: "User"}
+      /*eslint-enable camelcase*/
     },
 
     // ================================ SYNCHRONISATION
@@ -68,22 +70,22 @@ var exports = (function() {
       this.fetchUser().then(function (json) {
         this.state.user = json;
       }.bind(this)).catch(function (reason) {
-        console.error('Promise rejected: ' + reason);
+        console.error("Promise rejected: " + reason);
       });
     },
 
     // ================================ API FETCH CALLS
 
     fetchUser: function () {
-      return new Promise(function(resolve, reject) {
+      return new Promise((resolve, reject) => {
         $.ajax({url: "/api/v1/users/me/", data: [], traditional: true, dataType: "json"})
           .done(function(json) {
             resolve(json[0]);
-          }.bind(this))
+          })
           .fail(function(error) {
             reject(error);
           });
-      }.bind(this));
+      });
     },
     fetchModels: function () {
       return new Promise((resolve, reject) => {
@@ -95,6 +97,7 @@ var exports = (function() {
           traditional: true,
           dataType: "json"
         };
+
         $.ajax(request)
           .done((json) => {
             resolve(json);

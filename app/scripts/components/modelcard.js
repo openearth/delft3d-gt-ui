@@ -21,6 +21,7 @@ var exports = (function () {
       active: {
         get: function () {
           var isActive = false;
+
           if (this.selection.activeModelId === null) {
             isActive = false;
           } else {
@@ -42,8 +43,7 @@ var exports = (function () {
             if (!_.includes(this.selection.selectedModelIds, this.model.id)) {
               this.selection.selectedModelIds.push(this.model.id);
             }
-          }
-          else {
+          } else {
             // deselect
             _.pull(this.selection.selectedModelIds, this.model.id);
           }

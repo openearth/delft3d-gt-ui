@@ -1,6 +1,6 @@
+/* global Vue */
 var exports = (function () {
   "use strict";
-  /* global Vue */
 
   // register the grid component
   var SearchList = Vue.component("search-list", {
@@ -44,6 +44,7 @@ var exports = (function () {
                 // get keys in original form (like Object.keys, but preserve type)
                 _.map(this.models, "id")
               );
+
               return modelIds.length > 0;
             }
           );

@@ -30,9 +30,10 @@ var exports = (function () {
       selectedModels: {
         cache: false,
         get: function() {
-          return _.pick(this.models, this.selection.selectedModelIds);
+          return _.filter(this.models, (model) => {
+            return _.includes(this.selection.selectedModelIds, model.id);
+          });
         }
-
       }
     },
     methods: {

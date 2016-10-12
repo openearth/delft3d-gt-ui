@@ -1,3 +1,5 @@
+/* global store */
+
 var exports = (function () {
   "use strict";
   // some models are not visible, but there is an id
@@ -21,6 +23,9 @@ var exports = (function () {
       models: {
         cache: false,
         get: function() {
+          // get from the store, or also pass along the models to a scenario
+          // An alternative is to do this while fetching data, but we have to make sure we use Promise.all consistently
+          // to fetch models and scenarios at the same time
           return _.map(this.scenario.scene_set, (modelId) => {
             if (modelId in store.state.models) {
               return store.state.models[modelId];

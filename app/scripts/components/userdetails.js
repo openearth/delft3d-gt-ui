@@ -1,4 +1,4 @@
-/* global Vue */
+/* global Vue, store */
 
 var exports = (function () {
   "use strict";
@@ -8,8 +8,15 @@ var exports = (function () {
     template: "#template-user-details",
     data: function() {
       return {
-        sharedState: store.state
       };
+    },
+    computed: {
+      user: {
+        cache: false,
+        get: function() {
+          return store.state.user;
+        }
+      }
     }
   });
 

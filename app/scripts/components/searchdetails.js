@@ -83,6 +83,8 @@ var exports = (function () {
     methods: {
       search: function() {
         var params = this.buildParams();
+
+        // TODO: these parameters don't result in a filtered search result.... What to do??
         store.state.params = params;
         // update search
         store.update();
