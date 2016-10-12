@@ -24,19 +24,17 @@ var exports = (function () {
       "model-details": ModelDetails
     },
     ready: function() {
-      console.log("scenarios ready", this.scenarios);
       // make sure the state is merged with our scenarios and models
 
     },
     route: {
       data: function(transition) {
         transition.next();
-        console.log("scenarios transition", this.scenarios);
       }
     },
 
     computed: {
-      selectedModel: {
+      activeModel: {
         cache: false,
         get: function() {
           return _.get(this.models, this.selection.activeModelId);
