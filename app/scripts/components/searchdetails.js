@@ -83,7 +83,6 @@ var exports = (function () {
     methods: {
       search: function() {
         var params = this.buildParams();
-        console.log("searching with", params);
         store.state.params = params;
         // update search
         store.update();
