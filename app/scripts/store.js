@@ -12,7 +12,7 @@ var exports = (function() {
       scenariosFetched: false,
       selectedModelContainer: undefined,
       updateInterval: 2000,
-      user: {id: -1}
+      user: {id: -1, first_name: "Anonymous", last_name: "User"}
     },
 
     // ================================ SYNCHRONISATION
@@ -41,8 +41,28 @@ var exports = (function() {
       });
     },
 
+    updateUser: function () {
+      this.fetchUser().then(function (json) {
+        console.log(json);
+        this.state.user = json;
+      }.bind(this)).catch(function (reason) {
+        console.error('Promise rejected: ' + reason);
+      });
+    },
+
     // ================================ API FETCH CALLS
 
+    fetchUser: function () {
+      return new Promise(function(resolve, reject) {
+        $.ajax({url: "/api/v1/users/me/", data: [], traditional: true, dataType: "json"})
+          .done(function(json) {
+            resolve(json[0]);
+          }.bind(this))
+          .fail(function(error) {
+            reject(error);
+          });
+      }.bind(this));
+    },
     fetchModels: function () {
       this.state.modelsFetched = false;
       return new Promise(function(resolve, reject) {
@@ -186,6 +206,7 @@ var exports = (function() {
   };
 
   // get this baby up and running:
+  store.updateUser();
   store.startSync();
 
   return {
