@@ -204,9 +204,21 @@ var exports = (function() {
 
     // ================================ MULTISELECTED MODEL UPDATE METHODS
 
-    getNumSelectedModels: function () {
-      return _.filter(this.state.modelContainers, ["selected", true]).length;
-    }
+    getSelectedModels: function () {
+      return _.filter(this.state.modelContainers, ["selected", true]);
+    },
+
+    startSelectedModels: function () {
+      _.each(this.getSelectedModels(), this.startModel.bind(this));
+    },
+
+    stopSelectedModels: function () {
+      _.each(this.getSelectedModels(), this.stopModel.bind(this));
+    },
+
+    deleteSelectedModels: function () {
+      _.each(this.getSelectedModels(), this.deleteModel.bind(this));
+    },
 
   };
 

@@ -38,7 +38,7 @@ var exports = (function () {
               this.search();
 
               // as soon as this component is loaded we can start to sync models
-              startSyncModels();
+              // startSyncModels();
             }
           );
 
@@ -183,10 +183,11 @@ var exports = (function () {
         var params = this.buildParams();
 
         // store the filter parameters in the store
-        filterModels(params);
+        // filterModels(params);
 
         // we want to update the search results and scenarios at the same time
-        var promises = [fetchModels(), fetchScenarios()];
+        // var promises = [fetchModels(), fetchScenarios()];
+        var promises = [];
 
         // once we have everything, we can update the items
         Promise.all(promises).then(

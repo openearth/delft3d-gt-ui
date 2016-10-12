@@ -28,7 +28,7 @@ var exports = (function () {
         return _.some(this.scenario.models, ["selected", true]);
       },
       allModelsSelected: function() {
-        return _.every(this.scenario.models, ["selected", true]);
+        return _.every(_.filter(this.scenario.models, ["data.shared", "p"]), ["selected", true]);
       }
     }
   });

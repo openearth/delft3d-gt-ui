@@ -2,13 +2,18 @@ var exports = (function () {
   "use strict";
 
   var ModelCard = Vue.component("model-card", {
+
     template: "#template-model-card",
+
     props: {
       model: {
         required: true
-      },
-      selectable: {
-        required: false
+      }
+    },
+
+    computed: {
+      selectable: function () {
+        return (this.model.data.shared === "p");
       }
     },
 
@@ -26,7 +31,9 @@ var exports = (function () {
         }
       },
       "select-all": function () {
-        this.model.selected = true;
+        if (this.selectable) {
+          this.model.selected = true;
+        }
       },
       "unselect-all": function () {
         this.model.selected = false;
