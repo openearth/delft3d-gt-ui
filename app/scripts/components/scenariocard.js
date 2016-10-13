@@ -11,6 +11,10 @@ var exports = (function () {
       }
     },
     computed: {
+      hasModels: function () {
+        console.log(this.scenario);
+        return this.scenario.models.length > 0;
+      },
       modelStatuses: function () {
         var array = _.map(this.scenario.models, function (model) {
           return {state: model.data.state};

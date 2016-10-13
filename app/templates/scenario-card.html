@@ -1,8 +1,8 @@
 <template id="template-scenario-card">
 
-  <div class="scenario-card" @click.stop="collapse">
+  <div class="scenario-card" @click.stop="collapse" v-if="hasModels">
 
-    <template v-if="scenario">
+    <div class="panel panel-default">
 
       <div class="panel-heading panel-heading-scenario">
 
@@ -20,9 +20,13 @@
                 class="progress-bar"
                 :style="{ width: status.width + '%'}"
                 :class="[
-                    (status.state == 'Running simulation...') ? 'progress-bar-striped active' : '',
                     (status.state == 'Finished') ? 'progress-bar-success' : '',
                     (status.state == 'Idle: waiting for user input') ? 'progress-bar-warning' : '',
+                    (status.state == 'Running simulation...') ? 'progress-bar-striped active' : '',
+                    (
+                      status.state != 'Finished' &&
+                      status.state != 'Idle: waiting for user input'
+                    ) ? 'progress-bar-info' : '',
                 ]"
                 role="progressbar"></div>
             </div>
@@ -83,12 +87,6 @@
         </div>
 
       </div>
-
-    </template>
-
-    <template v-else>
-      no scenario available
-    </template>
 
   </div>
 

@@ -16,7 +16,17 @@
           </div>
 
           <div class="col-sm-4 text-right">
-            <span class="label label-default label-status">{{model.data.state | capitalize }}</span>
+            <span class="label label-status"
+                  :class="[
+                    (model.data.state == 'Finished') ? 'label-success' : '',
+                    (model.data.state == 'Idle: waiting for user input') ? 'label-warning' : '',
+                    (
+                      model.data.state != 'Finished' &&
+                      model.data.state != 'Idle: waiting for user input'
+                    ) ? 'label-info' : '',
+                  ]">
+              {{model.data.state | capitalize }}
+            </span>
           </div>
 
           <div class="col-sm-2">
@@ -28,6 +38,10 @@
                 :class="[
                     (model.data.state == 'Running simulation...') ? 'progress-bar-striped active' : '',
                     (model.data.state == 'Finished') ? 'progress-bar-success' : '',
+                    (
+                      model.data.state != 'Finished' &&
+                      model.data.state != 'Idle: waiting for user input'
+                    ) ? 'progress-bar-info' : ''
                 ]"
                 role="progressbar"
                 aria-valuemin="0"
