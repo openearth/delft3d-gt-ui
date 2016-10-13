@@ -65,7 +65,7 @@ var exports = (function () {
         var sliders = $(".ion-range");
 
         // Deselect all bootstrap select pickers
-        $('.search-details .select-picker').selectpicker('deselectAll');
+        $(".search-details .select-picker").selectpicker("deselectAll");
 
         $.each(sliders, function(key, slider) {
           var irs = $(slider).data("ionRangeSlider");
