@@ -156,6 +156,33 @@
         </div>
       </div>
 
+      <!-- Post processing information -->
+      <div class="panel panel-default">
+        <div class="panel-heading" @click.stop="collapseToggle">
+          <h2 class="panel-title">Post processing output</h2>
+        </div>
+        <div class="collapse">
+          <div class="panel-body">
+
+            <table class="table table-striped" v-if="(model.info.postprocess_output !== undefined)">
+              <thead>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(key, param) in model.info.postprocess_output | orderBy '$key'">
+                  <td>{{ (param.name || key) | capitalize }}</td>
+                  <td>{{param}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <p v-else>No post processing output available yet.</p>
+          </div>
+        </div>
+      </div>
+
       <div class="panel panel-default">
         <div class="panel-heading" @click.stop="collapseToggle">
           <h2 class="panel-title">Download files</h2>
