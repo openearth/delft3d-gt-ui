@@ -64,6 +64,9 @@ var exports = (function () {
         // Todo, reset sliders to min/max
         var sliders = $(".ion-range");
 
+        // Deselect all bootstrap select pickers
+        $('.search-details .select-picker').selectpicker('deselectAll');
+
         $.each(sliders, function(key, slider) {
           var irs = $(slider).data("ionRangeSlider");
 
