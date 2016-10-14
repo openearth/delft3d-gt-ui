@@ -1054,62 +1054,6 @@
 
 
 
-    // This version sends a invalid reponse to the fetchLog, we have to handle this.
-    // Skip the UI part of this. just direct through global.
-    xit("Should be possible to fetchLog - EXPECT INVALID REPONSE", function(done) {
-
-      //var correctReply = false;
-      var id = 405;
-
-      // We fake to get a model.
-      nock("http://0.0.0.0")
-        .defaultReplyHeaders({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*"
-        })
-        .filteringPath(function() {
-          return "/api/v1/scenes/";
-        })
-        .get("/api/v1/scenes/")
-        .reply(200, [
-          {
-            id: 405,
-            name: "Run 1",
-            fileurl: "/fileurl/",
-            info: {
-              logfile: {
-                location: "location/",
-                file: "file"
-              }
-            }
-          }
-        ]);
-
-      $.ajax({url: "/api/v1/scenes/" + id + "/", dataType: "json"})
-        .done(function(json) {
-          var data = json[0];
-
-          var url = data.fileurl + data.info.logfile.location + data.info.logfile.file;
-
-          nock("http://0.0.0.0")
-            .defaultReplyHeaders({
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*"
-            })
-            .get(url)
-            .reply(400, function() {
-              return {};
-            });
-
-          global.store.fetchLog({data: data}).catch(function() {
-            // We expect an error.
-            done();
-          });
-        });
-    });
-
-
-
     it("Should be possible to delete a model", function(done) {
 
       var deleteID = 4;
@@ -1282,10 +1226,13 @@
         });
 
       global.store.stopModel({id: id, data: {state: ""}})
-        .catch(function(e) {
-        // We expected an error.
-          done(new Error(e));
-      });
+        .then(function() {
+          done(new Error("we should get a 400 reply"));
+        })
+      // this is what we expect
+        .catch(function() {
+          done();
+        });
 
     });
 
@@ -1324,7 +1271,9 @@
     });
 
     assert.isOk(app, "app");
-    imageAnimation.model = { };
+    imageAnimation.model = {
+      info: {}
+    };
 
 
 
@@ -1470,6 +1419,8 @@
       // Next frame should still be at 0, as we did not have any model info.
       assert.isTrue(imageAnimation.currentAnimationIndex === 0, "Animation index should stay 0");
 
+      // restore model info
+      imageAnimation.model.info = {};
       done();
     });
 
@@ -1533,7 +1484,7 @@
 
       var imgurl = imageAnimation.animationFrame;
 
-      assert.isTrue(imgurl === "fileurl/location/firstframe.jpg", "Animation frame file matches expectation");
+      assert.equal("fileurl/location/firstframe.jpg", imgurl, "Animation frame file matches expectation");
 
       done();
     });
@@ -1585,7 +1536,7 @@
       done();
     });
 
-    xit("Should be possible to previousImageFrame - No model info", function(done) {
+    it("Should be possible to previousImageFrame - No model info", function(done) {
 
       // index should become 0
       /*eslint-disable camelcase*/
@@ -1600,7 +1551,8 @@
       imageAnimation.previousImageFrame();
 
       // We started at 0, without data, so it should still be 1, as it was left untouched (maybe should become 0 if the model data is gone though)
-      assert.isTrue(imageAnimation.animationIndex === 1, "Animation frame should still have been one.");
+      // TODO: 0,1? I don't get it....
+      assert.equal(imageAnimation.animationIndex, 1, "Animation frame should still have been one.");
       done();
     });
 
