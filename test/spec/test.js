@@ -1281,9 +1281,10 @@
           return {};
         });
 
-      global.store.stopModel({id: id, data: {state: ""}}).catch(function() {
+      global.store.stopModel({id: id, data: {state: ""}})
+        .catch(function(e) {
         // We expected an error.
-        done();
+          done(new Error(e));
       });
 
     });
