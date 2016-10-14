@@ -57,7 +57,7 @@ var exports = (function () {
         this.deleteDialog = getDialog(this, "confirm-dialog", "delete");
 
         this.deleteDialog.onConfirm = function() {
-          store.deleteModel(this.selectedModel);
+          store.deleteModel(this.activeModel);
 
           this.deleteDialog.hide();
         }.bind(this);
