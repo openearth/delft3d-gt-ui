@@ -53,7 +53,7 @@ var exports = (function () {
         e.stopPropagation();
 
         // Get a confirm dialog
-        this.deleteDialog = getDialog(this, "confirm-dialog", "delete-scenario-" + this.scenario.id );
+        this.deleteDialog = getDialog(this, "confirm-dialog", "delete-scenario-" + this.scenario.id);
 
 
         console.log(this.deleteDialog);
