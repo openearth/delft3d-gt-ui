@@ -55,11 +55,14 @@ var exports = (function() {
 
     fetchUser: function () {
       return new Promise((resolve, reject) => {
+        console.log("================================================= aklsfjhalsdkfhj 1");
         $.ajax({url: "/api/v1/users/me/", data: this.state.params, traditional: true, dataType: "json"})
           .done(function(json) {
+            console.log("================================================= aklsfjhalsdkfhj 2");
             resolve(json[0]);
           })
           .fail(function(error) {
+            console.error("================================================= aklsfjhalsdkfhj 3 ", error);
             reject(error);
           });
       });
@@ -148,69 +151,141 @@ var exports = (function() {
     // ================================ API MODELS UPDATE CALLS
 
     deleteModel: function (modelContainer) {
-      // snappyness: remove modelContainer from store
-      if(this.state.activeModelContainer === modelContainer) {
-        this.state.activeModelContainer = undefined;
-      }
-      this.state.modelContainers = _.without(this.state.modelContainers, modelContainer);
-      _.each(this.state.scenariosContainers, function (container) {
-        container.models = _.without(container.models, modelContainer);
-      });
-
-      // update backend
-      $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/", method: "DELETE", traditional: true, dataType: "json"})
-        .done(function() {})
-        .fail(function(error) {
-          console.error(error);
+      return new Promise((resolve, reject) => {
+        // snappyness: remove modelContainer from store
+        if(this.state.activeModelContainer === modelContainer) {
+          this.state.activeModelContainer = undefined;
+        }
+        this.state.modelContainers = _.without(this.state.modelContainers, modelContainer);
+        _.each(this.state.scenariosContainers, function (container) {
+          container.models = _.without(container.models, modelContainer);
         });
+
+        // update backend
+        $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/", method: "DELETE", traditional: true, dataType: "json"})
+          .done(function(data) {
+            resolve(data);
+          })
+          .fail(function(error) {
+            reject(error);
+          });
+      });
     },
 
     publishModel: function (modelContainer, target) {
-      modelContainer.data.shared = "u";
-      $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/publish_" + target + "/", method: "POST"})
-        .done(function () {})
-        .fail(function(error) {
-          console.error(error);
-        });
+      return new Promise((resolve, reject) => {
+        if (modelContainer === undefined || modelContainer.id === undefined) {
+          reject("No model id to delete");
+        }
+        if (target === undefined) {
+          reject("No publication level to publish to");
+        }
+        modelContainer.data.shared = "u";
+        $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/publish_" + target + "/", method: "POST"})
+          .done(function (data) {
+            resolve(data);
+          })
+          .fail(function(error) {
+            reject(error);
+          });
+      });
     },
 
     startModel: function (modelContainer) {
-      modelContainer.data.state = "Queued";
-      $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/start/", method: "PUT", traditional: true, dataType: "json"})
-        .done(function() {})
-        .fail(function(error) {
-          console.error(error);
-        });
+      return new Promise((resolve, reject) => {
+        if (modelContainer === undefined || modelContainer.id === undefined) {
+          reject("No model id to start");
+        }
+        modelContainer.data.state = "Queued";
+        $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/start/", method: "PUT", traditional: true, dataType: "json"})
+          .done(function(data) {
+            resolve(data);
+          })
+          .fail(function(error) {
+            reject(error);
+          });
+      });
     },
 
     stopModel: function (modelContainer) {
-      modelContainer.data.state = "Stopping simulation...";
-      $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/stop/", method: "PUT", traditional: true, dataType: "json"})
-        .done(function() {})
-        .fail(function(error) {
-          console.error(error);
-        });
+      return new Promise((resolve, reject) => {
+        console.log("stoppping model", modelContainer.id);
+        if (modelContainer === undefined || modelContainer.id === undefined) {
+          reject("No model id to start");
+        }
+        modelContainer.data.state = "Stopping simulation...";
+        var request = {
+          url: "/api/v1/scenes/" + modelContainer.id + "/stop/",
+          method: "PUT",
+          traditional: true,
+          dataType: "json"
+        };
+
+        console.log(request);
+        $.ajax(request)
+          .done(function(data) {
+            resolve(data);
+          })
+          .fail(function(error) {
+            reject(error);
+          });
+      });
     },
 
     // ================================ API SCENARIOS UPDATE CALLS
 
     deleteScenario: function (scenarioContainer) {
-      // snappyness: remove scenarioContainer from store
-      this.state.scenarioContainers = _.without(this.state.scenarioContainers, scenarioContainer);
-      if (_.indexOf(scenarioContainer.models, this.state.activeModelContainer) > -1) {
-        this.state.activeModelContainer = undefined;
-      }
-      $.ajax({url: "/api/v1/scenarios/" + scenarioContainer.id + "/", method: "DELETE", traditional: true, dataType: "json"})
-        .done(function() {})
-        .fail(function(error) {
-          console.error(error);
-        });
+      return new Promise((resolve, reject) => {
+        if (scenarioContainer === undefined || scenarioContainer.id === undefined) {
+          reject("No scenario id to delete");
+        }
+
+        // snappyness: remove scenarioContainer from store
+        this.state.scenarioContainers = _.without(this.state.scenarioContainers, scenarioContainer);
+        if (_.indexOf(scenarioContainer.models, this.state.activeModelContainer) > -1) {
+          this.state.activeModelContainer = undefined;
+        }
+
+        $.ajax({url: "/api/v1/scenarios/" + scenarioContainer.id + "/", method: "DELETE", traditional: true, dataType: "json"})
+          .done(function(json) {
+            resolve(json);
+          })
+          .fail(function(error) {
+            reject(error);
+          });
+      });
     },
 
     // ================================ OTHER SUPPORT METHODS
 
-    fetchLog: function () {
-      // TODO: write fetchlog
+    fetchLog: function (modelContainer) {
+      return new Promise(function(resolve, reject) {
+        if (modelContainer === undefined || modelContainer.data === undefined) {
+          reject("No model to fetch log of.");
+        }
+
+        var model = modelContainer.data;
+
+        // Working dir is at: modeldata.fileurl + delf3d + delft3d.log
+        var url = model.fileurl + model.info.logfile.location + model.info.logfile.file;
+
+        // Without a filename, we just give back a custom string.
+        if (model.info.logfile.file.length === 0) {
+
+          resolve("No log output available yet");
+          return;
+        }
+
+        $.ajax(url)
+          .done(function(text) {
+            resolve(text);
+          })
+          .fail(function(error) {
+            console.log("Failed to get log", error);
+            reject(error);
+          });
+
+      });
     },
 
     // ================================ MULTISELECTED MODEL UPDATE METHODS
@@ -220,15 +295,23 @@ var exports = (function() {
     },
 
     startSelectedModels: function () {
-      _.each(this.getSelectedModels(), this.startModel.bind(this));
+      return Promise.all(
+        _.map(this.getSelectedModels(), this.startModel.bind(this))
+      );
     },
 
     stopSelectedModels: function () {
-      _.each(this.getSelectedModels(), this.stopModel.bind(this));
+      console.log("selected models", this.getSelectedModels());
+      return Promise.all(
+        _.map(this.getSelectedModels(), this.stopModel.bind(this))
+      );
     },
 
     deleteSelectedModels: function () {
-      _.each(this.getSelectedModels(), this.deleteModel.bind(this));
+      return Promise.all(
+        _.map(this.getSelectedModels(), this.deleteModel.bind(this))
+      );
+
     },
 
     // ================================ SEARCH METHODS

@@ -1,4 +1,4 @@
-/* global ImageAnimation, ConfirmDialog, UserDetails, store  */
+/* global ImageAnimation, ConfirmDialog, UserDetails, store, getDialog  */
 var exports = (function () {
   "use strict";
 
@@ -52,7 +52,22 @@ var exports = (function () {
         store.publishModel(this.activeModel, level);
       },
       removeModel: function () {
-        store.deleteModel(this.activeModel);
+
+        // Get a confirm dialog
+        this.deleteDialog = getDialog(this, "confirm-dialog", "delete");
+
+        this.deleteDialog.onConfirm = function() {
+          store.deleteModel(this.activeModel);
+
+          this.deleteDialog.hide();
+        }.bind(this);
+
+        // We also show an extra warning in the dialog, if user chooses to remove additional files.
+        this.deleteDialog.showAlert(false);
+
+        // Show the dialog:
+        this.deleteDialog.show();
+
       },
       startModel: function () {
         store.startModel(this.activeModel);

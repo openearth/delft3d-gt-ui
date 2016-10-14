@@ -1,4 +1,4 @@
-/* global Vue, store */
+/* global Vue, store, getDialog */
 
 var exports = (function () {
   "use strict";
@@ -34,7 +34,23 @@ var exports = (function () {
       },
 
       deleteSelectedModels: function() {
-        store.deleteSelectedModels();
+
+        // Get a confirm dialog
+        this.deleteDialog = getDialog(this, "confirm-dialog", "delete-runs");
+
+        this.deleteDialog.onConfirm = function() {
+          store.deleteSelectedModels();
+
+          this.deleteDialog.hide();
+
+        }.bind(this);
+
+        // We also show an extra warning in the dialog, if user chooses to remove additional files.
+        this.deleteDialog.showAlert(false);
+
+        // Show the dialog:
+        this.deleteDialog.show();
+
       }
     }
 

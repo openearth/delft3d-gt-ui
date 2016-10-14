@@ -88,6 +88,7 @@ var exports = (function () {
       initializeForm: function() {
         // once the dom is updated, update the select pickers by hand
         // template data is computed into modelEngine
+        var that = this;
         var pickers = $(".select-picker");
 
         if (pickers.selectpicker !== undefined) {
@@ -110,20 +111,20 @@ var exports = (function () {
         /*eslint-enable camelcase*/
 
         // Add event handler that allows one to use the X next to inputs to clear the input.
-        $(".button-empty-input-field").on("click", () => {
-          var input = $(this).closest("div").find("input");
+        $(".button-empty-input-field").on("click", function() {
+          var input = $(this).closest(".input-group").find("input");
 
           // Force update selected parameters.
           // Quick fix for selected parameter, should be a parameter later.
           var id = input.attr("id");
 
           if (id === "search") {
-            this.searchText = "";
+            that.searchText = "";
           } else {
-            this.selectedParameters[id] = "";
+            that.selectedParameters[id] = "";
           }
           // Search up to the div, and then find the input child. This is the actual input field.
-          this.search();
+          that.search();
 
         });
 
@@ -167,7 +168,8 @@ var exports = (function () {
             }
 
             // Remove trailing ,:
-            result = result.replace(/\,$/, "");
+            //result = result.replace(/\,$/, "");
+
 
             return result;
           }
@@ -180,7 +182,20 @@ var exports = (function () {
         store.updateParams(params);
         store.update();
       }
+    },
+
+    // If the clear button event is fired, perform search automatic.
+    events: {
+      "clearSearch": function () {
+        this.searchText = "";
+        this.selectedDomains = [];
+        this.selectedParameters = {};
+        this.selectedTemplates = [];
+
+        this.search();
+      }
     }
+
   });
 
   return {
