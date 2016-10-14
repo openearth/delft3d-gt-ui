@@ -205,7 +205,7 @@ var exports = (function() {
         }
 
         //  Did the template change? Or maybe forcing an update
-        if ( this.currentSelectedId === template.id) {
+        if (this.currentSelectedId === template.id) {
           return;
         }
 

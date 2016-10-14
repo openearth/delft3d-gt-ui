@@ -55,14 +55,11 @@ var exports = (function() {
 
     fetchUser: function () {
       return new Promise((resolve, reject) => {
-        console.log("================================================= aklsfjhalsdkfhj 1");
         $.ajax({url: "/api/v1/users/me/", data: this.state.params, traditional: true, dataType: "json"})
           .done(function(json) {
-            console.log("================================================= aklsfjhalsdkfhj 2");
             resolve(json[0]);
           })
           .fail(function(error) {
-            console.error("================================================= aklsfjhalsdkfhj 3 ", error);
             reject(error);
           });
       });
