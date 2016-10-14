@@ -186,7 +186,14 @@ var exports = (function () {
 
     // If the clear button event is fired, perform search automatic.
     events: {
-      "clearSearch": "search"
+      "clearSearch": function () {
+        this.searchText = "";
+        this.selectedDomains = [];
+        this.selectedParameters = {};
+        this.selectedTemplates = [];
+
+        this.search();
+      }
     }
 
   });
