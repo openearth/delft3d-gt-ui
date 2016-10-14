@@ -85,6 +85,7 @@
                 </div>
               </div>
 
+
             </div>
 
           </div>
@@ -92,6 +93,16 @@
         </div>
 
       </div>
+
+      <confirm-dialog :dialog-id="'delete-scenario-'+scenario.id" confirm-button-title="Delete">
+        <template slot="title">
+         Delete scenario
+        </template>
+        <template slot="body">
+          <p>Are you sure you want to remove this scenario and all associated models?</p>
+        </template>
+      </confirm-dialog>
+
 
   </div>
 
