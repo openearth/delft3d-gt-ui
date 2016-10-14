@@ -128,7 +128,6 @@
   // In testing we override the URL domain name. Otherwise nock cannot work. Nock does NOT support relative paths.
   // Using this, we can use http://0.0.0.0 in the nock.
   global.$.ajaxPrefilter(function(options) {
-    // console.log(options);
     options.url = "http://0.0.0.0" + (options.url);
 
   });
@@ -1088,7 +1087,6 @@
       var id = 4;
 
       nock("http://0.0.0.0")
-        .log(console.log)
         .intercept("/api/v1/scenes/" + id + "/start/", "OPTIONS")
         .reply(200, function() {
           return "Allow: GET, HEAD, PUT, DELETE, POST";
@@ -1129,7 +1127,7 @@
 
       // Mock the three requests:
       nock("http://0.0.0.0")
-        .log(console.log)
+        // .log(console.log)
         .intercept("/api/v1/scenes/" + global.store.state.modelContainers[0].id + "/stop/", "OPTIONS")
         .reply(200, function() {
           return "Allow: GET, HEAD, PUT, DELETE, POST";
@@ -1556,24 +1554,23 @@
       done();
     });
 
-    // xit
-    xit("Should be possible to previousImageFrame ", function(done) {
+    it("Should not be possible to previousImageFrame before 0", function(done) {
 
       // index should become 0
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "middleframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
       imageAnimation.switchAnimation("delta_fringe_images");
       imageAnimation.animationIndex = 0;
       imageAnimation.previousImageFrame();
 
-      // We started at 0, so we expect image to go to length -1.
-      assert.isTrue(imageAnimation.animationIndex === imageAnimation.model.info.delta_fringe_images.images.length - 1, "Animation frame should have wrapped");
+      // We started at 0, we don't wrap past 0
+      assert.equal(imageAnimation.animationIndex, 0, "Animation frame should not have wrapped");
       done();
     });
 
     // xit
-    xit("Should be possible to previousImageFrame - no animation key ", function(done) {
+    it("Should be possible to previousImageFrame - no animation key ", function(done) {
 
       // index should become 0
       /*eslint-disable camelcase*/
@@ -1584,7 +1581,7 @@
       imageAnimation.previousImageFrame();
 
       // We started at 0, without data, so it should still be 1, as it was left untouched (maybe should become 0 if the model data is gone though)
-      assert.isTrue(imageAnimation.animationIndex === 1, "Animation frame should still have been one.");
+      assert.equal(imageAnimation.animationIndex, 1, "Animation frame should still have been one.");
       done();
     });
 
@@ -1604,7 +1601,7 @@
     });
 
     // xit
-    xit("Should be possible to gotoLastFrame - number wrap", function(done) {
+    it("Should be possible to gotoLastFrame - number wrap", function(done) {
 
       // index should become 0.. we do not have any images. Maybe test later using an fake array.
       /*eslint-disable camelcase*/
@@ -1615,7 +1612,7 @@
       imageAnimation.switchAnimation("delta_fringe_images");
       imageAnimation.gotoLastFrame();
 
-      assert.isTrue(imageAnimation.animationIndex === 0, "Animation frame at 0");
+      assert.equal(imageAnimation.animationIndex, 0, "Animation frame at 0");
       done();
     });
 
@@ -1716,33 +1713,6 @@
     });
 
 
-
-    // xit: Todo, but required DOM.
-    xit("Should be possible select an item WITH control key pressed ", function(done) {
-
-      var aSearchList = new SearchList();
-      var selectedId = 123;
-      var fakeEvent = {};
-
-      aSearchList.keyControlPressed = true;
-
-      fakeEvent.target = "somediv"; // We cannot match html yet?
-
-      // Start a run with the selected id.
-      aSearchList.runSelected(selectedId, fakeEvent);
-
-      // Start another run with the selected id +1;
-      selectedId++;
-      aSearchList.runSelected(selectedId, fakeEvent);
-
-      console.log(aSearchList.selectedRuns);
-
-      // Without control key we expect only the last item selected.
-      assert.isTrue(aSearchList.selectedRuns[0] === (selectedId - 1) && aSearchList.selectedRuns[1] === (selectedId) && aSearchList.selectedRuns.length === 2, "selectedResultId matches expected value (two items with correct id's)");
-
-      done();
-    });
-
     it("check properties ", function(done) {
 
       //var aSearchList = new SearchList();
@@ -1765,19 +1735,6 @@
 
       done();
     });
-
-    xit("Check default data", function(done) {
-
-      var aSearchList = new SearchList();
-      var defaultInfo = {};
-
-      /*eslint-disable no-underscore-dangle*/
-      assert.deepEqual(aSearchList._data, defaultInfo, "Match default properties");
-      /*eslint-enable no-underscore-dangle*/
-
-      done();
-    });
-
 
   });
 
@@ -1962,149 +1919,10 @@
 
     });
 
-    xit("Should be possible to fetch my info", function(done) {
-      var correctReply = false;
-
-      nock("http://0.0.0.0")
-        .defaultReplyHeaders({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*"
-        })
-        .get("/api/v1/users/me/")
-        .reply(200, function() {
-          correctReply = true;
-          return {};
-        });
-
-      var userDetails = new UserDetails();
-
-      assert.isOk(userDetails, "UserDetails created");
-
-      // Make sure the nock server had the time to reply
-      window.setTimeout(function() {
-        try {
-          assert(correctReply === true, "Nock server did not reach reply");
-          done();
-        } catch (e) {
-          done(e);
-        }
-      }, 100);
-
-      userDetails.fetchUserInfo();
-
-    });
-
-
-    xit("Should be possible to fetch my info - EXPECT INVALID RESPONSE", function(done) {
-
-      // We return an error this time.
-
-      nock("http://0.0.0.0")
-      //.log(console.log)
-        .defaultReplyHeaders({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*"
-        })
-        .get("/api/v1/users/me/")
-        .reply(400, function() {
-
-          return {};
-        });
-
-      var userDetails = new UserDetails();
-
-
-      userDetails.fetchUserInfo().catch(function() {
-        // We expect an error.
-        done();
-      });
-
-    });
-
-
-    xit("Should be possible to receive my first and lastname", function(done) {
-
-
-      // The fake reply we will return.
-      var reply = [{
-        "id": 500,
-        "username": "foo",
-        "first_name": "Foo",
-        "last_name": "User",
-        "email": "foo@bar.com",
-        "groups": [
-          42,
-          500
-        ]
-      }];
-
-      nock("http://0.0.0.0")
-        .defaultReplyHeaders({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*"
-        })
-        .get("/api/v1/users/me/")
-        .reply(200, function() {
-          return reply;
-        });
-
-      var userDetails = new UserDetails();
-
-      userDetails.fetchUserInfo().then(function() {
-
-        assert.isTrue((userDetails.user.first_name === reply[0].first_name && userDetails.user.last_name === reply[0].last_name), "First and lastname match");
-
-        done();
-
-      });
-
-    });
-
-
-    xit("Should be possible to call the details computed property", function(done) {
-
-      // The fake reply we will return.
-      var reply = [{
-        "id": 500,
-        "username": "foo",
-        "first_name": "Foo",
-        "last_name": "User",
-        "email": "foo@bar.com",
-        "groups": [
-          42,
-          500
-        ]
-      }];
-
-      nock("http://0.0.0.0")
-        .defaultReplyHeaders({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*"
-        })
-        .get("/api/v1/users/me/")
-        .reply(200, function() {
-          return reply;
-        });
-
-      var userDetails = new UserDetails();
-
-      assert.isOk(userDetails, "UserDetails created");
-
-      userDetails.fetchUserInfo().then(function() {
-
-        var details = userDetails.details;
-        var match = "id: 500\nusername: foo\nfirst_name: Foo\nlast_name: User\nemail: foo@bar.com\ngroups: 42,500";
-
-        // Check if the user info is set correctly.
-        assert.isTrue(details === match, "details match");
-
-        done();
-      });
 
 
 
 
-    });
   });
 
 
