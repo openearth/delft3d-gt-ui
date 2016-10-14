@@ -209,11 +209,14 @@ var exports = (function() {
 
     stopModel: function (modelContainer) {
       return new Promise((resolve, reject) => {
+        console.log("stoppping model", modelContainer.id);
         if (modelContainer === undefined || modelContainer.id === undefined) {
           reject("No model id to start");
         }
         modelContainer.data.state = "Stopping simulation...";
-        $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/stop/", method: "PUT", traditional: true, dataType: "json"})
+        var request = {url: "/api/v1/scenes/" + modelContainer.id + "/stop/", method: "PUT", traditional: true, dataType: "json"};
+        console.log(request);
+        $.ajax(request)
           .done(function(data) {
             resolve(data);
           })
@@ -286,15 +289,23 @@ var exports = (function() {
     },
 
     startSelectedModels: function () {
-      _.each(this.getSelectedModels(), this.startModel.bind(this));
+      return Promise.all(
+        _.map(this.getSelectedModels(), this.startModel.bind(this))
+      );
     },
 
     stopSelectedModels: function () {
-      _.each(this.getSelectedModels(), this.stopModel.bind(this));
+      console.log("selected models", this.getSelectedModels());
+      return Promise.all(
+        _.map(this.getSelectedModels(), this.stopModel.bind(this))
+      );
     },
 
     deleteSelectedModels: function () {
-      _.each(this.getSelectedModels(), this.deleteModel.bind(this));
+      return Promise.all(
+        _.map(this.getSelectedModels(), this.deleteModel.bind(this))
+      );
+
     },
 
     // ================================ SEARCH METHODS
