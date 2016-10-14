@@ -1,4 +1,4 @@
-/* global Vue, fetchSearchTemplate, fetchScenarios, startSyncModels, fetchModels, filterModels */
+/* global Vue, fetchSearchTemplate, store  */
 var exports = (function () {
   "use strict";
   var SearchDetails = Vue.component("search-details", {
@@ -21,7 +21,6 @@ var exports = (function () {
     },
 
     ready: function() {
-
       // get search templates
       fetchSearchTemplate()
         .then((template) => {
@@ -38,12 +37,11 @@ var exports = (function () {
               this.search();
 
               // as soon as this component is loaded we can start to sync models
-              startSyncModels();
+              // startSyncModels();
             }
           );
 
         });
-
     },
     computed: {
       modelEngines: {
@@ -90,6 +88,7 @@ var exports = (function () {
       initializeForm: function() {
         // once the dom is updated, update the select pickers by hand
         // template data is computed into modelEngine
+        var that = this;
         var pickers = $(".select-picker");
 
         if (pickers.selectpicker !== undefined) {
@@ -112,20 +111,20 @@ var exports = (function () {
         /*eslint-enable camelcase*/
 
         // Add event handler that allows one to use the X next to inputs to clear the input.
-        $(".button-empty-input-field").on("click", () => {
-          var input = $(this).closest("div").find("input");
+        $(".button-empty-input-field").on("click", function() {
+          var input = $(this).closest(".input-group").find("input");
 
           // Force update selected parameters.
           // Quick fix for selected parameter, should be a parameter later.
           var id = input.attr("id");
 
           if (id === "search") {
-            this.searchText = "";
+            that.searchText = "";
           } else {
-            this.selectedParameters[id] = "";
+            that.selectedParameters[id] = "";
           }
           // Search up to the div, and then find the input child. This is the actual input field.
-          this.search();
+          that.search();
 
         });
 
@@ -169,7 +168,8 @@ var exports = (function () {
             }
 
             // Remove trailing ,:
-            result = result.replace(/\,$/, "");
+            //result = result.replace(/\,$/, "");
+
 
             return result;
           }
@@ -177,78 +177,22 @@ var exports = (function () {
         return params;
       },
       search: function() {
-        // TODO: searching should be done in search-component, because it needs to update
-        // details and search list
-
         var params = this.buildParams();
 
-        // store the filter parameters in the store
-        filterModels(params);
+        store.updateParams(params);
+        store.update();
+      }
+    },
 
-        // we want to update the search results and scenarios at the same time
-        var promises = [fetchModels(), fetchScenarios()];
+    // If the clear button event is fired, perform search automatic.
+    events: {
+      "clearSearch": function () {
+        this.searchText = "";
+        this.selectedDomains = [];
+        this.selectedParameters = {};
+        this.selectedTemplates = [];
 
-        // once we have everything, we can update the items
-        Promise.all(promises).then(
-          (values) => {
-            var models = values[0];
-            var scenarios = values[1];
-
-            models = _.uniqBy(models, "id");
-            scenarios = _.uniqBy(scenarios, "id");
-
-            // drop duplicates
-            // TODO: why models has duplicates
-            var modelById = _.keyBy(models, "id");
-
-            // first loop over all the scenarios
-            var items = [];
-
-            _.each(scenarios, (scenario) => {
-              scenario.models = [];
-              // loop over all models
-              _.each(scenario.scene_set, (modelId) => {
-                // store model in models
-                if (!_.has(modelById, modelId)) {
-                  console.warn("Model", modelId, "in scenario but not in model overview");
-                  return;
-                }
-                var model = modelById[modelId];
-
-                // properties that we need
-                model.active = false;
-                model.type = "model";
-
-                scenario.models.push(model);
-              });
-
-              // properties that we need
-              scenario.active = false;
-              items.push(scenario);
-            });
-
-            // now we can the orphan models
-            // ids that are in a scenario
-            var inScenario = _.uniq(_.flatMap(scenarios, "scene_set"));
-            // all ids
-            var allIds = _.uniq(_.map(models, "id"));
-            // ids that are not in a scenario
-            var orphanIds = _.difference(allIds, inScenario);
-
-            // add the orphans to the list
-            var orphans = _.map(orphanIds, (id) => {
-              return modelById[id];
-            });
-
-            _.each(orphans, (model) => {
-              model.type = "model";
-              model.active = false;
-              items.push(model);
-            });
-
-            this.$dispatch("items-found", items, models);
-          }
-        );
+        this.search();
       }
     }
 

@@ -35,17 +35,6 @@ var exports = (function () {
     },
 
     computed: {
-      activeItem: {
-        cache: false,
-        get: function() {
-          if (_.has(this.$refs, ["searchList", "selectedModel"])) {
-            return this.$refs.searchList.selectedModel;
-          } else {
-            return null;
-          }
-
-        }
-      },
       checkedBoxes: {
         cache: false,
         get: function() {

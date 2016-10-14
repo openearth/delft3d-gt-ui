@@ -1,8 +1,15 @@
+@import 'variables';
+
 .model-card {
   cursor: pointer;
   user-select: none;
 
   .progress {
     margin-bottom: 0;
+  }
+
+  .active {
+    // background-color: $brand-primary;
+    color: $col-bw-0;
   }
 }
