@@ -180,7 +180,13 @@ var exports = (function () {
         store.updateParams(params);
         store.update();
       }
+    },
+
+    // If the clear button event is fired, perform search automatic.
+    events: {
+      "clearSearch": "search"
     }
+
   });
 
   return {
