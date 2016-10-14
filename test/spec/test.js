@@ -141,97 +141,103 @@
   describe("Testing data exchange with api", function() {
     describe("If we can query the scenario list", function() {
 
-      // // This test is now working using the filteringPath option.
-      // // When testing get request, this seems to be the solution.
-      // it("Should be possible to LIST scenarios", function(done) {
-      //   nock("http://0.0.0.0")
-      //     .defaultReplyHeaders({
-      //       "Content-Type": "application/json",
-      //       "Access-Control-Allow-Origin": "*"
-      //     })
-      //     .filteringPath(function() {
-      //       return "/api/v1/scenarios/";
-      //     })
-      //     .get("/api/v1/scenarios/")
-      //     .reply(200, {
-      //     });
+      // This test is now working using the filteringPath option.
+      // When testing get request, this seems to be the solution.
+      it("Should be possible to LIST scenarios", function(done) {
+        nock("http://0.0.0.0")
+          .defaultReplyHeaders({
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          })
+          .filteringPath(function() {
+            return "/api/v1/scenarios/";
+          })
+          .get("/api/v1/scenarios/")
+          .reply(200, {
+          });
 
-      //   global.fetchScenarios()
-      //     .then(function(data) {
-      //       assert.isOk(data, "we have some data");
-      //       done();
-      //     })
-      //     .catch(function(e) {
-      //       console.log(e);
-      //       // rethrow error to capture it and avoid time out
-      //       try {
-      //         throw new Error("exception from fetching scenarios" + JSON.stringify(e));
-      //       } catch (exc) {
-      //         done(exc);
-      //       }
-      //     });
+        global.store.fetchScenarios()
+          .then(function(data) {
+            assert.isOk(data, "we have some data");
+            done();
+          })
+          .catch(function(e) {
+            console.log(e);
+            // rethrow error to capture it and avoid time out
+            try {
+              throw new Error("exception from fetching scenarios" + JSON.stringify(e));
+            } catch (exc) {
+              done(exc);
+            }
+          });
 
-      // });
-
-
-      // it("Should be possible to LIST scenarios - FAILURE test", function(done) {
-      //   nock("http://0.0.0.0")
-      //     .defaultReplyHeaders({
-      //       "Content-Type": "application/json",
-      //       "Access-Control-Allow-Origin": "*"
-      //     })
-      //     .filteringPath(function() {
-      //       return "/api/v1/scenarios/";
-      //     })
-      //     .get("/api/v1/scenarios/")
-      //     .reply(400, {
-      //     });
-
-      //   // We expect an error, so we call done if this happens.
-      //   global.fetchScenarios().catch(function() {
-      //     // We expected an error.
-      //     done();
-      //   });
-
-      // });
+      });
 
 
-      // // Can we remove scenarios?
-      // it("Should be possible to DELETE scenarios", function(done) {
+      it("Should be possible to LIST scenarios - FAILURE test", function(done) {
+        nock("http://0.0.0.0")
+          .defaultReplyHeaders({
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          })
+          .filteringPath(function() {
+            return "/api/v1/scenarios/";
+          })
+          .get("/api/v1/scenarios/")
+          .reply(400, {
+          });
 
-      //   var deleteid = 4;
-      //   var correctReply = false;
+        // We expect an error, so we call done if this happens.
+        global.store.fetchScenarios().catch(function() {
+          // We expected an error.
+          done();
+        });
 
-      //   nock("http://0.0.0.0")
-      //     //.log(console.log)
-      //     .defaultReplyHeaders({
-      //       "Content-Type": "application/json",
-      //       "Access-Control-Allow-Origin": "*"
-      //     })
-      //     .intercept("/api/v1/scenarios/" + deleteid + "/", "OPTIONS") // We get an "OPTIONS" first.
-      //     .reply(200, function() {
-      //       return "";
-      //     })
-      //     .delete("/api/v1/scenarios/" + deleteid + "/")
-      //     .reply(200, function() {
-      //       correctReply = true;
-      //       return {"result": "ok"};
-      //     });
-
-      //   global.deleteScenario(deleteid);
-
-      //   window.setTimeout(function() {
-      //     try {
-      //       assert(correctReply === true, "Nock server did not reach reply");
-      //       done();
-      //     } catch (e) {
-      //       done(e);
-      //     }
-      //   }, 100);
-      // });
+      });
 
 
-      // it("Should be possible to DELETE scenarios - FAILURE test", function(done) {
+      // Can we remove scenarios?
+      xit("Should be possible to DELETE scenarios", function(done) {
+
+        var deleteid = 4;
+        var correctReply = false;
+
+        nock("http://0.0.0.0")
+          //.log(console.log)
+          .defaultReplyHeaders({
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          })
+          .intercept("/api/v1/scenarios/" + deleteid + "/", "OPTIONS") // We get an "OPTIONS" first.
+          .reply(200, function() {
+            return "";
+          })
+          .delete("/api/v1/scenarios/" + deleteid + "/")
+          .reply(200, function() {
+            correctReply = true;
+            return {"result": "ok"};
+          });
+
+        $.ajax({url: "/api/v1/scenarios/" + deleteid + "/", method: "DELETE"})
+          .done(function() {
+          })
+          .fail(function() {
+          });
+
+        global.store.deleteScenario(deleteid);
+
+        window.setTimeout(function() {
+          try {
+            assert(correctReply === true, "Nock server did not reach reply");
+            done();
+          } catch (e) {
+            done(e);
+          }
+        }, 100);
+      });
+
+
+      // xit("Should be possible to DELETE scenarios - FAILURE test", function(done) {
 
       //   var deleteid = 4;
 
@@ -260,7 +266,7 @@
 
 
       // // Test deletescenario when we do not specify any id
-      // it("Should be possible to DELETE scenarios - no id specified", function(done) {
+      // xit("Should be possible to DELETE scenarios - no id specified", function(done) {
 
       //   // We expect that an error message appears from this call without id
       //   global.deleteScenario().catch(function(e) {
@@ -279,7 +285,7 @@
 
       // // This test is now working using the filteringPath option.
       // // When testing get request, this seems to be the solution.
-      // it("Should be possible list models", function(done) {
+      // xit("Should be possible list models", function(done) {
       //   nock("http://0.0.0.0")
       //     .defaultReplyHeaders({
       //       "Content-Type": "application/json",
@@ -315,7 +321,7 @@
 
       // // This test is now working using the filteringPath option.
       // // When testing get request, this seems to be the solution.
-      // it("If we can query the model list - FAILURE test", function(done) {
+      // xit("If we can query the model list - FAILURE test", function(done) {
       //   nock("http://0.0.0.0")
       //     .defaultReplyHeaders({
       //       "Content-Type": "application/json",
@@ -339,7 +345,7 @@
 
 
 
-      // it("Should be possible get a model by id", function(done) {
+      // xit("Should be possible get a model by id", function(done) {
       //   nock("http://0.0.0.0")
       //     .defaultReplyHeaders({
       //       "Content-Type": "application/json",
@@ -372,7 +378,7 @@
       //     });
       // });
 
-      // it("Should get an error when requesting model WITHOUT an id", function(done) {
+      // xit("Should get an error when requesting model WITHOUT an id", function(done) {
 
       //   global.fetchModel()
       //     .catch(function(e) {
@@ -382,7 +388,7 @@
       //     });
       // });
 
-      // it("Should be possible to start and stop sync models", function() {
+      // xit("Should be possible to start and stop sync models", function() {
       //   var store = global.getModelStore();
 
       //   global.startSyncModels();
@@ -404,7 +410,7 @@
   describe("App", function() {
 
 
-    it("can I initialized the application", function(done) {
+    xit("can I initialized the application", function(done) {
       var App = Vue.extend({});
 
       Vue.use(VueRouter);
@@ -425,7 +431,7 @@
     });
 
     // This test doesn't work, since it gets stuck when loading the main template.
-    it("App - LoadTemplate - Check if mock template is added to DOM", function(done) {
+    xit("App - LoadTemplate - Check if mock template is added to DOM", function(done) {
 
       nock("http://0.0.0.0")
         .defaultReplyHeaders({
@@ -460,7 +466,7 @@
 
   describe("Components", function() {
 
-    it("Is possible to instantiate component ModelDetails", function(done) {
+    xit("Is possible to instantiate component ModelDetails", function(done) {
       var modelDetails = new ModelDetails({
       });
 
@@ -468,28 +474,28 @@
       done();
     });
 
-    it("Is possible to instantiate component ScenarioBuilder", function(done) {
+    xit("Is possible to instantiate component ScenarioBuilder", function(done) {
       var scenarioCreate = new ScenarioCreate({
       });
 
       assert.isOk(scenarioCreate);
       done();
     });
-    it("Is possible to create a search details", function(done) {
+    xit("Is possible to create a search details", function(done) {
       var searchDetails = new SearchDetails();
 
       assert.isOk(searchDetails);
       done();
     });
 
-    it("Is possible to create a search columns", function(done) {
+    xit("Is possible to create a search columns", function(done) {
       var searchColumns = new SearchColumns();
 
       assert.isOk(searchColumns);
       done();
     });
 
-    it("Is possible to create a search list", function(done) {
+    xit("Is possible to create a search list", function(done) {
       var aSearchList = new SearchList();
 
       assert.isOk(aSearchList);
@@ -502,7 +508,7 @@
 
   describe("ConfirmDialog", function() {
 
-    it("Does confirmdialog have right 'props'", function(done) {
+    xit("Does confirmdialog have right 'props'", function(done) {
 
       var defaultProps = {
         "dialogId": {
@@ -520,7 +526,7 @@
       done();
     });
 
-    it("Is possible to make a confirmdialog", function(done) {
+    xit("Is possible to make a confirmdialog", function(done) {
       var confirmDialog = new ConfirmDialog();
 
 
@@ -530,7 +536,7 @@
     });
 
 
-    it("Is possible to confirm", function(done) {
+    xit("Is possible to confirm", function(done) {
       var confirmDialog = new ConfirmDialog();
 
       confirmDialog.dialogId = "test";
@@ -545,7 +551,7 @@
 
     });
 
-    it("Is possible to cancel", function(done) {
+    xit("Is possible to cancel", function(done) {
       var confirmDialog = new ConfirmDialog();
 
       confirmDialog.dialogId = "test";
@@ -558,7 +564,7 @@
       confirmDialog.cancel();
     });
 
-    it("Is possible to show", function(done) {
+    xit("Is possible to show", function(done) {
       var confirmDialog = new ConfirmDialog();
 
       confirmDialog.dialogId = "test";
@@ -572,7 +578,7 @@
       done();
     });
 
-    it("Is possible to show - with modal", function(done) {
+    xit("Is possible to show - with modal", function(done) {
       var confirmDialog = new ConfirmDialog();
 
       confirmDialog.dialogId = "test";
@@ -592,7 +598,7 @@
     });
 
 
-    it("Is possible to hide", function(done) {
+    xit("Is possible to hide", function(done) {
       var confirmDialog = new ConfirmDialog();
 
       confirmDialog.dialogId = "test";
@@ -606,7 +612,7 @@
       done();
     });
 
-    it("Is possible to hide - with modal", function(done) {
+    xit("Is possible to hide - with modal", function(done) {
       var confirmDialog = new ConfirmDialog();
 
       confirmDialog.dialogId = "test";
@@ -626,7 +632,7 @@
     });
 
 
-    it("Is possible to showAlert", function(done) {
+    xit("Is possible to showAlert", function(done) {
       var confirmDialog = new ConfirmDialog();
 
       confirmDialog.dialogId = "test";
@@ -637,7 +643,7 @@
       done();
     });
 
-    it("Does getDialog exist", function(done) {
+    xit("Does getDialog exist", function(done) {
 
       // Simple test, see if object exists (we do not have al lthe dialog elements and components here ...)
       assert.isOk(getDialog);
@@ -649,7 +655,7 @@
   describe("Search details", function() {
 
 
-    it("Does Searchdetails have the initial values", function(done) {
+    xit("Does Searchdetails have the initial values", function(done) {
 
       var searchDetails = new SearchDetails();
       var defaultData = {
@@ -672,7 +678,7 @@
 
     });
 
-    it("fetchSearchtemplate", function(done) {
+    xit("fetchSearchtemplate", function(done) {
 
 
       nock("http://0.0.0.0")
@@ -697,7 +703,7 @@
     });
 
 
-    it("Is possible to get modelEngines", function(done) {
+    xit("Is possible to get modelEngines", function(done) {
       var searchDetails = new SearchDetails();
 
       searchDetails.templates = [{
@@ -713,7 +719,7 @@
       done();
     });
 
-    it("Is possible to get parameters", function(done) {
+    xit("Is possible to get parameters", function(done) {
       var searchDetails = new SearchDetails();
 
       searchDetails.templates = [{
@@ -741,7 +747,7 @@
     });
 
 
-    it("Is possible to build a request", function(done) {
+    xit("Is possible to build a request", function(done) {
       var searchDetails = new SearchDetails();
 
       // no values set
@@ -757,7 +763,7 @@
     });
 
 
-    it("Is possible to start a search", function(done) {
+    xit("Is possible to start a search", function(done) {
       var searchDetails = new SearchDetails();
       var replyCount = 0;
 
@@ -800,7 +806,7 @@
     });
 
 
-    // it("Is possible to process search", function(done) {
+    // xit("Is possible to process search", function(done) {
     //   var searchDetails = new SearchDetails();
     //   var replyCount = 0;
 
@@ -858,7 +864,7 @@
 
   });
   describe("User details", function() {
-    it("Is possible to create a user details", function(done) {
+    xit("Is possible to create a user details", function(done) {
       var userDetails = new UserDetails();
 
       assert.isOk(userDetails);
@@ -868,7 +874,7 @@
 
   describe("ScenarioCreate - Scenario builder", function() {
 
-    it("Should be possible to convert a single value to a tag array", function(done) {
+    xit("Should be possible to convert a single value to a tag array", function(done) {
       var array = factorToArray({
         factor: true,
         value: 0.3,
@@ -880,7 +886,7 @@
     });
 
 
-    it("Should be possible to convert a comma separated string to a tag array", function(done) {
+    xit("Should be possible to convert a comma separated string to a tag array", function(done) {
       var array = factorToArray({
         factor: true,
         value: "0,2,3",
@@ -892,7 +898,7 @@
     });
 
 
-    it("Should be possible to check a value using the custom max validator", function(done) {
+    xit("Should be possible to check a value using the custom max validator", function(done) {
       var scenarioCreate = new ScenarioCreate({
       });
 
@@ -904,7 +910,7 @@
     });
 
 
-    it("Should be possible get the total number of runs", function(done) {
+    xit("Should be possible get the total number of runs", function(done) {
       var scenarioCreate = new ScenarioCreate({
       });
 
@@ -928,7 +934,7 @@
       done();
     });
 
-    it("Should be possible to call validform - TRUE", function(done) {
+    xit("Should be possible to call validform - TRUE", function(done) {
       var scenarioCreate = new ScenarioCreate({
       });
 
@@ -941,7 +947,7 @@
       done();
     });
 
-    it("Should be possible to call validform - FALSE", function(done) {
+    xit("Should be possible to call validform - FALSE", function(done) {
       var scenarioCreate = new ScenarioCreate({
       });
 
@@ -955,7 +961,7 @@
     });
 
 
-    it("Should be possible to prepare a scenario", function(done) {
+    xit("Should be possible to prepare a scenario", function(done) {
       var scenarioCreate = new ScenarioCreate({
       });
 
@@ -970,7 +976,7 @@
     });
 
 
-    it("Should be possible to update with query parameters", function(done) {
+    xit("Should be possible to update with query parameters", function(done) {
       var scenarioCreate = new ScenarioCreate();
 
       scenarioCreate.updateWithQueryParameters();
@@ -981,7 +987,7 @@
     });
 
 
-    it("Should be possible to submit a scenario", function(done) {
+    xit("Should be possible to submit a scenario", function(done) {
       var scenarioCreate = new ScenarioCreate();
 
       // Set some vars:
@@ -1007,7 +1013,7 @@
     });
 
 
-    it("Should be possible to call updateAfterTick", function(done) {
+    xit("Should be possible to call updateAfterTick", function(done) {
       var scenarioCreate = new ScenarioCreate();
 
       assert.isOk(scenarioCreate.updateAfterTick);
@@ -1015,7 +1021,7 @@
       done();
     });
 
-    it("Should be possible to prepare a scenario", function(done) {
+    xit("Should be possible to prepare a scenario", function(done) {
       var scenarioCreate = new ScenarioCreate();
 
       scenarioCreate.prepareScenarioConfig({
@@ -1038,7 +1044,7 @@
     });
 
 
-    it("Should be possible to use getId ", function(done) {
+    xit("Should be possible to use getId ", function(done) {
       var scenarioCreate = new ScenarioCreate({
       });
 
@@ -1059,7 +1065,7 @@
 
     });
 
-    it("Should be possible to update with query parameters", function(done) {
+    xit("Should be possible to update with query parameters", function(done) {
       var scenarioCreate = new ScenarioCreate({
       });
 
@@ -1108,7 +1114,7 @@
 
     // Test if we can fetc htemplates through scenario builder
     // Later on it should maybe really use fake JSON to build scenarios.
-    it("Should be possible to fetch templates", function(done) {
+    xit("Should be possible to fetch templates", function(done) {
       var scenarioCreate = new ScenarioCreate();
       var correctReply = false;
 
@@ -1147,7 +1153,7 @@
     var modelDetails = new ModelDetails();
 
 
-    // it("Should be possible to fetchLog", function(done) {
+    // xit("Should be possible to fetchLog", function(done) {
     //   var correctReply = false;
     //   var id = 405;
 
@@ -1227,7 +1233,7 @@
 
 
 
-    // it("Should be possible to fetchLog - NON existing model", function(done) {
+    // xit("Should be possible to fetchLog - NON existing model", function(done) {
     //   var id = 405;
 
     //   // We expect an error! As there are no models yet
@@ -1239,7 +1245,7 @@
 
 
     // // This function should not perform a request as there is no filelog yet!
-    // it("Should be possible to fetchLog - NO filelog yet", function(done) {
+    // xit("Should be possible to fetchLog - NO filelog yet", function(done) {
     //   var correctReply = true;
     //   var id = 405;
 
@@ -1320,7 +1326,7 @@
 
     // // This version sends a invalid reponse to the fetchLog, we have to handle this.
     // // Skip the UI part of this. just direct through global.
-    // it("Should be possible to fetchLog - EXPECT INVALID REPONSE", function(done) {
+    // xit("Should be possible to fetchLog - EXPECT INVALID REPONSE", function(done) {
 
     //   //var correctReply = false;
     //   var id = 405;
@@ -1379,7 +1385,7 @@
 
 
 
-    // it("Should be possible to delete a model", function(done) {
+    // xit("Should be possible to delete a model", function(done) {
 
     //   var correctReply = false;
 
@@ -1413,7 +1419,7 @@
     //   }, 100);
     // });
 
-    // it("Should be possible to delete a model - FAILURE test", function(done) {
+    // xit("Should be possible to delete a model - FAILURE test", function(done) {
 
     //   var deleteID = 4;
 
@@ -1439,7 +1445,7 @@
 
     // });
 
-    // it("Should be possible to export a model", function(done) {
+    // xit("Should be possible to export a model", function(done) {
     //   var correctReply = false;
 
     //   modelDetails.model.id = 4;
@@ -1474,7 +1480,7 @@
     //   }, 100);
     // });
 
-    // it("Should be possible to export a model", function(done) {
+    // xit("Should be possible to export a model", function(done) {
     //   var correctReply = false;
 
     //   modelDetails.model.id = 4;
@@ -1509,7 +1515,7 @@
     //   }, 100);
     // });
 
-    // it("Should be possible to export a model - FAILURE test", function(done) {
+    // xit("Should be possible to export a model - FAILURE test", function(done) {
 
 
     //   var modelToExport = 4;
@@ -1538,7 +1544,7 @@
     // });
 
 
-    // it("Should be possible to start a model - FAILURE test", function(done) {
+    // xit("Should be possible to start a model - FAILURE test", function(done) {
     //   var modelToStart = 4;
 
     //   nock("http://0.0.0.0")
@@ -1564,7 +1570,7 @@
 
     // });
 
-    // it("Should be possible to start a model", function(done) {
+    // xit("Should be possible to start a model", function(done) {
     //   var correctReply = true;
 
     //   modelDetails.$parent = {};
@@ -1600,14 +1606,14 @@
     // });
 
 
-    // it("Should be possible to stop multiple models (stopruns)", function(done) {
+    // xit("Should be possible to stop multiple models (stopruns)", function(done) {
 
     //   // When no id's passed, should return false.
     //   assert.isFalse(global.stopModels());
     //   done();
     // });
 
-    // it("hould be possible to start multiple models (startModels)", function(done) {
+    // xit("hould be possible to start multiple models (startModels)", function(done) {
 
     //   // For now check if function is ok.
     //   assert.isFalse(global.startModels());
@@ -1615,14 +1621,14 @@
 
     // });
 
-    // it("Should be possible to delete  multiple models (deleteModels)", function(done) {
+    // xit("Should be possible to delete  multiple models (deleteModels)", function(done) {
 
     //   // For now check if function is ok.
     //   assert.isFalse(global.deleteModels());
     //   done();
     // });
 
-    // it("Should be possible to stop multiple models (stopruns) - also stop runs", function(done) {
+    // xit("Should be possible to stop multiple models (stopruns) - also stop runs", function(done) {
 
     //   // Process these ids
     //   var ids = [1, 2];
@@ -1674,7 +1680,7 @@
 
     // });
 
-    // it("Should be possible to start multiple models (startModels)  - also startModels runs", function(done) {
+    // xit("Should be possible to start multiple models (startModels)  - also startModels runs", function(done) {
 
     //   // Process these ids
     //   var ids = [1, 2];
@@ -1726,7 +1732,7 @@
 
     // });
 
-    // it("Should be possible to delete  multiple models (deleteModels)  - also deleteModels runs", function(done) {
+    // xit("Should be possible to delete  multiple models (deleteModels)  - also deleteModels runs", function(done) {
 
     //   // Process these ids
     //   var ids = [1, 2];
@@ -1778,7 +1784,7 @@
 
     // });
 
-    // it("Should be possible to stop a model", function(done) {
+    // xit("Should be possible to stop a model", function(done) {
     //   var correctReply = false;
 
     //   modelDetails = new ModelDetails();
@@ -1843,7 +1849,7 @@
     // });
 
 
-    // it("Should be possible to stop a model - FAILURE test", function(done) {
+    // xit("Should be possible to stop a model - FAILURE test", function(done) {
     //   var modelToStop = 4;
 
     //   nock("http://0.0.0.0")
@@ -1869,7 +1875,7 @@
 
     // });
 
-    // it("Should be possible to start a model - FAILURE test", function(done) {
+    // xit("Should be possible to start a model - FAILURE test", function(done) {
     //   var modelToStart = 4;
 
     //   nock("http://0.0.0.0")
@@ -1896,14 +1902,14 @@
     // });
 
 
-    // it("Should be possible to change download options", function(done) {
+    // xit("Should be possible to change download options", function(done) {
 
     //   // For now test if the function exists.
     //   modelDetails.downloadOptionsChange();
     //   done();
     // });
 
-    // it("Should be possible to check level enabled", function(done) {
+    // xit("Should be possible to check level enabled", function(done) {
 
     //   // For now test if the function exists.
     //   modelDetails.isLevelEnabled(1);
@@ -1911,7 +1917,7 @@
     // });
 
 
-    // it("Should be possible to check if read only", function(done) {
+    // xit("Should be possible to check if read only", function(done) {
 
     //   // For now test if the function exists.
     //   modelDetails.isReadOnly();
@@ -1919,14 +1925,14 @@
     // });
 
 
-    // it("Should be possible to check publish level", function(done) {
+    // xit("Should be possible to check publish level", function(done) {
 
     //   // For now test if the function exists.
     //   modelDetails.indexOfPublishLevel();
     //   done();
     // });
 
-    // it("Should be possible to hilight publish level", function(done) {
+    // xit("Should be possible to hilight publish level", function(done) {
 
     //   // For now test if the function exists.
     //   modelDetails.highlightPublishLevel();
@@ -1934,7 +1940,7 @@
     // });
 
 
-    // it("Should be possible to get isModelRunning property", function(done) {
+    // xit("Should be possible to get isModelRunning property", function(done) {
 
     //   // Make sure the function returns true:
     //   var aModelDetails = new ModelDetails();
@@ -1948,7 +1954,7 @@
     //   done();
     // });
 
-    // it("Should be possible to get logoutput property", function(done) {
+    // xit("Should be possible to get logoutput property", function(done) {
 
     //   // Make sure the function returns true:
     //   var aModelDetails = new ModelDetails();
@@ -1964,7 +1970,7 @@
     // });
 
 
-    // it("Should be possible to get scenario property (calculated)", function(done) {
+    // xit("Should be possible to get scenario property (calculated)", function(done) {
 
     //   var aModelDetails = new ModelDetails();
 
@@ -1976,7 +1982,7 @@
     // });
 
 
-    // it("Should be possible to publish a model private using Confirm", function(done) {
+    // xit("Should be possible to publish a model private using Confirm", function(done) {
 
     //   var correctReply = false;
 
@@ -2041,7 +2047,7 @@
     // });
 
 
-    it("Should be possible to publish a model private using Confirm - FAILURE test", function(done) {
+    xit("Should be possible to publish a model private using Confirm - FAILURE test", function(done) {
 
       modelDetails = new ModelDetails();
       modelDetails.model = {};
@@ -2114,7 +2120,7 @@
 
 
 
-    // it("Should be possible to publish a model private using Confirm", function(done) {
+    // xit("Should be possible to publish a model private using Confirm", function(done) {
 
     //   var correctReply = false;
 
@@ -2180,7 +2186,7 @@
 
 
 
-    // it("Should be possible to publish a model private", function(done) {
+    // xit("Should be possible to publish a model private", function(done) {
     //   var correctReply = false;
 
     //   var modelToPublishId = 4;
@@ -2210,7 +2216,7 @@
     //   }, 100);
     // });
 
-    // it("Should be possible to publish a model private - FAILURE test", function(done) {
+    // xit("Should be possible to publish a model private - FAILURE test", function(done) {
     //   var modelToPublishId = 4;
     //   var target = "private";
 
@@ -2233,7 +2239,7 @@
 
     // });
 
-    // it("Should be possible to publish a model company", function(done) {
+    // xit("Should be possible to publish a model company", function(done) {
     //   var correctReply = false;
 
     //   modelDetails.$parent = {};
@@ -2267,7 +2273,7 @@
     //   }, 100);
     // });
 
-    // it("Should be possible to publish a world company", function(done) {
+    // xit("Should be possible to publish a world company", function(done) {
     //   var correctReply = false;
 
     //   modelDetails.$parent = {};
@@ -2301,7 +2307,7 @@
     //   }, 100);
     // });
 
-    // it("Check publishlevel config", function(done) {
+    // xit("Check publishlevel config", function(done) {
 
     //   var publishLevels = [
     //     {
@@ -2338,7 +2344,7 @@
 
 
 
-    // it("Should be possible to download files", function(done) {
+    // xit("Should be possible to download files", function(done) {
     //   var windowSpy = sinon.spy(window, "open");
 
     //   // this should open a new window
@@ -2350,7 +2356,7 @@
     //   done();
     // });
 
-    // it("Should be possible to GET id (calculated)", function(done) {
+    // xit("Should be possible to GET id (calculated)", function(done) {
 
     //   var aModelDetails = new ModelDetails();
 
@@ -2368,7 +2374,7 @@
     // });
 
 
-    // it("Should be possible to SET id (calculated)", function(done) {
+    // xit("Should be possible to SET id (calculated)", function(done) {
 
     //   var aModelDetails = new ModelDetails();
     //   var idToSet = 4;
@@ -2383,7 +2389,7 @@
     // });
 
 
-    // it("Should be possible to GET progress (calculated)", function(done) {
+    // xit("Should be possible to GET progress (calculated)", function(done) {
 
     //   var aModelDetails = new ModelDetails();
     //   var progressToSet = 55;
@@ -2399,7 +2405,7 @@
     // });
 
 
-    // it("Should be possible to GET scenario (calculated after model set)", function(done) {
+    // xit("Should be possible to GET scenario (calculated after model set)", function(done) {
 
     //   var aModelDetails = new ModelDetails();
     //   var scenarioToSet = 123;
@@ -2415,7 +2421,7 @@
     // });
 
 
-    // it("Should be possible to GET current publishlevel - unknown", function(done) {
+    // xit("Should be possible to GET current publishlevel - unknown", function(done) {
 
     //   var aModelDetails = new ModelDetails();
 
@@ -2432,7 +2438,7 @@
 
     // });
 
-    // it("Should be possible to GET current publishlevel - public", function(done) {
+    // xit("Should be possible to GET current publishlevel - public", function(done) {
 
     //   var aModelDetails = new ModelDetails();
 
@@ -2450,7 +2456,7 @@
 
     // });
 
-    // it("Should be possible to GET next publishlevel", function(done) {
+    // xit("Should be possible to GET next publishlevel", function(done) {
 
     //   var aModelDetails = new ModelDetails();
 
@@ -2470,7 +2476,7 @@
     // });
 
 
-    // it("Should be possible to REMOVE a model", function(done) {
+    // xit("Should be possible to REMOVE a model", function(done) {
     //   var correctReply = false;
 
     //   modelDetails = new ModelDetails();
@@ -2551,7 +2557,7 @@
 
 
 
-    it("Does ImageAnimation have the initial values", function(done) {
+    xit("Does ImageAnimation have the initial values", function(done) {
 
       var defaultData = {
         // Current animation frame:
@@ -2575,7 +2581,7 @@
     });
 
 
-    it("Does ImageAnimation have the right default 'props'", function(done) {
+    xit("Does ImageAnimation have the right default 'props'", function(done) {
 
 
       // Couldn't match on the function, so we only check if model exists.
@@ -2587,7 +2593,7 @@
 
 
 
-    it("Should be possible to stop image frames - no anim key", function(done) {
+    xit("Should be possible to stop image frames - no anim key", function(done) {
 
       // Fake a timer interval:
       imageAnimation.timerAnimation = 0;
@@ -2600,7 +2606,7 @@
 
     });
 
-    it("Should be possible to stop image frames", function(done) {
+    xit("Should be possible to stop image frames", function(done) {
 
       // Fake a timer interval:
       imageAnimation.timerAnimation = 2;
@@ -2613,7 +2619,7 @@
 
     });
 
-    it("Should be possible to play image frames the imageFrame", function(done) {
+    xit("Should be possible to play image frames the imageFrame", function(done) {
 
       imageAnimation.playImageFrame();
 
@@ -2623,7 +2629,7 @@
 
     });
 
-    it("Should be possible to play image frames the imageFrame - No animationkey set", function(done) {
+    xit("Should be possible to play image frames the imageFrame - No animationkey set", function(done) {
 
       imageAnimation.currentAnimationKey = "";
 
@@ -2638,7 +2644,7 @@
 
     });
 
-    it("Should be possible to change to next imageFrame", function(done) {
+    xit("Should be possible to change to next imageFrame", function(done) {
 
       /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
@@ -2656,7 +2662,7 @@
     });
 
 
-    it("Should be possible to change to next imageFrame - stop at end", function(done) {
+    xit("Should be possible to change to next imageFrame - stop at end", function(done) {
 
       /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
@@ -2679,7 +2685,7 @@
 
 
 
-    it("Should be possible to change to next imageFrame - no model info", function(done) {
+    xit("Should be possible to change to next imageFrame - no model info", function(done) {
 
       /*eslint-disable camelcase*/
       imageAnimation.model.info = undefined;
@@ -2696,7 +2702,7 @@
       done();
     });
 
-    it("Should be possible to change to next imageFrame - no animationkey", function(done) {
+    xit("Should be possible to change to next imageFrame - no animationkey", function(done) {
 
       /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
@@ -2715,7 +2721,7 @@
 
 
 
-    it("Should be possible to check isanimating property", function(done) {
+    xit("Should be possible to check isanimating property", function(done) {
 
       imageAnimation.stopImageFrame();
       var isAnimating = imageAnimation.isAnimating;
@@ -2724,7 +2730,7 @@
       done();
     });
 
-    it("Should be possible to check hasFrames property", function(done) {
+    xit("Should be possible to check hasFrames property", function(done) {
 
       // We should not have any frames in this animation object, but maybe make sure later on?
       /*eslint-disable camelcase*/
@@ -2737,7 +2743,7 @@
       done();
     });
 
-    it("Should be possible to check animationIndex property", function(done) {
+    xit("Should be possible to check animationIndex property", function(done) {
 
       // We should not have any frames in this animation object, but maybe make sure later on?
       imageAnimation.currentAnimationIndex = 0;
@@ -2747,7 +2753,7 @@
       done();
     });
 
-    it("Should be possible to check animationFrame property", function(done) {
+    xit("Should be possible to check animationFrame property", function(done) {
 
        /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { location: "location/", images: ["firstframe.jpg", "lastframe.jpg"] } };
@@ -2761,7 +2767,7 @@
       done();
     });
 
-    it("Should be possible to check animationFrame property - empty", function(done) {
+    xit("Should be possible to check animationFrame property - empty", function(done) {
 
        /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { location: "location/", images: ["firstframe.jpg", "lastframe.jpg"] } };
@@ -2777,7 +2783,7 @@
     });
 
 
-    it("Should be possible to check frameCount property", function(done) {
+    xit("Should be possible to check frameCount property", function(done) {
 
       // We should not have any frames in this animation object, but maybe make sure later on?
        /*eslint-disable camelcase*/
@@ -2788,7 +2794,7 @@
       done();
     });
 
-    it("Should be possible to check frameCount property - no data", function(done) {
+    xit("Should be possible to check frameCount property - no data", function(done) {
 
       // We should not have any frames in this animation object, but maybe make sure later on?
        /*eslint-disable camelcase*/
@@ -2800,7 +2806,7 @@
     });
 
 
-    it("Should be possible to switchAnimation", function(done) {
+    xit("Should be possible to switchAnimation", function(done) {
 
       // We should not have any frames in this animation object, but maybe make sure later on?
       imageAnimation.switchAnimation("delta_fringe_images");
@@ -2858,7 +2864,7 @@
     });
 
 
-    it("Should be possible to gotoFirstFrame", function(done) {
+    xit("Should be possible to gotoFirstFrame", function(done) {
 
       // index should become 0
        /*eslint-disable camelcase*/
@@ -2887,7 +2893,7 @@
       done();
     });
 
-    it("Should be possible to gotoLastFrame", function(done) {
+    xit("Should be possible to gotoLastFrame", function(done) {
 
       // index should become 0.. we do not have any images. Maybe test later using an fake array.
        /*eslint-disable camelcase*/
@@ -2910,7 +2916,7 @@
   describe("SearchList class", function() {
 
 
-    it("Should be possible deselect all runs", function(done) {
+    xit("Should be possible deselect all runs", function(done) {
 
       // Add an artificial sene with a model in scene_set with id 1.
       var aSearchList = new SearchList();
@@ -2932,7 +2938,7 @@
     });
 
 
-    it("Should be possible select a scenario", function(done) {
+    xit("Should be possible select a scenario", function(done) {
 
       // Add an artificial sene with a model in scene_set with id 1.
       var aSearchList = new SearchList();
@@ -2948,7 +2954,7 @@
       done();
     });
 
-    it("Should be possible get selected runs", function(done) {
+    xit("Should be possible get selected runs", function(done) {
 
       // Add an artificial sene with a model in scene_set with id 1.
       var aSearchList = new SearchList();
@@ -2966,7 +2972,7 @@
       done();
     });
 
-    it("Should be possible get selected runs - none selected", function(done) {
+    xit("Should be possible get selected runs - none selected", function(done) {
 
       // Add an artificial sene with a model in scene_set with id 1.
       var aSearchList = new SearchList();
@@ -3011,7 +3017,7 @@
       done();
     });
 
-    it("check properties ", function(done) {
+    xit("check properties ", function(done) {
 
       //var aSearchList = new SearchList();
 
@@ -3034,7 +3040,7 @@
       done();
     });
 
-    // it("Check default data", function(done) {
+    // xit("Check default data", function(done) {
 
     //   var aSearchList = new SearchList();
 
@@ -3059,7 +3065,7 @@
   describe("SearchColumns class", function() {
 
 
-    it("Should be possible to init SearchColumns", function(done) {
+    xit("Should be possible to init SearchColumns", function(done) {
 
       var aSearchColumns = new SearchColumns();
 
@@ -3073,7 +3079,7 @@
 
 
     // Ignores the selectpicker though.
-    it("Should be possible to reset the form fields", function(done) {
+    xit("Should be possible to reset the form fields", function(done) {
 
       var aSearchColumns = new SearchColumns();
 
@@ -3096,7 +3102,7 @@
       done();
     });
 
-    it("Should be possible to call event modelsSelected", function(done) {
+    xit("Should be possible to call event modelsSelected", function(done) {
 
       var aSearchColumns = new SearchColumns();
 
@@ -3122,7 +3128,7 @@
 
   describe("Loading of templates", function() {
 
-    it("Should be possible to load scenariobuilder templates", function(done) {
+    xit("Should be possible to load scenariobuilder templates", function(done) {
       var correctReply = false;
 
       nock("http://0.0.0.0")
@@ -3152,7 +3158,7 @@
     });
 
 
-    it("Should be possible to load search templates - with data", function(done) {
+    xit("Should be possible to load search templates - with data", function(done) {
       var correctReply = false;
 
       nock("http://0.0.0.0")
@@ -3182,7 +3188,7 @@
     });
 
 
-    it("Should be possible to load search templates - no data", function(done) {
+    xit("Should be possible to load search templates - no data", function(done) {
       var correctReply = false;
 
       nock("http://0.0.0.0")
@@ -3229,7 +3235,7 @@
 
     });
 
-    // it("Should have default information", function(done) {
+    // xit("Should have default information", function(done) {
 
     //   var userDetails = new UserDetails();
     //   var defaultInfo = {
@@ -3248,7 +3254,7 @@
 
     // });
 
-    // it("Should be possible to fetch my info", function(done) {
+    // xit("Should be possible to fetch my info", function(done) {
     //   var correctReply = false;
 
     //   nock("http://0.0.0.0")
@@ -3282,7 +3288,7 @@
     // });
 
 
-    // it("Should be possible to fetch my info - EXPECT INVALID RESPONSE", function(done) {
+    // xit("Should be possible to fetch my info - EXPECT INVALID RESPONSE", function(done) {
 
     //   // We return an error this time.
 
@@ -3309,7 +3315,7 @@
     // });
 
 
-    // it("Should be possible to receive my first and lastname", function(done) {
+    // xit("Should be possible to receive my first and lastname", function(done) {
 
 
     //   // The fake reply we will return.
@@ -3349,7 +3355,7 @@
     // });
 
 
-    // it("Should be possible to call the details computed property", function(done) {
+    // xit("Should be possible to call the details computed property", function(done) {
 
     //   // The fake reply we will return.
     //   var reply = [{
@@ -3400,7 +3406,7 @@
 
 
   // This test doesn't work, since it gets stuck when loading the main template.
-  it("App - LoadTemplate - Check if mock template is added to DOM", function(done) {
+  xit("App - LoadTemplate - Check if mock template is added to DOM", function(done) {
 
     nock("http://0.0.0.0")
       .defaultReplyHeaders({

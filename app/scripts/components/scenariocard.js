@@ -42,6 +42,9 @@ var exports = (function () {
       }
     },
     methods: {
+      clone: function(e) {
+        e.stopPropagation();
+      },
       collapse: function(e) {
         e.stopPropagation();
         $("#collapse-" + this.scenario.id).collapse("toggle");
