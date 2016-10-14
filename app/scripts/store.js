@@ -1,3 +1,4 @@
+/* global */
 var exports = (function() {
   "use strict";
 
@@ -249,39 +250,6 @@ var exports = (function() {
 
     // ================================ OTHER SUPPORT METHODS
 
-
-    // Clone a model, route towards the scenario builder.
-    cloneScenario: function(scenario) {
-
-        // Not sure what to do here, use the selected scenario of one selected run?
-        // So we hardcode one item:
-        if (scenario === undefined) {
-          return;
-        }
-
-        var parameters = _.assign(
-          // create a new object (no data binding)
-          {},
-          // fill it with the parameters
-          // TODO: replace by object parameters instead of list of parameters
-          scenario.data.parameters
-        );
-
-        // These parameters are passed to the other view
-        // alternative would be to store them in the app or to call an event
-        var req = {
-          name: "scenarios-create",
-          params: {},
-          query: {
-            "template": scenario.data.template,
-            "parameters": JSON.stringify(parameters),
-            "name": _.get(scenario.data, "name")
-          }
-        };
-
-        router.go(req);
-
-    },
 
     fetchLog: function (modelContainer) {
       return new Promise(function(resolve, reject) {

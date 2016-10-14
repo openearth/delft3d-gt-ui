@@ -1,4 +1,4 @@
-/* global store, getDialog  */
+/* global store, getDialog, router  */
 var exports = (function () {
   "use strict";
 
@@ -44,8 +44,31 @@ var exports = (function () {
     methods: {
       clone: function(e) {
         e.stopPropagation();
+
         // Clone this scenario
-        store.cloneScenario(this.scenario);
+        var parameters = _.assign(
+          // create a new object (no data binding)
+          {},
+          // fill it with the parameters
+          // TODO: replace by object parameters instead of list of parameters
+          this.scenario.data.parameters
+        );
+
+        // These parameters are passed to the other view
+        // alternative would be to store them in the app or to call an event
+        var req = {
+          name: "scenarios-create",
+          params: {},
+          query: {
+            "template": this.scenario.data.template,
+            "parameters": JSON.stringify(parameters),
+            "name": _.get(this.scenario.data, "name")
+          }
+        };
+
+        router.go(req);
+
+
       },
       collapse: function(e) {
         e.stopPropagation();
