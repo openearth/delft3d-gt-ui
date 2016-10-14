@@ -8,6 +8,10 @@
     padding: 0;
   }
 
+  .col-sm-1:last-child {
+    padding-left: 0;
+  }
+
   .list-group {
     border: 0;
     margin-bottom: 0;
@@ -35,5 +39,6 @@
   .progress {
     margin-bottom: 0;
   }
+
 
 }
