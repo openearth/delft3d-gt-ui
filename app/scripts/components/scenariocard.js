@@ -44,6 +44,8 @@ var exports = (function () {
     methods: {
       clone: function(e) {
         e.stopPropagation();
+        // Clone this scenario
+        store.cloneScenario(this.scenario);
       },
       collapse: function(e) {
         e.stopPropagation();
