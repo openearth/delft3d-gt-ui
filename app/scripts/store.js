@@ -214,7 +214,13 @@ var exports = (function() {
           reject("No model id to start");
         }
         modelContainer.data.state = "Stopping simulation...";
-        var request = {url: "/api/v1/scenes/" + modelContainer.id + "/stop/", method: "PUT", traditional: true, dataType: "json"};
+        var request = {
+          url: "/api/v1/scenes/" + modelContainer.id + "/stop/",
+          method: "PUT",
+          traditional: true,
+          dataType: "json"
+        };
+
         console.log(request);
         $.ajax(request)
           .done(function(data) {
