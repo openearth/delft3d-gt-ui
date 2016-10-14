@@ -1,4 +1,4 @@
-/* global ModelDetails, ScenarioCreate, DeleteScenario, SearchColumns */
+/* global ModelDetails, ScenarioCreate, SearchColumns */
 
 var router;
 
@@ -38,12 +38,7 @@ var exports = (function() {
           "/": {
             name: "home",
             component: SearchColumns
-          },
-          "/scenarios/delete/:scenarioid": {
-            name: "delete-scenario",
-            component: DeleteScenario
           }
-
         });
         router.start(App, "#app");
 
