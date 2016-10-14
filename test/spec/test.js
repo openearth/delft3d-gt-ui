@@ -138,7 +138,7 @@
   var nock = require("nock");
   var assert = require("chai").assert;
 
-  describe("Testing data exchange with api", function() {
+  describe("Store: Testing data exchange with api", function() {
     describe("If we can query the scenario list", function() {
 
       // This test is now working using the filteringPath option.
@@ -197,7 +197,7 @@
 
 
       // Can we remove scenarios?
-      xit("Should be possible to DELETE scenarios", function(done) {
+      it("Should be possible to DELETE scenarios", function(done) {
 
         var deleteid = 4;
         var correctReply = false;
@@ -218,13 +218,7 @@
             return {"result": "ok"};
           });
 
-        $.ajax({url: "/api/v1/scenarios/" + deleteid + "/", method: "DELETE"})
-          .done(function() {
-          })
-          .fail(function() {
-          });
-
-        global.store.deleteScenario(deleteid);
+        global.store.deleteScenario({id: deleteid});
 
         window.setTimeout(function() {
           try {
@@ -237,45 +231,43 @@
       });
 
 
-      // xit("Should be possible to DELETE scenarios - FAILURE test", function(done) {
+      it("Should be possible to DELETE scenarios - FAILURE test", function(done) {
 
-      //   var deleteid = 4;
+        var deleteid = 4;
 
-      //   nock("http://0.0.0.0")
-      //     //.log(console.log)
-      //     .defaultReplyHeaders({
-      //       "Content-Type": "application/json",
-      //       "Access-Control-Allow-Origin": "*"
-      //     })
-      //     .intercept("/api/v1/scenarios/" + deleteid + "/", "OPTIONS") // We get an "OPTIONS" first.
-      //     .reply(400, function() {
-      //       return "";
-      //     })
-      //     .delete("/api/v1/scenarios/" + deleteid + "/")
-      //     .reply(200, function() {
-      //       return "";
-      //     });
+        nock("http://0.0.0.0")
+          .defaultReplyHeaders({
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          })
+          .intercept("/api/v1/scenarios/" + deleteid + "/", "OPTIONS") // We get an "OPTIONS" first.
+          .reply(400, function() {
+            return "";
+          })
+          .delete("/api/v1/scenarios/" + deleteid + "/")
+          .reply(200, function() {
+            return "";
+          });
 
-      //   // An error is expected, so we use done() when it happens.
-      //   global.deleteScenario(deleteid).catch(function() {
-      //     // We expected an error.
-      //     done();
-      //   });
+        // An error is expected, so we use done() when it happens.
+        global.store.deleteScenario({id: deleteid}).catch(function() {
+          // We expected an error.
+          done();
+        });
 
-      // });
+      });
 
 
-      // // Test deletescenario when we do not specify any id
-      // xit("Should be possible to DELETE scenarios - no id specified", function(done) {
+      // Test deletescenario when we do not specify any id
+      it("Should be possible to DELETE scenarios - no id specified", function(done) {
 
-      //   // We expect that an error message appears from this call without id
-      //   global.deleteScenario().catch(function(e) {
-      //     assert.equal(e, "No scenario id to delete");
+        // We expect that an error message appears from this call without id
+        global.store.deleteScenario().catch(function(e) {
+          assert.equal(e, "No scenario id to delete");
+          done();
+        });
 
-      //     done();
-      //   });
-
-      // });
+      });
 
 
     });
@@ -283,119 +275,115 @@
 
     describe("If we can query the model list", function() {
 
-      // // This test is now working using the filteringPath option.
-      // // When testing get request, this seems to be the solution.
-      // xit("Should be possible list models", function(done) {
-      //   nock("http://0.0.0.0")
-      //     .defaultReplyHeaders({
-      //       "Content-Type": "application/json",
-      //       "Access-Control-Allow-Origin": "*"
-      //     })
-      //     .get("/api/v1/scenes/")
-      //     .reply(200, [
-      //       {
-      //         id: 1,
-      //         name: "Run 1"
-      //       }
-      //     ]);
+      // This test is now working using the filteringPath option.
+      // When testing get request, this seems to be the solution.
+      it("Should be possible list models", function(done) {
+        nock("http://0.0.0.0")
+          .defaultReplyHeaders({
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          })
+          .get("/api/v1/scenes/")
+          .reply(200, [
+            {
+              id: 1,
+              name: "Run 1"
+            }
+          ]);
 
-      //   global.fetchModels()
-      //     .then(function(data) {
-      //       assert.isOk(data, "we have some data");
-      //       done();
-      //     })
-      //     .catch(function(e) {
-      //       console.log(e);
-      //       // rethrow error to capture it and avoid time out
-      //       try {
-      //         throw e;
-      //       } catch (exc) {
-      //         done(exc);
-      //       }
-      //     });
+        global.store.fetchModels()
+          .then(function(data) {
+            assert.isOk(data, "we have some data");
+            done();
+          })
+          .catch(function(e) {
+            console.log(e);
+            // rethrow error to capture it and avoid time out
+            try {
+              throw e;
+            } catch (exc) {
+              done(exc);
+            }
+          });
 
-      // });
+      });
 
-
-
-
-      // // This test is now working using the filteringPath option.
-      // // When testing get request, this seems to be the solution.
-      // xit("If we can query the model list - FAILURE test", function(done) {
-      //   nock("http://0.0.0.0")
-      //     .defaultReplyHeaders({
-      //       "Content-Type": "application/json",
-      //       "Access-Control-Allow-Origin": "*"
-      //     })
-      //     .get("/api/v1/scenes/")
-      //     .reply(400, [
-      //       {
-      //         id: 1,
-      //         name: "Run 1"
-      //       }
-      //     ]);
+      // This test is now working using the filteringPath option.
+      // When testing get request, this seems to be the solution.
+      it("If we can query the model list - FAILURE test", function(done) {
+        nock("http://0.0.0.0")
+          .defaultReplyHeaders({
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          })
+          .get("/api/v1/scenes/")
+          .reply(400, [
+            {
+              id: 1,
+              name: "Run 1"
+            }
+          ]);
 
 
-      //   global.fetchModels().catch(function() {
-      //     // We expected an error.
-      //     done();
-      //   });
+        global.store.fetchModels().catch(function() {
+          // We expected an error.
+          done();
+        });
 
-      // });
+      });
 
+      // Store Reimplementation: does not fetch single models anymore.
+      xit("Should be possible get a model by id", function(done) {
+        nock("http://0.0.0.0")
+          .defaultReplyHeaders({
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          })
+          .filteringPath(function() {
+            return "/api/v1/scenes/";
+          })
+          .get("/api/v1/scenes/")
+          .reply(200, [
+            {
+              id: 405,
+              name: "Run 1"
+            }
+          ]);
 
+        global.store.fetchModel(405)
+          .then(function(data) {
+            assert.isOk(data, "we have some data");
+            done();
+          })
+          .catch(function(e) {
+            console.log("no data returned", e);
+            // rethrow error to capture it and avoid time out
+            try {
+              throw e;
+            } catch (exc) {
+              done(exc);
+            }
+          });
+      });
 
-      // xit("Should be possible get a model by id", function(done) {
-      //   nock("http://0.0.0.0")
-      //     .defaultReplyHeaders({
-      //       "Content-Type": "application/json",
-      //       "Access-Control-Allow-Origin": "*"
-      //     })
-      //     .filteringPath(function() {
-      //       return "/api/v1/scenes/";
-      //     })
-      //     .get("/api/v1/scenes/")
-      //     .reply(200, [
-      //       {
-      //         id: 405,
-      //         name: "Run 1"
-      //       }
-      //     ]);
+      // Store Reimplementation: does not fetch single models anymore.
+      xit("Should get an error when requesting model WITHOUT an id", function(done) {
 
-      //   global.fetchModel(405)
-      //     .then(function(data) {
-      //       assert.isOk(data, "we have some data");
-      //       done();
-      //     })
-      //     .catch(function(e) {
-      //       console.log("no data returned", e);
-      //       // rethrow error to capture it and avoid time out
-      //       try {
-      //         throw e;
-      //       } catch (exc) {
-      //         done(exc);
-      //       }
-      //     });
-      // });
+        global.fetchModel()
+          .catch(function(e) {
+            assert.equal(e.message, "Model not found, even after updating");
 
-      // xit("Should get an error when requesting model WITHOUT an id", function(done) {
+            done();
+          });
+      });
 
-      //   global.fetchModel()
-      //     .catch(function(e) {
-      //       assert.equal(e.message, "Model not found, even after updating");
+      it("Should be possible to start and stop sync models", function() {
 
-      //       done();
-      //     });
-      // });
-
-      // xit("Should be possible to start and stop sync models", function() {
-      //   var store = global.getModelStore();
-
-      //   global.startSyncModels();
-      //   assert.isNumber(store.interval);
-      //   global.stopSyncModels();
-      //   assert.isNull(store.interval);
-      // });
+        global.store.startSync();
+        assert.isNumber(global.store.interval);
+        global.store.stopSync();
+        assert.isNull(global.store.interval);
+      });
 
 
     });
@@ -410,7 +398,7 @@
   describe("App", function() {
 
 
-    xit("can I initialized the application", function(done) {
+    it("can I initialized the application", function(done) {
       var App = Vue.extend({});
 
       Vue.use(VueRouter);
@@ -431,7 +419,7 @@
     });
 
     // This test doesn't work, since it gets stuck when loading the main template.
-    xit("App - LoadTemplate - Check if mock template is added to DOM", function(done) {
+    it("App - LoadTemplate - Check if mock template is added to DOM", function(done) {
 
       nock("http://0.0.0.0")
         .defaultReplyHeaders({
@@ -466,7 +454,7 @@
 
   describe("Components", function() {
 
-    xit("Is possible to instantiate component ModelDetails", function(done) {
+    it("Is possible to instantiate component ModelDetails", function(done) {
       var modelDetails = new ModelDetails({
       });
 
@@ -474,28 +462,28 @@
       done();
     });
 
-    xit("Is possible to instantiate component ScenarioBuilder", function(done) {
+    it("Is possible to instantiate component ScenarioBuilder", function(done) {
       var scenarioCreate = new ScenarioCreate({
       });
 
       assert.isOk(scenarioCreate);
       done();
     });
-    xit("Is possible to create a search details", function(done) {
+    it("Is possible to create a search details", function(done) {
       var searchDetails = new SearchDetails();
 
       assert.isOk(searchDetails);
       done();
     });
 
-    xit("Is possible to create a search columns", function(done) {
+    it("Is possible to create a search columns", function(done) {
       var searchColumns = new SearchColumns();
 
       assert.isOk(searchColumns);
       done();
     });
 
-    xit("Is possible to create a search list", function(done) {
+    it("Is possible to create a search list", function(done) {
       var aSearchList = new SearchList();
 
       assert.isOk(aSearchList);
@@ -508,7 +496,7 @@
 
   describe("ConfirmDialog", function() {
 
-    xit("Does confirmdialog have right 'props'", function(done) {
+    it("Does confirmdialog have right 'props'", function(done) {
 
       var defaultProps = {
         "dialogId": {
@@ -526,7 +514,7 @@
       done();
     });
 
-    xit("Is possible to make a confirmdialog", function(done) {
+    it("Is possible to make a confirmdialog", function(done) {
       var confirmDialog = new ConfirmDialog();
 
 
@@ -536,7 +524,7 @@
     });
 
 
-    xit("Is possible to confirm", function(done) {
+    it("Is possible to confirm", function(done) {
       var confirmDialog = new ConfirmDialog();
 
       confirmDialog.dialogId = "test";
@@ -551,7 +539,7 @@
 
     });
 
-    xit("Is possible to cancel", function(done) {
+    it("Is possible to cancel", function(done) {
       var confirmDialog = new ConfirmDialog();
 
       confirmDialog.dialogId = "test";
@@ -564,7 +552,7 @@
       confirmDialog.cancel();
     });
 
-    xit("Is possible to show", function(done) {
+    it("Is possible to show", function(done) {
       var confirmDialog = new ConfirmDialog();
 
       confirmDialog.dialogId = "test";
@@ -578,7 +566,7 @@
       done();
     });
 
-    xit("Is possible to show - with modal", function(done) {
+    it("Is possible to show - with modal", function(done) {
       var confirmDialog = new ConfirmDialog();
 
       confirmDialog.dialogId = "test";
@@ -598,7 +586,7 @@
     });
 
 
-    xit("Is possible to hide", function(done) {
+    it("Is possible to hide", function(done) {
       var confirmDialog = new ConfirmDialog();
 
       confirmDialog.dialogId = "test";
@@ -612,7 +600,7 @@
       done();
     });
 
-    xit("Is possible to hide - with modal", function(done) {
+    it("Is possible to hide - with modal", function(done) {
       var confirmDialog = new ConfirmDialog();
 
       confirmDialog.dialogId = "test";
@@ -632,7 +620,7 @@
     });
 
 
-    xit("Is possible to showAlert", function(done) {
+    it("Is possible to showAlert", function(done) {
       var confirmDialog = new ConfirmDialog();
 
       confirmDialog.dialogId = "test";
@@ -643,7 +631,7 @@
       done();
     });
 
-    xit("Does getDialog exist", function(done) {
+    it("Does getDialog exist", function(done) {
 
       // Simple test, see if object exists (we do not have al lthe dialog elements and components here ...)
       assert.isOk(getDialog);
@@ -655,7 +643,7 @@
   describe("Search details", function() {
 
 
-    xit("Does Searchdetails have the initial values", function(done) {
+    it("Does Searchdetails have the initial values", function(done) {
 
       var searchDetails = new SearchDetails();
       var defaultData = {
@@ -678,7 +666,7 @@
 
     });
 
-    xit("fetchSearchtemplate", function(done) {
+    it("fetchSearchtemplate", function(done) {
 
 
       nock("http://0.0.0.0")
@@ -703,7 +691,7 @@
     });
 
 
-    xit("Is possible to get modelEngines", function(done) {
+    it("Is possible to get modelEngines", function(done) {
       var searchDetails = new SearchDetails();
 
       searchDetails.templates = [{
@@ -719,7 +707,7 @@
       done();
     });
 
-    xit("Is possible to get parameters", function(done) {
+    it("Is possible to get parameters", function(done) {
       var searchDetails = new SearchDetails();
 
       searchDetails.templates = [{
@@ -747,7 +735,7 @@
     });
 
 
-    xit("Is possible to build a request", function(done) {
+    it("Is possible to build a request", function(done) {
       var searchDetails = new SearchDetails();
 
       // no values set
@@ -763,7 +751,7 @@
     });
 
 
-    xit("Is possible to start a search", function(done) {
+    it("Is possible to start a search", function(done) {
       var searchDetails = new SearchDetails();
       var replyCount = 0;
 
@@ -805,66 +793,10 @@
 
     });
 
-
-    // xit("Is possible to process search", function(done) {
-    //   var searchDetails = new SearchDetails();
-    //   var replyCount = 0;
-
-    //   nock("http://0.0.0.0")
-    //     .defaultReplyHeaders({
-    //       "Content-Type": "application/json",
-    //       "Access-Control-Allow-Origin": "*"
-    //     })
-    //     .get("/api/v1/scenarios/")
-    //     .query({"search": ""})
-    //     .reply(200, function() {
-
-    //       replyCount++;
-    //       return JSON.parse("[{\"id\":379,\"name\":\"Shared with company\",\"owner_url\":\"http://localhost:9000/api/v1/users/500/?format=json\",\"template\":50,\"parameters\":{},\"progress\":0,\"scene_set\":[909]},{\"id\":380,\"name\":\"Shared with world\",\"owner_url\":\"http://localhost:9000/api/v1/users/500/?format=json\",\"template\":50,\"parameters\":{},\"progress\":0,\"scene_set\":[914]},{\"id\":381,\"name\":\"Basin Fill Scenario\",\"owner_url\":\"http://localhost:9000/api/v1/users/500/?format=json\",\"template\":50,\"parameters\":{\"engine\":{\"values\":[\"Delft3D Curvilinear\"],\"name\":\"Model Engine\"},\"simstoptime\":{\"units\":\"days\",\"values\":[60],\"name\":\"Stop time\"},\"tidalamplitude\":{\"units\":\"m\",\"values\":[1],\"name\":\"Tidal amplitude\"},\"version\":{\"values\":[\"v0.1\"],\"name\":\"Version\"},\"riverdischarge\":{\"units\":\"mÂ³/s\",\"values\":[1000],\"name\":\"River discharge\"},\"template\":{\"values\":[\"Basin fill\"]},\"riverwidth\":{\"units\":\"m\",\"values\":[300],\"name\":\"River width\"},\"basinslope\":{\"units\":\"deg\",\"values\":[0.0143],\"name\":\"Basin slope\"},\"composition\":{\"values\":[\"medium-sand\"],\"name\":\"Sediment classes\",\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\"},\"outputinterval\":{\"units\":\"days\",\"values\":[1],\"name\":\"Output timestep\",\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"}},\"progress\":0,\"scene_set\":[909]},{\"id\":382,\"name\":\"Basin Fill Scenario\",\"owner_url\":\"http://localhost:9000/api/v1/users/500/?format=json\",\"template\":50,\"parameters\":{\"engine\":{\"values\":[\"Delft3D Curvilinear\"],\"name\":\"Model Engine\"},\"simstoptime\":{\"units\":\"days\",\"values\":[60],\"name\":\"Stop time\"},\"tidalamplitude\":{\"units\":\"m\",\"values\":[1],\"name\":\"Tidal amplitude\"},\"version\":{\"values\":[\"v0.1\"],\"name\":\"Version\"},\"riverdischarge\":{\"units\":\"mÂ³/s\",\"values\":[1000],\"name\":\"River discharge\"},\"template\":{\"values\":[\"Basin fill\"]},\"riverwidth\":{\"units\":\"m\",\"values\":[300,400,500,600,700],\"name\":\"River width\"},\"basinslope\":{\"units\":\"deg\",\"values\":[0.0143],\"name\":\"Basin slope\"},\"composition\":{\"values\":[\"medium-sand\"],\"name\":\"Sediment classes\",\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\"},\"outputinterval\":{\"units\":\"days\",\"values\":[1],\"name\":\"Output timestep\",\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"}},\"progress\":0,\"scene_set\":[909,910,911,912,913]},{\"id\":383,\"name\":\"Basin Fill Scenario\",\"owner_url\":\"http://localhost:9000/api/v1/users/500/?format=json\",\"template\":50,\"parameters\":{\"engine\":{\"values\":[\"Delft3D Curvilinear\"],\"name\":\"Model Engine\"},\"simstoptime\":{\"units\":\"days\",\"values\":[60],\"name\":\"Stop time\"},\"tidalamplitude\":{\"units\":\"m\",\"values\":[1],\"name\":\"Tidal amplitude\"},\"version\":{\"values\":[\"v0.1\"],\"name\":\"Version\"},\"riverdischarge\":{\"units\":\"mÂ³/s\",\"values\":[1000],\"name\":\"River discharge\"},\"template\":{\"values\":[\"Basin fill\"]},\"riverwidth\":{\"units\":\"m\",\"values\":[555],\"name\":\"River width\"},\"basinslope\":{\"units\":\"deg\",\"values\":[0.0143],\"name\":\"Basin slope\"},\"composition\":{\"values\":[\"medium-sand\"],\"name\":\"Sediment classes\",\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\"},\"outputinterval\":{\"units\":\"days\",\"values\":[1],\"name\":\"Output timestep\",\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"}},\"progress\":0,\"scene_set\":[914]},{\"id\":388,\"name\":\"Basin Fill Scenario\",\"owner_url\":\"http://localhost:9000/api/v1/users/500/?format=json\",\"template\":50,\"parameters\":{\"engine\":{\"values\":[\"Delft3D Curvilinear\"],\"name\":\"Model Engine\"},\"simstoptime\":{\"units\":\"days\",\"values\":[60],\"name\":\"Stop time\"},\"tidalamplitude\":{\"units\":\"m\",\"values\":[1],\"name\":\"Tidal amplitude\"},\"version\":{\"values\":[\"v0.1\"],\"name\":\"Version\"},\"riverdischarge\":{\"units\":\"mÂ³/s\",\"values\":[1000],\"name\":\"River discharge\"},\"template\":{\"values\":[\"Basin fill\"]},\"riverwidth\":{\"units\":\"m\",\"values\":[300,500,600],\"name\":\"River width\"},\"basinslope\":{\"units\":\"deg\",\"values\":[0.0143],\"name\":\"Basin slope\"},\"composition\":{\"values\":[\"medium-sand\"],\"name\":\"Sediment classes\",\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\"},\"outputinterval\":{\"units\":\"days\",\"values\":[1],\"name\":\"Output timestep\",\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"}},\"progress\":0,\"scene_set\":[909,911,912]},{\"id\":389,\"name\":\"Test Basin Fill Scenario\",\"owner_url\":\"http://localhost:9000/api/v1/users/500/?format=json\",\"template\":52,\"parameters\":{\"simstoptime\":{\"units\":\"days\",\"values\":[60],\"name\":\"Stop time\"},\"composition\":{\"values\":[\"medium-sand\"],\"name\":\"Sediment classes\",\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\"},\"riverdischarge\":{\"units\":\"mÂ³/s\",\"values\":[1000],\"name\":\"River discharge\"},\"template\":{\"values\":[\"Testing template\"]},\"riverwidth\":{\"units\":\"m\",\"values\":[300],\"name\":\"River width\"},\"dt\":{\"units\":\"min\",\"values\":[2],\"name\":\"Timestep\"},\"tidalamplitude\":{\"units\":\"m\",\"values\":[1],\"name\":\"Tidal amplitude\"},\"outputinterval\":{\"units\":\"days\",\"values\":[1],\"name\":\"Output timestep\",\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"},\"basinslope\":{\"units\":\"deg\",\"values\":[0.04],\"name\":\"Basin slope\"}},\"progress\":0,\"scene_set\":[915]}]");
-    //     });
-
-    //   nock("http://0.0.0.0")
-    //     .defaultReplyHeaders({
-    //       "Content-Type": "application/json",
-    //       "Access-Control-Allow-Origin": "*"
-    //     })
-    //     .get("/api/v1/scenes/")
-    //     .query({"search": ""})
-    //     .reply(200, function() {
-
-    //       replyCount++;
-    //       return JSON.parse("[{\"id\":909,\"name\":\"Basin Fill Scenario: Run 1\",\"state\":\"ABORTED\",\"progress\":0,\"owner\":{\"id\":500,\"username\":\"foo\",\"first_name\":\"Foo\",\"last_name\":\"User\",\"email\":\"foo@bar.com\",\"groups\":[42,500]},\"shared\":\"c\",\"suid\":\"ca9a22df-05ef-4c50-9561-dc39c85bfc45\",\"scenario\":[381,382,379,384,386,388],\"fileurl\":\"/files/ca9a22df-05ef-4c50-9561-dc39c85bfc45/\",\"info\":{\"procruns\":1,\"simulation\":{\"info\":{\"model_id\":\"88a98ead-446c-450e-a16f-ce8a83e687ba\",\"task\":\"simulation\",\"log\":[{\"progressprev\":\"0.00\",\"level\":\"INFO\",\"progresshigh\":\"0.00\",\"levelhigh\":\"INFO\",\"messages\":[\"  Time to finish  1d 14h,    0.1% completed, time steps left  86307\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86306\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86305\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86303\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86302\"],\"states\":[\"STARTED\"],\"state\":\"STARTED\",\"progress\":\"0.00\",\"message\":\"  Time to finish  1d 14h,    0.1% completed, time steps left  86302\",\"latesterror\":\"\"},{\"progressprev\":0,\"level\":\"INFO\",\"progresshigh\":0,\"levelhigh\":\"INFO\",\"messages\":[\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\"],\"states\":[\"STARTED\"],\"state\":\"STARTED\",\"progress\":0,\"message\":\"INFO:__main__:use container directory structure\",\"latesterror\":\"\"}],\"procruns\":1,\"container_id\":{\"processing\":\"568d2d326706a0070ee8b25daeca4b3d09aee79bd542110d0dbff09d0d4e5c07\",\"simulation\":\"acfa7f1045ed3e3aa387d7b01728e6628cde096c925cca46d95c3d32596a635e\"},\"output\":\"\"},\"state\":\"PROCESSING\"},\"delta_fringe_images\":{\"images\":[],\"location\":\"process/\"},\"preprocess\":{\"info\":{\"model_id\":\"eb230e8e-9278-4029-a54e-a8699c5e5bb1\",\"task\":\"preprocess\",\"log\":{\"progressprev\":0,\"level\":\"INFO\",\"progresshigh\":0,\"levelhigh\":\"INFO\",\"messages\":[\"\",\"A    svn/template/testing_template/coarse-silt.mdf\",\"INFO:__main__:Finish preprocessing: 100% done\"],\"states\":[\"STARTED\"],\"state\":\"STARTED\",\"progress\":0,\"message\":\"INFO:__main__:Finish preprocessing: 100% done\",\"latesterror\":\"\"},\"container_id\":\"30e60fa70e72db201a1ba979baaa670a84430c5fb6081434f9a9f99fce1ddc20\",\"output\":\"\"},\"state\":\"SUCCESS\"},\"channel_network_images\":{\"images\":[],\"location\":\"process/\"},\"logfile\":{\"location\":\"simulation/\",\"file\":\"delft3d.log\"},\"sediment_fraction_images\":{\"images\":[],\"location\":\"process/\"}},\"parameters\":{\"engine\":{\"name\":\"Model Engine\",\"value\":\"Delft3D Curvilinear\"},\"simstoptime\":{\"units\":\"days\",\"name\":\"Stop time\",\"value\":60},\"tidalamplitude\":{\"units\":\"m\",\"name\":\"Tidal amplitude\",\"value\":1},\"version\":{\"name\":\"Version\",\"value\":\"v0.1\"},\"riverdischarge\":{\"units\":\"mÂ³/s\",\"name\":\"River discharge\",\"value\":1000},\"template\":{\"value\":\"Basin fill\"},\"riverwidth\":{\"units\":\"m\",\"name\":\"River width\",\"value\":300},\"basinslope\":{\"units\":\"deg\",\"name\":\"Basin slope\",\"value\":0.0143},\"composition\":{\"name\":\"Sediment classes\",\"value\":\"medium-sand\",\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\"},\"outputinterval\":{\"units\":\"days\",\"name\":\"Output timestep\",\"value\":1,\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"}},\"task_id\":\"\",\"workingdir\":\"/data/container/files/ca9a22df-05ef-4c50-9561-dc39c85bfc45/\"},{\"id\":909,\"name\":\"Basin Fill Scenario: Run 1\",\"state\":\"ABORTED\",\"progress\":0,\"owner\":{\"id\":500,\"username\":\"foo\",\"first_name\":\"Foo\",\"last_name\":\"User\",\"email\":\"foo@bar.com\",\"groups\":[42,500]},\"shared\":\"c\",\"suid\":\"ca9a22df-05ef-4c50-9561-dc39c85bfc45\",\"scenario\":[381,382,379,384,386,388],\"fileurl\":\"/files/ca9a22df-05ef-4c50-9561-dc39c85bfc45/\",\"info\":{\"procruns\":1,\"simulation\":{\"info\":{\"model_id\":\"88a98ead-446c-450e-a16f-ce8a83e687ba\",\"task\":\"simulation\",\"log\":[{\"progressprev\":\"0.00\",\"level\":\"INFO\",\"progresshigh\":\"0.00\",\"levelhigh\":\"INFO\",\"messages\":[\"  Time to finish  1d 14h,    0.1% completed, time steps left  86307\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86306\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86305\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86303\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86302\"],\"states\":[\"STARTED\"],\"state\":\"STARTED\",\"progress\":\"0.00\",\"message\":\"  Time to finish  1d 14h,    0.1% completed, time steps left  86302\",\"latesterror\":\"\"},{\"progressprev\":0,\"level\":\"INFO\",\"progresshigh\":0,\"levelhigh\":\"INFO\",\"messages\":[\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\"],\"states\":[\"STARTED\"],\"state\":\"STARTED\",\"progress\":0,\"message\":\"INFO:__main__:use container directory structure\",\"latesterror\":\"\"}],\"procruns\":1,\"container_id\":{\"processing\":\"568d2d326706a0070ee8b25daeca4b3d09aee79bd542110d0dbff09d0d4e5c07\",\"simulation\":\"acfa7f1045ed3e3aa387d7b01728e6628cde096c925cca46d95c3d32596a635e\"},\"output\":\"\"},\"state\":\"PROCESSING\"},\"delta_fringe_images\":{\"images\":[],\"location\":\"process/\"},\"preprocess\":{\"info\":{\"model_id\":\"eb230e8e-9278-4029-a54e-a8699c5e5bb1\",\"task\":\"preprocess\",\"log\":{\"progressprev\":0,\"level\":\"INFO\",\"progresshigh\":0,\"levelhigh\":\"INFO\",\"messages\":[\"\",\"A    svn/template/testing_template/coarse-silt.mdf\",\"INFO:__main__:Finish preprocessing: 100% done\"],\"states\":[\"STARTED\"],\"state\":\"STARTED\",\"progress\":0,\"message\":\"INFO:__main__:Finish preprocessing: 100% done\",\"latesterror\":\"\"},\"container_id\":\"30e60fa70e72db201a1ba979baaa670a84430c5fb6081434f9a9f99fce1ddc20\",\"output\":\"\"},\"state\":\"SUCCESS\"},\"channel_network_images\":{\"images\":[],\"location\":\"process/\"},\"logfile\":{\"location\":\"simulation/\",\"file\":\"delft3d.log\"},\"sediment_fraction_images\":{\"images\":[],\"location\":\"process/\"}},\"parameters\":{\"engine\":{\"name\":\"Model Engine\",\"value\":\"Delft3D Curvilinear\"},\"simstoptime\":{\"units\":\"days\",\"name\":\"Stop time\",\"value\":60},\"tidalamplitude\":{\"units\":\"m\",\"name\":\"Tidal amplitude\",\"value\":1},\"version\":{\"name\":\"Version\",\"value\":\"v0.1\"},\"riverdischarge\":{\"units\":\"mÂ³/s\",\"name\":\"River discharge\",\"value\":1000},\"template\":{\"value\":\"Basin fill\"},\"riverwidth\":{\"units\":\"m\",\"name\":\"River width\",\"value\":300},\"basinslope\":{\"units\":\"deg\",\"name\":\"Basin slope\",\"value\":0.0143},\"composition\":{\"name\":\"Sediment classes\",\"value\":\"medium-sand\",\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\"},\"outputinterval\":{\"units\":\"days\",\"name\":\"Output timestep\",\"value\":1,\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"}},\"task_id\":\"\",\"workingdir\":\"/data/container/files/ca9a22df-05ef-4c50-9561-dc39c85bfc45/\"},{\"id\":909,\"name\":\"Basin Fill Scenario: Run 1\",\"state\":\"ABORTED\",\"progress\":0,\"owner\":{\"id\":500,\"username\":\"foo\",\"first_name\":\"Foo\",\"last_name\":\"User\",\"email\":\"foo@bar.com\",\"groups\":[42,500]},\"shared\":\"c\",\"suid\":\"ca9a22df-05ef-4c50-9561-dc39c85bfc45\",\"scenario\":[381,382,379,384,386,388],\"fileurl\":\"/files/ca9a22df-05ef-4c50-9561-dc39c85bfc45/\",\"info\":{\"procruns\":1,\"simulation\":{\"info\":{\"model_id\":\"88a98ead-446c-450e-a16f-ce8a83e687ba\",\"task\":\"simulation\",\"log\":[{\"progressprev\":\"0.00\",\"level\":\"INFO\",\"progresshigh\":\"0.00\",\"levelhigh\":\"INFO\",\"messages\":[\"  Time to finish  1d 14h,    0.1% completed, time steps left  86307\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86306\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86305\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86303\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86302\"],\"states\":[\"STARTED\"],\"state\":\"STARTED\",\"progress\":\"0.00\",\"message\":\"  Time to finish  1d 14h,    0.1% completed, time steps left  86302\",\"latesterror\":\"\"},{\"progressprev\":0,\"level\":\"INFO\",\"progresshigh\":0,\"levelhigh\":\"INFO\",\"messages\":[\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\"],\"states\":[\"STARTED\"],\"state\":\"STARTED\",\"progress\":0,\"message\":\"INFO:__main__:use container directory structure\",\"latesterror\":\"\"}],\"procruns\":1,\"container_id\":{\"processing\":\"568d2d326706a0070ee8b25daeca4b3d09aee79bd542110d0dbff09d0d4e5c07\",\"simulation\":\"acfa7f1045ed3e3aa387d7b01728e6628cde096c925cca46d95c3d32596a635e\"},\"output\":\"\"},\"state\":\"PROCESSING\"},\"delta_fringe_images\":{\"images\":[],\"location\":\"process/\"},\"preprocess\":{\"info\":{\"model_id\":\"eb230e8e-9278-4029-a54e-a8699c5e5bb1\",\"task\":\"preprocess\",\"log\":{\"progressprev\":0,\"level\":\"INFO\",\"progresshigh\":0,\"levelhigh\":\"INFO\",\"messages\":[\"\",\"A    svn/template/testing_template/coarse-silt.mdf\",\"INFO:__main__:Finish preprocessing: 100% done\"],\"states\":[\"STARTED\"],\"state\":\"STARTED\",\"progress\":0,\"message\":\"INFO:__main__:Finish preprocessing: 100% done\",\"latesterror\":\"\"},\"container_id\":\"30e60fa70e72db201a1ba979baaa670a84430c5fb6081434f9a9f99fce1ddc20\",\"output\":\"\"},\"state\":\"SUCCESS\"},\"channel_network_images\":{\"images\":[],\"location\":\"process/\"},\"logfile\":{\"location\":\"simulation/\",\"file\":\"delft3d.log\"},\"sediment_fraction_images\":{\"images\":[],\"location\":\"process/\"}},\"parameters\":{\"engine\":{\"name\":\"Model Engine\",\"value\":\"Delft3D Curvilinear\"},\"simstoptime\":{\"units\":\"days\",\"name\":\"Stop time\",\"value\":60},\"tidalamplitude\":{\"units\":\"m\",\"name\":\"Tidal amplitude\",\"value\":1},\"version\":{\"name\":\"Version\",\"value\":\"v0.1\"},\"riverdischarge\":{\"units\":\"mÂ³/s\",\"name\":\"River discharge\",\"value\":1000},\"template\":{\"value\":\"Basin fill\"},\"riverwidth\":{\"units\":\"m\",\"name\":\"River width\",\"value\":300},\"basinslope\":{\"units\":\"deg\",\"name\":\"Basin slope\",\"value\":0.0143},\"composition\":{\"name\":\"Sediment classes\",\"value\":\"medium-sand\",\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\"},\"outputinterval\":{\"units\":\"days\",\"name\":\"Output timestep\",\"value\":1,\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"}},\"task_id\":\"\",\"workingdir\":\"/data/container/files/ca9a22df-05ef-4c50-9561-dc39c85bfc45/\"},{\"id\":909,\"name\":\"Basin Fill Scenario: Run 1\",\"state\":\"ABORTED\",\"progress\":0,\"owner\":{\"id\":500,\"username\":\"foo\",\"first_name\":\"Foo\",\"last_name\":\"User\",\"email\":\"foo@bar.com\",\"groups\":[42,500]},\"shared\":\"c\",\"suid\":\"ca9a22df-05ef-4c50-9561-dc39c85bfc45\",\"scenario\":[381,382,379,384,386,388],\"fileurl\":\"/files/ca9a22df-05ef-4c50-9561-dc39c85bfc45/\",\"info\":{\"procruns\":1,\"simulation\":{\"info\":{\"model_id\":\"88a98ead-446c-450e-a16f-ce8a83e687ba\",\"task\":\"simulation\",\"log\":[{\"progressprev\":\"0.00\",\"level\":\"INFO\",\"progresshigh\":\"0.00\",\"levelhigh\":\"INFO\",\"messages\":[\"  Time to finish  1d 14h,    0.1% completed, time steps left  86307\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86306\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86305\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86303\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86302\"],\"states\":[\"STARTED\"],\"state\":\"STARTED\",\"progress\":\"0.00\",\"message\":\"  Time to finish  1d 14h,    0.1% completed, time steps left  86302\",\"latesterror\":\"\"},{\"progressprev\":0,\"level\":\"INFO\",\"progresshigh\":0,\"levelhigh\":\"INFO\",\"messages\":[\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\"],\"states\":[\"STARTED\"],\"state\":\"STARTED\",\"progress\":0,\"message\":\"INFO:__main__:use container directory structure\",\"latesterror\":\"\"}],\"procruns\":1,\"container_id\":{\"processing\":\"568d2d326706a0070ee8b25daeca4b3d09aee79bd542110d0dbff09d0d4e5c07\",\"simulation\":\"acfa7f1045ed3e3aa387d7b01728e6628cde096c925cca46d95c3d32596a635e\"},\"output\":\"\"},\"state\":\"PROCESSING\"},\"delta_fringe_images\":{\"images\":[],\"location\":\"process/\"},\"preprocess\":{\"info\":{\"model_id\":\"eb230e8e-9278-4029-a54e-a8699c5e5bb1\",\"task\":\"preprocess\",\"log\":{\"progressprev\":0,\"level\":\"INFO\",\"progresshigh\":0,\"levelhigh\":\"INFO\",\"messages\":[\"\",\"A    svn/template/testing_template/coarse-silt.mdf\",\"INFO:__main__:Finish preprocessing: 100% done\"],\"states\":[\"STARTED\"],\"state\":\"STARTED\",\"progress\":0,\"message\":\"INFO:__main__:Finish preprocessing: 100% done\",\"latesterror\":\"\"},\"container_id\":\"30e60fa70e72db201a1ba979baaa670a84430c5fb6081434f9a9f99fce1ddc20\",\"output\":\"\"},\"state\":\"SUCCESS\"},\"channel_network_images\":{\"images\":[],\"location\":\"process/\"},\"logfile\":{\"location\":\"simulation/\",\"file\":\"delft3d.log\"},\"sediment_fraction_images\":{\"images\":[],\"location\":\"process/\"}},\"parameters\":{\"engine\":{\"name\":\"Model Engine\",\"value\":\"Delft3D Curvilinear\"},\"simstoptime\":{\"units\":\"days\",\"name\":\"Stop time\",\"value\":60},\"tidalamplitude\":{\"units\":\"m\",\"name\":\"Tidal amplitude\",\"value\":1},\"version\":{\"name\":\"Version\",\"value\":\"v0.1\"},\"riverdischarge\":{\"units\":\"mÂ³/s\",\"name\":\"River discharge\",\"value\":1000},\"template\":{\"value\":\"Basin fill\"},\"riverwidth\":{\"units\":\"m\",\"name\":\"River width\",\"value\":300},\"basinslope\":{\"units\":\"deg\",\"name\":\"Basin slope\",\"value\":0.0143},\"composition\":{\"name\":\"Sediment classes\",\"value\":\"medium-sand\",\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\"},\"outputinterval\":{\"units\":\"days\",\"name\":\"Output timestep\",\"value\":1,\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"}},\"task_id\":\"\",\"workingdir\":\"/data/container/files/ca9a22df-05ef-4c50-9561-dc39c85bfc45/\"},{\"id\":909,\"name\":\"Basin Fill Scenario: Run 1\",\"state\":\"ABORTED\",\"progress\":0,\"owner\":{\"id\":500,\"username\":\"foo\",\"first_name\":\"Foo\",\"last_name\":\"User\",\"email\":\"foo@bar.com\",\"groups\":[42,500]},\"shared\":\"c\",\"suid\":\"ca9a22df-05ef-4c50-9561-dc39c85bfc45\",\"scenario\":[381,382,379,384,386,388],\"fileurl\":\"/files/ca9a22df-05ef-4c50-9561-dc39c85bfc45/\",\"info\":{\"procruns\":1,\"simulation\":{\"info\":{\"model_id\":\"88a98ead-446c-450e-a16f-ce8a83e687ba\",\"task\":\"simulation\",\"log\":[{\"progressprev\":\"0.00\",\"level\":\"INFO\",\"progresshigh\":\"0.00\",\"levelhigh\":\"INFO\",\"messages\":[\"  Time to finish  1d 14h,    0.1% completed, time steps left  86307\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86306\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86305\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86303\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86302\"],\"states\":[\"STARTED\"],\"state\":\"STARTED\",\"progress\":\"0.00\",\"message\":\"  Time to finish  1d 14h,    0.1% completed, time steps left  86302\",\"latesterror\":\"\"},{\"progressprev\":0,\"level\":\"INFO\",\"progresshigh\":0,\"levelhigh\":\"INFO\",\"messages\":[\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\"],\"states\":[\"STARTED\"],\"state\":\"STARTED\",\"progress\":0,\"message\":\"INFO:__main__:use container directory structure\",\"latesterror\":\"\"}],\"procruns\":1,\"container_id\":{\"processing\":\"568d2d326706a0070ee8b25daeca4b3d09aee79bd542110d0dbff09d0d4e5c07\",\"simulation\":\"acfa7f1045ed3e3aa387d7b01728e6628cde096c925cca46d95c3d32596a635e\"},\"output\":\"\"},\"state\":\"PROCESSING\"},\"delta_fringe_images\":{\"images\":[],\"location\":\"process/\"},\"preprocess\":{\"info\":{\"model_id\":\"eb230e8e-9278-4029-a54e-a8699c5e5bb1\",\"task\":\"preprocess\",\"log\":{\"progressprev\":0,\"level\":\"INFO\",\"progresshigh\":0,\"levelhigh\":\"INFO\",\"messages\":[\"\",\"A    svn/template/testing_template/coarse-silt.mdf\",\"INFO:__main__:Finish preprocessing: 100% done\"],\"states\":[\"STARTED\"],\"state\":\"STARTED\",\"progress\":0,\"message\":\"INFO:__main__:Finish preprocessing: 100% done\",\"latesterror\":\"\"},\"container_id\":\"30e60fa70e72db201a1ba979baaa670a84430c5fb6081434f9a9f99fce1ddc20\",\"output\":\"\"},\"state\":\"SUCCESS\"},\"channel_network_images\":{\"images\":[],\"location\":\"process/\"},\"logfile\":{\"location\":\"simulation/\",\"file\":\"delft3d.log\"},\"sediment_fraction_images\":{\"images\":[],\"location\":\"process/\"}},\"parameters\":{\"engine\":{\"name\":\"Model Engine\",\"value\":\"Delft3D Curvilinear\"},\"simstoptime\":{\"units\":\"days\",\"name\":\"Stop time\",\"value\":60},\"tidalamplitude\":{\"units\":\"m\",\"name\":\"Tidal amplitude\",\"value\":1},\"version\":{\"name\":\"Version\",\"value\":\"v0.1\"},\"riverdischarge\":{\"units\":\"mÂ³/s\",\"name\":\"River discharge\",\"value\":1000},\"template\":{\"value\":\"Basin fill\"},\"riverwidth\":{\"units\":\"m\",\"name\":\"River width\",\"value\":300},\"basinslope\":{\"units\":\"deg\",\"name\":\"Basin slope\",\"value\":0.0143},\"composition\":{\"name\":\"Sediment classes\",\"value\":\"medium-sand\",\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\"},\"outputinterval\":{\"units\":\"days\",\"name\":\"Output timestep\",\"value\":1,\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"}},\"task_id\":\"\",\"workingdir\":\"/data/container/files/ca9a22df-05ef-4c50-9561-dc39c85bfc45/\"},{\"id\":909,\"name\":\"Basin Fill Scenario: Run 1\",\"state\":\"ABORTED\",\"progress\":0,\"owner\":{\"id\":500,\"username\":\"foo\",\"first_name\":\"Foo\",\"last_name\":\"User\",\"email\":\"foo@bar.com\",\"groups\":[42,500]},\"shared\":\"c\",\"suid\":\"ca9a22df-05ef-4c50-9561-dc39c85bfc45\",\"scenario\":[381,382,379,384,386,388],\"fileurl\":\"/files/ca9a22df-05ef-4c50-9561-dc39c85bfc45/\",\"info\":{\"procruns\":1,\"simulation\":{\"info\":{\"model_id\":\"88a98ead-446c-450e-a16f-ce8a83e687ba\",\"task\":\"simulation\",\"log\":[{\"progressprev\":\"0.00\",\"level\":\"INFO\",\"progresshigh\":\"0.00\",\"levelhigh\":\"INFO\",\"messages\":[\"  Time to finish  1d 14h,    0.1% completed, time steps left  86307\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86306\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86305\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86303\",\"  Time to finish  1d 14h,    0.1% completed, time steps left  86302\"],\"states\":[\"STARTED\"],\"state\":\"STARTED\",\"progress\":\"0.00\",\"message\":\"  Time to finish  1d 14h,    0.1% completed, time steps left  86302\",\"latesterror\":\"\"},{\"progressprev\":0,\"level\":\"INFO\",\"progresshigh\":0,\"levelhigh\":\"INFO\",\"messages\":[\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\",\"INFO:__main__:use container directory structure\"],\"states\":[\"STARTED\"],\"state\":\"STARTED\",\"progress\":0,\"message\":\"INFO:__main__:use container directory structure\",\"latesterror\":\"\"}],\"procruns\":1,\"container_id\":{\"processing\":\"568d2d326706a0070ee8b25daeca4b3d09aee79bd542110d0dbff09d0d4e5c07\",\"simulation\":\"acfa7f1045ed3e3aa387d7b01728e6628cde096c925cca46d95c3d32596a635e\"},\"output\":\"\"},\"state\":\"PROCESSING\"},\"delta_fringe_images\":{\"images\":[],\"location\":\"process/\"},\"preprocess\":{\"info\":{\"model_id\":\"eb230e8e-9278-4029-a54e-a8699c5e5bb1\",\"task\":\"preprocess\",\"log\":{\"progressprev\":0,\"level\":\"INFO\",\"progresshigh\":0,\"levelhigh\":\"INFO\",\"messages\":[\"\",\"A    svn/template/testing_template/coarse-silt.mdf\",\"INFO:__main__:Finish preprocessing: 100% done\"],\"states\":[\"STARTED\"],\"state\":\"STARTED\",\"progress\":0,\"message\":\"INFO:__main__:Finish preprocessing: 100% done\",\"latesterror\":\"\"},\"container_id\":\"30e60fa70e72db201a1ba979baaa670a84430c5fb6081434f9a9f99fce1ddc20\",\"output\":\"\"},\"state\":\"SUCCESS\"},\"channel_network_images\":{\"images\":[],\"location\":\"process/\"},\"logfile\":{\"location\":\"simulation/\",\"file\":\"delft3d.log\"},\"sediment_fraction_images\":{\"images\":[],\"location\":\"process/\"}},\"parameters\":{\"engine\":{\"name\":\"Model Engine\",\"value\":\"Delft3D Curvilinear\"},\"simstoptime\":{\"units\":\"days\",\"name\":\"Stop time\",\"value\":60},\"tidalamplitude\":{\"units\":\"m\",\"name\":\"Tidal amplitude\",\"value\":1},\"version\":{\"name\":\"Version\",\"value\":\"v0.1\"},\"riverdischarge\":{\"units\":\"mÂ³/s\",\"name\":\"River discharge\",\"value\":1000},\"template\":{\"value\":\"Basin fill\"},\"riverwidth\":{\"units\":\"m\",\"name\":\"River width\",\"value\":300},\"basinslope\":{\"units\":\"deg\",\"name\":\"Basin slope\",\"value\":0.0143},\"composition\":{\"name\":\"Sediment classes\",\"value\":\"medium-sand\",\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\"},\"outputinterval\":{\"units\":\"days\",\"name\":\"Output timestep\",\"value\":1,\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"}},\"task_id\":\"\",\"workingdir\":\"/data/container/files/ca9a22df-05ef-4c50-9561-dc39c85bfc45/\"},{\"id\":910,\"name\":\"Basin Fill Scenario: Run 2\",\"state\":\"INACTIVE\",\"progress\":0,\"owner\":{\"id\":500,\"username\":\"foo\",\"first_name\":\"Foo\",\"last_name\":\"User\",\"email\":\"foo@bar.com\",\"groups\":[42,500]},\"shared\":\"p\",\"suid\":\"9350fbaa-9a66-4c9c-8a31-f782d0796da7\",\"scenario\":[382],\"fileurl\":\"/files/9350fbaa-9a66-4c9c-8a31-f782d0796da7/\",\"info\":{\"channel_network_images\":{\"images\":[],\"location\":\"process/\"},\"logfile\":{\"location\":\"simulation/\",\"file\":\"\"},\"procruns\":0,\"delta_fringe_images\":{\"images\":[],\"location\":\"process/\"},\"sediment_fraction_images\":{\"images\":[],\"location\":\"process/\"}},\"parameters\":{\"engine\":{\"name\":\"Model Engine\",\"value\":\"Delft3D Curvilinear\"},\"simstoptime\":{\"units\":\"days\",\"name\":\"Stop time\",\"value\":60},\"composition\":{\"name\":\"Sediment classes\",\"value\":\"medium-sand\",\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\"},\"version\":{\"name\":\"Version\",\"value\":\"v0.1\"},\"riverdischarge\":{\"units\":\"mÂ³/s\",\"name\":\"River discharge\",\"value\":1000},\"template\":{\"value\":\"Basin fill\"},\"riverwidth\":{\"units\":\"m\",\"name\":\"River width\",\"value\":400},\"basinslope\":{\"units\":\"deg\",\"name\":\"Basin slope\",\"value\":0.0143},\"tidalamplitude\":{\"units\":\"m\",\"name\":\"Tidal amplitude\",\"value\":1},\"outputinterval\":{\"units\":\"days\",\"name\":\"Output timestep\",\"value\":1,\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"}},\"task_id\":\"039da767-e485-48db-a3ca-c13127364d99\",\"workingdir\":\"/data/container/files/9350fbaa-9a66-4c9c-8a31-f782d0796da7/\"},{\"id\":911,\"name\":\"Basin Fill Scenario: Run 3\",\"state\":\"INACTIVE\",\"progress\":0,\"owner\":{\"id\":500,\"username\":\"foo\",\"first_name\":\"Foo\",\"last_name\":\"User\",\"email\":\"foo@bar.com\",\"groups\":[42,500]},\"shared\":\"p\",\"suid\":\"a9b99e7f-f1bf-459f-b4f8-3538c82bc10b\",\"scenario\":[382,388],\"fileurl\":\"/files/a9b99e7f-f1bf-459f-b4f8-3538c82bc10b/\",\"info\":{\"channel_network_images\":{\"images\":[],\"location\":\"process/\"},\"logfile\":{\"location\":\"simulation/\",\"file\":\"\"},\"delta_fringe_images\":{\"images\":[],\"location\":\"process/\"},\"procruns\":0,\"sediment_fraction_images\":{\"images\":[],\"location\":\"process/\"}},\"parameters\":{\"engine\":{\"name\":\"Model Engine\",\"value\":\"Delft3D Curvilinear\"},\"simstoptime\":{\"units\":\"days\",\"name\":\"Stop time\",\"value\":60},\"tidalamplitude\":{\"units\":\"m\",\"name\":\"Tidal amplitude\",\"value\":1},\"version\":{\"name\":\"Version\",\"value\":\"v0.1\"},\"riverdischarge\":{\"units\":\"mÂ³/s\",\"name\":\"River discharge\",\"value\":1000},\"template\":{\"value\":\"Basin fill\"},\"riverwidth\":{\"units\":\"m\",\"name\":\"River width\",\"value\":500},\"basinslope\":{\"units\":\"deg\",\"name\":\"Basin slope\",\"value\":0.0143},\"composition\":{\"name\":\"Sediment classes\",\"value\":\"medium-sand\",\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\"},\"outputinterval\":{\"units\":\"days\",\"name\":\"Output timestep\",\"value\":1,\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"}},\"task_id\":\"126a143d-ea51-4b5f-98fa-b1dd29fa3f57\",\"workingdir\":\"/data/container/files/a9b99e7f-f1bf-459f-b4f8-3538c82bc10b/\"},{\"id\":911,\"name\":\"Basin Fill Scenario: Run 3\",\"state\":\"INACTIVE\",\"progress\":0,\"owner\":{\"id\":500,\"username\":\"foo\",\"first_name\":\"Foo\",\"last_name\":\"User\",\"email\":\"foo@bar.com\",\"groups\":[42,500]},\"shared\":\"p\",\"suid\":\"a9b99e7f-f1bf-459f-b4f8-3538c82bc10b\",\"scenario\":[382,388],\"fileurl\":\"/files/a9b99e7f-f1bf-459f-b4f8-3538c82bc10b/\",\"info\":{\"channel_network_images\":{\"images\":[],\"location\":\"process/\"},\"logfile\":{\"location\":\"simulation/\",\"file\":\"\"},\"delta_fringe_images\":{\"images\":[],\"location\":\"process/\"},\"procruns\":0,\"sediment_fraction_images\":{\"images\":[],\"location\":\"process/\"}},\"parameters\":{\"engine\":{\"name\":\"Model Engine\",\"value\":\"Delft3D Curvilinear\"},\"simstoptime\":{\"units\":\"days\",\"name\":\"Stop time\",\"value\":60},\"tidalamplitude\":{\"units\":\"m\",\"name\":\"Tidal amplitude\",\"value\":1},\"version\":{\"name\":\"Version\",\"value\":\"v0.1\"},\"riverdischarge\":{\"units\":\"mÂ³/s\",\"name\":\"River discharge\",\"value\":1000},\"template\":{\"value\":\"Basin fill\"},\"riverwidth\":{\"units\":\"m\",\"name\":\"River width\",\"value\":500},\"basinslope\":{\"units\":\"deg\",\"name\":\"Basin slope\",\"value\":0.0143},\"composition\":{\"name\":\"Sediment classes\",\"value\":\"medium-sand\",\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\"},\"outputinterval\":{\"units\":\"days\",\"name\":\"Output timestep\",\"value\":1,\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"}},\"task_id\":\"126a143d-ea51-4b5f-98fa-b1dd29fa3f57\",\"workingdir\":\"/data/container/files/a9b99e7f-f1bf-459f-b4f8-3538c82bc10b/\"},{\"id\":912,\"name\":\"Basin Fill Scenario: Run 4\",\"state\":\"INACTIVE\",\"progress\":0,\"owner\":{\"id\":500,\"username\":\"foo\",\"first_name\":\"Foo\",\"last_name\":\"User\",\"email\":\"foo@bar.com\",\"groups\":[42,500]},\"shared\":\"p\",\"suid\":\"cdd2d7d4-757c-42de-9c9a-4384d06ab4de\",\"scenario\":[382,388],\"fileurl\":\"/files/cdd2d7d4-757c-42de-9c9a-4384d06ab4de/\",\"info\":{\"channel_network_images\":{\"images\":[],\"location\":\"process/\"},\"logfile\":{\"location\":\"simulation/\",\"file\":\"delft3d.log\"},\"procruns\":0,\"delta_fringe_images\":{\"images\":[],\"location\":\"process/\"},\"sediment_fraction_images\":{\"images\":[],\"location\":\"process/\"}},\"parameters\":{\"engine\":{\"name\":\"Model Engine\",\"value\":\"Delft3D Curvilinear\"},\"simstoptime\":{\"units\":\"days\",\"name\":\"Stop time\",\"value\":60},\"composition\":{\"name\":\"Sediment classes\",\"value\":\"medium-sand\",\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\"},\"version\":{\"name\":\"Version\",\"value\":\"v0.1\"},\"riverdischarge\":{\"units\":\"mÂ³/s\",\"name\":\"River discharge\",\"value\":1000},\"template\":{\"value\":\"Basin fill\"},\"riverwidth\":{\"units\":\"m\",\"name\":\"River width\",\"value\":600},\"basinslope\":{\"units\":\"deg\",\"name\":\"Basin slope\",\"value\":0.0143},\"tidalamplitude\":{\"units\":\"m\",\"name\":\"Tidal amplitude\",\"value\":1},\"outputinterval\":{\"units\":\"days\",\"name\":\"Output timestep\",\"value\":1,\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"}},\"task_id\":\"ad1227fe-6587-4886-b286-b2e623696293\",\"workingdir\":\"/data/container/files/cdd2d7d4-757c-42de-9c9a-4384d06ab4de/\"},{\"id\":912,\"name\":\"Basin Fill Scenario: Run 4\",\"state\":\"INACTIVE\",\"progress\":0,\"owner\":{\"id\":500,\"username\":\"foo\",\"first_name\":\"Foo\",\"last_name\":\"User\",\"email\":\"foo@bar.com\",\"groups\":[42,500]},\"shared\":\"p\",\"suid\":\"cdd2d7d4-757c-42de-9c9a-4384d06ab4de\",\"scenario\":[382,388],\"fileurl\":\"/files/cdd2d7d4-757c-42de-9c9a-4384d06ab4de/\",\"info\":{\"channel_network_images\":{\"images\":[],\"location\":\"process/\"},\"logfile\":{\"location\":\"simulation/\",\"file\":\"delft3d.log\"},\"procruns\":0,\"delta_fringe_images\":{\"images\":[],\"location\":\"process/\"},\"sediment_fraction_images\":{\"images\":[],\"location\":\"process/\"}},\"parameters\":{\"engine\":{\"name\":\"Model Engine\",\"value\":\"Delft3D Curvilinear\"},\"simstoptime\":{\"units\":\"days\",\"name\":\"Stop time\",\"value\":60},\"composition\":{\"name\":\"Sediment classes\",\"value\":\"medium-sand\",\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\"},\"version\":{\"name\":\"Version\",\"value\":\"v0.1\"},\"riverdischarge\":{\"units\":\"mÂ³/s\",\"name\":\"River discharge\",\"value\":1000},\"template\":{\"value\":\"Basin fill\"},\"riverwidth\":{\"units\":\"m\",\"name\":\"River width\",\"value\":600},\"basinslope\":{\"units\":\"deg\",\"name\":\"Basin slope\",\"value\":0.0143},\"tidalamplitude\":{\"units\":\"m\",\"name\":\"Tidal amplitude\",\"value\":1},\"outputinterval\":{\"units\":\"days\",\"name\":\"Output timestep\",\"value\":1,\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"}},\"task_id\":\"ad1227fe-6587-4886-b286-b2e623696293\",\"workingdir\":\"/data/container/files/cdd2d7d4-757c-42de-9c9a-4384d06ab4de/\"},{\"id\":913,\"name\":\"Basin Fill Scenario: Run 5\",\"state\":\"INACTIVE\",\"progress\":0,\"owner\":{\"id\":500,\"username\":\"foo\",\"first_name\":\"Foo\",\"last_name\":\"User\",\"email\":\"foo@bar.com\",\"groups\":[42,500]},\"shared\":\"p\",\"suid\":\"3affdf5f-4deb-4748-90f1-d3625684148f\",\"scenario\":[382],\"fileurl\":\"/files/3affdf5f-4deb-4748-90f1-d3625684148f/\",\"info\":{\"channel_network_images\":{\"images\":[],\"location\":\"process/\"},\"logfile\":{\"location\":\"simulation/\",\"file\":\"\"},\"delta_fringe_images\":{\"images\":[],\"location\":\"process/\"},\"procruns\":0,\"sediment_fraction_images\":{\"images\":[],\"location\":\"process/\"}},\"parameters\":{\"engine\":{\"name\":\"Model Engine\",\"value\":\"Delft3D Curvilinear\"},\"simstoptime\":{\"units\":\"days\",\"name\":\"Stop time\",\"value\":60},\"tidalamplitude\":{\"units\":\"m\",\"name\":\"Tidal amplitude\",\"value\":1},\"version\":{\"name\":\"Version\",\"value\":\"v0.1\"},\"riverdischarge\":{\"units\":\"mÂ³/s\",\"name\":\"River discharge\",\"value\":1000},\"template\":{\"value\":\"Basin fill\"},\"riverwidth\":{\"units\":\"m\",\"name\":\"River width\",\"value\":700},\"basinslope\":{\"units\":\"deg\",\"name\":\"Basin slope\",\"value\":0.0143},\"composition\":{\"name\":\"Sediment classes\",\"value\":\"medium-sand\",\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\"},\"outputinterval\":{\"units\":\"days\",\"name\":\"Output timestep\",\"value\":1,\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"}},\"task_id\":\"13ced207-9ce3-4805-9946-f1be42a24bb1\",\"workingdir\":\"/data/container/files/3affdf5f-4deb-4748-90f1-d3625684148f/\"},{\"id\":914,\"name\":\"Basin Fill Scenario: Run 1\",\"state\":\"ABORTED\",\"progress\":0,\"owner\":{\"id\":500,\"username\":\"foo\",\"first_name\":\"Foo\",\"last_name\":\"User\",\"email\":\"foo@bar.com\",\"groups\":[42,500]},\"shared\":\"w\",\"suid\":\"c902592e-789b-48fa-8dfb-911070e6966e\",\"scenario\":[383,380],\"fileurl\":\"/files/c902592e-789b-48fa-8dfb-911070e6966e/\",\"info\":{\"procruns\":0,\"delta_fringe_images\":{\"images\":[],\"location\":\"process/\"},\"preprocess\":{\"info\":{\"model_id\":\"61774c99-9563-42b1-9c8c-9c7f9fe5b685\",\"task\":\"preprocess\",\"log\":{\"progressprev\":0,\"level\":\"Make\",\"progresshigh\":0,\"levelhigh\":\"\",\"messages\":[\"Make checkout of subversion repository\"],\"states\":[\"STARTED\"],\"state\":\"STARTED\",\"progress\":0,\"message\":\"Make checkout of subversion repository\",\"latesterror\":\"\"},\"container_id\":\"1e08c08fc6b18f1b52d93628fe4f7a6777b0638cc74e477a87c945f83d479c15\",\"output\":\"\"},\"state\":\"PROCESSING\"},\"channel_network_images\":{\"images\":[],\"location\":\"process/\"},\"logfile\":{\"location\":\"simulation/\",\"file\":\"\"},\"sediment_fraction_images\":{\"images\":[],\"location\":\"process/\"}},\"parameters\":{\"engine\":{\"name\":\"Model Engine\",\"value\":\"Delft3D Curvilinear\"},\"simstoptime\":{\"units\":\"days\",\"name\":\"Stop time\",\"value\":60},\"tidalamplitude\":{\"units\":\"m\",\"name\":\"Tidal amplitude\",\"value\":1},\"version\":{\"name\":\"Version\",\"value\":\"v0.1\"},\"riverdischarge\":{\"units\":\"mÂ³/s\",\"name\":\"River discharge\",\"value\":1000},\"template\":{\"value\":\"Basin fill\"},\"riverwidth\":{\"units\":\"m\",\"name\":\"River width\",\"value\":555},\"basinslope\":{\"units\":\"deg\",\"name\":\"Basin slope\",\"value\":0.0143},\"composition\":{\"name\":\"Sediment classes\",\"value\":\"medium-sand\",\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\"},\"outputinterval\":{\"units\":\"days\",\"name\":\"Output timestep\",\"value\":1,\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"}},\"task_id\":\"\",\"workingdir\":\"/data/container/files/c902592e-789b-48fa-8dfb-911070e6966e/\"},{\"id\":914,\"name\":\"Basin Fill Scenario: Run 1\",\"state\":\"ABORTED\",\"progress\":0,\"owner\":{\"id\":500,\"username\":\"foo\",\"first_name\":\"Foo\",\"last_name\":\"User\",\"email\":\"foo@bar.com\",\"groups\":[42,500]},\"shared\":\"w\",\"suid\":\"c902592e-789b-48fa-8dfb-911070e6966e\",\"scenario\":[383,380],\"fileurl\":\"/files/c902592e-789b-48fa-8dfb-911070e6966e/\",\"info\":{\"procruns\":0,\"delta_fringe_images\":{\"images\":[],\"location\":\"process/\"},\"preprocess\":{\"info\":{\"model_id\":\"61774c99-9563-42b1-9c8c-9c7f9fe5b685\",\"task\":\"preprocess\",\"log\":{\"progressprev\":0,\"level\":\"Make\",\"progresshigh\":0,\"levelhigh\":\"\",\"messages\":[\"Make checkout of subversion repository\"],\"states\":[\"STARTED\"],\"state\":\"STARTED\",\"progress\":0,\"message\":\"Make checkout of subversion repository\",\"latesterror\":\"\"},\"container_id\":\"1e08c08fc6b18f1b52d93628fe4f7a6777b0638cc74e477a87c945f83d479c15\",\"output\":\"\"},\"state\":\"PROCESSING\"},\"channel_network_images\":{\"images\":[],\"location\":\"process/\"},\"logfile\":{\"location\":\"simulation/\",\"file\":\"\"},\"sediment_fraction_images\":{\"images\":[],\"location\":\"process/\"}},\"parameters\":{\"engine\":{\"name\":\"Model Engine\",\"value\":\"Delft3D Curvilinear\"},\"simstoptime\":{\"units\":\"days\",\"name\":\"Stop time\",\"value\":60},\"tidalamplitude\":{\"units\":\"m\",\"name\":\"Tidal amplitude\",\"value\":1},\"version\":{\"name\":\"Version\",\"value\":\"v0.1\"},\"riverdischarge\":{\"units\":\"mÂ³/s\",\"name\":\"River discharge\",\"value\":1000},\"template\":{\"value\":\"Basin fill\"},\"riverwidth\":{\"units\":\"m\",\"name\":\"River width\",\"value\":555},\"basinslope\":{\"units\":\"deg\",\"name\":\"Basin slope\",\"value\":0.0143},\"composition\":{\"name\":\"Sediment classes\",\"value\":\"medium-sand\",\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\"},\"outputinterval\":{\"units\":\"days\",\"name\":\"Output timestep\",\"value\":1,\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"}},\"task_id\":\"\",\"workingdir\":\"/data/container/files/c902592e-789b-48fa-8dfb-911070e6966e/\"},{\"id\":915,\"name\":\"Test Basin Fill Scenario: Run 1\",\"state\":\"PROCESSING\",\"progress\":28,\"owner\":{\"id\":500,\"username\":\"foo\",\"first_name\":\"Foo\",\"last_name\":\"User\",\"email\":\"foo@bar.com\",\"groups\":[42,500]},\"shared\":\"p\",\"suid\":\"9170bfd3-4cd9-4cf5-bbeb-b6e835903ad8\",\"scenario\":[389],\"fileurl\":\"/files/9170bfd3-4cd9-4cf5-bbeb-b6e835903ad8/\",\"info\":{\"procruns\":10,\"simulation\":{\"info\":{\"model_id\":\"f31963be-5ee1-4419-a62e-358c4d55d6df\",\"task\":\"simulation\",\"log\":[{\"progressprev\":\"0.28\",\"level\":\"INFO\",\"progresshigh\":\"0.29\",\"levelhigh\":\"INFO\",\"messages\":[\"  Time to finish  15m,   27.8% completed, time steps left  433\",\"  Time to finish  15m,   28.0% completed, time steps left  432\",\"  Time to finish  15m,   28.2% completed, time steps left  431\",\"  Time to finish  15m,   28.5% completed, time steps left  429\",\"  Time to finish  15m,   28.7% completed, time steps left  428\"],\"states\":[\"STARTED\"],\"state\":\"STARTED\",\"progress\":\"0.29\",\"message\":\"  Time to finish  15m,   28.7% completed, time steps left  428\",\"latesterror\":\"\"},{\"progressprev\":0,\"level\":\"INFO\",\"progresshigh\":0,\"levelhigh\":\"WARNING\",\"messages\":[\"INFO:__main__:Start creating patches\",\"INFO:__main__:Start creating patches\",\"INFO:__main__:Start creating patches\",\"INFO:__main__:Start creating patches\",\"INFO:__main__:Start creating patches\"],\"states\":[\"STARTED\"],\"state\":\"STARTED\",\"progress\":0,\"message\":\"INFO:__main__:Start creating patches\",\"latesterror\":\"\"}],\"procruns\":10,\"container_id\":{\"processing\":\"448ba2792070a73dfda15dbaaf06e463a0e1099783c4f619cd0d067c9e78990d\",\"simulation\":\"4b91c3343d5bac12989e086c1c51fe4cc44ad51856862f35ffae604a379b526c\"},\"output\":\"\"},\"state\":\"PROCESSING\"},\"delta_fringe_images\":{\"images\":[\"delta_fringe_20140101000000.png\",\"delta_fringe_20140101003000.png\",\"delta_fringe_20140101010000.png\"],\"location\":\"process/\"},\"preprocess\":{\"info\":{\"model_id\":\"5730efb8-2232-4cde-bf43-027501c17a33\",\"task\":\"preprocess\",\"log\":{\"progressprev\":0,\"level\":\"INFO\",\"progresshigh\":0,\"levelhigh\":\"INFO\",\"messages\":[\"Make checkout of subversion repository\",\"INFO:__main__:Finish preprocessing: 100% done\"],\"states\":[\"STARTED\"],\"state\":\"STARTED\",\"progress\":0,\"message\":\"INFO:__main__:Finish preprocessing: 100% done\",\"latesterror\":\"\"},\"container_id\":\"94c948df649c27231f011f62ee7ec855d364a3697738475fb3f636ee33dd7e38\",\"output\":\"\"},\"state\":\"SUCCESS\"},\"channel_network_images\":{\"images\":[\"channel_network_20140101000000.png\",\"channel_network_20140101003000.png\",\"channel_network_20140101010000.png\"],\"location\":\"process/\"},\"logfile\":{\"location\":\"simulation/\",\"file\":\"delft3d.log\"},\"sediment_fraction_images\":{\"images\":[\"sediment_fraction_20140101000000.png\",\"sediment_fraction_20140101003000.png\",\"sediment_fraction_20140101010000.png\"],\"location\":\"process/\"}},\"parameters\":{\"simstoptime\":{\"units\":\"days\",\"name\":\"Stop time\",\"value\":60},\"tidalamplitude\":{\"units\":\"m\",\"name\":\"Tidal amplitude\",\"value\":1},\"riverdischarge\":{\"units\":\"mÂ³/s\",\"name\":\"River discharge\",\"value\":1000},\"template\":{\"value\":\"Testing template\"},\"riverwidth\":{\"units\":\"m\",\"name\":\"River width\",\"value\":300},\"dt\":{\"units\":\"min\",\"name\":\"Timestep\",\"value\":2},\"composition\":{\"name\":\"Sediment classes\",\"value\":\"medium-sand\",\"description\":\"Read <a href='more'>more</a> about the sediment composition clasess.\"},\"outputinterval\":{\"units\":\"days\",\"name\":\"Output timestep\",\"value\":1,\"description\":\"Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.\"},\"basinslope\":{\"units\":\"deg\",\"name\":\"Basin slope\",\"value\":0.04}},\"task_id\":\"ce909f87-98fa-4dfc-af43-1758df7ec210\",\"workingdir\":\"/data/container/files/9170bfd3-4cd9-4cf5-bbeb-b6e835903ad8/\"}]");
-    //     });
-
-    //   searchDetails.$dispatch = function(ev) {
-
-    //     // We should measure the run or sdcenario count knowing the above. But somehow the arguments are not accessible right now?
-    //     assert.isTrue(ev === "items-found", "event has been dispatched");
-    //     done();
-    //   };
-
-    //   searchDetails.search();
-
-    //   // we expect two replies.
-    //   window.setTimeout(function() {
-    //     try {
-
-    //       console.log("Waiting for event...");
-
-    //     } catch (e) {
-    //       done(e);
-    //     }
-    //   }, 100);
-
-    // });
-
-
-
-
-
   });
+
   describe("User details", function() {
-    xit("Is possible to create a user details", function(done) {
+    it("Is possible to create a user details", function(done) {
       var userDetails = new UserDetails();
 
       assert.isOk(userDetails);
@@ -874,7 +806,7 @@
 
   describe("ScenarioCreate - Scenario builder", function() {
 
-    xit("Should be possible to convert a single value to a tag array", function(done) {
+    it("Should be possible to convert a single value to a tag array", function(done) {
       var array = factorToArray({
         factor: true,
         value: 0.3,
@@ -886,7 +818,7 @@
     });
 
 
-    xit("Should be possible to convert a comma separated string to a tag array", function(done) {
+    it("Should be possible to convert a comma separated string to a tag array", function(done) {
       var array = factorToArray({
         factor: true,
         value: "0,2,3",
@@ -898,7 +830,7 @@
     });
 
 
-    xit("Should be possible to check a value using the custom max validator", function(done) {
+    it("Should be possible to check a value using the custom max validator", function(done) {
       var scenarioCreate = new ScenarioCreate({
       });
 
@@ -910,7 +842,7 @@
     });
 
 
-    xit("Should be possible get the total number of runs", function(done) {
+    it("Should be possible get the total number of runs", function(done) {
       var scenarioCreate = new ScenarioCreate({
       });
 
@@ -934,7 +866,7 @@
       done();
     });
 
-    xit("Should be possible to call validform - TRUE", function(done) {
+    it("Should be possible to call validform - TRUE", function(done) {
       var scenarioCreate = new ScenarioCreate({
       });
 
@@ -947,7 +879,7 @@
       done();
     });
 
-    xit("Should be possible to call validform - FALSE", function(done) {
+    it("Should be possible to call validform - FALSE", function(done) {
       var scenarioCreate = new ScenarioCreate({
       });
 
@@ -961,7 +893,7 @@
     });
 
 
-    xit("Should be possible to prepare a scenario", function(done) {
+    it("Should be possible to prepare a scenario", function(done) {
       var scenarioCreate = new ScenarioCreate({
       });
 
@@ -976,7 +908,7 @@
     });
 
 
-    xit("Should be possible to update with query parameters", function(done) {
+    it("Should be possible to update with query parameters", function(done) {
       var scenarioCreate = new ScenarioCreate();
 
       scenarioCreate.updateWithQueryParameters();
@@ -987,7 +919,7 @@
     });
 
 
-    xit("Should be possible to submit a scenario", function(done) {
+    it("Should be possible to submit a scenario", function(done) {
       var scenarioCreate = new ScenarioCreate();
 
       // Set some vars:
@@ -1013,7 +945,7 @@
     });
 
 
-    xit("Should be possible to call updateAfterTick", function(done) {
+    it("Should be possible to call updateAfterTick", function(done) {
       var scenarioCreate = new ScenarioCreate();
 
       assert.isOk(scenarioCreate.updateAfterTick);
@@ -1021,7 +953,7 @@
       done();
     });
 
-    xit("Should be possible to prepare a scenario", function(done) {
+    it("Should be possible to prepare a scenario", function(done) {
       var scenarioCreate = new ScenarioCreate();
 
       scenarioCreate.prepareScenarioConfig({
@@ -1044,7 +976,7 @@
     });
 
 
-    xit("Should be possible to use getId ", function(done) {
+    it("Should be possible to use getId ", function(done) {
       var scenarioCreate = new ScenarioCreate({
       });
 
@@ -1065,7 +997,7 @@
 
     });
 
-    xit("Should be possible to update with query parameters", function(done) {
+    it("Should be possible to update with query parameters", function(done) {
       var scenarioCreate = new ScenarioCreate({
       });
 
@@ -1114,7 +1046,7 @@
 
     // Test if we can fetc htemplates through scenario builder
     // Later on it should maybe really use fake JSON to build scenarios.
-    xit("Should be possible to fetch templates", function(done) {
+    it("Should be possible to fetch templates", function(done) {
       var scenarioCreate = new ScenarioCreate();
       var correctReply = false;
 
@@ -1149,301 +1081,276 @@
   });
 
 
-  describe("ModelDetails", function() {
-    var modelDetails = new ModelDetails();
+  describe("Store: Test model related API calls", function() {
 
+    it("Should be possible to fetchLog", function(done) {
+      var correctReply = false;
+      var id = 405;
 
-    // xit("Should be possible to fetchLog", function(done) {
-    //   var correctReply = false;
-    //   var id = 405;
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .filteringPath(function() {
+          return "/api/v1/scenes/";
+        })
+        .get("/api/v1/scenes/")
+        .reply(200, [{
+          id: 405,
+          name: "Run 1",
+          fileurl: "/fileurl/",
+          info: {
+            logfile: {
+              location: "location/",
+              file: "file"
+            }
+          }
+        }]);
 
-    //   // We fake to get a model.
-    //   nock("http://0.0.0.0")
-    //     .defaultReplyHeaders({
-    //       "Content-Type": "application/json",
-    //       "Access-Control-Allow-Origin": "*"
-    //     })
-    //     .filteringPath(function() {
-    //       return "/api/v1/scenes/";
-    //     })
-    //     .get("/api/v1/scenes/")
-    //     .reply(200, [
-    //       {
-    //         id: 405,
-    //         name: "Run 1",
-    //         fileurl: "/fileurl/",
-    //           info: {
-    //             logfile: {
-    //               location: "location/",
-    //               file: "file"
-    //             }
-    //           }
-    //         }
-    //     ]);
+      $.ajax({url: "/api/v1/scenes/" + id + "/", dataType: "json"})
+        .done(function(json) {
+          var data = json[0];
 
-    //   global.fetchModel(id)
-    //     .then(function(data) {
-    //       modelDetails.model = data;
-    //       // Now test the log
-    //       modelDetails.model.id = id;
+          var url = data.fileurl + data.info.logfile.location + data.info.logfile.file;
 
-    //       // We refer to this item:
-    //       //var model = itemsCache["4"];
+          nock("http://0.0.0.0")
+            //.log(console.log)
+            .defaultReplyHeaders({
+              "Content-Type": "application/data",
+              "Access-Control-Allow-Origin": "*"
+            })
+            .get(url)
+            .reply(200, function() {
+              correctReply = true;
+              return {};
+            });
 
-    //       // Working dir is at: modeldata.fileurl + delf3d + delft3d.log
-    //       var url = data.fileurl + data.info.logfile.location + data.info.logfile.file;
+          global.store.fetchLog({data: data});
 
-    //       nock("http://0.0.0.0")
-    //         //.log(console.log)
-    //         .defaultReplyHeaders({
-    //           "Content-Type": "application/json",
-    //           "Access-Control-Allow-Origin": "*"
-    //         })
-    //         .get(url)
-    //         .reply(200, function() {
-    //           correctReply = true;
-    //           return {};
-    //         });
+          // Make sure the nock server had the time to reply
+          window.setTimeout(function() {
+            try {
+              assert(correctReply === true, "Nock server did not reach reply");
+              done();
+            } catch (e) {
+              done(e);
+            }
+          }, 100);
+        })
+        .fail(function(error) {
+          console.log("no data returned", error);
+          // rethrow error to capture it and avoid time out
+          try {
+            throw error;
+          } catch (exc) {
+            done(exc);
+          }
+        });
 
-    //       modelDetails.fetchLog();
-
-    //       // Make sure the nock server had the time to reply
-    //       window.setTimeout(function() {
-    //         try {
-    //           assert(correctReply === true, "Nock server did not reach reply");
-    //           done();
-    //         } catch (e) {
-    //           done(e);
-    //         }
-    //       }, 100);
-
-
-    //     })
-    //     .catch(function(e) {
-    //       console.log("no data returned", e);
-    //       // rethrow error to capture it and avoid time out
-    //       try {
-    //         throw e;
-    //       } catch (exc) {
-    //         done(exc);
-    //       }
-    //     });
-
-    // });
+    });
 
 
 
-    // xit("Should be possible to fetchLog - NON existing model", function(done) {
-    //   var id = 405;
+    it("Should be possible to fetchLog - NON existing model", function(done) {
+      var container = {id: 405};
 
-    //   // We expect an error! As there are no models yet
-    //   global.fetchLog(id).catch(function() {
-    //     // We expect an error.
-    //     done();
-    //   });
-    // });
-
-
-    // // This function should not perform a request as there is no filelog yet!
-    // xit("Should be possible to fetchLog - NO filelog yet", function(done) {
-    //   var correctReply = true;
-    //   var id = 405;
-
-    //   // We fake to get a model.
-    //   nock("http://0.0.0.0")
-    //     .defaultReplyHeaders({
-    //       "Content-Type": "application/json",
-    //       "Access-Control-Allow-Origin": "*"
-    //     })
-    //     .filteringPath(function() {
-    //       return "/api/v1/scenes/";
-    //     })
-    //     .get("/api/v1/scenes/")
-    //     .reply(200, [
-    //       {
-    //         id: 405,
-    //         name: "Run 1",
-    //         fileurl: "/fileurl/",
-    //           info: {
-    //             logfile: {
-    //               location: "location/",
-    //               file: "" // <-- this is the part we are testing.
-    //             }
-    //           }
-    //         }
-    //     ]);
-
-    //   global.fetchModel(id)
-    //     .then(function(data) {
-
-    //       // Now test the log
-    //       modelDetails.model.id = id;
-
-    //       // We refer to this item:
-    //       //var model = itemsCache["4"];
-
-    //       // Working dir is at: modeldata.fileurl + delf3d + delft3d.log
-    //       var url = data.fileurl + data.info.logfile.location + data.info.logfile.file;
-
-    //       nock("http://0.0.0.0")
-    //         //.log(console.log)
-    //         .defaultReplyHeaders({
-    //           "Content-Type": "application/json",
-    //           "Access-Control-Allow-Origin": "*"
-    //         })
-    //         .get(url)
-    //         .reply(200, function() {
-    //           correctReply = false; // We did not expect a reply!!
-    //           return {};
-    //         });
-
-    //       modelDetails.fetchLog();
-
-    //       // Make sure the nock server had the time to reply
-    //       window.setTimeout(function() {
-    //         try {
-    //           assert(correctReply === true, "[x] No Ajax call performed");
-    //           done();
-    //         } catch (e) {
-    //           done(e);
-    //         }
-    //       }, 100);
+      // We expect an error! As there are no models yet
+      global.store.fetchLog(container).catch(function() {
+        // We expect an error.
+        done();
+      });
+    });
 
 
-    //     })
-    //     .catch(function(e) {
-    //       console.log("no data returned", e);
-    //       // rethrow error to capture it and avoid time out
-    //       try {
-    //         throw e;
-    //       } catch (exc) {
-    //         done(exc);
-    //       }
-    //     });
+    // This function should not perform a request as there is no filelog yet!
+    it("Should be possible to fetchLog - NO filelog yet", function(done) {
+      var correctReply = true;
+      var id = 405;
 
-    // });
+      // We fake to get a model.
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .filteringPath(function() {
+          return "/api/v1/scenes/";
+        })
+        .get("/api/v1/scenes/")
+        .reply(200, [
+          {
+            id: 405,
+            name: "Run 1",
+            fileurl: "/fileurl/",
+            info: {
+              logfile: {
+                location: "location/",
+                file: "" // <-- this is the part we are testing.
+              }
+            }
+          }
+        ]);
+
+      $.ajax({url: "/api/v1/scenes/" + id + "/", dataType: "json"})
+        .done(function(json) {
+          var data = json[0];
+
+          var url = data.fileurl + data.info.logfile.location + data.info.logfile.file;
+
+          nock("http://0.0.0.0")
+            //.log(console.log)
+            .defaultReplyHeaders({
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*"
+            })
+            .get(url)
+            .reply(200, function() {
+              correctReply = false; // We did not expect a reply!!
+              return {};
+            });
+
+          global.store.fetchLog({data: data});
+
+          // Make sure the nock server had the time to reply
+          window.setTimeout(function() {
+            try {
+              assert(correctReply === true, "[x] No Ajax call performed");
+              done();
+            } catch (e) {
+              done(e);
+            }
+          }, 100);
 
 
-    // // This version sends a invalid reponse to the fetchLog, we have to handle this.
-    // // Skip the UI part of this. just direct through global.
-    // xit("Should be possible to fetchLog - EXPECT INVALID REPONSE", function(done) {
+        })
+        .fail(function(e) {
+          console.log("no data returned", e);
+          // rethrow error to capture it and avoid time out
+          try {
+            throw e;
+          } catch (exc) {
+            done(exc);
+          }
+        });
 
-    //   //var correctReply = false;
-    //   var id = 405;
+    });
 
-    //   // We fake to get a model.
-    //   nock("http://0.0.0.0")
-    //     .defaultReplyHeaders({
-    //       "Content-Type": "application/json",
-    //       "Access-Control-Allow-Origin": "*"
-    //     })
-    //     .filteringPath(function() {
-    //       return "/api/v1/scenes/";
-    //     })
-    //     .get("/api/v1/scenes/")
-    //     .reply(200, [
-    //       {
-    //         id: 405,
-    //         name: "Run 1",
-    //         fileurl: "/fileurl/",
-    //           info: {
-    //             logfile: {
-    //               location: "location/",
-    //               file: "file"
-    //             }
-    //           }
-    //         }
-    //     ]);
 
-    //   global.fetchModel(id)
-    //     .then(function(data) {
+    // This version sends a invalid reponse to the fetchLog, we have to handle this.
+    // Skip the UI part of this. just direct through global.
+    it("Should be possible to fetchLog - EXPECT INVALID REPONSE", function(done) {
 
-    //       // Now test the log
-    //       modelDetails.model.id = id;
+      //var correctReply = false;
+      var id = 405;
 
-    //       // Working dir is at: modeldata.fileurl + delf3d + delft3d.log
-    //       var url = data.fileurl + data.info.logfile.location + data.info.logfile.file;
+      // We fake to get a model.
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .filteringPath(function() {
+          return "/api/v1/scenes/";
+        })
+        .get("/api/v1/scenes/")
+        .reply(200, [
+          {
+            id: 405,
+            name: "Run 1",
+            fileurl: "/fileurl/",
+            info: {
+              logfile: {
+                location: "location/",
+                file: "file"
+              }
+            }
+          }
+        ]);
 
-    //       nock("http://0.0.0.0")
-    //         //.log(console.log)
-    //         .defaultReplyHeaders({
-    //           "Content-Type": "application/json",
-    //           "Access-Control-Allow-Origin": "*"
-    //         })
-    //         .get(url)
-    //         .reply(400, function() {
-    //           return {};
-    //         });
+      $.ajax({url: "/api/v1/scenes/" + id + "/", dataType: "json"})
+        .done(function(json) {
+          var data = json[0];
 
-    //       global.fetchLog(id).catch(function() {
+          var url = data.fileurl + data.info.logfile.location + data.info.logfile.file;
 
-    //         // We expect an error.
-    //         done();
-    //       });
-    //     });
-    // });
+          nock("http://0.0.0.0")
+            .defaultReplyHeaders({
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*"
+            })
+            .get(url)
+            .reply(400, function() {
+              return {};
+            });
+
+          global.store.fetchLog({data: data}).catch(function() {
+            // We expect an error.
+            done();
+          });
+        });
+    });
 
 
 
-    // xit("Should be possible to delete a model", function(done) {
+    it("Should be possible to delete a model", function(done) {
 
-    //   var correctReply = false;
+      var correctReply = false;
 
-    //   var deleteID = 4;
+      var deleteID = 4;
 
-    //   nock("http://0.0.0.0")
-    //     .defaultReplyHeaders({
-    //       "Content-Type": "application/json",
-    //       "Access-Control-Allow-Origin": "*"
-    //     })
-    //     .intercept("/api/v1/scenes/" + deleteID + "/", "OPTIONS")
-    //     .reply(200, function() {
-    //       return "Allow: GET, HEAD, PUT, DELETE, POST";
-    //     })
-    //     .delete("/api/v1/scenes/" + deleteID + "/")
-    //     .reply(200, function() {
-    //       correctReply = true;
-    //       return {};
-    //     });
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .intercept("/api/v1/scenes/" + deleteID + "/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+        .delete("/api/v1/scenes/" + deleteID + "/")
+        .reply(200, function() {
+          correctReply = true;
+          return {};
+        });
 
-    //   global.deleteModel(deleteID);
+      global.store.deleteModel({id: deleteID});
 
-    //   // Make sure the nock server had the time to reply
-    //   window.setTimeout(function() {
-    //     try {
-    //       assert(correctReply === true, "Nock server did not reach reply");
-    //       done();
-    //     } catch (e) {
-    //       done(e);
-    //     }
-    //   }, 100);
-    // });
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
+    });
 
-    // xit("Should be possible to delete a model - FAILURE test", function(done) {
+    it("Should be possible to delete a model - FAILURE test", function(done) {
 
-    //   var deleteID = 4;
+      var deleteID = 4;
 
-    //   nock("http://0.0.0.0")
-    //     .defaultReplyHeaders({
-    //       "Content-Type": "application/json",
-    //       "Access-Control-Allow-Origin": "*"
-    //     })
-    //     .intercept("/api/v1/scenes/" + deleteID + "/", "OPTIONS")
-    //     .reply(200, function() {
-    //       return "Allow: GET, HEAD, PUT, DELETE, POST";
-    //     })
-    //     .delete("/api/v1/scenes/" + deleteID + "/")
-    //     .reply(400, function() {
-    //       return {};
-    //     });
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .intercept("/api/v1/scenes/" + deleteID + "/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+        .delete("/api/v1/scenes/" + deleteID + "/")
+        .reply(400, function() {
+          return {};
+        });
 
-    //   global.deleteModel(deleteID).catch(function() {
-    //     // We expected an error.
-    //     done();
-    //   });
+      global.store.deleteModel({id: deleteID}).catch(function() {
+        // We expected an error.
+        done();
+      });
 
-
-    // });
+    });
 
     // xit("Should be possible to export a model", function(done) {
     //   var correctReply = false;
@@ -1544,66 +1451,56 @@
     // });
 
 
-    // xit("Should be possible to start a model - FAILURE test", function(done) {
-    //   var modelToStart = 4;
+    it("Should be possible to start a model - FAILURE test", function(done) {
+      var id = 4;
 
-    //   nock("http://0.0.0.0")
-    //     //.log(console.log)
-    //     // jquery calls OPTIONS first
-    //     .intercept("/api/v1/scenes/" + modelToStart + "/start/", "OPTIONS")
-    //     .reply(200, function() {
-    //       return "Allow: GET, HEAD, PUT, DELETE, POST";
-    //     })
-    //     // Browsers (and jquery) expect the Access-Control-Allow-Origin header
-    //     .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
-    //     .put("/api/v1/scenes/" + modelToStart + "/start/")
-    //     .reply(400, function() {
+      nock("http://0.0.0.0")
+        .intercept("/api/v1/scenes/" + id + "/start/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+        // Browsers (and jquery) expect the Access-Control-Allow-Origin header
+        .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
+        .put("/api/v1/scenes/" + id + "/start/")
+        .reply(400, function() {
+          return {};
+        });
 
-    //       // We got the right reply:
-    //       return {};
-    //     });
+      global.store.startModel({id: id}).catch(function() {
+        done();
+      });
 
-    //   global.startModel(modelToStart).catch(function() {
-    //     // We expected an error.
-    //     done();
-    //   });
+    });
 
-    // });
+    it("Should be possible to start a model", function(done) {
+      var correctReply = true;
+      var id = 4;
 
-    // xit("Should be possible to start a model", function(done) {
-    //   var correctReply = true;
+      nock("http://0.0.0.0")
+        // jquery calls OPTIONS first
+        .intercept("/api/v1/scenes/" + id + "/start/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+        // Browsers (and jquery) expect the Access-Control-Allow-Origin header
+        .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
+        .put("/api/v1/scenes/" + id + "/start/")
+        .reply(200, function() {
+          return "{\"a\":" + id + "}";
+        });
 
-    //   modelDetails.$parent = {};
-    //   modelDetails.$parent.$broadcast = function() {
-    //   };
+      global.store.startModel({id: id});
 
-    //   modelDetails.model.id = 4;
-
-    //   nock("http://0.0.0.0")
-    //     // jquery calls OPTIONS first
-    //     .intercept("/api/v1/scenes/4/start/", "OPTIONS")
-    //     .reply(200, function() {
-    //       return "Allow: GET, HEAD, PUT, DELETE, POST";
-    //     })
-    //     // Browsers (and jquery) expect the Access-Control-Allow-Origin header
-    //     .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
-    //     .put("/api/v1/scenes/4/start/")
-    //     .reply(200, function() {
-    //       return "{\"a\":4}";
-    //     });
-
-    //   modelDetails.startModel();
-
-    //   // Make sure the nock server had the time to reply
-    //   window.setTimeout(function() {
-    //     try {
-    //       assert(correctReply === true, "Nock server did not reach reply");
-    //       done();
-    //     } catch (e) {
-    //       done(e);
-    //     }
-    //   }, 150);
-    // });
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 150);
+    });
 
 
     // xit("Should be possible to stop multiple models (stopruns)", function(done) {
@@ -1784,764 +1681,101 @@
 
     // });
 
-    // xit("Should be possible to stop a model", function(done) {
-    //   var correctReply = false;
-
-    //   modelDetails = new ModelDetails();
-    //   modelDetails.model = {};
-
-    //   modelDetails.$parent = {};
-    //   modelDetails.$parent.$broadcast = function() {
-    //   };
-
-    //   modelDetails.$root = {};
-    //   modelDetails.$root.$broadcast = function() {
-    //   };
-
-    //   modelDetails.model.id = 4;
-
-    //   // To get dialogs, manually have to create and add them to the component. So that is what we do here:
-    //   var dialog = new ConfirmDialog();
-
-    //   dialog.dialogId = "stop";
-    //   modelDetails.$children.push(dialog);
-
-    //   // End manual dialog.
-
-
-    //   nock("http://0.0.0.0")
-    //     //.log(console.log)
-    //     // jquery calls OPTIONS first
-    //     .intercept("/api/v1/scenes/" + modelDetails.model.id + "/stop/", "OPTIONS")
-    //     .reply(200, function() {
-    //       return "Allow: GET, HEAD, PUT, DELETE, POST";
-    //     })
-    //     // Browsers (and jquery) expect the Access-Control-Allow-Origin header
-    //     .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
-    //     .put("/api/v1/scenes/" + modelDetails.model.id + "/stop/")
-    //     .reply(200, function() {
-
-    //       // We got the right reply:
-    //       correctReply = true;
-    //       return {};
-    //     });
-
-    //   // Make sure the nock server had the time to reply
-    //   window.setTimeout(function() {
-    //     try {
-    //       assert(correctReply === true, "Nock server did not reach reply");
-    //       done();
-    //     } catch (e) {
-    //       done(e);
-    //     }
-    //   }, 150);
-
-    //   $("#dialog-container").load("/templates/confirm-dialog.html", function() {
-
-    //     modelDetails.stopModel();
-
-    //     // Find the dialog:
-    //     var stopDialog = getDialog(modelDetails, "confirm-dialog", "stop");
-
-    //     // confirm the dialog:
-    //     stopDialog.onConfirm();
-    //   });
-    // });
-
-
-    // xit("Should be possible to stop a model - FAILURE test", function(done) {
-    //   var modelToStop = 4;
-
-    //   nock("http://0.0.0.0")
-    //     //.log(console.log)
-    //     // jquery calls OPTIONS first
-    //     .intercept("/api/v1/scenes/" + modelToStop + "/stop/", "OPTIONS")
-    //     .reply(200, function() {
-    //       return "Allow: GET, HEAD, PUT, DELETE, POST";
-    //     })
-    //     // Browsers (and jquery) expect the Access-Control-Allow-Origin header
-    //     .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
-    //     .put("/api/v1/scenes/" + modelToStop + "/stop/")
-    //     .reply(400, function() {
-
-    //       // We got the right reply:
-    //       return {};
-    //     });
-
-    //   global.stopModel(modelToStop).catch(function() {
-    //     // We expected an error.
-    //     done();
-    //   });
-
-    // });
-
-    // xit("Should be possible to start a model - FAILURE test", function(done) {
-    //   var modelToStart = 4;
-
-    //   nock("http://0.0.0.0")
-    //     //.log(console.log)
-    //     // jquery calls OPTIONS first
-    //     .intercept("/api/v1/scenes/" + modelToStart + "/start/", "OPTIONS")
-    //     .reply(200, function() {
-    //       return "Allow: GET, HEAD, PUT, DELETE, POST";
-    //     })
-    //     // Browsers (and jquery) expect the Access-Control-Allow-Origin header
-    //     .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
-    //     .put("/api/v1/scenes/" + modelToStart + "/start/")
-    //     .reply(400, function() {
-
-    //       // We got the right reply:
-    //       return {};
-    //     });
-
-    //   global.startModel(modelToStart).catch(function() {
-    //     // We expected an error.
-    //     done();
-    //   });
-
-    // });
-
-
-    // xit("Should be possible to change download options", function(done) {
-
-    //   // For now test if the function exists.
-    //   modelDetails.downloadOptionsChange();
-    //   done();
-    // });
-
-    // xit("Should be possible to check level enabled", function(done) {
-
-    //   // For now test if the function exists.
-    //   modelDetails.isLevelEnabled(1);
-    //   done();
-    // });
-
-
-    // xit("Should be possible to check if read only", function(done) {
-
-    //   // For now test if the function exists.
-    //   modelDetails.isReadOnly();
-    //   done();
-    // });
-
-
-    // xit("Should be possible to check publish level", function(done) {
-
-    //   // For now test if the function exists.
-    //   modelDetails.indexOfPublishLevel();
-    //   done();
-    // });
-
-    // xit("Should be possible to hilight publish level", function(done) {
-
-    //   // For now test if the function exists.
-    //   modelDetails.highlightPublishLevel();
-    //   done();
-    // });
-
-
-    // xit("Should be possible to get isModelRunning property", function(done) {
-
-    //   // Make sure the function returns true:
-    //   var aModelDetails = new ModelDetails();
-
-    //   // Some state for a fake model.
-    //   aModelDetails.model = { state: "PROCESSING" };
-
-
-    //   assert.isTrue(aModelDetails.isModelRunning);
-
-    //   done();
-    // });
-
-    // xit("Should be possible to get logoutput property", function(done) {
-
-    //   // Make sure the function returns true:
-    //   var aModelDetails = new ModelDetails();
-    //   var logtext = "logtext";
-
-    //   // Set some logoutput for a fake model.
-    //   aModelDetails.model = { logoutput: logtext };
-
-
-    //   assert.isTrue(aModelDetails.logoutput === logtext);
-
-    //   done();
-    // });
-
-
-    // xit("Should be possible to get scenario property (calculated)", function(done) {
-
-    //   var aModelDetails = new ModelDetails();
-
-
-    //   // Should give -1 as default.
-    //   assert.isTrue(aModelDetails.scenario === -1);
-
-    //   done();
-    // });
-
-
-    // xit("Should be possible to publish a model private using Confirm", function(done) {
-
-    //   var correctReply = false;
-
-    //   modelDetails = new ModelDetails();
-    //   modelDetails.model = {};
-    //   modelDetails.$parent = {};
-    //   modelDetails.$parent.$broadcast = function() {
-    //   };
-
-    //   modelDetails.$root = {};
-    //   modelDetails.$root.$broadcast = function() {
-    //   };
-
-    //   modelDetails.model.id = 4;
-
-    //   // Publishlevel 2 = world
-
-    //   var newPublishLevel = 2;
-    //   var target = "world";
-
-    //   // To get dialogs, manually have to create and add them to the component. So that is what we do here:
-    //   var dialog = new ConfirmDialog();
-
-    //   dialog.dialogId = "publish";
-    //   modelDetails.$children.push(dialog);
-
-    //   // End manual dialog.
-
-
-    //   nock("http://0.0.0.0")
-    //     .defaultReplyHeaders({
-    //       "Content-Type": "application/json",
-    //       "Access-Control-Allow-Origin": "*"
-    //     })
-    //     .post("/api/v1/scenes/" + modelDetails.model.id + "/publish_" + target + "/")
-    //     .reply(200, function() {
-    //       correctReply = true;
-    //       return {};
-    //     });
-
-
-    //   // Make sure the nock server had the time to reply
-    //   window.setTimeout(function() {
-    //     try {
-    //       assert(correctReply === true, "Nock server did not reach reply");
-    //       done();
-    //     } catch (e) {
-    //       done(e);
-    //     }
-    //   }, 150);
-
-    //   $("#dialog-container").load("/templates/confirm-dialog.html", function() {
-
-    //     modelDetails.publishModel(newPublishLevel);
-
-    //     // Find the dialog:
-    //     var publishDialog = getDialog(modelDetails, "confirm-dialog", "publish");
-
-    //     // confirm the dialog:
-    //     publishDialog.onConfirm();
-    //   });
-    // });
-
-
-    xit("Should be possible to publish a model private using Confirm - FAILURE test", function(done) {
-
-      modelDetails = new ModelDetails();
-      modelDetails.model = {};
-      modelDetails.$parent = {};
-      modelDetails.$parent.$broadcast = function() {
-        done("Broadcast should not have been called");
-      };
-
-      modelDetails.$root = {};
-      modelDetails.$root.$broadcast = function() {
-        done("Broadcast should not have been called");
-      };
-
-      modelDetails.model.id = 4;
-
-      // Publishlevel 2 = world
-
-      var newPublishLevel = 2;
-      var target = "world";
-
+    it("Should be possible to stop a model", function(done) {
+      var correctReply = false;
+      var id = 4;
+
+      // TODO: verification dialog testing
       // To get dialogs, manually have to create and add them to the component. So that is what we do here:
-      var dialog = new ConfirmDialog();
-
-      dialog.dialogId = "publish";
-      modelDetails.$children.push(dialog);
-
-      // End manual dialog.
-
+      // var dialog = new ConfirmDialog();
+      // dialog.dialogId = "stop";
+      // modelDetails.$children.push(dialog);
 
       nock("http://0.0.0.0")
-        .defaultReplyHeaders({
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*"
+        .intercept("/api/v1/scenes/" + id + "/stop/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
         })
-        .post("/api/v1/scenes/" + modelDetails.model.id + "/publish_" + target + "/")
-        .reply(400, function() { // We reply with 400
+        .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
+        .put("/api/v1/scenes/" + id + "/stop/")
+        .reply(200, function() {
+          correctReply = true;
           return {};
         });
 
-
       // Make sure the nock server had the time to reply
       window.setTimeout(function() {
-        done();
-
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
       }, 150);
 
-      // We test if the continue code was still called by checking if a broadcast was executed.
-      modelDetails.$parent = {};
-      modelDetails.$parent.$broadcast = function() {
-        done("Broadcast should not have been called");
-      };
+      global.store.stopModel({id: id, data: {state: ""}});
 
-      modelDetails.$root = {};
-      modelDetails.$root.$broadcast = function() {
-        done("Broadcast should not have been called");
-      };
+      // $("#dialog-container").load("/templates/confirm-dialog.html", function() {
 
+      //   global.store.stopModel({id: id});
 
-      $("#dialog-container").load("/templates/confirm-dialog.html", function() {
-
-        modelDetails.publishModel(newPublishLevel);
-
-        // Find the dialog:
-        var publishDialog = getDialog(modelDetails, "confirm-dialog", "publish");
-
-        // confirm the dialog:
-        publishDialog.onConfirm();
-      });
+      //   // Mimick click on "Stop"
+      //   var stopDialog = getDialog(modelDetails, "confirm-dialog", "stop");
+      //   stopDialog.onConfirm();
+      // });
     });
 
 
-
-    // xit("Should be possible to publish a model private using Confirm", function(done) {
-
-    //   var correctReply = false;
-
-    //   modelDetails = new ModelDetails();
-    //   modelDetails.model = {};
-    //   modelDetails.$parent = {};
-    //   modelDetails.$parent.$broadcast = function() {
-    //   };
-
-    //   modelDetails.$root = {};
-    //   modelDetails.$root.$broadcast = function() {
-    //   };
-
-    //   modelDetails.model.id = 4;
-
-    //   // Publishlevel 2 = world
-
-    //   var newPublishLevel = 2;
-    //   var target = "world";
-
-    //   // To get dialogs, manually have to create and add them to the component. So that is what we do here:
-    //   var dialog = new ConfirmDialog();
-
-    //   dialog.dialogId = "publish";
-    //   modelDetails.$children.push(dialog);
-
-    //   // End manual dialog.
-
-
-    //   nock("http://0.0.0.0")
-    //     .defaultReplyHeaders({
-    //       "Content-Type": "application/json",
-    //       "Access-Control-Allow-Origin": "*"
-    //     })
-    //     .post("/api/v1/scenes/" + modelDetails.model.id + "/publish_" + target + "/")
-    //     .reply(200, function() {
-    //       correctReply = true;
-    //       return {};
-    //     });
-
-
-    //   // Make sure the nock server had the time to reply
-    //   window.setTimeout(function() {
-    //     try {
-    //       assert(correctReply === true, "Nock server did not reach reply");
-    //       done();
-    //     } catch (e) {
-    //       done(e);
-    //     }
-    //   }, 150);
-
-    //   $("#dialog-container").load("/templates/confirm-dialog.html", function() {
-
-    //     modelDetails.publishModel(newPublishLevel);
-
-    //     // Find the dialog:
-    //     var publishDialog = getDialog(modelDetails, "confirm-dialog", "publish");
-
-    //     // confirm the dialog:
-    //     publishDialog.onConfirm();
-    //   });
-    // });
-
-
-
-    // xit("Should be possible to publish a model private", function(done) {
-    //   var correctReply = false;
-
-    //   var modelToPublishId = 4;
-    //   var target = "private";
-
-    //   nock("http://0.0.0.0")
-    //     .defaultReplyHeaders({
-    //       "Content-Type": "application/json",
-    //       "Access-Control-Allow-Origin": "*"
-    //     })
-    //     .post("/api/v1/scenes/" + modelToPublishId + "/publish_" + target + "/")
-    //     .reply(200, function() {
-    //       correctReply = true;
-    //       return {};
-    //     });
-
-    //   global.publishModel(modelToPublishId, target);
-
-    //   // Make sure the nock server had the time to reply
-    //   window.setTimeout(function() {
-    //     try {
-    //       assert(correctReply === true, "Nock server did not reach reply");
-    //       done();
-    //     } catch (e) {
-    //       done(e);
-    //     }
-    //   }, 100);
-    // });
-
-    // xit("Should be possible to publish a model private - FAILURE test", function(done) {
-    //   var modelToPublishId = 4;
-    //   var target = "private";
-
-    //   nock("http://0.0.0.0")
-    //     .defaultReplyHeaders({
-    //       "Content-Type": "application/json",
-    //       "Access-Control-Allow-Origin": "*"
-    //     })
-    //     .post("/api/v1/scenes/" + modelToPublishId + "/publish_" + target + "/")
-    //     .reply(400, function() {
-    //       return {};
-    //     });
-
-    //   global.publishModel(modelToPublishId, target).catch(function() {
-    //     // We expected an error.
-    //     done();
-    //   });
-
-
-
-    // });
-
-    // xit("Should be possible to publish a model company", function(done) {
-    //   var correctReply = false;
-
-    //   modelDetails.$parent = {};
-    //   modelDetails.$parent.$broadcast = function() {
-    //   };
-
-    //   var modelToPublishId = 4;
-    //   var target = "company";
-
-    //   nock("http://0.0.0.0")
-    //     .defaultReplyHeaders({
-    //       "Content-Type": "application/json",
-    //       "Access-Control-Allow-Origin": "*"
-    //     })
-    //     .post("/api/v1/scenes/" + modelToPublishId + "/publish_" + target + "/")
-    //     .reply(200, function() {
-    //       correctReply = true;
-    //       return {};
-    //     });
-
-    //   global.publishModel(modelToPublishId, target);
-
-    //   // Make sure the nock server had the time to reply
-    //   window.setTimeout(function() {
-    //     try {
-    //       assert(correctReply === true, "Nock server did not reach reply");
-    //       done();
-    //     } catch (e) {
-    //       done(e);
-    //     }
-    //   }, 100);
-    // });
-
-    // xit("Should be possible to publish a world company", function(done) {
-    //   var correctReply = false;
-
-    //   modelDetails.$parent = {};
-    //   modelDetails.$parent.$broadcast = function() {
-    //   };
-
-    //   var modelToPublishId = 4;
-    //   var target = "world";
-
-    //   nock("http://0.0.0.0")
-    //     .defaultReplyHeaders({
-    //       "Content-Type": "application/json",
-    //       "Access-Control-Allow-Origin": "*"
-    //     })
-    //     .post("/api/v1/scenes/" + modelToPublishId + "/publish_" + target + "/")
-    //     .reply(200, function() {
-    //       correctReply = true;
-    //       return {};
-    //     });
-
-    //   global.publishModel(modelToPublishId, target);
-
-    //   // Make sure the nock server had the time to reply
-    //   window.setTimeout(function() {
-    //     try {
-    //       assert(correctReply === true, "Nock server did not reach reply");
-    //       done();
-    //     } catch (e) {
-    //       done(e);
-    //     }
-    //   }, 100);
-    // });
-
-    // xit("Check publishlevel config", function(done) {
-
-    //   var publishLevels = [
-    //     {
-    //       "indicator": "p",
-    //       "url": "private",
-    //       "iconClass": "glyphicon-people",
-    //       "description": "Private"
-    //     },
-    //     {
-    //       "indicator": "c",
-    //       "url": "company",
-    //       "iconClass": "glyphicon-blackboard",
-    //       "description": "Share with your company"
-    //     },
-    //     {
-    //       "indicator": "w",
-    //       "url": "world",
-    //       "iconClass": "glyphicon-globe",
-    //       "description": "Share with all Delft3D-GT users"
-    //     }
-    //   ];
-
-    //   var aModelDetails = new ModelDetails();
-
-    //   /*eslint-disable no-underscore-dangle*/
-    //   assert.deepEqual(aModelDetails._data.publishLevels, publishLevels, "Match publishlevels");
-    //   /*eslint-enable no-underscore-dangle*/
-
-    //   done();
-
-    // });
-
-
-
-
-
-    // xit("Should be possible to download files", function(done) {
-    //   var windowSpy = sinon.spy(window, "open");
-
-    //   // this should open a new window
-    //   modelDetails.downloadFiles();
-
-    //   // did it?
-    //   sinon.assert.calledOnce(windowSpy);
-
-    //   done();
-    // });
-
-    // xit("Should be possible to GET id (calculated)", function(done) {
-
-    //   var aModelDetails = new ModelDetails();
-
-    //   // Set an id:
-    //   aModelDetails.$route = {
-    //     params: {
-    //       modelid: 4
-    //     }
-    //   };
-
-    //   assert.isTrue(aModelDetails.id === aModelDetails.$route.params.modelid, "Match id");
-
-    //   done();
-
-    // });
-
-
-    // xit("Should be possible to SET id (calculated)", function(done) {
-
-    //   var aModelDetails = new ModelDetails();
-    //   var idToSet = 4;
-
-    //   aModelDetails.id = idToSet;
-
-    //   // Apperantly, we always use the router for the get function. So we expect -1 right now (no route params)
-    //   assert.isTrue(aModelDetails.id === -1, "Match id");
-
-    //   done();
-
-    // });
-
-
-    // xit("Should be possible to GET progress (calculated)", function(done) {
-
-    //   var aModelDetails = new ModelDetails();
-    //   var progressToSet = 55;
-
-    //   // Set a fake progress
-    //   aModelDetails.model = { progress: progressToSet };
-
-    //   // Does the progress match?
-    //   assert.isTrue(aModelDetails.progress === progressToSet, "Match progress");
-
-    //   done();
-
-    // });
-
-
-    // xit("Should be possible to GET scenario (calculated after model set)", function(done) {
-
-    //   var aModelDetails = new ModelDetails();
-    //   var scenarioToSet = 123;
-
-    //   // Set a fake progress
-    //   aModelDetails.model = { scenario: scenarioToSet };
-
-    //   // Does the progress match?
-    //   assert.isTrue(aModelDetails.scenario === scenarioToSet, "Match scenario");
-
-    //   done();
-
-    // });
-
-
-    // xit("Should be possible to GET current publishlevel - unknown", function(done) {
-
-    //   var aModelDetails = new ModelDetails();
-
-    //   aModelDetails.model = {
-    //     publishLevel: "nope"
-    //   };
-
-    //   var publishLevel = aModelDetails.publishLevel;
-
-    //   // When nothing is set, should return "unknown"
-    //   assert.isTrue(publishLevel === "Unknown", "Match unknown");
-
-    //   done();
-
-    // });
-
-    // xit("Should be possible to GET current publishlevel - public", function(done) {
-
-    //   var aModelDetails = new ModelDetails();
-
-    //   // We set a share state of a fake model.
-    //   aModelDetails.model = {
-    //     shared: "w" // w means "Public"
-    //   };
-
-    //   var publishLevel = aModelDetails.publishLevel;
-
-    //   // We expect public
-    //   assert.isTrue(publishLevel === "Share with all Delft3D-GT users", "Match with public");
-
-    //   done();
-
-    // });
-
-    // xit("Should be possible to GET next publishlevel", function(done) {
-
-    //   var aModelDetails = new ModelDetails();
-
-    //   // We set a share state of a fake model.
-    //   aModelDetails.model = {
-    //     shared: "c" // c means "company"
-    //   };
-
-    //   // Now we go to the 'next level'
-    //   var publishLevel = aModelDetails.nextPublishLevel;
-
-    //   // We expect public (private->company->public)
-    //   assert.isTrue(publishLevel === "Share with all Delft3D-GT users", "Match with public");
-
-    //   done();
-
-    // });
-
-
-    // xit("Should be possible to REMOVE a model", function(done) {
-    //   var correctReply = false;
-
-    //   modelDetails = new ModelDetails();
-    //   modelDetails.model = {};
-
-    //   modelDetails.$parent = {};
-    //   modelDetails.$parent.$broadcast = function() {
-    //   };
-
-    //   modelDetails.$root = {};
-    //   modelDetails.$root.$broadcast = function() {
-    //   };
-
-    //   modelDetails.model.id = 4;
-
-    //   // To get dialogs, manually have to create and add them to the component. So that is what we do here:
-    //   var dialog = new ConfirmDialog();
-
-    //   dialog.dialogId = "delete";
-    //   modelDetails.$children.push(dialog);
-
-    //   // End manual dialog.
-
-
-    //   nock("http://0.0.0.0")
-    //     .defaultReplyHeaders({
-    //       "Content-Type": "application/json",
-    //       "Access-Control-Allow-Origin": "*"
-    //     })
-    //     .intercept("/api/v1/scenes/" + modelDetails.model.id + "/", "OPTIONS")
-    //     .reply(200, function() {
-    //       return "Allow: GET, HEAD, PUT, DELETE, POST";
-    //     })
-    //     .delete("/api/v1/scenes/" + modelDetails.model.id + "/")
-    //     .reply(200, function() {
-    //       correctReply = true;
-    //       return {};
-    //     });
-
-    //   // Make sure the nock server had the time to reply
-    //   window.setTimeout(function() {
-    //     try {
-    //       assert(correctReply === true, "Nock server did not reach reply");
-    //       done();
-    //     } catch (e) {
-    //       done(e);
-    //     }
-    //   }, 150);
-
-
-    //   $("#dialog-container").load("/templates/confirm-dialog.html", function() {
-
-    //     var deleteDialog = getDialog(modelDetails, "confirm-dialog", "delete");
-
-
-    //     modelDetails.removeModel();
-
-    //     // confirm the dialog:
-    //     deleteDialog.onConfirm();
-    //   });
-    // });
+    it("Should be possible to stop a model - FAILURE test", function(done) {
+      var id = 4;
+
+      nock("http://0.0.0.0")
+        //.log(console.log)
+        // jquery calls OPTIONS first
+        .intercept("/api/v1/scenes/" + id + "/stop/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+        // Browsers (and jquery) expect the Access-Control-Allow-Origin header
+        .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
+        .put("/api/v1/scenes/" + id + "/stop/")
+        .reply(400, function() {
+
+          // We got the right reply:
+          return {};
+        });
+
+      global.store.stopModel({id: id, data: {state: ""}}).catch(function() {
+        // We expected an error.
+        done();
+      });
+
+    });
+
+    it("Should be possible to start a model - FAILURE test", function(done) {
+      var id = 4;
+
+      nock("http://0.0.0.0")
+        .intercept("/api/v1/scenes/" + id + "/start/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+        // Browsers (and jquery) expect the Access-Control-Allow-Origin header
+        .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
+        .put("/api/v1/scenes/" + id + "/start/")
+        .reply(400, function() {
+          return {};
+        });
+
+      global.store.startModel({id: id, data: {state: ""}}).catch(function() {
+        // We expected an error.
+        done();
+      });
+
+    });
 
 
   });
-
 
   describe("ImageAnimation", function() {
     var app = new Vue({
@@ -2557,7 +1791,7 @@
 
 
 
-    xit("Does ImageAnimation have the initial values", function(done) {
+    it("Does ImageAnimation have the initial values", function(done) {
 
       var defaultData = {
         // Current animation frame:
@@ -2581,7 +1815,7 @@
     });
 
 
-    xit("Does ImageAnimation have the right default 'props'", function(done) {
+    it("Does ImageAnimation have the right default 'props'", function(done) {
 
 
       // Couldn't match on the function, so we only check if model exists.
@@ -2593,7 +1827,7 @@
 
 
 
-    xit("Should be possible to stop image frames - no anim key", function(done) {
+    it("Should be possible to stop image frames - no anim key", function(done) {
 
       // Fake a timer interval:
       imageAnimation.timerAnimation = 0;
@@ -2606,7 +1840,7 @@
 
     });
 
-    xit("Should be possible to stop image frames", function(done) {
+    it("Should be possible to stop image frames", function(done) {
 
       // Fake a timer interval:
       imageAnimation.timerAnimation = 2;
@@ -2619,7 +1853,7 @@
 
     });
 
-    xit("Should be possible to play image frames the imageFrame", function(done) {
+    it("Should be possible to play image frames the imageFrame", function(done) {
 
       imageAnimation.playImageFrame();
 
@@ -2629,7 +1863,7 @@
 
     });
 
-    xit("Should be possible to play image frames the imageFrame - No animationkey set", function(done) {
+    it("Should be possible to play image frames the imageFrame - No animationkey set", function(done) {
 
       imageAnimation.currentAnimationKey = "";
 
@@ -2644,7 +1878,7 @@
 
     });
 
-    xit("Should be possible to change to next imageFrame", function(done) {
+    it("Should be possible to change to next imageFrame", function(done) {
 
       /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
@@ -2662,7 +1896,7 @@
     });
 
 
-    xit("Should be possible to change to next imageFrame - stop at end", function(done) {
+    it("Should be possible to change to next imageFrame - stop at end", function(done) {
 
       /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
@@ -2685,7 +1919,7 @@
 
 
 
-    xit("Should be possible to change to next imageFrame - no model info", function(done) {
+    it("Should be possible to change to next imageFrame - no model info", function(done) {
 
       /*eslint-disable camelcase*/
       imageAnimation.model.info = undefined;
@@ -2702,7 +1936,7 @@
       done();
     });
 
-    xit("Should be possible to change to next imageFrame - no animationkey", function(done) {
+    it("Should be possible to change to next imageFrame - no animationkey", function(done) {
 
       /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
@@ -2721,7 +1955,7 @@
 
 
 
-    xit("Should be possible to check isanimating property", function(done) {
+    it("Should be possible to check isanimating property", function(done) {
 
       imageAnimation.stopImageFrame();
       var isAnimating = imageAnimation.isAnimating;
@@ -2730,7 +1964,7 @@
       done();
     });
 
-    xit("Should be possible to check hasFrames property", function(done) {
+    it("Should be possible to check hasFrames property", function(done) {
 
       // We should not have any frames in this animation object, but maybe make sure later on?
       /*eslint-disable camelcase*/
@@ -2743,7 +1977,7 @@
       done();
     });
 
-    xit("Should be possible to check animationIndex property", function(done) {
+    it("Should be possible to check animationIndex property", function(done) {
 
       // We should not have any frames in this animation object, but maybe make sure later on?
       imageAnimation.currentAnimationIndex = 0;
@@ -2753,7 +1987,7 @@
       done();
     });
 
-    xit("Should be possible to check animationFrame property", function(done) {
+    it("Should be possible to check animationFrame property", function(done) {
 
        /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { location: "location/", images: ["firstframe.jpg", "lastframe.jpg"] } };
@@ -2767,7 +2001,7 @@
       done();
     });
 
-    xit("Should be possible to check animationFrame property - empty", function(done) {
+    it("Should be possible to check animationFrame property - empty", function(done) {
 
        /*eslint-disable camelcase*/
       imageAnimation.model.info = { delta_fringe_images: { location: "location/", images: ["firstframe.jpg", "lastframe.jpg"] } };
@@ -2783,7 +2017,7 @@
     });
 
 
-    xit("Should be possible to check frameCount property", function(done) {
+    it("Should be possible to check frameCount property", function(done) {
 
       // We should not have any frames in this animation object, but maybe make sure later on?
        /*eslint-disable camelcase*/
@@ -2794,7 +2028,7 @@
       done();
     });
 
-    xit("Should be possible to check frameCount property - no data", function(done) {
+    it("Should be possible to check frameCount property - no data", function(done) {
 
       // We should not have any frames in this animation object, but maybe make sure later on?
        /*eslint-disable camelcase*/
@@ -2806,7 +2040,7 @@
     });
 
 
-    xit("Should be possible to switchAnimation", function(done) {
+    it("Should be possible to switchAnimation", function(done) {
 
       // We should not have any frames in this animation object, but maybe make sure later on?
       imageAnimation.switchAnimation("delta_fringe_images");
@@ -2814,6 +2048,7 @@
       done();
     });
 
+    // xit
     xit("Should be possible to previousImageFrame - No model info", function(done) {
 
       // index should become 0
@@ -2833,6 +2068,7 @@
       done();
     });
 
+    // xit
     xit("Should be possible to previousImageFrame ", function(done) {
 
       // index should become 0
@@ -2848,6 +2084,7 @@
       done();
     });
 
+    // xit
     xit("Should be possible to previousImageFrame - no animation key ", function(done) {
 
       // index should become 0
@@ -2864,7 +2101,7 @@
     });
 
 
-    xit("Should be possible to gotoFirstFrame", function(done) {
+    it("Should be possible to gotoFirstFrame", function(done) {
 
       // index should become 0
        /*eslint-disable camelcase*/
@@ -2878,6 +2115,7 @@
       done();
     });
 
+    // xit
     xit("Should be possible to gotoLastFrame - number wrap", function(done) {
 
       // index should become 0.. we do not have any images. Maybe test later using an fake array.
@@ -2893,7 +2131,7 @@
       done();
     });
 
-    xit("Should be possible to gotoLastFrame", function(done) {
+    it("Should be possible to gotoLastFrame", function(done) {
 
       // index should become 0.. we do not have any images. Maybe test later using an fake array.
        /*eslint-disable camelcase*/
@@ -2916,7 +2154,7 @@
   describe("SearchList class", function() {
 
 
-    xit("Should be possible deselect all runs", function(done) {
+    it("Should be possible deselect all runs", function(done) {
 
       // Add an artificial sene with a model in scene_set with id 1.
       var aSearchList = new SearchList();
@@ -2938,7 +2176,7 @@
     });
 
 
-    xit("Should be possible select a scenario", function(done) {
+    it("Should be possible select a scenario", function(done) {
 
       // Add an artificial sene with a model in scene_set with id 1.
       var aSearchList = new SearchList();
@@ -2954,7 +2192,7 @@
       done();
     });
 
-    xit("Should be possible get selected runs", function(done) {
+    it("Should be possible get selected runs", function(done) {
 
       // Add an artificial sene with a model in scene_set with id 1.
       var aSearchList = new SearchList();
@@ -2972,7 +2210,7 @@
       done();
     });
 
-    xit("Should be possible get selected runs - none selected", function(done) {
+    it("Should be possible get selected runs - none selected", function(done) {
 
       // Add an artificial sene with a model in scene_set with id 1.
       var aSearchList = new SearchList();
@@ -2991,7 +2229,7 @@
 
 
 
-    // Todo, but required DOM.
+    // xit: Todo, but required DOM.
     xit("Should be possible select an item WITH control key pressed ", function(done) {
 
       var aSearchList = new SearchList();
@@ -3017,7 +2255,7 @@
       done();
     });
 
-    xit("check properties ", function(done) {
+    it("check properties ", function(done) {
 
       //var aSearchList = new SearchList();
 
@@ -3065,7 +2303,7 @@
   describe("SearchColumns class", function() {
 
 
-    xit("Should be possible to init SearchColumns", function(done) {
+    it("Should be possible to init SearchColumns", function(done) {
 
       var aSearchColumns = new SearchColumns();
 
@@ -3079,7 +2317,7 @@
 
 
     // Ignores the selectpicker though.
-    xit("Should be possible to reset the form fields", function(done) {
+    it("Should be possible to reset the form fields", function(done) {
 
       var aSearchColumns = new SearchColumns();
 
@@ -3102,7 +2340,7 @@
       done();
     });
 
-    xit("Should be possible to call event modelsSelected", function(done) {
+    it("Should be possible to call event modelsSelected", function(done) {
 
       var aSearchColumns = new SearchColumns();
 
@@ -3128,7 +2366,7 @@
 
   describe("Loading of templates", function() {
 
-    xit("Should be possible to load scenariobuilder templates", function(done) {
+    it("Should be possible to load scenariobuilder templates", function(done) {
       var correctReply = false;
 
       nock("http://0.0.0.0")
@@ -3158,7 +2396,7 @@
     });
 
 
-    xit("Should be possible to load search templates - with data", function(done) {
+    it("Should be possible to load search templates - with data", function(done) {
       var correctReply = false;
 
       nock("http://0.0.0.0")
@@ -3188,7 +2426,7 @@
     });
 
 
-    xit("Should be possible to load search templates - no data", function(done) {
+    it("Should be possible to load search templates - no data", function(done) {
       var correctReply = false;
 
       nock("http://0.0.0.0")
@@ -3222,70 +2460,56 @@
   });
 
 
-  describe("UserDetails", function() {
+  describe("Store: get user details", function() {
 
-    // Not sure how to do this..
-    xit("Should be able to call ready()", function(done) {
+    it("Should have default information", function(done) {
 
+      var defaultInfo = {
+        /*eslint-disable camelcase*/
+        first_name: "Anonymous",
+        id: -1,
+        last_name: "User"
+        /*eslint-enable camelcase*/
+      };
 
-      //var userDetails = new UserDetails();
-       /*eslint-disable no-underscore-dangle*/
+      /*eslint-disable no-underscore-dangle*/
+      assert.deepEqual(global.store.state.user, defaultInfo, "Match default properties");
       /*eslint-enable no-underscore-dangle*/
       done();
 
     });
 
-    // xit("Should have default information", function(done) {
+    xit("Should be possible to fetch my info", function(done) {
+      var correctReply = false;
 
-    //   var userDetails = new UserDetails();
-    //   var defaultInfo = {
-    //     user: {
-    //       /*eslint-disable camelcase*/
-    //       first_name: "Unknown",
-    //       last_name: "User"
-    //       /*eslint-enable camelcase*/
-    //     }
-    //   };
+      nock("http://0.0.0.0")
+        .defaultReplyHeaders({
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        })
+        .get("/api/v1/users/me/")
+        .reply(200, function() {
+          correctReply = true;
+          return {};
+        });
 
-    //   /*eslint-disable no-underscore-dangle*/
-    //   assert.deepEqual(userDetails._data, defaultInfo, "Match default properties");
-    //   /*eslint-enable no-underscore-dangle*/
-    //   done();
+      var userDetails = new UserDetails();
 
-    // });
+      assert.isOk(userDetails, "UserDetails created");
 
-    // xit("Should be possible to fetch my info", function(done) {
-    //   var correctReply = false;
+      // Make sure the nock server had the time to reply
+      window.setTimeout(function() {
+        try {
+          assert(correctReply === true, "Nock server did not reach reply");
+          done();
+        } catch (e) {
+          done(e);
+        }
+      }, 100);
 
-    //   nock("http://0.0.0.0")
-    //     //.log(console.log)
-    //     .defaultReplyHeaders({
-    //       "Content-Type": "application/json",
-    //       "Access-Control-Allow-Origin": "*"
-    //     })
-    //     .get("/api/v1/users/me/")
-    //     .reply(200, function() {
-    //       correctReply = true;
-    //       return {};
-    //     });
+      userDetails.fetchUserInfo();
 
-    //   var userDetails = new UserDetails();
-
-    //   assert.isOk(userDetails, "UserDetails created");
-
-    //   // Make sure the nock server had the time to reply
-    //   window.setTimeout(function() {
-    //     try {
-    //       assert(correctReply === true, "Nock server did not reach reply");
-    //       done();
-    //     } catch (e) {
-    //       done(e);
-    //     }
-    //   }, 100);
-
-    //   userDetails.fetchUserInfo();
-
-    // });
+    });
 
 
     // xit("Should be possible to fetch my info - EXPECT INVALID RESPONSE", function(done) {
@@ -3406,7 +2630,7 @@
 
 
   // This test doesn't work, since it gets stuck when loading the main template.
-  xit("App - LoadTemplate - Check if mock template is added to DOM", function(done) {
+  it("App - LoadTemplate - Check if mock template is added to DOM", function(done) {
 
     nock("http://0.0.0.0")
       .defaultReplyHeaders({
