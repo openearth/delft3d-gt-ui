@@ -2,27 +2,25 @@ var exports = (function () {
   "use strict";
 
   var ModelCard = Vue.component("model-card", {
-    template: "#template-model-card",
 
-    data: function() {
-      return {
-        selected: false
-      };
-    },
+    template: "#template-model-card",
 
     props: {
       model: {
         required: true
-      },
-      selectable: {
-        required: false
+      }
+    },
+
+    computed: {
+      selectable: function () {
+        return (this.model.data.shared === "p");
       }
     },
 
     methods: {
       toggleActive: function() {
         this.model.active = true;
-        this.$dispatch("deactivate-all", this.model);
+        this.$dispatch("activated", this.model);
       }
     },
 
@@ -33,10 +31,12 @@ var exports = (function () {
         }
       },
       "select-all": function () {
-        this.selected = true;
+        if (this.selectable) {
+          this.model.selected = true;
+        }
       },
       "unselect-all": function () {
-        this.selected = false;
+        this.model.selected = false;
       }
     }
 

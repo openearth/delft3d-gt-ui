@@ -8,19 +8,16 @@
       your scenarios
     </div>
 
-    <div v-for="item in items"class="panel panel-default">
-       <scenario-card :scenario="item"></scenario-card>
-    </div>
+    <scenario-card v-for="scenario in sharedState.scenarioContainers" :scenario="scenario"></scenario-card>
 
     <div class="list-divider" v-if="hasCompanyModels()">
       shared with company
     </div>
 
     <div
-       v-for="model in models"
-       v-if="model.shared == 'c'"
+       v-for="model in sharedState.modelContainers"
+       v-if="model.data.shared == 'c'"
        class="panel panel-default"
-       @click.stop="toggleActive(item)"
        >
        <model-card :model="model" :selectable="false"></model-card>
     </div>
@@ -30,10 +27,9 @@
     </div>
 
     <div
-       v-for="model in models"
-       v-if="model.shared == 'w'"
+       v-for="model in sharedState.modelContainers"
+       v-if="model.data.shared == 'w'"
        class="panel panel-default"
-       @click.stop="toggleActive(item)"
        >
        <model-card :model="model" :selectable="false"></model-card>
     </div>

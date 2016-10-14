@@ -1,18 +1,24 @@
+/* global Vue, store */
 var exports = (function () {
   "use strict";
-  /* global Vue */
 
   // register the grid component
   var SearchList = Vue.component("search-list", {
 
     template: "#template-search-list",
+
+    data: function () {
+      return {
+        sharedState: store.state
+      };
+    },
+
     props: {
       // can contain scenarios and models
       "items": {
         type: Array,
         required: true
       },
-
       "models": {
         type: Array,
         required: true
@@ -67,15 +73,19 @@ var exports = (function () {
         item.active = !item.active;
       },
       hasCompanyModels: function () {
-        return (_.filter(this.models, ["shared", "c"]).length > 0);
+        return (_.filter(this.sharedState.models, ["shared", "c"]).length > 0);
       },
       hasWorldModels: function () {
-        return (_.filter(this.models, ["shared", "w"]).length > 0);
+        return (_.filter(this.sharedState.models, ["shared", "w"]).length > 0);
+      },
+      action: function (thing) {
+        thing.active = !thing.active;
       }
     },
     events: {
-      "deactivate-all": function (model) {
+      "activated": function (model) {
         this.$broadcast("deactivate", model);
+        this.sharedState.activeModelContainer = model;
       }
     }
   });
