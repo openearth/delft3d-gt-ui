@@ -1,4 +1,4 @@
-/* global store  */
+/* global store, getDialog  */
 var exports = (function () {
   "use strict";
 
@@ -51,7 +51,23 @@ var exports = (function () {
       },
       delete: function(e) {
         e.stopPropagation();
-        store.deleteScenario(this.scenario);
+
+        // Get a confirm dialog
+        this.deleteDialog = getDialog(this, "confirm-dialog", "delete-scenario-" + this.scenario.id );
+
+
+        console.log(this.deleteDialog);
+
+        this.deleteDialog.onConfirm = function() {
+          store.deleteScenario(this.scenario);
+
+          this.deleteDialog.hide();
+
+        }.bind(this);
+
+        // Show the dialog:
+        this.deleteDialog.show();
+
       },
       selectAll: function(e) {
         e.stopPropagation();
