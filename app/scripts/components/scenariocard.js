@@ -12,7 +12,6 @@ var exports = (function () {
     },
     computed: {
       hasModels: function () {
-        console.log(this.scenario);
         return this.scenario.models.length > 0;
       },
       modelStatuses: function () {
