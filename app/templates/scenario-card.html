@@ -22,7 +22,7 @@
                 :class="[
                     (status.state == 'Finished') ? 'progress-bar-success' : '',
                     (status.state == 'Idle: waiting for user input') ? 'progress-bar-warning' : '',
-                    (status.state == 'Running simulation...') ? 'progress-bar-striped active' : '',
+                    (status.state == 'Running simulation') ? 'progress-bar-striped active' : '',
                     (
                       status.state != 'Finished' &&
                       status.state != 'Idle: waiting for user input'
@@ -35,7 +35,7 @@
           <div class="col-sm-1 text-center">
             <form class="form-inline">
               <div class="checkbox">
-                <button type="button" class="btn btn-default btn-xs" @click.stop="selectAll">
+                <button type="button" class="btn btn-default btn-xs" @click.stop="selectAll" title="multi select">
                   <span class="glyphicon" :class="[
                     allModelsSelected() ? 'glyphicon-check' : someModelsSelected() ? 'glyphicon-collapse-down' : 'glyphicon-unchecked'
                   ]"></span>
@@ -46,7 +46,7 @@
 
           <div class="col-sm-1 text-center">
             <button type="button" class="btn btn-default btn-xs" @click.stop="clone" title="Clone scenario">
-              <span class="glyphicon glyphicon-transfer"></span>
+              <i class="fa fa-clone" aria-hidden="true"></i>
             </button>
             <button type="button" class="btn btn-default btn-xs" @click.stop="delete" title="Delete scenario">
               <span class="glyphicon glyphicon-trash"></span>
@@ -102,7 +102,6 @@
           <p>Are you sure you want to remove this scenario and all associated models?</p>
         </template>
       </confirm-dialog>
-
 
   </div>
 

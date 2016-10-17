@@ -54,7 +54,16 @@ body {
   color: $col-bw-5;
 }
 
+.panel {
+  margin-bottom: $padding;
+}
+
 .panel-default .panel-heading {
   background-color: $col-bw-1;
-  padding: 15px;
+  border-bottom: 0;
+  padding: $padding;
+}
+
+div[data-toggle="collapse"] {
+  cursor: pointer;
 }
