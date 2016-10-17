@@ -35,7 +35,7 @@
           <div class="col-sm-1 text-center">
             <form class="form-inline">
               <div class="checkbox">
-                <button type="button" class="btn btn-default btn-xs" @click.stop="selectAll">
+                <button type="button" class="btn btn-default btn-xs" @click.stop="selectAll" title="multi select">
                   <span class="glyphicon" :class="[
                     allModelsSelected() ? 'glyphicon-check' : someModelsSelected() ? 'glyphicon-collapse-down' : 'glyphicon-unchecked'
                   ]"></span>
@@ -45,10 +45,10 @@
           </div>
 
           <div class="col-sm-1 text-center">
-            <button type="button" class="btn btn-default btn-xs" @click.stop="clone">
-              <span class="glyphicon glyphicon-transfer"></span>
+            <button type="button" class="btn btn-default btn-xs" @click.stop="clone" title="clone scenario">
+              <i class="fa fa-clone" aria-hidden="true"></i>
             </button>
-            <button type="button" class="btn btn-default btn-xs" @click.stop="delete">
+            <button type="button" class="btn btn-default btn-xs" @click.stop="delete" title="delete scenario">
               <span class="glyphicon glyphicon-trash"></span>
             </button>
           </div>
@@ -102,7 +102,6 @@
           <p>Are you sure you want to remove this scenario and all associated models?</p>
         </template>
       </confirm-dialog>
-
 
   </div>
 
