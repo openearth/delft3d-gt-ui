@@ -15,8 +15,7 @@
     </div>
 
     <div
-       v-for="model in sharedState.modelContainers"
-       v-if="model.data.shared == 'c'"
+       v-for="model in companyModels"
        class="panel panel-default"
        >
        <model-card :model="model" :selectable="false"></model-card>
@@ -27,8 +26,7 @@
     </div>
 
     <div
-       v-for="model in sharedState.modelContainers"
-       v-if="model.data.shared == 'w'"
+       v-for="model in worldModels"
        class="panel panel-default"
        >
        <model-card :model="model" :selectable="false"></model-card>
