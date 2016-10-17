@@ -10,7 +10,7 @@ var exports = (function () {
     data: function() {
 
       return {
-
+        collapseShow: true,
         sharedState: store.state
 
       };
@@ -24,6 +24,14 @@ var exports = (function () {
     },
 
     methods: {
+      expandScenarios: function() {
+        if (this.collapseShow) {
+          $(".scenario-card .collapse").collapse("show");
+        } else {
+          $(".scenario-card .collapse").collapse("hide");
+        }
+        this.collapseShow = !this.collapseShow;
+      },
 
       startSelectedModels: function() {
         store.startSelectedModels();

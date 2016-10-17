@@ -9,6 +9,7 @@ var exports = (function () {
     data: function() {
       return {
         // items that were found
+        collapseShow: true,
         items: [],
         models: []
       };
@@ -44,6 +45,14 @@ var exports = (function () {
     },
 
     methods: {
+      expandDetails: function() {
+        if (this.collapseShow) {
+          $(".model-details .collapse").collapse("show");
+        } else {
+          $(".model-details .collapse").collapse("hide");
+        }
+        this.collapseShow = !this.collapseShow;
+      },
 
       // Reset all input fields.
       resetFields: function() {
