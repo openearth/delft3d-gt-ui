@@ -48,6 +48,9 @@ var exports = (function () {
         $(e.target).closest(".panel").children(".collapse").collapse("toggle");
       },
       fetchLog: function () {},
+      hasPostProcessData: function () {
+        return Object.keys(this.activeModel.data.info.postprocess_output).length > 0;
+      },
       publishModel: function (level) {
         store.publishModel(this.activeModel, level);
       },

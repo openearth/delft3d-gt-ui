@@ -174,8 +174,7 @@
         </div>
         <div class="collapse">
           <div class="panel-body">
-
-            <table class="table table-striped" v-if="(activeModel.data.info.postprocess_output !== undefined)">
+            <table class="table table-striped" v-if="hasPostProcessData()">
               <thead>
                 <tr>
                   <th>Parameter</th>
