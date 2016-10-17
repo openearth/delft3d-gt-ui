@@ -4,10 +4,6 @@
 
   <div class="search-list" data-toggle="items">
 
-    <div class="list-divider">
-      your scenarios
-    </div>
-
     <scenario-card v-for="scenario in sharedState.scenarioContainers" :scenario="scenario"></scenario-card>
 
     <div class="list-divider" v-if="hasCompanyModels()">
