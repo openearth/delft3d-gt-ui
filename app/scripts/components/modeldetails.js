@@ -47,7 +47,15 @@ var exports = (function () {
         e.stopPropagation();
         $(e.target).closest(".panel").children(".collapse").collapse("toggle");
       },
-      fetchLog: function () {},
+      fetchLog: function () {
+        store.fetchLog(this.activeModel).then(log => {
+          $("#model-log-output").text(log);
+        })
+        .catch(e => {
+          console.log("error - fetchlog" + e);
+          $("#model-log-output").text("No log available");
+        });
+      },
       publishModel: function (level) {
         store.publishModel(this.activeModel, level);
       },
