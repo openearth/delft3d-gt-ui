@@ -14,6 +14,25 @@ var exports = (function () {
       hasModels: function () {
         return this.scenario.models.length > 0;
       },
+      someModelsSelected: {
+        cache: false,
+        get: function() {
+          var someSelected = _.some(this.scenario.models, ["selected", true]);
+
+          if (someSelected) {
+            // set input to indeterminate
+          } else {
+            // set input to determinate
+          }
+          return someSelected;
+        }
+      },
+      allModelsSelected: {
+        cache: false,
+        get: function() {
+          return _.every(_.filter(this.scenario.models, ["data.shared", "p"]), ["selected", true]);
+        }
+      },
       modelStatuses: function () {
         var array = _.map(this.scenario.models, function (model) {
           return {state: model.data.state};
@@ -72,17 +91,11 @@ var exports = (function () {
         e.stopPropagation();
         $("#collapse-" + this.scenario.id).collapse("show");
 
-        if (this.allModelsSelected()) {
+        if (this.allModelsSelected) {
           this.$broadcast("unselect-all");
         } else {
           this.$broadcast("select-all");
         }
-      },
-      someModelsSelected: function() {
-        return _.some(this.scenario.models, ["selected", true]);
-      },
-      allModelsSelected: function() {
-        return _.every(_.filter(this.scenario.models, ["data.shared", "p"]), ["selected", true]);
       }
     }
   });
