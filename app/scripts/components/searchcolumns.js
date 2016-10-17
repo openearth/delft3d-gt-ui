@@ -9,7 +9,8 @@ var exports = (function () {
     data: function() {
       return {
         // items that were found
-        collapseShow: true,
+        collapseDetailsShow: true,
+        collapseSearchShow: true,
         items: [],
         models: []
       };
@@ -46,12 +47,20 @@ var exports = (function () {
 
     methods: {
       expandDetails: function() {
-        if (this.collapseShow) {
+        if (this.collapseDetailsShow) {
           $(".model-details .collapse").collapse("show");
         } else {
           $(".model-details .collapse").collapse("hide");
         }
-        this.collapseShow = !this.collapseShow;
+        this.collapseDetailsShow = !this.collapseDetailsShow;
+      },
+      expandSearch: function() {
+        if (this.collapseSearchShow) {
+          $(".search-details .collapse").collapse("show");
+        } else {
+          $(".search-details .collapse").collapse("hide");
+        }
+        this.collapseSearchShow = !this.collapseSearchShow;
       },
 
       // Reset all input fields.

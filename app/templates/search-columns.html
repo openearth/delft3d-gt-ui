@@ -10,7 +10,12 @@
           <span class="btn-text">Search</span>
         </div>
         <div class="col-xs-1 text-right bordered">
-          <button type="button" class="btn btn-default" id="btn-reset-search-form" v-on:click="resetFields">Reset</button>
+          <div class="btn-group pull-right">
+            <button class="btn btn-default" @click.stop="expandSearch">
+              <i class="fa" :class="[(collapseSearchShow)? 'fa-arrow-down' : 'fa-arrow-up']" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="btn btn-default" id="btn-reset-search-form" v-on:click="resetFields">Reset</button>
+          </div>
         </div>
 
         <div class="col-xs-3">
@@ -25,7 +30,7 @@
         </div>
         <div class="col-xs-1 text-right">
           <button class="btn btn-default" @click.stop="expandDetails">
-            <i class="fa" :class="[(collapseShow)? 'fa-arrow-down' : 'fa-arrow-up']" aria-hidden="true"></i>
+            <i class="fa" :class="[(collapseDetailsShow)? 'fa-arrow-down' : 'fa-arrow-up']" aria-hidden="true"></i>
           </button>
         </div>
       </div>
