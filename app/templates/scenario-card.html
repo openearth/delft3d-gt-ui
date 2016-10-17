@@ -22,7 +22,7 @@
                 :class="[
                     (status.state == 'Finished') ? 'progress-bar-success' : '',
                     (status.state == 'Idle: waiting for user input') ? 'progress-bar-warning' : '',
-                    (status.state == 'Running simulation...') ? 'progress-bar-striped active' : '',
+                    (status.state == 'Running simulation') ? 'progress-bar-striped active' : '',
                     (
                       status.state != 'Finished' &&
                       status.state != 'Idle: waiting for user input'

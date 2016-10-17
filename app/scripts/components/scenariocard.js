@@ -26,7 +26,7 @@ var exports = (function () {
           if (status.state === "Finished") {
             return 0;
           }
-          if (status.state === "Running simulation...") {
+          if (status.state === "Running simulation") {
             return 1;
           }
           if (status.state === "Queued") {
