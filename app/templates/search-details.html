@@ -10,41 +10,41 @@
 
         <div class="panel-group" id="run-accordion" role="tablist" aria-multiselectable="true">
 
-              <div class="form-group clear-left">
-                <div class="input-group">
-                  <input type="text" class="form-control" id="search" placeholder="Search name..." v-model="searchText">
-                  <span class="input-group-btn">
-                    <button class="btn btn-default button-empty-input-field" type="button">
-                      <i class="fa fa-times" aria-hidden="true"></i>
-                    </button>
-                  </span>
-                </div>
-              </div>
+          <div class="form-group clear-left">
+            <div class="input-group">
+              <input type="text" class="form-control" id="search" placeholder="Search name..." v-model="searchText">
+              <span class="input-group-btn">
+                <button class="btn btn-default button-empty-input-field" type="button">
+                  <i class="fa fa-times" aria-hidden="true"></i>
+                </button>
+              </span>
+            </div>
+          </div>
 
-              <div class="form-group">
-                <!-- break because of the label hack below -->
-                <select
-                   v-model="selectedDomains"
-                   id="domain"
-                   class="select-picker form-control"
-                   title="Choose publication domain..."
-                   multiple
-                   data-selected-text-format="count > 3"
-                   data-actions-box="true">
-                  <option
-                    data-content="<i class='fa fa-fw fa-lock aria-hidden='true'></i> Private">
-                    private
-                  </option>
-                  <option
-                    data-content="<i class='fa fa-fw fa-users' aria-hidden='true'></i> Company">
-                    company
-                  </option>
-                  <option
-                    data-content="<i class='fa fa-fw fa-globe' aria-hidden='true'></i> Public">
-                    public
-                  </option>
-                </select>
-              </div>
+          <div class="form-group">
+            <!-- break because of the label hack below -->
+            <select
+               v-model="selectedDomains"
+               id="domain"
+               class="select-picker form-control"
+               title="Choose publication domain..."
+               multiple
+               data-selected-text-format="count > 3"
+               data-actions-box="true">
+              <option
+                 data-content="<i class='fa fa-fw fa-lock aria-hidden='true'></i> Private">
+                private
+              </option>
+              <option
+                 data-content="<i class='fa fa-fw fa-users' aria-hidden='true'></i> Company">
+                company
+              </option>
+              <option
+                 data-content="<i class='fa fa-fw fa-globe' aria-hidden='true'></i> Public">
+                public
+              </option>
+            </select>
+          </div>
 
           <!-- Dynamically generated HTML using incoming template from API -->
 
@@ -60,89 +60,98 @@
 
                 <div class="panel-body panel-collapse collapse" role="tabpanel" aria-labelledby="template-{{$index}}" id="template-{{$index}}">
 
-                  <div class="form-group" v-for="variable in section.variables" v-if="variable.name !== 'Name'"> <!-- Name should be excluded: already included above -->
 
-                    <label class="control-label" for="{{variable.id}}">{{ variable.name }}: <span v-if="variable.units" >({{ variable.units }})</span></label>
+                  <div
+                     class="form-group"
+                     v-for="variable in section.variables"
+                     >
+                    <template v-if="variable.name !== 'Name'">
+                      <!-- Name should be excluded: already included above -->
+                      <label class="control-label" for="{{variable.id}}">{{ variable.name }}: <span v-if="variable.units" >({{ variable.units }})</span></label>
 
-                    <div v-bind:class="{ numeric: variable.type === 'numeric' }">
-                      <!-- two types of input for now: textarea and other -->
+                      <div v-bind:class="{ numeric: variable.type === 'numeric' }">
+                        <!-- two types of input for now: textarea and other -->
 
-                      <!-- other first -->
-                      <template v-if="variable.type !== 'textarea'">
+                        <!-- other first -->
+                        <template v-if="variable.type !== 'textarea'">
 
-                        <!-- the 0.01 makes the floating point values work -->
-                        <template v-if="variable.type === 'numeric'">
-                          <input
-                             type="text"
-                             class="ion-range"
-                             id="{{ variable.id }}"
-                             data-step="0.01"
-                             data-min="{{ variable.validators.min }}"
-                             data-max="{{ variable.validators.max }}"
-                             data-type="double"
-                             v-model="selectedParameters[variable.id]"
-                             />
-                        </template>
-
-                        <template v-if="variable.type === 'select' && !variable.factor">
-                          <div class="form-group">
-                            <select class="select-picker form-control" multiple
-                                    id="{{ variable.id }}"
-                                    v-model="selectedParameters[variable.id]"
-                                    data-selected-text-format="count > 3" data-actions-box="true"
-                                    >
-                              <option
-                                 v-for="option in variable.options"
-                                 v-bind:value="option.text"
-                                 >
-                                {{ option.text }}
-                              </option>
-                            </select>
-                          </div>
-                        </template>
-
-                        <template v-if="variable.type !== 'numeric' && variable.type !== 'select'">
-                          <div class="input-group">
+                          <!-- the 0.01 makes the floating point values work -->
+                          <template v-if="variable.type === 'numeric'">
                             <input
-                               type="{{ variable.type }}"
-                               class="form-control"
+                               type="text"
+                               class="ion-range"
                                id="{{ variable.id }}"
-                               value=""
+                               data-step="0.01"
+                               data-min="{{ variable.validators.min }}"
+                               data-max="{{ variable.validators.max }}"
+                               data-type="double"
                                v-model="selectedParameters[variable.id]"
                                />
-                            <span class="input-group-btn">
-                              <button class="btn btn-default button-empty-input-field" type="button">
-                                <i class="fa fa-times" aria-hidden="true"></i>
-                              </button>
-                            </span>
-                          </div>
+                          </template>
+
+                          <template v-if="variable.type === 'select' && !variable.factor">
+                            <div class="form-group">
+                              <select class="select-picker form-control" multiple
+                                      id="{{ variable.id }}"
+                                      v-model="selectedParameters[variable.id]"
+                                      data-selected-text-format="count > 3" data-actions-box="true"
+                                      >
+                                <option
+                                   v-for="option in variable.options"
+                                   v-bind:value="option.text"
+                                   >
+                                  {{ option.text }}
+                                </option>
+                              </select>
+                            </div>
+                          </template>
+
+                          <template v-if="variable.type !== 'numeric' && variable.type !== 'select'">
+                            <div class="input-group">
+                              <input
+                                 type="{{ variable.type }}"
+                                 class="form-control"
+                                 id="{{ variable.id }}"
+                                 value=""
+                                 v-model="selectedParameters[variable.id]"
+                                 />
+                              <span class="input-group-btn">
+                                <button class="btn btn-default button-empty-input-field" type="button">
+                                  <i class="fa fa-times" aria-hidden="true"></i>
+                                </button>
+                              </span>
+                            </div>
+                          </template>
+
                         </template>
 
-                      </template>
+                        <!-- text area -->
+                        <template
+                           v-if="variable.type === 'textarea'">
+                          <textarea
+                             class="form-control"
+                             rows="3"
+                             v-model="selectedParameters[variable.id]"
 
-                      <!-- text area -->
-                      <template
-                         v-if="variable.type === 'textarea'">
-                        <textarea
-                           class="form-control"
-                           rows="3"
-                           v-model="selectedParameters[variable.id]"
+                             ></textarea>
+                        </template>
 
-                           ></textarea>
-                      </template>
+                      </div>
 
-                    </div>
+
+                    </template>
 
                   </div> <!-- form-group -->
 
               </div> <!-- panel-body -->
 
-          </div> <!-- panel -->
-
+            </div> <!-- panel -->
+          </div>
+        </div>
       </form>
 
 
-      </div>
     </div>
+  </div>
 
 </template>
