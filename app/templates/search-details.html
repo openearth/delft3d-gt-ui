@@ -54,15 +54,11 @@
 
             <div class="panel panel-default panel-search">
 
-              <div class="panel-body" role="tab" >
+              <div class="panel-heading panel-collapse-header" data-toggle="collapse" data-parent="#template-{{$index}}" href="#template-{{$index}}" aria-expanded="true" aria-controls="template-collapse">
+                {{section.name}}
+              </div>
 
-                <div class="panel-collapse-header">
-                  <a role="button" class="section-collapse-link" data-toggle="collapse" data-parent="#template-{{$index}}" href="#template-{{$index}}" aria-expanded="true" aria-controls="template-collapse">
-                    <span class="glyphicon glyphicon-triangle-right"></span> {{section.name}}
-                  </a>
-                </div>
-
-                <div class="panel-collapse collapse" role="tabpanel" aria-labelledby="template-{{$index}}" id="template-{{$index}}">
+                <div class="panel-body panel-collapse collapse" role="tabpanel" aria-labelledby="template-{{$index}}" id="template-{{$index}}">
 
                   <div class="form-group" v-for="variable in section.variables" v-if="variable.name !== 'Name'"> <!-- Name should be excluded: already included above -->
 
@@ -138,8 +134,6 @@
                     </div>
 
                   </div> <!-- form-group -->
-
-                </div> <!-- panel-collapse -->
 
               </div> <!-- panel-body -->
 
