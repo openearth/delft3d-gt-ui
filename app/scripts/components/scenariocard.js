@@ -14,23 +14,37 @@ var exports = (function () {
       hasModels: function () {
         return this.scenario.models.length > 0;
       },
+      hasPrivateModels: function() {
+        var privateModels = _.filter(this.scenario.models, ["data.shared", "p"]);
+
+        return privateModels.length > 0;
+      },
       someModelsSelected: {
         cache: false,
         get: function() {
           var someSelected = _.some(this.scenario.models, ["selected", true]);
 
-          if (someSelected) {
-            // set input to indeterminate
-          } else {
-            // set input to determinate
-          }
           return someSelected;
         }
       },
       allModelsSelected: {
         cache: false,
         get: function() {
-          return _.every(_.filter(this.scenario.models, ["data.shared", "p"]), ["selected", true]);
+          var privateModels = _.filter(this.scenario.models, ["data.shared", "p"]);
+
+          if (privateModels.length > 0) {
+            return _.every(privateModels, ["selected", true]);
+          } else {
+            return false;
+          }
+
+        },
+        set: function(val) {
+          if (val) {
+            this.$broadcast("select-all");
+          } else {
+            this.$broadcast("unselect-all");
+          }
         }
       },
       modelStatuses: function () {
@@ -59,7 +73,29 @@ var exports = (function () {
         return array;
       }
     },
+    ready: function() {
+      // disable click propagation on checkbox
+      $("input.scenario-checkbox:checkbox").on("click", function (e) {
+        e.stopPropagation();
+      });
+    },
+    watch: {
+      someModelsSelected: function() {
+        this.updateIndeterminate();
+      },
+      allModelsSelected: function() {
+        this.updateIndeterminate();
+      }
+    },
     methods: {
+      updateIndeterminate: function() {
+        if (this.someModelsSelected && (!this.allModelsSelected)) {
+          // set the indeterminate property to true
+          $(this.$el).find(".scenario-checkbox").prop("indeterminate", true);
+        } else {
+          $(this.$el).find(".scenario-checkbox").prop("indeterminate", false);
+        }
+      },
       clone: function(e) {
         e.stopPropagation();
       },
@@ -86,16 +122,6 @@ var exports = (function () {
         // Show the dialog:
         this.deleteDialog.show();
 
-      },
-      selectAll: function(e) {
-        e.stopPropagation();
-        $("#collapse-" + this.scenario.id).collapse("show");
-
-        if (this.allModelsSelected) {
-          this.$broadcast("unselect-all");
-        } else {
-          this.$broadcast("select-all");
-        }
       }
     }
   });
