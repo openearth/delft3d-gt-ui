@@ -175,7 +175,7 @@
         <div class="collapse">
           <div class="panel-body">
 
-            <table class="table table-striped" v-if="(model.info.postprocess_output !== undefined)">
+            <table class="table table-striped" v-if="(activeModel.data.info.postprocess_output !== undefined)">
               <thead>
                 <tr>
                   <th>Parameter</th>
@@ -183,9 +183,9 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(key, param) in model.info.postprocess_output | orderBy '$key'">
-                  <td>{{ (param.name || key) | capitalize }}</td>
-                  <td>{{param}}</td>
+                <tr v-for="(key, param) in activeModel.data.info.postprocess_output | orderBy '$key'">
+                  <td>{{ key | capitalize }}</td>
+                  <td>{{ param || "-"}}</td>
                 </tr>
               </tbody>
             </table>

@@ -1,5 +1,7 @@
 <template id="template-image-animation">
-  <div>
+
+  <div class="image-animation">
+
     <div class="row">
       <div class="col-sm-12 text-center" >
         <button type="button" class="btn btn-primary" v-bind:class="{ 'btn-success': currentAnimationKey === 'delta_fringe_images' }"  v-on:click="switchAnimation('delta_fringe_images')">
@@ -12,7 +14,7 @@
           Sediment fraction
         </button>
         <button type="button" class="btn btn-primary" v-bind:class="{ 'btn-success': currentAnimationKey === 'subenvironment_images' }" v-on:click="switchAnimation('subenvironment_images')">
-          Subenvironment
+          Sub-environment
         </button>
       </div>
     </div>
@@ -102,15 +104,27 @@
           </div>
 
           <div v-if="currentAnimationKey === 'subenvironment_images'">
-            <h3>Sub environment</h3>
+            <h3>Sub-environment</h3>
 
             <p class="text-center">
-              <img src="images/ui/sub_environment_definition.png" alt="Subenvironment definition" />
+              <img class="description-image" src="images/ui/sub_environment_definition.png" alt="Subenvironment definition" />
+              <dl class="dl">
+                <dt>Delta Top</dt>
+                <dd>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</dd>
+
+                <dt>Delta Front</dt>
+                <dd>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</dd>
+
+                <dt>Pro Delta</dt>
+                <dd>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</dd>
+              </dl>
             </p>
           </div>
 
         </div>
       </div>
     </div>
+
   </div>
+
 </template>
