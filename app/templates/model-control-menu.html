@@ -2,7 +2,7 @@
 
   <div class="model-control-menu">
 
-    <div class="btn-group pull-right">
+    <div class="btn-group pull-right dropdown">
       <button type="button"
               class="btn btn-default dropdown-toggle nav-bar-button"
               :class="{disabled: numSelectedModels === 0 }"
@@ -10,6 +10,7 @@
               aria-haspopup="true"
               aria-expanded="false">
         Selected ({{ numSelectedModels }})
+        <span class="caret"></span>
       </button>
 
       <ul class="dropdown-menu">
