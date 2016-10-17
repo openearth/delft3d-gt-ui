@@ -36,7 +36,7 @@
                 :style="{ width: model.data.progress + '%'}"
                 class="progress-bar"
                 :class="[
-                    (model.data.state == 'Running simulation...') ? 'progress-bar-striped active' : '',
+                    (model.data.state == 'Running simulation') ? 'progress-bar-striped active' : '',
                     (model.data.state == 'Finished') ? 'progress-bar-success' : '',
                     (
                       model.data.state != 'Finished' &&

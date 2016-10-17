@@ -35,7 +35,7 @@ var exports = (function () {
             "p": "private",
             "c": "company",
             "w": "world",
-            "u": "updating..."
+            "u": "updating"
           };
 
           return niceStrings[this.activeModel.data.shared];
