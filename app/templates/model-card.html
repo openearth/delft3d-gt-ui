@@ -4,7 +4,7 @@
 
     <template v-if="model.data">
 
-      <div class="panel-body" :class="{ 'active-class': model.active }">
+      <div class="panel-body" :class="{ 'panel-active': model.active }">
 
         <div class="row">
 
@@ -36,7 +36,7 @@
                 :style="{ width: model.data.progress + '%'}"
                 class="progress-bar"
                 :class="[
-                    (model.data.state == 'Running simulation...') ? 'progress-bar-striped active' : '',
+                    (model.data.state == 'Running simulation') ? 'progress-bar-striped active' : '',
                     (model.data.state == 'Finished') ? 'progress-bar-success' : '',
                     (
                       model.data.state != 'Finished' &&

@@ -27,7 +27,7 @@
             <dd>
               <div class="progress progress-incell">
                 <div class="progress-bar progress-bar-info"
-                     :class="{'progress-bar-striped active': (activeModel.data.state == 'Running simulation...')}"
+                     :class="{'progress-bar-striped active': (activeModel.data.state == 'Running simulation')}"
                      role="progressbar"
                      aria-valuenow="{{activeModel.data.progress}}"
                      aria-valuemin="0"
@@ -50,7 +50,7 @@
 
       <div class="panel panel-default">
         <div class="panel-heading" @click.stop="collapseToggle">
-          <h2 class="panel-title">Simulation controls</h2>
+          Simulation controls
         </div>
 
         <div class="collapse">
@@ -74,8 +74,8 @@
             <button type="button"
                     v-on:click="stopModel"
                     class="btn btn-labeled btn-spaced-right" id="simulation-control-stop"
-                    :class="[(isReadOnly || !(activeModel.data.state === 'Running simulation...')) ? 'disabled' : 'btn-warning' ]"
-                    :disabled="(isReadOnly || !(activeModel.data.state === 'Running simulation...'))">
+                    :class="[(isReadOnly || !(activeModel.data.state === 'Running simulation')) ? 'disabled' : 'btn-warning' ]"
+                    :disabled="(isReadOnly || !(activeModel.data.state === 'Running simulation'))">
               <span class="btn-label"><i class="fa fa-fw fa-stop" aria-hidden="true"></i></span>
               Stop
             </button>
@@ -95,7 +95,7 @@
 
       <div class="panel panel-default">
         <div class="panel-heading" @click.stop="collapseToggle">
-          <h2 class="panel-title">Share controls</h2>
+          Share controls
         </div>
         <div class="collapse">
           <div class="panel-body">
@@ -126,7 +126,7 @@
 
       <div class="panel panel-default">
         <div class="panel-heading" @click.stop="collapseToggle">
-          <h2 class="panel-title">Run input parameters</h2>
+          Run input parameters
         </div>
         <div class="collapse">
           <div class="panel-body">
@@ -158,7 +158,7 @@
 
       <div class="panel panel-default">
         <div class="panel-heading" @click.stop="collapseToggle">
-          <h2 class="panel-title">Generated images</h2>
+          Generated images
         </div>
         <div class="collapse">
           <div class="panel-body">
@@ -169,7 +169,7 @@
 
       <div class="panel panel-default">
         <div class="panel-heading" @click.stop="collapseToggle">
-          <h2 class="panel-title">Download files</h2>
+          Download files
         </div>
         <div class="collapse">
           <div class="panel-body">
@@ -213,7 +213,7 @@
 
       <div class="panel panel-default">
         <div class="panel-heading" @click.stop="collapseToggle">
-          <h2 class="panel-title">Log output</h2>
+          Log output
         </div>
         <div class="collapse">
           <div class="panel-body">

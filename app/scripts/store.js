@@ -210,7 +210,7 @@ var exports = (function() {
         if (modelContainer === undefined || modelContainer.id === undefined) {
           reject("No model id to start");
         }
-        modelContainer.data.state = "Stopping simulation...";
+        modelContainer.data.state = "Stopping simulation";
         var request = {
           url: "/api/v1/scenes/" + modelContainer.id + "/stop/",
           method: "PUT",

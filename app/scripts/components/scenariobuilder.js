@@ -171,7 +171,10 @@ var exports = (function() {
       }
     },
     methods: {
-
+      // check if variable should generate an input element
+      isInput: function(variable) {
+        return _.includes(["numeric", "text", "semver"], variable.type) || variable.factor;
+      },
       // Moved so that we can test it better.
       fetchTemplateList: function() {
 
