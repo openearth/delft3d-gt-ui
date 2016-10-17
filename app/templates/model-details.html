@@ -170,7 +170,7 @@
       <!-- Post processing information -->
       <div class="panel panel-default">
         <div class="panel-heading" @click.stop="collapseToggle">
-          <h2 class="panel-title">Post processing output</h2>
+          Post processing output
         </div>
         <div class="collapse">
           <div class="panel-body">
@@ -189,7 +189,9 @@
                 </tr>
               </tbody>
             </table>
-            <p v-else>No post processing output available yet.</p>
+
+            <div v-else>No post processing output available yet.</div>
+
           </div>
         </div>
       </div>
