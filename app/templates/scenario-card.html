@@ -1,8 +1,8 @@
 <template id="template-scenario-card">
 
-  <div class="scenario-card" @click.stop="collapse">
+  <div class="scenario-card" @click.stop="collapse" v-if="hasModels">
 
-    <template v-if="scenario">
+    <div class="panel panel-default">
 
       <div class="panel-heading panel-heading-scenario">
 
@@ -10,33 +10,47 @@
 
           <div class="col-sm-8">
             <i class="fa fa-folder-o" aria-hidden="true" title="scenario"></i>
-            &nbsp;{{scenario.name}}
+            &nbsp;{{scenario.data.name}}
           </div>
 
           <div class="col-sm-2 text-center">
             <div class="progress">
               <div
-                 data-percentage="{{ scenario.progress }}%"
-                 :style="{ width: scenario.progress + '%'}"
-                 class="progress-bar"
-                 role="progressbar"
-                 aria-valuemin="0"
-                 aria-valuemax="100">
-              </div>
+                v-for="status in modelStatuses"
+                class="progress-bar"
+                :style="{ width: status.width + '%'}"
+                :class="[
+                    (status.state == 'Finished') ? 'progress-bar-success' : '',
+                    (status.state == 'Idle: waiting for user input') ? 'progress-bar-warning' : '',
+                    (status.state == 'Running simulation') ? 'progress-bar-striped active' : '',
+                    (
+                      status.state != 'Finished' &&
+                      status.state != 'Idle: waiting for user input'
+                    ) ? 'progress-bar-info' : '',
+                ]"
+                role="progressbar"></div>
             </div>
           </div>
 
           <div class="col-sm-1 text-center">
             <form class="form-inline">
               <div class="checkbox">
-                <button type="button" class="btn btn-default btn-xs" @click.stop="selectAll">
-                  <span class="glyphicon" :class="[someModelsSelected() ? 'glyphicon-check' : 'glyphicon-unchecked']"></span>
+                <button type="button" class="btn btn-default btn-xs" @click.stop="selectAll" title="multi select">
+                  <span class="glyphicon" :class="[
+                    allModelsSelected() ? 'glyphicon-check' : someModelsSelected() ? 'glyphicon-collapse-down' : 'glyphicon-unchecked'
+                  ]"></span>
                 </button>
               </div>
             </form>
           </div>
 
           <div class="col-sm-1 text-center">
+            <button type="button" class="btn btn-default btn-xs" @click.stop="clone" title="Clone scenario">
+              <i class="fa fa-clone" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="btn btn-default btn-xs" @click.stop="delete" title="Delete scenario">
+              <span class="glyphicon glyphicon-trash"></span>
+            </button>
           </div>
 
         </div>
@@ -57,8 +71,6 @@
 
                   <model-card
                      v-for="model in scenario.models"
-                     v-ref:modelcards
-                     :selectable="true"
                      :model="model"
                      >
                   </model-card>
@@ -73,6 +85,7 @@
                 </div>
               </div>
 
+
             </div>
 
           </div>
@@ -81,11 +94,14 @@
 
       </div>
 
-    </template>
-
-    <template v-else>
-      no scenario available
-    </template>
+      <confirm-dialog :dialog-id="'delete-scenario-'+scenario.id" confirm-button-title="Delete">
+        <template slot="title">
+         Delete scenario
+        </template>
+        <template slot="body">
+          <p>Are you sure you want to remove this scenario and all associated models?</p>
+        </template>
+      </confirm-dialog>
 
   </div>
 

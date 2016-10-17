@@ -53,7 +53,17 @@ var exports = (function () {
       animationIndex: {
         cache: false,
         get: function() {
-          return Math.min(this.currentAnimationIndex, this.frameCount - 1);
+          var idx = 0;
+
+          // if we have frames this can be used
+          if (this.frameCount > 0) {
+            idx = Math.min(this.currentAnimationIndex, this.frameCount - 1);
+          } else {
+            // otherwise it should be the currentAnimationIndex
+            idx = this.currentAnimationIndex;
+          }
+          // TODO: why the double administration??
+          return idx;
         }
       },
 
@@ -82,9 +92,9 @@ var exports = (function () {
         get: function() {
 
           var animationKey = this.currentAnimationKey;
-          var imgs = this.model.info[animationKey];
+          var imgs = _.get(this.model.info, animationKey);
 
-          if (imgs !== undefined) {
+          if (_.has(imgs, "images")) {
             return imgs.images.length;
           }
 
@@ -139,9 +149,7 @@ var exports = (function () {
 
           this.timerAnimation = -1;
         }
-
       },
-
       playImageFrame: function() {
         // Check if an animation key has been set. If not, we bail out.
         if (this.currentAnimationKey.length === 0) {

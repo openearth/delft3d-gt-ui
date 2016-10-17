@@ -35,17 +35,6 @@ var exports = (function () {
     },
 
     computed: {
-      activeItem: {
-        cache: false,
-        get: function() {
-          if (_.has(this.$refs, ["searchList", "selectedModel"])) {
-            return this.$refs.searchList.selectedModel;
-          } else {
-            return null;
-          }
-
-        }
-      },
       checkedBoxes: {
         cache: false,
         get: function() {
@@ -63,6 +52,9 @@ var exports = (function () {
 
         // Todo, reset sliders to min/max
         var sliders = $(".ion-range");
+
+        // Deselect all bootstrap select pickers
+        $(".search-details .select-picker").selectpicker("deselectAll");
 
         $.each(sliders, function(key, slider) {
           var irs = $(slider).data("ionRangeSlider");
