@@ -8,13 +8,13 @@ var exports = (function () {
 
     template: "#template-image-animation",
     props: {
-     model: {
-      type: Object,
-      default: function () {
-        return { };
+      model: {
+        type: Object,
+        default: function () {
+          return { };
+        }
       }
-    }
-   },
+    },
 
     data: function() {
       return {

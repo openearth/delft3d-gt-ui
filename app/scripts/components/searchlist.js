@@ -61,7 +61,14 @@ var exports = (function () {
 
           return activeItems;
         }
+      },
+      worldModels: function() {
+        return _.filter(this.sharedState.modelContainers, ["data.shared", "w"]);
+      },
+      companyModels: function() {
+        return _.filter(this.sharedState.modelContainers, ["data.shared", "c"]);
       }
+
     },
     methods: {
       toggleActive: function(item) {
@@ -73,10 +80,10 @@ var exports = (function () {
         item.active = !item.active;
       },
       hasCompanyModels: function () {
-        return (_.filter(this.sharedState.models, ["shared", "c"]).length > 0);
+        return this.companyModels.length > 0;
       },
       hasWorldModels: function () {
-        return (_.filter(this.sharedState.models, ["shared", "w"]).length > 0);
+        return this.worldModels.length > 0;
       },
       action: function (thing) {
         thing.active = !thing.active;

@@ -158,7 +158,7 @@ var exports = (function () {
           function(value, key) {
             var result = "";
 
-            if (_.isString(value) && value.includes(";")) {
+            if (_.isString(value) && _.includes(value, ";")) {
               // replace ; by , =>  key,min,max
               // Breaks if someone uses ; in values (these originate from tags)
               result = key + "," + _.replace(value, ";", ",");
