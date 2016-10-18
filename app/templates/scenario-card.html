@@ -1,56 +1,59 @@
 <template id="template-scenario-card">
 
-  <div class="scenario-card" @click.stop="collapse" v-if="hasModels">
+  <div class="scenario-card" @click.stop="collapse">
 
-    <div class="panel panel-default">
+    <div class="panel panel-default" v-if="hasModels">
 
       <div class="panel-heading panel-heading-scenario">
 
         <div class="row">
 
-          <div class="col-sm-8">
+          <div class="col-sm-5">
             <i class="fa fa-folder-o" aria-hidden="true" title="scenario"></i>
             &nbsp;{{scenario.data.name}}
           </div>
 
-          <div class="col-sm-2 text-center">
+          <div class="col-sm-4 text-right">
+            <div class="btn-group">
+              <button type="button" class="btn btn-default btn-xs" @click.stop="clone" title="Clone scenario">
+                <i class="fa fa-clone" aria-hidden="true"></i>
+              </button>
+              <button type="button" class="btn btn-default btn-xs" @click.stop="delete" title="Delete scenario">
+                <span class="glyphicon glyphicon-trash"></span>
+              </button>
+            </div>
+          </div>
+
+          <div class="col-sm-2 text-center no-padding">
             <div class="progress">
               <div
-                v-for="status in modelStatuses"
-                class="progress-bar"
-                :style="{ width: status.width + '%'}"
-                :class="[
-                    (status.state == 'Finished') ? 'progress-bar-success' : '',
-                    (status.state == 'Idle: waiting for user input') ? 'progress-bar-warning' : '',
-                    (status.state == 'Running simulation') ? 'progress-bar-striped active' : '',
-                    (
-                      status.state != 'Finished' &&
-                      status.state != 'Idle: waiting for user input'
-                    ) ? 'progress-bar-info' : '',
-                ]"
-                role="progressbar"></div>
+                 v-for="status in modelStatuses"
+                 class="progress-bar"
+                 :style="{ width: status.width + '%'}"
+                 :class="[
+                         (status.state == 'Finished') ? 'progress-bar-success' : '',
+                         (status.state == 'Idle: waiting for user input') ? 'progress-bar-warning' : '',
+                         (status.state == 'Running simulation') ? 'progress-bar-striped active' : '',
+                         (
+                         status.state != 'Finished' &&
+                         status.state != 'Idle: waiting for user input'
+                         ) ? 'progress-bar-info' : '',
+                         ]"
+                 role="progressbar"></div>
             </div>
           </div>
 
           <div class="col-sm-1 text-center">
-            <form class="form-inline">
-              <div class="checkbox">
-                <button type="button" class="btn btn-default btn-xs" @click.stop="selectAll" title="multi select">
-                  <span class="glyphicon" :class="[
-                    allModelsSelected() ? 'glyphicon-check' : someModelsSelected() ? 'glyphicon-collapse-down' : 'glyphicon-unchecked'
-                  ]"></span>
-                </button>
-              </div>
-            </form>
-          </div>
+            <div
+               v-if="hasPrivateModels"
+               >
+              <input
+                 type="checkbox"
+                 class="scenario-checkbox"
+                 v-model="allModelsSelected"
+                 title="select all models" >
+            </div>
 
-          <div class="col-sm-1 text-center">
-            <button type="button" class="btn btn-default btn-xs" @click.stop="clone" title="Clone scenario">
-              <i class="fa fa-clone" aria-hidden="true"></i>
-            </button>
-            <button type="button" class="btn btn-default btn-xs" @click.stop="delete" title="Delete scenario">
-              <span class="glyphicon glyphicon-trash"></span>
-            </button>
           </div>
 
         </div>
@@ -96,13 +99,13 @@
 
       <confirm-dialog :dialog-id="'delete-scenario-'+scenario.id" confirm-button-title="Delete">
         <template slot="title">
-         Delete scenario
+          Delete scenario
         </template>
         <template slot="body">
           <p>Are you sure you want to remove this scenario and all associated models?</p>
         </template>
       </confirm-dialog>
 
-  </div>
+    </div>
 
 </template>
