@@ -1,47 +1,43 @@
 <template id="template-model-control-menu" inline-template>
 
-  <div class="model-control-menu">
+  <div class="model-control-menu btn-group pull-right dropdown">
+    <button class="btn btn-default" @click.stop="expandScenarios">
+      <i class="fa" :class="[(collapseShow)? 'fa-arrow-down' : 'fa-arrow-up']" aria-hidden="true"></i>
+    </button>
 
-    <div class="btn-group pull-right dropdown">
-      <button class="btn btn-default" @click.stop="expandScenarios">
-        <i class="fa" :class="[(collapseShow)? 'fa-arrow-down' : 'fa-arrow-up']" aria-hidden="true"></i>
-      </button>
+    <button type="button"
+            class="btn btn-default dropdown-toggle nav-bar-button"
+            :class="{disabled: numSelectedModels === 0 }"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false">
+      Selected ({{ numSelectedModels }})
+      <span class="caret"></span>
+    </button>
 
-      <button type="button"
-              class="btn btn-default dropdown-toggle nav-bar-button"
-              :class="{disabled: numSelectedModels === 0 }"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false">
-        Selected ({{ numSelectedModels }})
-        <span class="caret"></span>
-      </button>
+    <ul class="dropdown-menu">
 
-      <ul class="dropdown-menu">
+      <li :class="{disabled: numSelectedModels === 0 }">
+        <a @click="startSelectedModels">
+          Start model<span v-if="numSelectedModels > 1">s</span>
+        </a>
+      </li>
 
-        <li :class="{disabled: numSelectedModels === 0 }">
-          <a @click="startSelectedModels">
-            Start model<span v-if="numSelectedModels > 1">s</span>
-          </a>
-        </li>
+      <li :class="{disabled: numSelectedModels === 0 }">
+        <a @click="stopSelectedModels">
+          Stop model<span v-if="numSelectedModels > 1">s</span>
+        </a>
+      </li>
 
-        <li :class="{disabled: numSelectedModels === 0 }">
-          <a @click="stopSelectedModels">
-            Stop model<span v-if="numSelectedModels > 1">s</span>
-          </a>
-        </li>
+      <li role="separator" class="divider"></li>
 
-        <li role="separator" class="divider"></li>
+      <li :class="{disabled: numSelectedModels === 0 }">
+        <a @click="deleteSelectedModels">
+          Delete model<span v-if="numSelectedModels > 1">s</span>
+        </a>
+      </li>
 
-        <li :class="{disabled: numSelectedModels === 0 }">
-          <a @click="deleteSelectedModels">
-            Delete model<span v-if="numSelectedModels > 1">s</span>
-          </a>
-        </li>
-
-      </ul>
-
-    </div>
+    </ul>
 
     <confirm-dialog dialog-id="delete-runs" confirm-button-title="Delete">
       <template slot="title">
