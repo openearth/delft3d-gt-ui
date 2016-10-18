@@ -14,6 +14,9 @@ var exports = (function () {
         selectedTemplates: [],
         selectedDomains: [],
 
+        users: [],
+        selectedUsers: [],
+
         // Template used for searching (probably always one)
         searchTemplate: null
 
@@ -22,9 +25,10 @@ var exports = (function () {
 
     ready: function() {
       // get search templates
-      fetchSearchTemplate()
-        .then((template) => {
+      Promise.all([fetchUsers(), fetchSearchTemplate()])
+        .then(([users, template]) => {
           // store them
+          this.users = users;
           this.searchTemplate = template;
 
           // after we"re done loading the templates in the dom, start searching.
@@ -147,6 +151,7 @@ var exports = (function () {
 
         var params = {
           shared: this.selectedDomains,
+          users: this.selectedUsers,
           template: this.selectedTemplates,
           search: this.searchText
         };
@@ -189,6 +194,7 @@ var exports = (function () {
       "clearSearch": function () {
         this.searchText = "";
         this.selectedDomains = [];
+        this.selectedUsers = [];
         this.selectedParameters = {};
         this.selectedTemplates = [];
 
