@@ -8,9 +8,20 @@
 
         <div class="row">
 
-          <div class="col-sm-7">
+          <div class="col-sm-5">
             <i class="fa fa-folder-o" aria-hidden="true" title="scenario"></i>
             &nbsp;{{scenario.data.name}}
+          </div>
+
+          <div class="col-sm-4 text-right">
+            <div class="btn-group">
+              <button type="button" class="btn btn-default btn-xs" @click.stop="clone" title="Clone scenario">
+                <i class="fa fa-clone" aria-hidden="true"></i>
+              </button>
+              <button type="button" class="btn btn-default btn-xs" @click.stop="delete" title="Delete scenario">
+                <span class="glyphicon glyphicon-trash"></span>
+              </button>
+            </div>
           </div>
 
           <div class="col-sm-2 text-center no-padding">
@@ -31,16 +42,7 @@
                  role="progressbar"></div>
             </div>
           </div>
-          <div class="col-sm-2 text-center no-padding">
-            <div class="btn-group">
-              <button type="button" class="btn btn-default btn-xs" @click.stop="clone" title="Clone scenario">
-                <i class="fa fa-clone" aria-hidden="true"></i>
-              </button>
-              <button type="button" class="btn btn-default btn-xs" @click.stop="delete" title="Delete scenario">
-                <span class="glyphicon glyphicon-trash"></span>
-              </button>
-            </div>
-          </div>
+
           <div class="col-sm-1 text-center">
             <div
                v-if="hasPrivateModels"
