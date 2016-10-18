@@ -9,6 +9,8 @@ var exports = (function () {
     data: function() {
       return {
         // items that were found
+        collapseDetailsShow: true,
+        collapseSearchShow: true,
         items: [],
         models: []
       };
@@ -44,6 +46,22 @@ var exports = (function () {
     },
 
     methods: {
+      expandDetails: function() {
+        if (this.collapseDetailsShow) {
+          $(".model-details .collapse").collapse("show");
+        } else {
+          $(".model-details .collapse").collapse("hide");
+        }
+        this.collapseDetailsShow = !this.collapseDetailsShow;
+      },
+      expandSearch: function() {
+        if (this.collapseSearchShow) {
+          $(".search-details .collapse").collapse("show");
+        } else {
+          $(".search-details .collapse").collapse("hide");
+        }
+        this.collapseSearchShow = !this.collapseSearchShow;
+      },
 
       // Reset all input fields.
       resetFields: function() {

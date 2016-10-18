@@ -3,6 +3,10 @@
   <div class="model-control-menu">
 
     <div class="btn-group pull-right dropdown">
+      <button class="btn btn-default" @click.stop="expandScenarios">
+        <i class="fa" :class="[(collapseShow)? 'fa-arrow-down' : 'fa-arrow-up']" aria-hidden="true"></i>
+      </button>
+
       <button type="button"
               class="btn btn-default dropdown-toggle nav-bar-button"
               :class="{disabled: numSelectedModels === 0 }"
