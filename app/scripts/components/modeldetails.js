@@ -49,7 +49,10 @@ var exports = (function () {
       },
       fetchLog: function () {},
       hasPostProcessData: function () {
-        return Object.keys(this.activeModel.data.info.postprocess_output).length > 0;
+        if(("data" in this.activeModel) && ("info" in this.activeModel.data) && "postprocess_output" in this.activeModel.data.info) {
+          return (Object.keys(this.activeModel.data.info.postprocess_output).length > 0);
+        }
+        return false;
       },
       publishModel: function (level) {
         store.publishModel(this.activeModel, level);
