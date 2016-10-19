@@ -7,6 +7,7 @@
 @import 'bower_components/bootstrap-sass/assets/stylesheets/bootstrap';
 @import 'bower_components/font-awesome/scss/font-awesome';
 
+@import 'imageanimation';
 @import 'modelcard';
 @import 'modelcontrolmenu';
 @import 'modeldetails';
@@ -75,4 +76,8 @@ dt {
 
 div[data-toggle="collapse"] {
   cursor: pointer;
+}
+
+.no-padding {
+  padding: 0;
 }

@@ -16,6 +16,10 @@
     border-right: $border;
   }
 
+  .column {
+    padding: 0 $padding $padding;
+  }
+
   .scrollable {
     overflow-y: auto;
   }

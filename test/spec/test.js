@@ -610,6 +610,10 @@
         selectedParameters: { },
         selectedTemplates: [],
         selectedDomains: [],
+
+        users: [],
+        selectedUsers: [],
+
         // Template used for searching (probably always one)
         searchTemplate: null
       };
@@ -697,6 +701,7 @@
       var params = {
         shared: [],
         template: [],
+        users: [],
         search: "",
         parameter: []
       };

@@ -180,7 +180,7 @@ var exports = (function() {
 
         fetchTemplates()
           .then((templates) => {
-            this.availableTemplates = templates;
+            this.availableTemplates = _.sortBy(templates, ["name"]);
 
             // Select the first template automatic:
             var template = _.get(this.availableTemplates, 0);

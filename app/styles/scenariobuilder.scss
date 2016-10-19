@@ -6,7 +6,8 @@
   position: static;
 
   img {
-    height: 800px;
+    max-height: 768px;
+    max-width: 100%;
   }
 
   .bootstrap-tagsinput {

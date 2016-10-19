@@ -6,6 +6,26 @@ var exports = (function() {
    *
    * @return {Promise}
    */
+  function fetchUsers() {
+    return new Promise(function(resolve, reject) {
+
+      //Load test template data:
+      $.getJSON("/api/v1/users/")
+        .done(function(data) {
+          resolve(data);
+        })
+        .fail(function(error) {
+          reject(error);
+        });
+
+    });
+  }
+
+  /**
+   * Fetch all models.
+   *
+   * @return {Promise}
+   */
   function fetchTemplates() {
     return new Promise(function(resolve, reject) {
 
@@ -39,6 +59,7 @@ var exports = (function() {
   }
 
   return {
+    fetchUsers: fetchUsers,
     fetchTemplates: fetchTemplates,
     fetchSearchTemplate: fetchSearchTemplate
   };

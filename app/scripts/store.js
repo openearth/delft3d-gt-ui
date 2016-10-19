@@ -1,3 +1,4 @@
+/* global */
 var exports = (function() {
   "use strict";
 
@@ -254,6 +255,7 @@ var exports = (function() {
     },
 
     // ================================ OTHER SUPPORT METHODS
+
 
     fetchLog: function (modelContainer) {
       return new Promise(function(resolve, reject) {

@@ -167,6 +167,34 @@
         </div>
       </div>
 
+      <!-- Post processing information -->
+      <div class="panel panel-default">
+        <div class="panel-heading" @click.stop="collapseToggle">
+          Post processing output
+        </div>
+        <div class="collapse">
+          <div class="panel-body">
+            <table class="table table-striped" v-if="hasPostProcessData()">
+              <thead>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(key, param) in activeModel.data.info.postprocess_output | orderBy '$key'">
+                  <td>{{ key | capitalize }}</td>
+                  <td>{{ param || "-"}}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div v-else>No post processing output available yet.</div>
+
+          </div>
+        </div>
+      </div>
+
       <div class="panel panel-default">
         <div class="panel-heading" @click.stop="collapseToggle">
           Download files

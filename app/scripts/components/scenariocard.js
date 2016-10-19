@@ -1,4 +1,4 @@
-/* global store, getDialog  */
+/* global store, getDialog, router  */
 var exports = (function () {
   "use strict";
 
@@ -13,6 +13,39 @@ var exports = (function () {
     computed: {
       hasModels: function () {
         return this.scenario.models.length > 0;
+      },
+      hasPrivateModels: function() {
+        var privateModels = _.filter(this.scenario.models, ["data.shared", "p"]);
+
+        return privateModels.length > 0;
+      },
+      someModelsSelected: {
+        cache: false,
+        get: function() {
+          var someSelected = _.some(this.scenario.models, ["selected", true]);
+
+          return someSelected;
+        }
+      },
+      allModelsSelected: {
+        cache: false,
+        get: function() {
+          var privateModels = _.filter(this.scenario.models, ["data.shared", "p"]);
+
+          if (privateModels.length > 0) {
+            return _.every(privateModels, ["selected", true]);
+          } else {
+            return false;
+          }
+
+        },
+        set: function(val) {
+          if (val) {
+            this.$broadcast("select-all");
+          } else {
+            this.$broadcast("unselect-all");
+          }
+        }
       },
       modelStatuses: function () {
         var array = _.map(this.scenario.models, function (model) {
@@ -40,9 +73,56 @@ var exports = (function () {
         return array;
       }
     },
+    ready: function() {
+      // disable click propagation on checkbox
+      $("input.scenario-checkbox:checkbox").on("click", function (e) {
+        e.stopPropagation();
+      });
+    },
+    watch: {
+      someModelsSelected: function() {
+        this.updateIndeterminate();
+      },
+      allModelsSelected: function() {
+        this.updateIndeterminate();
+      }
+    },
     methods: {
+      updateIndeterminate: function() {
+        if (this.someModelsSelected && (!this.allModelsSelected)) {
+          // set the indeterminate property to true
+          $(this.$el).find(".scenario-checkbox").prop("indeterminate", true);
+        } else {
+          $(this.$el).find(".scenario-checkbox").prop("indeterminate", false);
+        }
+      },
       clone: function(e) {
         e.stopPropagation();
+
+        // Clone this scenario
+        var parameters = _.assign(
+          // create a new object (no data binding)
+          {},
+          // fill it with the parameters
+          // TODO: replace by object parameters instead of list of parameters
+          this.scenario.data.parameters
+        );
+
+        // These parameters are passed to the other view
+        // alternative would be to store them in the app or to call an event
+        var req = {
+          name: "scenarios-create",
+          params: {},
+          query: {
+            "template": this.scenario.data.template,
+            "parameters": JSON.stringify(parameters),
+            "name": _.get(this.scenario.data, "name")
+          }
+        };
+
+        router.go(req);
+
+
       },
       collapse: function(e) {
         e.stopPropagation();
@@ -67,22 +147,6 @@ var exports = (function () {
         // Show the dialog:
         this.deleteDialog.show();
 
-      },
-      selectAll: function(e) {
-        e.stopPropagation();
-        $("#collapse-" + this.scenario.id).collapse("show");
-
-        if (this.allModelsSelected()) {
-          this.$broadcast("unselect-all");
-        } else {
-          this.$broadcast("select-all");
-        }
-      },
-      someModelsSelected: function() {
-        return _.some(this.scenario.models, ["selected", true]);
-      },
-      allModelsSelected: function() {
-        return _.every(_.filter(this.scenario.models, ["data.shared", "p"]), ["selected", true]);
       }
     }
   });
