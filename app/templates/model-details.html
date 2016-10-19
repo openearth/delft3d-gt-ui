@@ -242,29 +242,6 @@
         </div>
       </div>
 
-      <div class="panel panel-default">
-        <div class="panel-heading" @click.stop="collapseToggle">
-          Log output
-        </div>
-        <div class="collapse">
-          <div class="panel-body">
-            <p>
-              <button class="btn btn-primary" type="button" id="btn-copy-log-output" data-clipboard-target="#model-log-output">
-                Copy log
-              </button>
-              <button class="btn btn-primary" type="button" id="btn-refresh-log-output" v-on:click="fetchLog">
-                Refresh log
-              </button>
-            </p>
-
-            <div id="model-log-output-wrap">
-              <!-- fill this directly cause debugging views with 3MB text are a bit slow -->
-              <pre><code id="model-log-output">Press "Refresh log" to load the log file. It might take a few seconds for a large log file to show.</code></pre>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- MODALS -->
       <confirm-dialog dialog-id="publish" confirm-button-title="Publish">
         <template slot="title">
