@@ -30,13 +30,17 @@ body {
   background-color: $col-bg-main;
 }
 
+div {
+  &[data-toggle='collapse'] {
+    cursor: pointer;
+  }
+}
+
 // OpenSans and default font-weight of bootstrap is quite ugly. Therefore we change the weight from "bold" to semibold, see variables.scss.
 label,
 dt {
   font-weight: $font-weight-semibold;
 }
-
-
 
 .btn-text {
   border: 1px solid transparent;
@@ -67,19 +71,47 @@ dt {
   margin-bottom: $padding;
 }
 
-.panel-default .panel-heading {
-  background-color: $col-bw-1;
-  border-bottom: 0;
-  padding: $padding;
-}
-
-
-*[data-toggle="collapse"] {
-  cursor: pointer;
-}
-
 .no-padding {
   padding: 0;
+}
+
+.panel-default {
+  .panel-heading {
+    background-color: $col-bw-1;
+    border-bottom: 0;
+    padding: $padding;
+  }
+}
+
+.login-body {
+  img {
+    height: 20px;
+  }
+
+  &::after {
+    background: url('/login/images/delta.jpg') no-repeat center center fixed;
+    background-size: cover;
+    bottom: 0;
+    content: '';
+    left: 0;
+    opacity: .5;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -1;
+  }
+
+  .panel {
+    border-color: $col-bw-4;
+    box-shadow: 0 8px 6px -6px $col-bw-5;
+    height: 260px;
+    left: 50%;  // applies golden ratio
+    margin-left: -250px;
+    margin-top: -130px;
+    position: absolute;
+    top: 38.1%;  // applies golden ratio
+    width: 500px;
+  }
 }
 
 .bs-actionsbox .btn-group button {
