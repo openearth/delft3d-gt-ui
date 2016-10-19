@@ -1,4 +1,4 @@
-/* global Vue, fetchSearchTemplate, store  */
+/* global Vue, fetchSearchTemplate, fetchUsers, store  */
 var exports = (function () {
   "use strict";
   var SearchDetails = Vue.component("search-details", {
@@ -26,7 +26,10 @@ var exports = (function () {
     ready: function() {
       // get search templates
       Promise.all([fetchUsers(), fetchSearchTemplate()])
-        .then(([users, template]) => {
+        .then((jsons) => {
+          var users = jsons[0];
+          var template = jsons[1];
+
           // store them
           this.users = users;
           this.searchTemplate = template;
