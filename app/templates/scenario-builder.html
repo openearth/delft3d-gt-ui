@@ -19,6 +19,9 @@
                   <option v-for="template in availableTemplates" v-bind:value="template">
                     {{ template.name }}
                   </option>
+                  <option value="" disabled>
+                    more templates will be added in the future...
+                  </option>
                 </select>
               </div>
             </div>
@@ -159,26 +162,12 @@
 
                   <a class="btn btn-default nav-bar-button" v-link="{ path: '/' }">Cancel</a>
                   <button  type="button" class="btn btn-primary nav-bar-button default" id="scenario-submit" v-on:click="submitScenario" value="" v-bind:class="{ 'inputdisabled': !(totalRuns <= 20 && validForm) }" >
-                    Submit
+                    Submit (Created runs: {{totalRuns}})
                   </button>
 
                 </div>
               </div>
 
-            </div>
-
-
-            <!-- expected runs indicator. It becomes a different color if the totalRuns exceed 20 -->
-            <div class="row" >
-              <div class="col-sm-12">
-                <div class="alert alert-info" v-bind:class="{ 'alert-warning': totalRuns > 20}" role="alert">
-                  <p class="lead">Expected runs: <strong>{{totalRuns}}</strong></p>
-                  <p v-if="totalRuns > 20">
-                    At the moment you cannot submit more than 20 runs in one scenario.
-                  </p>
-
-                </div>
-              </div>
             </div>
 
           </div>
@@ -209,7 +198,7 @@
                 <h3 class="panel-title">Schematic</h3>
               </div>
               <!-- template details -->
-              <div class="panel-body  text-center">
+              <div class="panel-body text-center">
                 <img src="images/schematic.svg" class="scenariobuilder-schematic" />
               </div>
             </div>
