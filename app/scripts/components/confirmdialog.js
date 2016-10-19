@@ -41,6 +41,9 @@ var exports = (function () {
 
         var el = $("#" + this.dialogId + "-dialog");
 
+        // Hide extra alert by default.
+        $("#" + this.dialogId + "-dialog-alert").hide();
+
         if (el.modal !== undefined) {
           el.modal({});
         }

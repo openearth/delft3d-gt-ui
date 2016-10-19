@@ -48,16 +48,29 @@ var exports = (function() {
         currentSelectedId: null,
 
         // The DOM elements used for the fixed toolbar event listener
-        navBars: null
+        navBars: null,
+
+        forceTemplateUpdate: false
 
       };
     },
 
     created: function() {
-      this.fetchTemplateList();
-    },
 
+    },
     route: {
+
+      activate: function (transition) {
+        // We force the template to be reloaded when this page is openend
+        // Otherwise old values will stay in the form, and the validator is not reactivated.
+        // The data function changes the function if needed.
+        this.currentSelectedId = null;
+        this.template = null;
+        this.fetchTemplateList();
+
+        transition.next();
+
+      },
       data: function(transition) {
 
 
@@ -66,7 +79,6 @@ var exports = (function() {
 
           // This cannot go into the fetchTemplates, template will always be empty!
           var templateId = parseInt(this.$route.query.template);
-
           var template = _.first(_.filter(this.availableTemplates, ["id", templateId]));
 
           if (template !== undefined) {
@@ -87,7 +99,6 @@ var exports = (function() {
           value: val,
           type: "numeric"
         });
-
         // check if any value is > rule
         var valid = _.every(vals, function(x) {
           return x <= rule;
@@ -160,7 +171,10 @@ var exports = (function() {
       }
     },
     methods: {
-
+      // check if variable should generate an input element
+      isInput: function(variable) {
+        return _.includes(["numeric", "text", "semver"], variable.type) || variable.factor;
+      },
       // Moved so that we can test it better.
       fetchTemplateList: function() {
 
@@ -189,10 +203,15 @@ var exports = (function() {
 
       selectTemplate: function(template) {
 
+        if (template === null) {
+          return;
+        }
 
+        //  Did the template change? Or maybe forcing an update
         if (this.currentSelectedId === template.id) {
           return;
         }
+
 
         this.currentSelectedId = template.id;
 

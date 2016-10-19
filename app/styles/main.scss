@@ -8,6 +8,7 @@
 @import 'bower_components/font-awesome/scss/font-awesome';
 
 @import 'modelcard';
+@import 'modelcontrolmenu';
 @import 'modeldetails';
 @import 'navbar';
 @import 'scenariobuilder';
@@ -27,6 +28,14 @@ body {
 body {
   background-color: $col-bg-main;
 }
+
+// OpenSans and default font-weight of bootstrap is quite ugly. Therefore we change the weight from "bold" to semibold, see variables.scss.
+label,
+dt {
+  font-weight: $font-weight-semibold;
+}
+
+
 
 .btn-text {
   border: 1px solid transparent;
@@ -53,12 +62,17 @@ body {
   color: $col-bw-5;
 }
 
-.panel-default .panel-heading {
-  background-color: $col-bw-1;
-  padding: 15px;
+.panel {
+  margin-bottom: $padding;
 }
 
-// OpenSans and default font-weight of bootstrap is quite ugly. Therefore we change the weight from "bold" to 600.
-label, dt {
-  font-weight: 600;
+.panel-default .panel-heading {
+  background-color: $col-bw-1;
+  border-bottom: 0;
+  padding: $padding;
+}
+
+
+div[data-toggle="collapse"] {
+  cursor: pointer;
 }

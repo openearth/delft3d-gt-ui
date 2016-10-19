@@ -53,7 +53,7 @@
                           </label>
                           <div class="input-group">
                             <!-- numeric, text, semver or factor are inputs-->
-                            <template v-if="['numeric', 'text', 'semver'].includes(variable.type) || variable.factor">
+                            <template v-if="isInput(variable)">
                               <input
                                      type="{{ variable.type }}"
                                      class="form-control"
