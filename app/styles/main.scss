@@ -74,10 +74,14 @@ dt {
 }
 
 
-div[data-toggle="collapse"] {
+*[data-toggle="collapse"] {
   cursor: pointer;
 }
 
 .no-padding {
   padding: 0;
+}
+
+.bs-actionsbox .btn-group button {
+  @include text-overflow();
 }
