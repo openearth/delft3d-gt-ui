@@ -1,11 +1,11 @@
 <template id="template-alert-message">
    <footer v-show="visible">
     <div class="navbar  navbar-fixed-bottom no-minheight">
-
-
+        <!-- dismissable alert-->
         <!-- this alert message is created using the alert component -->
-        <div class="alert message-alert alert-{{type}}" role="alert">{{message}}</div>
-
+        <div class="alert message-alert alert-dismissible alert-{{type}}" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <p>{{message}}</div>
     </div>
     </footer>
 
