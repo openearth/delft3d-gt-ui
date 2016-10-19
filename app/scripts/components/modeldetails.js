@@ -47,9 +47,6 @@ var exports = (function () {
         e.stopPropagation();
         $(e.target).closest(".panel").children(".collapse").collapse("toggle");
       },
-      downloadFiles: function () {
-
-      },
       fetchLog: function () {},
       hasPostProcessData: function () {
         if(("data" in this.activeModel) && ("info" in this.activeModel.data) && "postprocess_output" in this.activeModel.data.info) {
