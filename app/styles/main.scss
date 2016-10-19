@@ -113,3 +113,7 @@ dt {
     width: 500px;
   }
 }
+
+.bs-actionsbox .btn-group button {
+  @include text-overflow();
+}
