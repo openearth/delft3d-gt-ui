@@ -1,34 +1,13 @@
 <template id="template-scenario-builder">
-  <div class="scenario-builder">
 
-    <!-- the grey toolbar for scenario builder -->
-    <nav class="navbar navbar-default navbar-static-top tool-bar" id="tool-bar">
-      <div class="container-fluid">
-        <div class="row" >
-          <div class="col-xs-12">
-            <div class="btn-toolbar">
-              <!-- mixed button and a tags will be fixed soon! -->
-              <button  type="button" class="btn btn-primary nav-bar-button default" id="scenario-submit" v-on:click="submitScenario" value="" v-bind:class="{ 'inputdisabled': !(totalRuns <= 20 && validForm) }" >
-                Submit
-              </button>
-
-              <a class="btn btn-primary pull-left nav-bar-button" v-link="{ path: '/' }">Cancel</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </nav>
+  <div class="scenario-builder full-height">
 
     <!-- User has to select a template first -->
 
-    <div class="container-fluid" id="below-tool-bar">
-      <div class="row">
-        <div class="col-sm-12">
-          <h2>Scenario builder</h2>
-        </div>
-      </div>
+    <div class="container-fluid full-height scrollable" id="below-tool-bar">
 
       <div class="row">
+
         <!-- 2 column layout, 1st column scenario properties -->
         <div class="col-sm-5">
           <!--  -->
@@ -39,6 +18,9 @@
                 <select class="combobox form-control" v-model="template"  id="select-template" :onchange="selectTemplate(template)">
                   <option v-for="template in availableTemplates" v-bind:value="template">
                     {{ template.name }}
+                  </option>
+                  <option value="" disabled>
+                    more templates will be added in the future...
                   </option>
                 </select>
               </div>
@@ -74,27 +56,27 @@
                           </label>
                           <div class="input-group">
                             <!-- numeric, text, semver or factor are inputs-->
-                            <template v-if="['numeric', 'text', 'semver'].includes(variable.type) || variable.factor">
+                            <template v-if="isInput(variable)">
                               <input
-                                     type="{{ variable.type }}"
-                                     class="form-control"
-                                     id="{{ variable.id }}"
-                                     :data-role="variable.factor ? 'tagsinput' : ''"
-                                     v-model="variable.value"
-                                     :disabled="variable.disabled"
-                                     :field="getId(variable)"
-                                     v-validate="variable.validators"
-                                     />
+                                 type="{{ variable.type }}"
+                                 class="form-control"
+                                 id="{{ variable.id }}"
+                                 :data-role="variable.factor ? 'tagsinput' : ''"
+                                 v-model="variable.value"
+                                 :disabled="variable.disabled"
+                                 :field="getId(variable)"
+                                 v-validate="variable.validators"
+                                 />
                             </template>
                             <!-- select if not form -->
                             <template v-if="variable.type === 'select' && !variable.factor">
                               <select
-                                     class="form-control"
-                                     id="{{ variable.id }}"
-                                     v-model="variable.value"
-                                     :field="getId(variable)"
-                                     v-validate="variable.validators"
-                                     >
+                                 class="form-control"
+                                 id="{{ variable.id }}"
+                                 v-model="variable.value"
+                                 :field="getId(variable)"
+                                 v-validate="variable.validators"
+                                 >
                                 <option
                                    v-for="(i, option) in variable.options"
                                    v-bind:value="option.value"
@@ -174,27 +156,36 @@
                 <!-- </pre> -->
 
               </validator>
-            </div>
 
 
-            <!-- expected runs indicator. It becomes a different color if the totalRuns exceed 20 -->
-            <div class="row" >
-              <div class="col-sm-12">
-                <div class="alert alert-info" v-bind:class="{ 'alert-warning': totalRuns > 20}" role="alert">
-                  <p class="lead">Expected runs: <strong>{{totalRuns}}</strong></p>
-                  <p v-if="totalRuns > 20">
-                    At the moment you cannot submit more than 20 runs in one scenario.
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  Number of runs: <strong>{{totalRuns}}</strong>
+                  <p v-if="totalRuns > 20" class="text-warning">
+                    You cannot submit more than 20 runs in one scenario.
                   </p>
+                  <div class="pull-right">
+                  <a class="btn btn-default nav-bar-button" v-link="{ path: '/' }">Cancel</a>
+                  <button
+                     type="button"
+                     class="btn btn-primary nav-bar-button default"
+                     id="scenario-submit"
+                     @click="submitScenario"
+                     value=""
+                     :class="{ 'disabled': !(totalRuns <= 20 && validForm) }" >
+                    Submit
+                  </button>
+                  </div>
 
                 </div>
+
               </div>
             </div>
 
           </div>
 
-
-
         </div>
+
 
 
         <div class="col-sm-7">
@@ -218,7 +209,7 @@
                 <h3 class="panel-title">Schematic</h3>
               </div>
               <!-- template details -->
-              <div class="panel-body  text-center">
+              <div class="panel-body text-center">
                 <img src="images/schematic.svg" class="scenariobuilder-schematic" />
               </div>
             </div>

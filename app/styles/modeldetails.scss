@@ -1,0 +1,43 @@
+@import 'variables';
+
+.model-details {
+  table {
+    margin-bottom: 0;
+  }
+
+  dl {
+    margin-bottom: 0;
+  }
+
+  dd,
+  dt {
+    margin-bottom: ($padding / 2);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  img {
+    margin: ($padding * 2) 0;
+    max-width: 100%;
+  }
+
+  .alert {
+    margin: $padding 0;
+  }
+
+  .btn-group .btn {
+    margin-right: 0;
+  }
+
+  .panel-heading {
+    cursor: pointer;
+  }
+
+  .progress {
+    height: 18px;
+    margin-bottom: 0;
+    margin-top: 1px;
+  }
+}

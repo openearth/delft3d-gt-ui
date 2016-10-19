@@ -1,4 +1,4 @@
-/* global Vue startModels, stopModels, deleteModels, router,  deleteScenario */
+/* global Vue, store, getDialog */
 
 var exports = (function () {
   "use strict";
@@ -6,139 +6,58 @@ var exports = (function () {
   var ModelControlMenu = Vue.component("model-control-menu", {
 
     template: "#template-model-control-menu",
+
     data: function() {
+
       return {
-        deleteDialog: null
+        collapseShow: true,
+        sharedState: store.state
+
       };
+
     },
 
-    ready: function() {
-
-      console.log(this.$refs);
-    },
-
-
-    props: {
-
-      "selectedScenarios": {
-        type: Array,
-        required: true
-      },
-
-      "selectedRuns": {
-        type: Array,
-        required: true
-      },
-
-      "Models": {
-        type: Array,
-        required: true
+    computed: {
+      numSelectedModels: function () {
+        return store.getSelectedModels().length;
       }
     },
 
     methods: {
-
-      deleteSelectedScenario: function() {
-
-        // Right now we use the old dialog from before. Should be turned into a component.
-        var that = this;
-
-        // User accepts deletion:
-        $("#dialog-remove-scenario-response-accept").on("click", () => {
-
-          this.selectedScenarios.forEach(function(id) {
-            deleteScenario(id)
-            .then(() => {
-              that.$parent.$broadcast("show-alert", {
-              message: "Deleting scenario... It might take a moment before the view is updated.",
-              showTime: 5000,
-              type: "success"
-              });
-
-              // Immediatly refresh screen:
-              that.$root.$broadcast("updateSearch");
-
-            })
-
-
-          .catch(e => {
-            console.log("scenario deletion failed", e);
-          });
-
-            // Hide dialog when user presses this accept.:
-            $("#dialog-confirm-delete-scenario").modal("hide");
-
-          });
-
-        });
-
-        // Show the dialog:
-        $("#dialog-confirm-delete-scenario").modal({});
-
-
+      expandScenarios: function() {
+        if (this.collapseShow) {
+          $(".scenario-card .collapse").collapse("show");
+        } else {
+          $(".scenario-card .collapse").collapse("hide");
+        }
+        this.collapseShow = !this.collapseShow;
       },
 
       startSelectedModels: function() {
-
-        // Start these models:
-        startModels(this.selectedRuns);
-
+        store.startSelectedModels();
       },
 
       stopSelectedModels: function() {
-
-        // Stop models:
-        stopModels(this.selectedRuns);
+        store.stopSelectedModels();
       },
 
       deleteSelectedModels: function() {
 
-        // Delete models
-        deleteModels(this.selectedRuns);
-      },
+        // Get a confirm dialog
+        this.deleteDialog = getDialog(this, "confirm-dialog", "delete-runs");
 
-      cloneScenario: function() {
+        this.deleteDialog.onConfirm = function() {
+          store.deleteSelectedModels();
 
-        // Get scenario id:
-        var scenarioId = this.selectedScenarios[0];
+          this.deleteDialog.hide();
 
-        // Find it:
-        var scenario = _.find(this.Models, function(value) {
+        }.bind(this);
 
-          // Is our id in this
-          return (value.id === scenarioId);
-        });
+        // We also show an extra warning in the dialog, if user chooses to remove additional files.
+        this.deleteDialog.showAlert(false);
 
-        console.log(scenario);
-
-        // Ignore if we did not find anything.
-        if (scenario === undefined) {
-          return;
-        }
-
-        var parameters = _.assign(
-          // create a new object (no data binding)
-          {},
-          // fill it with the parameters
-          // TODO: replace by object parameters instead of list of parameters
-          scenario.parameters
-        );
-
-        console.log("TEMPLATE:" + scenario.template);
-        // These parameters are passed to the other view
-        // alternative would be to store them in the app or to call an event
-        var req = {
-          name: "scenarios-create",
-          params: {},
-          query: {
-            "template": scenario.template,
-            "parameters": JSON.stringify(parameters),
-            "name": _.get(scenario, "name")
-          }
-        };
-
-        router.go(req);
-
+        // Show the dialog:
+        this.deleteDialog.show();
 
       }
     }

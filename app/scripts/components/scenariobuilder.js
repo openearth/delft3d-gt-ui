@@ -48,21 +48,29 @@ var exports = (function() {
         currentSelectedId: null,
 
         // The DOM elements used for the fixed toolbar event listener
-        navBars: null
+        navBars: null,
+
+        forceTemplateUpdate: false
 
       };
     },
 
     created: function() {
-      this.fetchTemplateList();
+
     },
-
-    ready: function() {
-
-      this.initFixedToolbar();
-    },
-
     route: {
+
+      activate: function (transition) {
+        // We force the template to be reloaded when this page is openend
+        // Otherwise old values will stay in the form, and the validator is not reactivated.
+        // The data function changes the function if needed.
+        this.currentSelectedId = null;
+        this.template = null;
+        this.fetchTemplateList();
+
+        transition.next();
+
+      },
       data: function(transition) {
 
 
@@ -71,7 +79,6 @@ var exports = (function() {
 
           // This cannot go into the fetchTemplates, template will always be empty!
           var templateId = parseInt(this.$route.query.template);
-
           var template = _.first(_.filter(this.availableTemplates, ["id", templateId]));
 
           if (template !== undefined) {
@@ -92,7 +99,6 @@ var exports = (function() {
           value: val,
           type: "numeric"
         });
-
         // check if any value is > rule
         var valid = _.every(vals, function(x) {
           return x <= rule;
@@ -165,13 +171,16 @@ var exports = (function() {
       }
     },
     methods: {
-
+      // check if variable should generate an input element
+      isInput: function(variable) {
+        return _.includes(["numeric", "text", "semver"], variable.type) || variable.factor;
+      },
       // Moved so that we can test it better.
       fetchTemplateList: function() {
 
         fetchTemplates()
           .then((templates) => {
-            this.availableTemplates = templates;
+            this.availableTemplates = _.sortBy(templates, ["name"]);
 
             // Select the first template automatic:
             var template = _.get(this.availableTemplates, 0);
@@ -194,10 +203,15 @@ var exports = (function() {
 
       selectTemplate: function(template) {
 
+        if (template === null) {
+          return;
+        }
 
+        //  Did the template change? Or maybe forcing an update
         if (this.currentSelectedId === template.id) {
           return;
         }
+
 
         this.currentSelectedId = template.id;
 
@@ -237,7 +251,7 @@ var exports = (function() {
 
           $(el).tagsinput();
           //} else {
-           // $(el).tagsinput();
+          // $(el).tagsinput();
           //}
         });
 
@@ -394,44 +408,6 @@ var exports = (function() {
         });
 
         return scenario;
-      },
-
-      // Some code to keep the bar on the top.
-      // TODO: replace by css or css framework.
-      initFixedToolbar: function() {
-        var that = this;
-
-        this.navBars = {
-          topBar: document.getElementById("top-bar"),
-          toolBar: document.getElementById("tool-bar"),
-          belowToolBar: document.getElementById("below-tool-bar")
-        };
-
-        $(window).on("scroll touchmove load", that.updateFixedToolbarStyle);
-
-        this.updateFixedToolbarStyle();
-      },
-
-      updateFixedToolbarStyle: function() {
-        var top = this.getTop();
-
-        if (this.navBars === null) {
-          return 0;
-        }
-
-        if (top > this.navBars.topBar.clientHeight) {
-          this.navBars.belowToolBar.style.paddingTop = this.navBars.toolBar.clientHeight + "px";
-          this.navBars.toolBar.style.position = "fixed";
-          this.navBars.toolBar.style.top = "0";
-        } else {
-          this.navBars.belowToolBar.style.paddingTop = "0px";
-          this.navBars.toolBar.style.position = "relative";
-        }
-      },
-
-      getTop: function() {
-
-        return $(window).scrollTop();
       }
     }
   });

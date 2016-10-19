@@ -6,6 +6,26 @@ var exports = (function() {
    *
    * @return {Promise}
    */
+  function fetchUsers() {
+    return new Promise(function(resolve, reject) {
+
+      //Load test template data:
+      $.getJSON("/api/v1/users/")
+        .done(function(data) {
+          resolve(data);
+        })
+        .fail(function(error) {
+          reject(error);
+        });
+
+    });
+  }
+
+  /**
+   * Fetch all models.
+   *
+   * @return {Promise}
+   */
   function fetchTemplates() {
     return new Promise(function(resolve, reject) {
 
@@ -21,13 +41,15 @@ var exports = (function() {
     });
   }
 
-  function fetchSearchTemplates() {
+  function fetchSearchTemplate() {
     return new Promise(function(resolve, reject) {
 
       //Load test template data:
       $.getJSON("/api/v1/searchforms/")
         .done(function(data) {
-          resolve(data);
+          // return the one and only search template
+          // the backend returns a list but there shall only be one
+          resolve(_.first(data));
         })
         .fail(function(error) {
           reject(error);
@@ -37,8 +59,9 @@ var exports = (function() {
   }
 
   return {
+    fetchUsers: fetchUsers,
     fetchTemplates: fetchTemplates,
-    fetchSearchTemplates: fetchSearchTemplates
+    fetchSearchTemplate: fetchSearchTemplate
   };
 
 }());
