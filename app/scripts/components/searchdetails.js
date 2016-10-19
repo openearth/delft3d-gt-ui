@@ -1,4 +1,4 @@
-/* global Vue, fetchSearchTemplate, fetchUsers, store  */
+/* global _, Vue, fetchSearchTemplate, fetchUsers, store  */
 var exports = (function () {
   "use strict";
   var SearchDetails = Vue.component("search-details", {
@@ -31,7 +31,7 @@ var exports = (function () {
           var template = jsons[1];
 
           // store them
-          this.users = users;
+          this.users = _.sortBy(users, ["last_name", "first_name"]);
           this.searchTemplate = template;
 
           // after we"re done loading the templates in the dom, start searching.

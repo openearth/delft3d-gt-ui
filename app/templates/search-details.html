@@ -51,7 +51,7 @@
           <div class="form-group">
             <!-- break because of the label hack below -->
             <select v-model="selectedUsers" id="user" class="select-picker form-control" title="Choose user..." multiple data-selected-text-format="count > 3">
-              <option v-for="user in users" value="{{user.id}}">{{user.first_name}} {{user.last_name}} ({{ user.username }})</option>
+              <option v-for="user in users" value="{{user.id}}">{{user.last_name}}, {{user.first_name}}</option>
             </select>
           </div>
 
