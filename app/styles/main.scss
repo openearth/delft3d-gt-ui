@@ -30,6 +30,14 @@ body {
   background-color: $col-bg-main;
 }
 
+// OpenSans and default font-weight of bootstrap is quite ugly. Therefore we change the weight from "bold" to semibold, see variables.scss.
+label,
+dt {
+  font-weight: $font-weight-semibold;
+}
+
+
+
 .btn-text {
   border: 1px solid transparent;
   display: inline-block;
@@ -64,6 +72,7 @@ body {
   border-bottom: 0;
   padding: $padding;
 }
+
 
 div[data-toggle="collapse"] {
   cursor: pointer;
