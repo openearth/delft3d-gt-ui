@@ -9,6 +9,8 @@ var exports = (function () {
 
     data: function () {
       return {
+        companyModels: [],
+        worldModels: [],
         sharedState: store.state
       };
     },
@@ -35,8 +37,11 @@ var exports = (function () {
       items: function() {
         this.$nextTick(function() {
         });
+      },
+      "sharedState.models": function () {
+        this.companyModels = _.filter(this.sharedState.modelContainers, ["data.shared", "c"]);
+        this.worldModels = _.filter(this.sharedState.modelContainers, ["data.shared", "w"]);
       }
-
     },
     computed: {
       // Get the current selected modelid from the routing URL
@@ -61,14 +66,7 @@ var exports = (function () {
 
           return activeItems;
         }
-      },
-      worldModels: function() {
-        return _.filter(this.sharedState.modelContainers, ["data.shared", "w"]);
-      },
-      companyModels: function() {
-        return _.filter(this.sharedState.modelContainers, ["data.shared", "c"]);
       }
-
     },
     methods: {
       toggleActive: function(item) {
