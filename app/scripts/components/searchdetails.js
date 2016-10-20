@@ -27,6 +27,20 @@ var exports = (function () {
     },
 
     ready: function() {
+
+      // should be initialised with values: it needs values when post processing search is activated
+      this.selectedPostProc = {
+        "ProDeltaD50": "0;1",
+        "DeltaFrontD50": "0;1",
+        "DeltaTopD50": "0;1",
+        "ProDeltaD50sand": "0;1",
+        "DeltaFrontD50sand": "0;1",
+        "DeltaTopD50sand": "0;1",
+        "ProDeltasorting": "0;10",
+        "DeltaFrontsorting": "0;10",
+        "DeltaTopsorting": "0;10"
+      };
+
       // get search templates
       Promise.all([fetchUsers(), fetchSearchTemplate()])
         .then((jsons) => {
@@ -221,6 +235,28 @@ var exports = (function () {
         this.selectedUsers = [];
         this.selectedParameters = {};
         this.selectedTemplates = [];
+        this.activatedPostProc = {
+          "ProDeltaD50": false,
+          "DeltaFrontD50": false,
+          "DeltaTopD50": false,
+          "ProDeltaD50sand": false,
+          "DeltaFrontD50sand": false,
+          "DeltaTopD50sand": false,
+          "ProDeltasorting": false,
+          "DeltaFrontsorting": false,
+          "DeltaTopsorting": false
+        };
+        this.selectedPostProc = {
+          "ProDeltaD50": "0;1",
+          "DeltaFrontD50": "0;1",
+          "DeltaTopD50": "0;1",
+          "ProDeltaD50sand": "0;1",
+          "DeltaFrontD50sand": "0;1",
+          "DeltaTopD50sand": "0;1",
+          "ProDeltasorting": "0;10",
+          "DeltaFrontsorting": "0;10",
+          "DeltaTopsorting": "0;10"
+        };
 
         this.search();
       }
