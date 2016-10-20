@@ -611,6 +611,9 @@
         selectedTemplates: [],
         selectedDomains: [],
 
+        activatedPostProc: {},
+        selectedPostProc: {},
+
         users: [],
         selectedUsers: [],
 

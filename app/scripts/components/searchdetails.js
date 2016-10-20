@@ -1,4 +1,4 @@
-/* global Vue, fetchSearchTemplate, fetchUsers, store  */
+/* global _, Vue, fetchSearchTemplate, fetchUsers, store  */
 var exports = (function () {
   "use strict";
   var SearchDetails = Vue.component("search-details", {
@@ -13,6 +13,9 @@ var exports = (function () {
         selectedParameters: {},
         selectedTemplates: [],
         selectedDomains: [],
+
+        activatedPostProc: {},
+        selectedPostProc: {},
 
         users: [],
         selectedUsers: [],
@@ -31,7 +34,7 @@ var exports = (function () {
           var template = jsons[1];
 
           // store them
-          this.users = users;
+          this.users = _.sortBy(users, ["last_name", "first_name"]);
           this.searchTemplate = template;
 
           // after we"re done loading the templates in the dom, start searching.
@@ -160,10 +163,9 @@ var exports = (function () {
         };
 
         // serialize parameters corresponding to https://publicwiki.deltares.nl/display/Delft3DGT/Search
-        params.parameter = _.map(
-          // loop over all parameters in the template
+        var paramArray = _.map(
           this.selectedParameters,
-          function(value, key) {
+          (value, key) => {
             var result = "";
 
             if (_.isString(value) && _.includes(value, ";")) {
@@ -175,13 +177,25 @@ var exports = (function () {
               result = key + "," + value;
             }
 
-            // Remove trailing ,:
-            //result = result.replace(/\,$/, "");
-
-
             return result;
           }
         );
+
+        // serialize post-processing corresponding to https://publicwiki.deltares.nl/display/Delft3DGT/Search
+        var postProcArray = _.map(
+          this.selectedPostProc,
+          (value, key) => {
+            if (this.activatedPostProc[key]) {
+              return key + "," + _.replace(value, ";", ",");
+            }
+            return "";
+          }
+        );
+
+        _.pullAll(postProcArray, [""]);
+
+        params.parameter = _.merge(paramArray, postProcArray);
+
         return params;
       },
       search: function() {
