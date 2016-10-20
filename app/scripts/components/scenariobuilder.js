@@ -1,4 +1,4 @@
-/* global Vue,  fetchTemplates */
+/* global Vue,  fetchTemplates, store */
 
 // Exported globals
 var ScenarioCreate;
@@ -190,7 +190,6 @@ var exports = (function() {
               var templateId = parseInt(this.$route.query.template);
 
               template = _.first(_.filter(this.availableTemplates, ["id", templateId]));
-              console.log("setting template", template);
             }
 
             // set the template, somehow a computed setter was not working...
@@ -360,25 +359,22 @@ var exports = (function() {
           "parameters": JSON.stringify(parameters)
         };
 
-        $.ajax({
-          url: "/api/v1/scenarios/",
-          data: postdata,
-          method: "POST"
-        })
-          .done(() => {
-            // Go back to home.
-            var params = {
-            };
+        store.createScenario(postdata)
+          .then(function() {
 
             // This is not practical, but the only way in vue? (using $parent)
             this.$parent.$broadcast("show-alert", { message: "Scenario submitted", showTime: 5000, type: "info"});
             this.$router.go({
               name: "home",
-              params: params
+              params: { }
             });
+          }.bind(this))
+          .catch(function() {
 
+            // This is not practical, but the only way in vue? (using $parent)
+            this.$parent.$broadcast("show-alert", { message: "Scenario could not be submitted", showTime: 5000, type: "warning"});
 
-          });
+          }.bind(this));
       },
 
 
