@@ -14,6 +14,9 @@ var exports = (function () {
         selectedTemplates: [],
         selectedDomains: [],
 
+        activatedPostProc: {},
+        selectedPostProc: {},
+
         users: [],
         selectedUsers: [],
 
@@ -160,10 +163,9 @@ var exports = (function () {
         };
 
         // serialize parameters corresponding to https://publicwiki.deltares.nl/display/Delft3DGT/Search
-        params.parameter = _.map(
-          // loop over all parameters in the template
+        var paramArray = _.map(
           this.selectedParameters,
-          function(value, key) {
+          (value, key) => {
             var result = "";
 
             if (_.isString(value) && _.includes(value, ";")) {
@@ -175,13 +177,25 @@ var exports = (function () {
               result = key + "," + value;
             }
 
-            // Remove trailing ,:
-            //result = result.replace(/\,$/, "");
-
-
             return result;
           }
         );
+
+        // serialize post-processing corresponding to https://publicwiki.deltares.nl/display/Delft3DGT/Search
+        var postProcArray = _.map(
+          this.selectedPostProc,
+          (value, key) => {
+            if (this.activatedPostProc[key]) {
+              return key + "," + _.replace(value, ";", ",");
+            }
+            return "";
+          }
+        );
+
+        _.pullAll(postProcArray, [""]);
+
+        params.parameter = _.merge(paramArray, postProcArray);
+
         return params;
       },
       search: function() {
