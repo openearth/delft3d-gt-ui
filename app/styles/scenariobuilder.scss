@@ -30,7 +30,22 @@
 
   // some styling to align a text with a standard butotn.
   .align-with-button {
-    padding: 8px 16px; /* Extra pixel top and bottom for border on buttons */
+    padding: 8px 16px; // Extra pixel top and bottom for border on buttons
    }
 
+  // DUMMY FEATURES
+
+  select,
+  option,
+  .input-group {
+    width: 100%;
+  }
+
+  [type='file'] {
+    display: inline-block;
+  }
+
+  .form-file-upload {
+    margin-top: $padding;
+  }
 }

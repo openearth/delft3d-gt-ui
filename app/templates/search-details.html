@@ -139,6 +139,7 @@
                              class="form-control"
                              rows="3"
                              v-model="selectedParameters[variable.id]"
+
                              ></textarea>
                         </template>
 
@@ -146,15 +147,74 @@
                     </div>
                   </template>
                 </div>
+              </div>
+            </div>
+          </div>
 
-              </div> <!-- .panel-body -->
-            </div> <!-- .panel -->
+          <div class="panel panel-default panel-search">
 
-          </div> <!-- section -->
-        </div> <!-- .panel-group -->
+            <div class="panel-heading panel-collapse-header" data-toggle="collapse" data-parent="#template-postprocess" href="#template-postprocess" aria-expanded="true" aria-controls="template-collapse">
+              Post-processing output
+            </div>
+
+            <div class="panel-body panel-collapse collapse" role="tabpanel" aria-labelledby="template-postprocess" id="template-postprocess">
+
+              <div class="form-group">
+                <label class="control-label" >d50 for Prodelta</label>
+                <div class="checkbox pull-right"><label class="control-label"><input type="checkbox" v-model="activatedPostProc['ProDeltaD50']"> activate filter</label></div>
+                <input type="text" id="ProDeltaD50" v-model="selectedPostProc['ProDeltaD50']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="1" data-type="double"/>
+              </div>
+              <div class="form-group">
+                <label class="control-label" >d50 for Deltafront</label>
+                <div class="checkbox pull-right"><label class="control-label"><input type="checkbox" v-model="activatedPostProc['DeltaFrontD50']"> activate filter</label></div>
+                <input type="text" id="DeltaFrontD50" v-model="selectedPostProc['DeltaFrontD50']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="1" data-type="double"/>
+              </div>
+              <div class="form-group">
+                <label class="control-label" >d50 for DeltaTop</label>
+                <div class="checkbox pull-right"><label class="control-label"><input type="checkbox" v-model="activatedPostProc['DeltaTopD50']"> activate filter</label></div>
+                <input type="text" id="DeltaTopD50" v-model="selectedPostProc['DeltaTopD50']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="1" data-type="double"/>
+              </div>
+              <div class="form-group">
+                <label class="control-label" >d50sand for Prodelta</label>
+                <div class="checkbox pull-right"><label class="control-label"><input type="checkbox" v-model="activatedPostProc['ProDeltaD50sand']"> activate filter</label></div>
+                <input type="text" id="ProDeltaD50sand" v-model="selectedPostProc['ProDeltaD50sand']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="1" data-type="double"/>
+              </div>
+              <div class="form-group">
+                <label class="control-label" >d50sand for Deltafront</label>
+                <div class="checkbox pull-right"><label class="control-label"><input type="checkbox" v-model="activatedPostProc['DeltaFrontD50sand']"> activate filter</label></div>
+                <input type="text" id="DeltaFrontD50sand" v-model="selectedPostProc['DeltaFrontD50sand']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="1" data-type="double"/>
+              </div>
+              <div class="form-group">
+                <label class="control-label" >d50sand for DeltaTop</label>
+                <div class="checkbox pull-right"><label class="control-label"><input type="checkbox" v-model="activatedPostProc['DeltaTopD50sand']"> activate filter</label></div>
+                <input type="text" id="DeltaTopD50sand" v-model="selectedPostProc['DeltaTopD50sand']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="1" data-type="double"/>
+              </div>
+              <div class="form-group">
+                <label class="control-label" >sorting for Prodelta</label>
+                <div class="checkbox pull-right"><label class="control-label"><input type="checkbox" v-model="activatedPostProc['ProDeltasorting']"> activate filter</label></div>
+                <input type="text" id="ProDeltasorting" v-model="selectedPostProc['ProDeltasorting']" class="ion-range" id="parameter1" data-step="0.1" data-min="0" data-max="10" data-type="double"/>
+              </div>
+              <div class="form-group">
+                <label class="control-label" >sorting for Deltafront</label>
+                <div class="checkbox pull-right"><label class="control-label"><input type="checkbox" v-model="activatedPostProc['DeltaFrontsorting']"> activate filter</label></div>
+                <input type="text" id="DeltaFrontsorting" v-model="selectedPostProc['DeltaFrontsorting']" class="ion-range" id="parameter1" data-step="0.1" data-min="0" data-max="10" data-type="double"/>
+              </div>
+              <div class="form-group">
+                <label class="control-label" >sorting for DeltaTop</label>
+                <div class="checkbox pull-right"><label class="control-label"><input type="checkbox" v-model="activatedPostProc['DeltaTopsorting']"> activate filter</label></div>
+                <input type="text" id="DeltaTopsorting" v-model="selectedPostProc['DeltaTopsorting']" class="ion-range" id="parameter1" data-step="0.1" data-min="0" data-max="10" data-type="double"/>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
 
       </form>
+
     </div>
+
   </div>
 
 </template>
