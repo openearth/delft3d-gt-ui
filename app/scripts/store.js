@@ -6,6 +6,7 @@ var exports = (function() {
 
     state: {
       activeModelContainer: undefined,
+      failedUpdate: null, // If promise of updates failed, this callback will be called.
       modelContainers: [],
       models: [],
       params: [],
@@ -39,8 +40,10 @@ var exports = (function() {
         this.state.scenarios = jsons[1];
         this.updateContainers();
       })
-      .catch(function(reason) {
-        console.error("Promise rejected: " + reason);
+      .catch(() => {
+        if (this.state.failedUpdate !== null) {
+          this.state.failedUpdate();
+        }
       });
     },
 
@@ -219,7 +222,6 @@ var exports = (function() {
           dataType: "json"
         };
 
-        console.log(request);
         $.ajax(request)
           .done(function(data) {
             resolve(data);
@@ -253,6 +255,31 @@ var exports = (function() {
           });
       });
     },
+
+    createScenario: function (postdata) {
+
+      return new Promise(function(resolve, reject) {
+        $.ajax({
+          url: "/api/v1/scenarios/",
+          data: postdata,
+          method: "POST"
+        })
+        .done(function() {
+          resolve();
+        })
+        .fail(function(error) {
+          reject(error);
+        });
+      });
+
+    },
+
+//            this.$parent.$broadcast("show-alert", { message: "Error submitting scenario. Scenario has not been stored.", showTime: 5000, type: "error"});
+
+
+
+
+
 
     // ================================ OTHER SUPPORT METHODS
 
