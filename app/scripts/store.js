@@ -109,12 +109,20 @@ var exports = (function() {
       });
 
       // remove containers that have no associated model
-      var modelIds = _.map(this.state.models, function (model) {
+      var modelIds = _.map(this.state.models, (model) => {
         return model.id;
       });
 
-      _.remove(this.state.modelContainers, function(container) {
-        return _.indexOf(modelIds, container.id) === -1;
+      _.remove(this.state.modelContainers, (container) => {
+        // check if should be removed
+        if (_.indexOf(modelIds, container.id) === -1) {
+          // if yes, check if activeModelContainer should be removed
+          if(this.state.activeModelContainer !== undefined && this.state.activeModelContainer.id === container.id) {
+            this.state.activeModelContainer = undefined;
+          }
+          return true;
+        }
+        return false;
       });
     },
     updateScenarioContainers: function () {
@@ -137,11 +145,11 @@ var exports = (function() {
       });
 
       // remove containers that have no associated scenario
-      var scenarioIds = _.map(this.state.scenarios, function (scenario) {
+      var scenarioIds = _.map(this.state.scenarios, (scenario) => {
         return scenario.id;
       });
 
-      _.remove(this.state.scenarioContainers, function(container) {
+      _.remove(this.state.scenarioContainers, (container) => {
         return _.indexOf(scenarioIds, container.id) === -1;
       });
     },
@@ -207,7 +215,7 @@ var exports = (function() {
 
     stopModel: function (modelContainer) {
       return new Promise((resolve, reject) => {
-        console.log("stoppping model", modelContainer.id);
+        console.log("stopping model", modelContainer.id);
         if (modelContainer === undefined || modelContainer.id === undefined) {
           reject("No model id to start");
         }
