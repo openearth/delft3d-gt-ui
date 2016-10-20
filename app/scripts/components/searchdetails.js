@@ -46,6 +46,13 @@ var exports = (function () {
               // update the search results
               this.search();
 
+              store.state.failedUpdate = function() {
+
+                // This is not practical, but the only way in vue? (using $parent)
+                this.$root.$broadcast("show-alert", { message: "Cannot connect to server...", showTime: 1000, type: "warning"});
+
+              }.bind(this);
+
               // as soon as this component is loaded we can start to sync models
               // startSyncModels();
             }
