@@ -47,7 +47,23 @@ var exports = (function () {
         e.stopPropagation();
         $(e.target).closest(".panel").children(".collapse").collapse("toggle");
       },
-      fetchLog: function () {},
+      downloadFiles: function () {
+        // Open download window
+        var id = this.activeModel.id;
+
+        // Get array of checked download options.
+        var downloadOptions = $(".downloadoption:checked").map(function() {
+          return "options=" + $(this).val();
+        }).get(); //
+
+        window.open("/api/v1/scenes/" + id + "/export/?" + downloadOptions.join("&"));
+      },
+      downloadOptionsChange: function() {
+        //Determine if there is any download option enabled, if not, disable button
+        var selectedOptions = $(".downloadoption:checked").length;
+
+        $("#download-submit").prop("disabled", selectedOptions === 0);
+      },
       hasPostProcessData: function () {
         if(("data" in this.activeModel) && ("info" in this.activeModel.data) && "postprocess_output" in this.activeModel.data.info) {
           return (Object.keys(this.activeModel.data.info.postprocess_output).length > 0);

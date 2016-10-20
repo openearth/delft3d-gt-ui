@@ -19,6 +19,9 @@
                   <option v-for="template in availableTemplates" v-bind:value="template">
                     {{ template.name }}
                   </option>
+                  <option value="" disabled>
+                    more templates will be added in the future...
+                  </option>
                 </select>
               </div>
             </div>
@@ -55,25 +58,25 @@
                             <!-- numeric, text, semver or factor are inputs-->
                             <template v-if="isInput(variable)">
                               <input
-                                     type="{{ variable.type }}"
-                                     class="form-control"
-                                     id="{{ variable.id }}"
-                                     :data-role="variable.factor ? 'tagsinput' : ''"
-                                     v-model="variable.value"
-                                     :disabled="variable.disabled"
-                                     :field="getId(variable)"
-                                     v-validate="variable.validators"
-                                     />
+                                 type="{{ variable.type }}"
+                                 class="form-control"
+                                 id="{{ variable.id }}"
+                                 :data-role="variable.factor ? 'tagsinput' : ''"
+                                 v-model="variable.value"
+                                 :disabled="variable.disabled"
+                                 :field="getId(variable)"
+                                 v-validate="variable.validators"
+                                 />
                             </template>
                             <!-- select if not form -->
                             <template v-if="variable.type === 'select' && !variable.factor">
                               <select
-                                     class="form-control"
-                                     id="{{ variable.id }}"
-                                     v-model="variable.value"
-                                     :field="getId(variable)"
-                                     v-validate="variable.validators"
-                                     >
+                                 class="form-control"
+                                 id="{{ variable.id }}"
+                                 v-model="variable.value"
+                                 :field="getId(variable)"
+                                 v-validate="variable.validators"
+                                 >
                                 <option
                                    v-for="(i, option) in variable.options"
                                    v-bind:value="option.value"
@@ -154,38 +157,35 @@
 
               </validator>
 
-              <div class="panel panel-default">
-                <div class="panel-body text-right">
 
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  Number of runs: <strong>{{totalRuns}}</strong>
+                  <p v-if="totalRuns > 20" class="text-warning">
+                    You cannot submit more than 20 runs in one scenario.
+                  </p>
+                  <div class="pull-right">
                   <a class="btn btn-default nav-bar-button" v-link="{ path: '/' }">Cancel</a>
-                  <button  type="button" class="btn btn-primary nav-bar-button default" id="scenario-submit" v-on:click="submitScenario" value="" v-bind:class="{ 'inputdisabled': !(totalRuns <= 20 && validForm) }" >
+                  <button
+                     type="button"
+                     class="btn btn-primary nav-bar-button default"
+                     id="scenario-submit"
+                     @click="submitScenario"
+                     value=""
+                     :class="{ 'disabled': !(totalRuns <= 20 && validForm) }" >
                     Submit
                   </button>
+                  </div>
 
                 </div>
-              </div>
 
-            </div>
-
-
-            <!-- expected runs indicator. It becomes a different color if the totalRuns exceed 20 -->
-            <div class="row" >
-              <div class="col-sm-12">
-                <div class="alert alert-info" v-bind:class="{ 'alert-warning': totalRuns > 20}" role="alert">
-                  <p class="lead">Expected runs: <strong>{{totalRuns}}</strong></p>
-                  <p v-if="totalRuns > 20">
-                    At the moment you cannot submit more than 20 runs in one scenario.
-                  </p>
-
-                </div>
               </div>
             </div>
 
           </div>
 
-
-
         </div>
+
 
 
         <div class="col-sm-7">
@@ -209,7 +209,7 @@
                 <h3 class="panel-title">Schematic</h3>
               </div>
               <!-- template details -->
-              <div class="panel-body  text-center">
+              <div class="panel-body text-center">
                 <img src="images/schematic.svg" class="scenariobuilder-schematic" />
               </div>
             </div>

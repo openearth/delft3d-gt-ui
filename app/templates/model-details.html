@@ -17,7 +17,10 @@
           <dl class="dl-horizontal">
             <dt>Owner of run</dt><dd><a href="mailto:{{activeModel.data.owner.email}}">{{ activeModel.data.owner.first_name }} {{ activeModel.data.owner.last_name }}</a> </dd>
             <dt>Share level</dt><dd><span>{{ shareLevelText | capitalize }}</span></dd>
-            <dt>Simulation output:</dt><dd><a href="{{activeModel.data.fileurl}}" target="_blank">Open in new tab</a></dd>
+            <dt>Simulation output:</dt><dd>
+              <a class="btn btn-default btn-xs" href="{{activeModel.data.fileurl}}" target="_blank" title="A link to the file server hosting all output files.">File Server</a>
+              <a class="btn btn-default btn-xs" href="/thredds/catalog/files/{{activeModel.data.suid}}/simulation/catalog.html" onclick="javascript:event.target.port=8080" target="_blank" title="A link to the THREDDS server hosting Delft3D NetCDF output, which allows querying via OPeNDAP.">THREDDS Data Server</a>
+            </dd>
           </dl>
 
           <hr>
@@ -235,29 +238,6 @@
               Download
             </button>
 
-          </div>
-        </div>
-      </div>
-
-      <div class="panel panel-default">
-        <div class="panel-heading" @click.stop="collapseToggle">
-          Log output
-        </div>
-        <div class="collapse">
-          <div class="panel-body">
-            <p>
-              <button class="btn btn-primary" type="button" id="btn-copy-log-output" data-clipboard-target="#model-log-output">
-                Copy log
-              </button>
-              <button class="btn btn-primary" type="button" id="btn-refresh-log-output" v-on:click="fetchLog">
-                Refresh log
-              </button>
-            </p>
-
-            <div id="model-log-output-wrap">
-              <!-- fill this directly cause debugging views with 3MB text are a bit slow -->
-              <pre><code id="model-log-output">Press "Refresh log" to load the log file. It might take a few seconds for a large log file to show.</code></pre>
-            </div>
           </div>
         </div>
       </div>

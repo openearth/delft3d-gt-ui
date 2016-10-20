@@ -6,7 +6,8 @@
   position: static;
 
   img {
-    height: 800px;
+    max-height: 768px;
+    max-width: 100%;
   }
 
   .bootstrap-tagsinput {
@@ -26,5 +27,10 @@
   .scrollable {
     overflow-y: auto;
   }
+
+  // some styling to align a text with a standard butotn.
+  .align-with-button {
+    padding: 8px 16px; /* Extra pixel top and bottom for border on buttons */
+   }
 
 }
