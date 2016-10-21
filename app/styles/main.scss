@@ -20,12 +20,6 @@
 
 // ===================== app-wide styling
 
-html,
-body {
-  height: 100%;
-  overflow-y: hidden;
-}
-
 body {
   background-color: $col-bg-main;
 }
@@ -52,10 +46,6 @@ dt {
   padding: 6px 0;
   vertical-align: middle;
   white-space: nowrap;
-}
-
-.full-height {
-  height: 100%;
 }
 
 .info-secondary {
@@ -104,15 +94,52 @@ dt {
   .panel {
     border-color: $col-bw-4;
     box-shadow: 0 8px 6px -6px $col-bw-5;
-    left: 50%;  // applies golden ratio
-    margin-left: -250px;
-    margin-top: -130px;
-    position: absolute;
-    top: 38.1%;  // applies golden ratio
-    width: 500px;
+    margin: $padding;
   }
 }
 
-.bs-actionsbox .btn-group button {
-  @include text-overflow();
+.bs-actionsbox {
+  .btn-group {
+    button {
+      @include text-overflow;
+    }
+  }
+}
+
+.label,
+.btn {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.label {
+  padding: 5px;
+}
+
+// ============ responsiveness
+
+@media (min-width: $screen-xs-sm) {
+  html,
+  body {
+    height: 100%;
+    overflow-y: hidden;
+  }
+
+  .full-height {
+    height: 100%;
+  }
+
+  .login-body {
+    .panel {
+      left: 50%;
+      margin-left: -250px;
+      margin-top: -130px;
+      position: absolute;
+      top: 38.1%;  // applies golden ratio
+      width: 500px;
+    }
+  }
 }
