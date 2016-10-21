@@ -8,6 +8,10 @@
     padding: 0;
   }
 
+  [class^='col-'] {
+    padding: 5px;
+  }
+
   .col-sm-1:last-child {
     padding-left: 0;
   }
@@ -40,5 +44,15 @@
     margin-bottom: 0;
   }
 
+  .row {
+    margin: 0;
+  }
+}
 
+@media (min-width: $screen-xs-sm) {
+  .scenario-card {
+    [class^='col-'] {
+      padding-top: 0;
+    }
+  }
 }

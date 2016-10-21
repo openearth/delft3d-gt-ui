@@ -16,6 +16,13 @@
     border-right: $border;
   }
 
+  .btn-text {
+    max-width: 45%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .column {
     padding: 0 $padding $padding;
   }
@@ -24,4 +31,14 @@
     overflow-y: auto;
   }
 
+  .visible-xs-block {
+    border-radius: 5px;
+    background-color: $col-bw-3;
+    margin: $padding 0;
+    padding: $padding;
+
+    &.visible-xs-block-first {
+      border-top: 0;
+    }
+  }
 }
