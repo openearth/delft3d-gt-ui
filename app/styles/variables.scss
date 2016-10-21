@@ -14,9 +14,8 @@ $col-bw-6: #000;
 
 $col-bg-main: #fff;
 
-$brand-primary: rgb(3, 140, 192);
-
 $font-weight-semibold: 600;
+
 // ======================== spacing
 
 $padding: 15px;
@@ -24,3 +23,11 @@ $padding: 15px;
 // ======================== borders
 
 $border: 1px solid $col-bw-2;
+
+//  ======================== bootstrap
+
+$brand-primary: rgb(3, 140, 192);
+$screen-xs-sm: 768px;
+$screen-md: 992px;
+$screen-lg: 1200px;
+
