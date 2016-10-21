@@ -8,14 +8,14 @@
 
         <div class="row">
 
-          <div class="col-sm-5">
+          <div class="col-xs-8 col-sm-5">
             <span v-if="model.data.shared == 'p'"><i class="fa fa-fw fa-user" aria-hidden="true"></i></span>
             <span v-if="model.data.shared == 'c'"><i class="fa fa-fw fa-group" aria-hidden="true"></i></span>
             <span v-if="model.data.shared == 'w'"><i class="fa fa-fw fa-globe" aria-hidden="true"></i></span>
             &nbsp;{{model.data.name}}
           </div>
 
-          <div class="col-sm-4 text-right">
+          <div class="col-xs-4 col-sm-4 text-right">
             <span class="label label-status"
                   :class="[
                     (model.data.state == 'Finished') ? 'label-success' : '',
@@ -29,7 +29,7 @@
             </span>
           </div>
 
-          <div class="col-sm-2 text-center no-padding">
+          <div class="col-xs-11 col-sm-2 text-center no-padding">
             <div class="progress">
               <div
                 data-percentage="{{model.data.progress}}%"
@@ -49,11 +49,9 @@
             </div>
           </div>
 
-          <div class="col-sm-1 text-center">
+          <div class="col-xs-1 col-sm-1 text-center">
             <form class="form-inline" v-if="selectable">
-              <div class="checkbox">
-                <input type="checkbox" v-model="model.selected">
-              </div>
+              <input type="checkbox" v-model="model.selected">
             </form>
           </div>
 

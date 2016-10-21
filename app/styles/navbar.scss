@@ -14,4 +14,16 @@
   &.navbar-default .active > a:focus {
     background: $col-bw-4;
   }
+
+  .navbar-brand {
+    font-size: 1em;
+  }
+}
+
+@media (min-width: $screen-xs-sm) {
+  .navbar {
+    a.navbar-brand {
+      font-size: 18px;
+    }
+  }
 }
