@@ -16,12 +16,12 @@
           </div>
         </div>
 
-        <div class="col-sm-5 col-md-4 col-lg-3 bordered">
+        <div class="col-sm-5 col-md-4 col-lg-4 bordered">
           <div class="btn-text">Database (search results)</div>
           <model-control-menu :items="items" :models="models"></model-control-menu>
         </div>
 
-        <div class="col-sm-5 col-md-6 col-lg-7">
+        <div class="col-sm-5 col-md-6 col-lg-6">
           <div class="btn-text">Model details</div>
           <button class="btn btn-default pull-right" @click.stop="expandDetails">
             <i class="fa" :class="[(collapseDetailsShow)? 'fa-arrow-down' : 'fa-arrow-up']" aria-hidden="true"></i>
@@ -48,7 +48,7 @@
           <search-details></search-details>
         </div>
 
-        <div class="col-sm-5 col-md-4 col-lg-3 column full-height bordered scrollable">
+        <div class="col-sm-5 col-md-4 col-lg-4 column full-height bordered scrollable">
           <div class="visible-xs-block">
             <span class="btn-text">Database</span>
             <model-control-menu :items="items" :models="models"></model-control-menu>
@@ -56,7 +56,7 @@
           <search-list :items="items" :models="models" v-ref:search-list></search-list>
         </div>
 
-        <div class="col-sm-5 col-md-6 col-lg-7 column full-height scrollable">
+        <div class="col-sm-5 col-md-6 col-lg-6 column full-height scrollable">
           <div class="visible-xs-block">
             <span class="btn-text">Model details</span>
             <button class="btn btn-default pull-right" @click.stop="expandDetails">
