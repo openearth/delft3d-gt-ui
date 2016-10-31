@@ -1,0 +1,36 @@
+<template id="template-navbar">
+
+    <nav class="navbar navbar-default navbar-static-top" id="top-bar">
+
+      <div class="container-fluid">
+
+        <div class="navbar-header">
+
+          <a href="/" class="navbar-brand">
+            <img src="images/logo/delft3d-gt.svg" alt="logo"/> Delft3D Geological Tool
+          </a>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+
+        </div>
+
+        <div id="navbar" class="collapse navbar-collapse">
+
+          <ul class="nav navbar-nav navbar-left">
+            <li :class="{'active': $route.path === '/'}"><a href="#" title="Create scenario">Database</a></li>
+            <li :class="{'active': $route.path === '/scenarios/create'}"><a v-link="{ path: '/scenarios/create'}" title="Create scenario">Scenario builder</a></li>
+          </ul>
+
+          <user-details></user-details>
+
+        </div>
+
+      </div>
+
+    </nav>
+
+</template>

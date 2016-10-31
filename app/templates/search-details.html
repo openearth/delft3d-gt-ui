@@ -1,154 +1,89 @@
 <template id="template-search-details">
 
   <div class="search-details">
-    <div>
-      <form v-on:change="startSearch" v-on:input="startSearch">
+    <!-- disable if we don't have a searchTemplate -->
+    <div v-if="searchTemplate">
+      <form
+         @change="search"
+         @input="search"
+         >
+
         <div class="panel-group" id="run-accordion" role="tablist" aria-multiselectable="true">
-          <div class="panel panel-default">
 
-            <div class="panel-collapse" role="tabpanel">
-
-              <div class="form-group domain-search-boxes">
-                <label for="options">Search domain:</label>
-
-                <!-- break because of the label hack below -->
-                <div class="form-group">
-
-                  <div class="domain-selection-box">
-                    <input type="checkbox" value="private"  v-model="shared"  id="domain-private"  checked="checked"/>
-                    <label for="domain-private" class="domain-private"><span>Private</span></label>
-                  </div>
-
-                  <div class="domain-selection-box">
-                    <input type="checkbox" value="company" v-model="shared" id="domain-company"   checked="checked"/>
-                    <label for="domain-company" class="domain-company"><span>Company</span></label>
-                  </div>
-
-                  <div class="domain-selection-box">
-                    <input type="checkbox" value="public" v-model="shared" id="domain-public"  checked="checked" />
-                    <label for="domain-public" class="domain-public"><span>Public</span></label>
-                  </div>
-
-                </div>
-              </div>
-
-              <div class="form-group clear-left">
-                <label for="search">Search on name:</label>
-                <div class="input-group">
-                  <input type="text" class="form-control" id="search" placeholder="Type to search..." v-model="search">
-                  <span class="input-group-btn">
-                    <button class="btn btn-default button-empty-input-field" type="button">
-                      <i class="fa fa-times" aria-hidden="true"></i>
-                    </button>
-                  </span>
-                </div>
-              </div>
-
-              <!-- label search is hidden for now, as long a we do not support it.
-                   <div class="form-group clear-left">
-                     <label for="text">Labels:</label>
-                     <div class="input-group stylish-input-group">
-                       <input type="text" class="form-control" id="text" placeholder="Type to seach for labels..." v-model="text">
-                       <span class="input-group-addon">
-                         <button class="button-empty-input-field" type="button">
-                           <span class="glyphicon glyphicon-remove"></span>
-                         </button>
-                       </span>
-                     </div>
-                   </div>
-                   -->
-
-              <!-- date search is hidden for now, as long a we do not support it.
-                   <div class="form-group">
-                     <label for="begin-date">Search period:</label>
-
-                     <div>
-                       <div class="input-group stylish-input-group search-date-input" >
-                         <input type="date" name="begin-date" value="" class="form-control" v-model="endDate" maxlength="10" placeholder="dd-mm-yyyy" />
-                         <span class="input-group-addon">
-                           <button class="button-empty-input-field" type="button">
-                             <span class="glyphicon glyphicon-remove"></span>
-                           </button>
-                         </span>
-                       </div>
-
-                       <div class="search-date-label">until</div>
-
-
-                       <div class="input-group stylish-input-group search-date-input" >
-                         <input type="date" name="end-date" value="" class="form-control" v-model="startDate" maxlength="10" placeholder="dd-mm-yyyy" />
-                         <span class="input-group-addon">
-                           <button class="button-empty-input-field" type="button">
-                             <span class="glyphicon glyphicon-remove"></span>
-                           </button>
-                         </span>
-                       </div>
-                     </div>
-                   </div>
-                   -->
-
-              <!-- Templates disabled as we do not yet support it
-              <div class="form-group">
-                <label for="template">Template</label>
-                <select class="select-picker form-control" multiple id="template" v-model="selectedTemplates" data-selected-text-format="count > 3" data-actions-box="true">
-                  <option v-for="template in templates" selected>{{ template.name }}</option>
-                </select>
-              </div>
-              -->
-
-
-
-
+          <div class="form-group clear-left">
+            <div class="input-group">
+              <input type="text" class="form-control" id="search" placeholder="Search name..." v-model="searchText">
+              <span class="input-group-btn">
+                <button class="btn btn-default button-empty-input-field" type="button">
+                  <i class="fa fa-times" aria-hidden="true"></i>
+                </button>
+              </span>
             </div>
+          </div>
 
-
-
-
+          <div class="form-group">
+            <!-- break because of the label hack below -->
+            <select
+               v-model="selectedDomains"
+               id="domain"
+               class="select-picker form-control"
+               title="Choose publication domain..."
+               multiple
+               data-selected-text-format="count > 3"
+               data-actions-box="true">
+              <option
+                 data-content="<i class='fa fa-fw fa-lock aria-hidden='true'></i> Private">
+                private
+              </option>
+              <option
+                 data-content="<i class='fa fa-fw fa-users' aria-hidden='true'></i> Company">
+                company
+              </option>
+              <option
+                 data-content="<i class='fa fa-fw fa-globe' aria-hidden='true'></i> Public">
+                public
+              </option>
+            </select>
           </div>
 
           <!-- Dynamically generated HTML using incoming template from API -->
 
-
-
+          <div class="form-group">
+            <!-- break because of the label hack below -->
+            <select v-model="selectedUsers" id="user" class="select-picker form-control" title="Choose user..." multiple data-selected-text-format="count > 3">
+              <option v-for="user in users" value="{{user.id}}">{{user.last_name}}, {{user.first_name}}</option>
+            </select>
+          </div>
 
           <!-- Variables -->
 
-          <div v-for="section in searchTemplates.sections" v-show="searchTemplates !== undefined">
+          <div v-for="section in searchTemplate.sections" v-show="searchTemplate">
 
             <div class="panel panel-default panel-search">
-              <div class="panel-heading list-group-item" role="tab" >
-                <a role="button" class="section-collapse-link" data-toggle="collapse" data-parent="#template-{{$index}}" href="#template-{{$index}}" aria-expanded="true" aria-controls="template-collapse">
-                  <h3 class="panel-title"><span class="glyphicon glyphicon-triangle-right"></span> {{section.name | uppercase }}</h3>
-                </a>
 
-                <div class="panel-collapse collapse" role="tabpanel" aria-labelledby="template-{{$index}}" id="template-{{$index}}">
+              <div class="panel-heading panel-collapse-header" data-toggle="collapse" data-parent="#template-{{$index}}" href="#template-{{$index}}" aria-expanded="true" aria-controls="template-collapse">
+                {{section.name}}
+              </div>
 
-                  <div class="form-group" v-for="variable in section.variables">
-                    <label class="control-label" for="{{variable.id}}">{{ variable.name }}: <span v-if="variable.units" >({{ variable.units }})</span></label>
+              <div class="panel-body panel-collapse collapse" role="tabpanel" aria-labelledby="template-{{$index}}" id="template-{{$index}}">
 
+                <div v-for="variable in section.variables">
 
-                    <div :class="{slider: variable.type === 'slider'}">
-                      <!-- two types of input for now: textarea and other -->
-                      <!-- other first -->
-                      <template v-if="variable.type !== 'textarea'">
+                  <template v-if="variable.name !== 'Name'">
 
-                        <template v-if="variable.type === 'slider'">
-                          <div>
-                            <input
-                               type="text"
-                               class="ion-range"
-                               id="{{ variable.id }}"
-                               data-min="{{ variable.validators.min }}"
-                               data-max="{{ variable.validators.max }}"
-                               data-type="double"
-                               v-model="selectedParameters[variable.id]"
-                               />
-                          </div>
-                        </template>
+                    <div class="form-group">
 
-                        <!-- the 0.01 makes the floating point values work -->
-                        <template v-if="variable.type === 'numeric'">
-                          <div>
+                      <!-- Name should be excluded: already included above -->
+                      <label class="control-label" for="{{variable.id}}">{{ variable.name }}: <span v-if="variable.units" >({{ variable.units }})</span></label>
+
+                      <div v-bind:class="{ numeric: variable.type === 'numeric' }">
+                        <!-- two types of input for now: textarea and other -->
+
+                        <!-- other first -->
+                        <template v-if="variable.type !== 'textarea'">
+
+                          <!-- the 0.01 makes the floating point values work -->
+                          <template v-if="variable.type === 'numeric'">
                             <input
                                type="text"
                                class="ion-range"
@@ -159,70 +94,118 @@
                                data-type="double"
                                v-model="selectedParameters[variable.id]"
                                />
-                          </div>
-                        </template>
+                          </template>
 
-                        <template v-if="variable.type !== 'numeric' && variable.type !== 'slider' && variable.type !== 'select'">
+                          <template v-if="variable.type === 'select' && !variable.factor">
+                            <div class="form-group">
+                              <select class="select-picker form-control" multiple
+                                      id="{{ variable.id }}"
+                                      v-model="selectedParameters[variable.id]"
+                                      data-selected-text-format="count > 3" data-actions-box="true"
+                                      >
+                                <option
+                                   v-for="option in variable.options"
+                                   v-bind:value="option.text"
+                                   >
+                                  {{ option.text }}
+                                </option>
+                              </select>
+                            </div>
+                          </template>
+
+                          <template v-if="variable.type !== 'numeric' && variable.type !== 'select'">
                             <div class="input-group">
-                            <input
-                               type="{{ variable.type }}"
-                               class="form-control"
-                               id="{{ variable.id }}"
-                               value=""
-                               v-model="selectedParameters[variable.id]"
-                               />
+                              <input
+                                 type="{{ variable.type }}"
+                                 class="form-control"
+                                 id="{{ variable.id }}"
+                                 value=""
+                                 v-model="selectedParameters[variable.id]"
+                                 />
                               <span class="input-group-btn">
                                 <button class="btn btn-default button-empty-input-field" type="button">
                                   <i class="fa fa-times" aria-hidden="true"></i>
                                 </button>
                               </span>
-                          </div>
-                        </template>
-
-                        <template v-if="variable.type === 'select' && !variable.factor">
-                          <div class="form-group">
-                            <select class="select-picker form-control" multiple
-                                    id="{{ variable.id }}"
-                                    v-model="selectedParameters[variable.id]"
-                                    data-selected-text-format="count > 3" data-actions-box="true"
-                                    >
-                              <option
-                                 v-for="option in variable.options"
-                                 v-bind:value="option.text"
-                                 selected="selected"
-
-                                 >
-                                {{ option.text }}
-                              </option>
-                            </select>
-                          </div>
-
+                            </div>
+                          </template>
 
                         </template>
 
-                      </template>
-                      <!-- text area -->
-                      <template
-                         v-if="variable.type === 'textarea'">
-                        <textarea
-                           class="form-control"
-                           rows="3"
-                           v-model="selectedParameters[variable.id]"
+                        <!-- text area -->
+                        <template
+                           v-if="variable.type === 'textarea'">
+                          <textarea
+                             class="form-control"
+                             rows="3"
+                             v-model="selectedParameters[variable.id]"
 
-                           ></textarea>
-                      </template>
+                             ></textarea>
+                        </template>
+
+                      </div>
                     </div>
-
-                  </div>
-
+                  </template>
                 </div>
               </div>
             </div>
           </div>
+
+          <div class="panel panel-default panel-search">
+
+            <div class="panel-heading panel-collapse-header" data-toggle="collapse" data-parent="#template-postprocess" href="#template-postprocess" aria-expanded="true" aria-controls="template-collapse">
+              Post-processing output
+            </div>
+
+            <div class="panel-body panel-collapse collapse" role="tabpanel" aria-labelledby="template-postprocess" id="template-postprocess">
+
+              <div class="form-group">
+                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['ProDeltaD50']"> d50 for Prodelta</label>
+                <input type="text" id="ProDeltaD50" v-model="selectedPostProc['ProDeltaD50']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="1" data-type="double"/>
+              </div>
+              <div class="form-group">
+                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaFrontD50']"> d50 for Deltafront</label>
+                <input type="text" id="DeltaFrontD50" v-model="selectedPostProc['DeltaFrontD50']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="1" data-type="double"/>
+              </div>
+              <div class="form-group">
+                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaTopD50']"> d50 for DeltaTop</label>
+                <input type="text" id="DeltaTopD50" v-model="selectedPostProc['DeltaTopD50']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="1" data-type="double"/>
+              </div>
+              <div class="form-group">
+                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['ProDeltaD50sand']"> d50sand for Prodelta</label>
+                <input type="text" id="ProDeltaD50sand" v-model="selectedPostProc['ProDeltaD50sand']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="1" data-type="double"/>
+              </div>
+              <div class="form-group">
+                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaFrontD50sand']"> d50sand for Deltafront</label>
+                <input type="text" id="DeltaFrontD50sand" v-model="selectedPostProc['DeltaFrontD50sand']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="1" data-type="double"/>
+              </div>
+              <div class="form-group">
+                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaTopD50sand']"> d50sand for DeltaTop</label>
+                <input type="text" id="DeltaTopD50sand" v-model="selectedPostProc['DeltaTopD50sand']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="1" data-type="double"/>
+              </div>
+              <div class="form-group">
+                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['ProDeltasorting']"> sorting for Prodelta</label>
+                <input type="text" id="ProDeltasorting" v-model="selectedPostProc['ProDeltasorting']" class="ion-range" id="parameter1" data-step="0.1" data-min="0" data-max="10" data-type="double"/>
+              </div>
+              <div class="form-group">
+                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaFrontsorting']"> sorting for Deltafront</label>
+                <input type="text" id="DeltaFrontsorting" v-model="selectedPostProc['DeltaFrontsorting']" class="ion-range" id="parameter1" data-step="0.1" data-min="0" data-max="10" data-type="double"/>
+              </div>
+              <div class="form-group">
+                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaTopsorting']"> sorting for DeltaTop</label>
+                <input type="text" id="DeltaTopsorting" v-model="selectedPostProc['DeltaTopsorting']" class="ion-range" id="parameter1" data-step="0.1" data-min="0" data-max="10" data-type="double"/>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
       </form>
 
-
-      </div>
     </div>
+
+  </div>
 
 </template>

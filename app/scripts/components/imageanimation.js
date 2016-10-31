@@ -8,13 +8,13 @@ var exports = (function () {
 
     template: "#template-image-animation",
     props: {
-     model: {
-      type: Object,
-      default: function () {
-        return { };
+      model: {
+        type: Object,
+        default: function () {
+          return { };
+        }
       }
-    }
-   },
+    },
 
     data: function() {
       return {
@@ -53,7 +53,17 @@ var exports = (function () {
       animationIndex: {
         cache: false,
         get: function() {
-          return this.currentAnimationIndex;
+          var idx = 0;
+
+          // if we have frames this can be used
+          if (this.frameCount > 0) {
+            idx = Math.min(this.currentAnimationIndex, this.frameCount - 1);
+          } else {
+            // otherwise it should be the currentAnimationIndex
+            idx = this.currentAnimationIndex;
+          }
+          // TODO: why the double administration??
+          return idx;
         }
       },
 
@@ -67,7 +77,7 @@ var exports = (function () {
             var imgs = this.model.info[animationKey];
 
             if (imgs !== undefined) {
-              return this.model.fileurl + imgs.location + imgs.images[this.currentAnimationIndex];
+              return this.model.fileurl + imgs.location + imgs.images[this.animationIndex];
             }
           }
 
@@ -82,9 +92,9 @@ var exports = (function () {
         get: function() {
 
           var animationKey = this.currentAnimationKey;
-          var imgs = this.model.info[animationKey];
+          var imgs = _.get(this.model.info, animationKey);
 
-          if (imgs !== undefined) {
+          if (_.has(imgs, "images")) {
             return imgs.images.length;
           }
 
@@ -116,15 +126,12 @@ var exports = (function () {
           return;
         }
 
-
+        this.currentAnimationIndex = this.animationIndex;
         this.currentAnimationIndex--;
-
-        var imgs = this.model.info[this.currentAnimationKey];
-
 
         // Probably wrap with active key.
         if (this.currentAnimationIndex < 0) {
-          this.currentAnimationIndex = imgs.images.length - 1;
+          this.currentAnimationIndex = 0;
         }
       },
 
@@ -142,9 +149,7 @@ var exports = (function () {
 
           this.timerAnimation = -1;
         }
-
       },
-
       playImageFrame: function() {
         // Check if an animation key has been set. If not, we bail out.
         if (this.currentAnimationKey.length === 0) {

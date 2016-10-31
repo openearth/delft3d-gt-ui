@@ -1,0 +1,51 @@
+@import 'variables';
+
+.scenario-builder {
+  margin-top: -50px;
+  padding-top: 50px;
+  position: static;
+
+  img {
+    max-height: 768px;
+    max-width: 100%;
+  }
+
+  .bootstrap-tagsinput {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    width: 100%;
+  }
+
+  .btn {
+    margin-right: $padding;
+  }
+
+  .row {
+    padding-top: $padding;
+  }
+
+  .scrollable {
+    overflow-y: auto;
+  }
+
+  // some styling to align a text with a standard butotn.
+  .align-with-button {
+    padding: 8px 16px; // Extra pixel top and bottom for border on buttons
+   }
+
+  // DUMMY FEATURES
+
+  select,
+  option,
+  .input-group {
+    width: 100%;
+  }
+
+  [type='file'] {
+    display: inline-block;
+  }
+
+  .form-file-upload {
+    margin-top: $padding;
+  }
+}

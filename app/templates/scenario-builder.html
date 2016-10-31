@@ -1,34 +1,13 @@
 <template id="template-scenario-builder">
-  <div class="scenario-builder">
 
-    <!-- the grey toolbar for scenario builder -->
-    <nav class="navbar navbar-default navbar-static-top tool-bar" id="tool-bar">
-      <div class="container-fluid">
-        <div class="row" >
-          <div class="col-xs-12">
-            <div class="btn-toolbar">
-              <!-- mixed button and a tags will be fixed soon! -->
-              <button  type="button" class="btn btn-primary nav-bar-button default" id="scenario-submit" v-on:click="submitScenario" value="" v-bind:class="{ 'inputdisabled': !(totalRuns <= 20 && validForm) }" >
-                Submit
-              </button>
-
-              <a class="btn btn-primary pull-left nav-bar-button" v-link="{ path: '/' }">Cancel</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </nav>
+  <div class="scenario-builder full-height">
 
     <!-- User has to select a template first -->
 
-    <div class="container-fluid" id="below-tool-bar">
-      <div class="row">
-        <div class="col-sm-12">
-          <h2>Scenario builder</h2>
-        </div>
-      </div>
+    <div class="container-fluid full-height scrollable" id="below-tool-bar">
 
       <div class="row">
+
         <!-- 2 column layout, 1st column scenario properties -->
         <div class="col-sm-5">
           <!--  -->
@@ -39,6 +18,9 @@
                 <select class="combobox form-control" v-model="template"  id="select-template" :onchange="selectTemplate(template)">
                   <option v-for="template in availableTemplates" v-bind:value="template">
                     {{ template.name }}
+                  </option>
+                  <option value="" disabled>
+                    more templates will be added in the future...
                   </option>
                 </select>
               </div>
@@ -51,13 +33,54 @@
               <!-- the vue validator config, stores form validation result in validation -->
               <validator name="validation">
                 <form novalidate>
+
                   <div v-for="section in scenarioConfig.sections">
                     <div class="panel panel-default">
+
                       <div class="panel-heading">
                         <h3 class="panel-title">{{section.name}}</h3>
                       </div>
+
                       <div class="panel-body">
+
+                        <!-- ===== DUMMY FEATURES START ===== -->
+                        <template v-if="section.name === 'Simulation settings'">
+                          <div class="form-group">
+                            <label class="control-label" for="run-env">
+                              Run environment
+                              <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="Specifies where the simulations are hosted."></span>
+                            </label>
+                            <div class="input-group">
+                              <select
+                                class="form-control"
+                                id="run-env"
+                                >
+                                <option selected>Amazon</option>
+                                <option disabled>local (disabled: this feature will be added in future versions)</option>
+                              </select>
+                            </div>
+                          </div>
+
+                          <div class="form-group">
+                            <label class="control-label" for="run-env">
+                              Delft3D Version
+                              <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="Specifies the Delft3D version used for simulation."></span>
+                            </label>
+                            <div class="input-group">
+                              <select
+                                class="form-control"
+                                id="run-env"
+                                >
+                                <option selected>Deltares, FLOW2D3D Version 6.02.07.6118</option>
+                                <option disabled>Deltares, Delft3D Flexible Mesh Suite (disabled: this feature will be added in future versions)</option>
+                              </select>
+                            </div>
+                          </div>
+                        </template>
+                        <!-- =====  DUMMY FEATURES END  ===== -->
+
                         <div class="form-group" v-for="variable in section.variables" v-bind:class="{'has-error': $validation[getId(variable)] && !$validation[getId(variable)].valid}">
+
                           <label class="control-label" for="{{variable.id}}">
                             {{ variable.name }}
                             <!-- TODO: get rid of this space -->
@@ -72,129 +95,149 @@
                               {<span v-for="(i, option) in variable.options">{{ option.text}}<span v-if="i < variable.options.length - 1">, </span></span>}
                             </span>
                           </label>
+
                           <div class="input-group">
                             <!-- numeric, text, semver or factor are inputs-->
-                            <template v-if="['numeric', 'text', 'semver'].includes(variable.type) || variable.factor">
+                            <template v-if="isInput(variable)">
                               <input
-                                     type="{{ variable.type }}"
-                                     class="form-control"
-                                     id="{{ variable.id }}"
-                                     :data-role="variable.factor ? 'tagsinput' : ''"
-                                     v-model="variable.value"
-                                     :disabled="variable.disabled"
-                                     :field="getId(variable)"
-                                     v-validate="variable.validators"
-                                     />
+                              type="{{ variable.type }}"
+                              class="form-control"
+                              id="{{ variable.id }}"
+                              :data-role="variable.factor ? 'tagsinput' : ''"
+                              v-model="variable.value"
+                              :disabled="variable.disabled"
+                              :field="getId(variable)"
+                              v-validate="variable.validators"
+                              />
                             </template>
                             <!-- select if not form -->
                             <template v-if="variable.type === 'select' && !variable.factor">
                               <select
-                                     class="form-control"
-                                     id="{{ variable.id }}"
-                                     v-model="variable.value"
-                                     :field="getId(variable)"
-                                     v-validate="variable.validators"
-                                     >
+                                class="form-control"
+                                id="{{ variable.id }}"
+                                v-model="variable.value"
+                                :field="getId(variable)"
+                                v-validate="variable.validators"
+                                >
                                 <option
-                                   v-for="(i, option) in variable.options"
-                                   v-bind:value="option.value"
-                                   >
+                                  v-for="(i, option) in variable.options"
+                                  v-bind:value="option.value"
+                                  >
                                   {{ option.text }}
                                 </option>
                               </select>
                             </template>
                             <!-- text area -->
                             <template
-                               v-if="variable.type === 'textarea'"
-                               >
+                              v-if="variable.type === 'textarea'"
+                              >
                               <textarea
-                                 class="form-control"
-                                 rows="3"
-                                 :disabled="variable.disabled"
-                                 :field="getId(variable)"
-                                 v-validate="variable.validators"
-                                 >{{ variable.value }}</textarea>
+                              class="form-control"
+                              rows="3"
+                              :disabled="variable.disabled"
+                              :field="getId(variable)"
+                              v-validate="variable.validators"
+                              >{{ variable.value }}</textarea>
                             </template>
                             <!-- if we add this to 1 we need to add it to all, bug in bootstrap -->
                             <span class="input-group-addon" >
                               {{ variable.units || '-' }}
                             </span>
-
                           </div>
+
                           <!-- TODO: replace this part by messages -->
                           <div v-if="$validation[getId(variable)]">
                             <p  v-if="$validation[getId(variable)].required"
-                                class="help-block has-error">
+                              class="help-block has-error">
                               This field cannot be left empty.
                             </p>
                             <template  v-if="$validation[getId(variable)].min
-                                             && !$validation[getId(variable)].required
-                                             && variable.type === 'numeric'">
+                              && !$validation[getId(variable)].required
+                              && variable.type === 'numeric'">
                               <template
-                                 v-for="input in variable.value.split(',')">
+                                v-for="input in variable.value.split(',')">
                                 <p v-if="!isNaN(input) && input < variable.validators.min"
-                                   class="help-block has-error">
+                                  class="help-block has-error">
                                   Entered value "{{ input }}" is less than the minimum value "{{ variable.validators.min }}".
                                 </p>
                               </template>
                             </template>
                             <template  v-if="$validation[getId(variable)].max
-                                             && !$validation[getId(variable)].required
-                                             && variable.type === 'numeric'">
+                              && !$validation[getId(variable)].required
+                              && variable.type === 'numeric'">
                               <template
-                                 v-for="input in variable.value.split(',')">
+                                v-for="input in variable.value.split(',')">
                                 <p v-if="!isNaN(input) && input > variable.validators.max"
-                                   class="help-block has-error">
+                                  class="help-block has-error">
                                   Entered value "{{ input }}" is greater than the maximum value "{{ variable.validators.max }}".
                                 </p>
                               </template>
                             </template>
                             <template  v-if="$validation[getId(variable)]
-                                             && !$validation[getId(variable)].valid
-                                             && variable.type === 'numeric'">
+                              && !$validation[getId(variable)].valid
+                              && variable.type === 'numeric'">
                               <template
-                                 v-for="input in variable.value.split(',')">
+                                v-for="input in variable.value.split(',')">
                                 <p v-if="isNaN(input)"
-                                   class="help-block has-error">
+                                  class="help-block has-error">
                                   "{{ input }}" is not a number.
                                 </p>
                               </template>
                             </template>
                           </div>
-                        </div>
-
-                      </div>
-                    </div>
 
 
-                  </div>
+                          <!-- ===== DUMMY FEATURES START ===== -->
+                          <div class="form-file-upload" v-if="variable.name === 'Tidal amplitude'">
+                            <p class="help-block">Import tidal components <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="Uploading of tidal components is disabled. This feature will be added in future versions."></span>: <input type="file" id="exampleInputFile" class="" disabled></p>
+                          </div>
+                          <div class="form-file-upload" v-if="variable.name === 'River discharge'">
+                            <p class="help-block">Import time series <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="Uploading of time series is disabled. This feature will be added in future versions."></span>: <input type="file" id="exampleInputFile" class="" disabled></p>
+                          </div>
+                          <div class="form-file-upload" v-if="variable.name === 'Sediment classes'">
+                            <p class="help-block">Import spacially varying field <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="Uploading of a spacially varying field is disabled. This feature will be added in future versions."></span>: <input type="file" id="exampleInputFile" class="" disabled></p>
+                          </div>
+                          <!-- =====  DUMMY FEATURES END  ===== -->
+
+                        </div> <!-- .form-group -->
+                      </div> <!-- .panel-body -->
+                    </div> <!-- .panel -->
+
+
+                  </div> <!-- .section -->
                 </form>
-                <!-- <pre> -->
-                <!--   {{ $validation | json }} -->
-                <!-- </pre> -->
 
               </validator>
-            </div>
 
 
-            <!-- expected runs indicator. It becomes a different color if the totalRuns exceed 20 -->
-            <div class="row" >
-              <div class="col-sm-12">
-                <div class="alert alert-info" v-bind:class="{ 'alert-warning': totalRuns > 20}" role="alert">
-                  <p class="lead">Expected runs: <strong>{{totalRuns}}</strong></p>
-                  <p v-if="totalRuns > 20">
-                    At the moment you cannot submit more than 20 runs in one scenario.
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  Number of runs: <strong>{{totalRuns}}</strong>
+                  <p v-if="totalRuns > 20" class="text-warning">
+                    You cannot submit more than 20 runs in one scenario.
                   </p>
+                  <div class="pull-right">
+                  <a class="btn btn-default nav-bar-button" v-link="{ path: '/' }">Cancel</a>
+                  <button
+                     type="button"
+                     class="btn btn-primary nav-bar-button default"
+                     id="scenario-submit"
+                     @click="submitScenario"
+                     value=""
+                     :class="{ 'disabled': !(totalRuns <= 20 && validForm) }" >
+                    Submit
+                  </button>
+                  </div>
 
                 </div>
+
               </div>
             </div>
 
           </div>
 
-
-
         </div>
+
 
 
         <div class="col-sm-7">
@@ -218,7 +261,7 @@
                 <h3 class="panel-title">Schematic</h3>
               </div>
               <!-- template details -->
-              <div class="panel-body  text-center">
+              <div class="panel-body text-center">
                 <img src="images/schematic.svg" class="scenariobuilder-schematic" />
               </div>
             </div>

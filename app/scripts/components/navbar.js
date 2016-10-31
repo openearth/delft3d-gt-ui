@@ -1,19 +1,16 @@
-/* global Vue, store */
+/* global Vue */
+
 var exports = (function () {
   "use strict";
+  // Our alert message component
+  var NavBar = Vue.component("navigation-bar", {
 
-  var UserDetails = Vue.component("user-details", {
+    template: "#template-navbar"
 
-    template: "#template-user-details",
-    data: function() {
-      return {
-        sharedState: store.state
-      };
-    }
   });
 
   return {
-    UserDetails: UserDetails
+    NavBar: NavBar
   };
 
 }());

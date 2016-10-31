@@ -1,0 +1,29 @@
+@import 'variables';
+
+.navbar {
+  margin-bottom: 0;  // override default bootstrap value
+
+  img {
+    float: left;
+    height: 51px;
+    margin: -15px 15px 15px -15px;
+  }
+
+  &.navbar-default .active > a,
+  &.navbar-default .active > a:hover,
+  &.navbar-default .active > a:focus {
+    background: $col-bw-4;
+  }
+
+  .navbar-brand {
+    font-size: 1em;
+  }
+}
+
+@media (min-width: $screen-xs-sm) {
+  .navbar {
+    a.navbar-brand {
+      font-size: 18px;
+    }
+  }
+}
