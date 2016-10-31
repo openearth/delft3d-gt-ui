@@ -71,8 +71,8 @@
 
             <button type="button" class="btn btn-labeled btn-spaced-right"  id="simulation-control-start"
                     v-on:click="startModel"
-                    :class="[(isReadOnly || !(activeModel.data.state === 'Idle: waiting for user input' || activeModel.data.state === 'Finished')) ? 'disabled': 'btn-success']"
-                    :disabled="(isReadOnly || !(activeModel.data.state === 'Idle: waiting for user input' || activeModel.data.state === 'Finished'))">
+                    :class="[(isReadOnly || !(activeModel.data.state === 'Idle: waiting for user input')) ? 'disabled': 'btn-success']"
+                    :disabled="(isReadOnly || !(activeModel.data.state === 'Idle: waiting for user input'))">
               <span class="btn-label"><i class="fa fa-fw fa-check" aria-hidden="true"></i></span>
               Start
             </button>
