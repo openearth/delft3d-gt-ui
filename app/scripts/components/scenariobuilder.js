@@ -242,8 +242,8 @@ var exports = (function() {
           // register event for closing tooltips when clicking anywhere in the body
           $("body").click(function (evt) {
             // clicking the tooltip element also triggers a click event on accompanying input or select elements, hence the additional tagName check
-            if (evt.target.getAttribute('data-toggle') === null && evt.target.tagName !== 'INPUT' && evt.target.tagName !== 'SELECT') {
-              $("[data-toggle='tooltip']").tooltip('hide');
+            if (evt.target.getAttribute("data-toggle") === null && evt.target.tagName !== "INPUT" && evt.target.tagName !== "SELECT") {
+              $("[data-toggle='tooltip']").tooltip("hide");
             }
           });
         }
