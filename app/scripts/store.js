@@ -10,9 +10,13 @@ var exports = (function() {
       modelContainers: [],
       models: [],
       params: [],
+      reqModel: undefined,
+      reqScenario: undefined,
+      reqUser: undefined,
       scenarioContainers: [],
       scenarios: [],
       updateInterval: 2000,
+      updating: false,
       user: {id: -1,
         /*eslint-disable camelcase*/
         first_name: "Anonymous", last_name: "User"}
@@ -31,6 +35,11 @@ var exports = (function() {
     },
 
     update: function () {
+      if(this.state.updating) {
+        return;
+      }
+
+      this.state.updating = true;
       Promise.all([
         this.fetchModels(),
         this.fetchScenarios()
@@ -39,11 +48,13 @@ var exports = (function() {
         this.state.models = jsons[0];
         this.state.scenarios = jsons[1];
         this.updateContainers();
+        this.state.updating = false;
       })
       .catch(() => {
         if (this.state.failedUpdate !== null) {
           this.state.failedUpdate();
         }
+        this.state.updating = false;
       });
     },
 
@@ -57,20 +68,12 @@ var exports = (function() {
 
     // ================================ API FETCH CALLS
 
-    fetchUser: function () {
-      return new Promise((resolve, reject) => {
-        $.ajax({url: "/api/v1/users/me/", data: this.state.params, traditional: true, dataType: "json"})
-          .done(function(json) {
-            resolve(json[0]);
-          })
-          .fail(function(error) {
-            reject(error);
-          });
-      });
-    },
     fetchModels: function () {
+      if (this.state.reqModel !== undefined) {
+        this.state.reqModel.abort();
+      }
       return new Promise((resolve, reject) => {
-        $.ajax({url: "/api/v1/scenes/", data: this.state.params, traditional: true, dataType: "json"})
+        this.state.reqModel = $.ajax({url: "/api/v1/scenes/", data: this.state.params, traditional: true, dataType: "json"})
           .done(function(json) {
             resolve(json);
           })
@@ -80,10 +83,27 @@ var exports = (function() {
       });
     },
     fetchScenarios: function () {
+      if (this.state.reqScenario !== undefined) {
+        this.state.reqScenario.abort();
+      }
       return new Promise((resolve, reject) => {
-        $.ajax({url: "/api/v1/scenarios/", data: this.state.params, traditional: true, dataType: "json"})
+        this.state.reqScenario = $.ajax({url: "/api/v1/scenarios/", data: this.state.params, traditional: true, dataType: "json"})
           .done(function(json) {
             resolve(json);
+          })
+          .fail(function(error) {
+            reject(error);
+          });
+      });
+    },
+    fetchUser: function () {
+      if (this.state.reqUser !== undefined) {
+        this.state.reqUser.abort();
+      }
+      return new Promise((resolve, reject) => {
+        this.state.reqUser = $.ajax({url: "/api/v1/users/me/", data: this.state.params, traditional: true, dataType: "json"})
+          .done(function(json) {
+            resolve(json[0]);
           })
           .fail(function(error) {
             reject(error);
