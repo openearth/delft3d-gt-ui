@@ -14,6 +14,11 @@ var exports = (function () {
         selectedTemplates: [],
         selectedDomains: [],
 
+        createdAfter: "",
+        createdBefore: "",
+        startedAfter: "",
+        startedBefore: "",
+
         activatedPostProc: {},
         selectedPostProc: {},
 
@@ -176,12 +181,18 @@ var exports = (function () {
       buildParams: function() {
         // for now we just copy everything
 
+        /*eslint-disable camelcase*/
         var params = {
+          created_after: this.createdAfter,
+          created_before: this.createdBefore,
+          search: this.searchText,
           shared: this.selectedDomains,
-          users: this.selectedUsers,
+          started_after: this.startedAfter,
+          started_before: this.startedBefore,
           template: this.selectedTemplates,
-          search: this.searchText
+          users: this.selectedUsers
         };
+        /*eslint-enable camelcase*/
 
         // serialize parameters corresponding to https://publicwiki.deltares.nl/display/Delft3DGT/Search
         var paramArray = _.map(
@@ -230,11 +241,16 @@ var exports = (function () {
     // If the clear button event is fired, perform search automatic.
     events: {
       "clearSearch": function () {
+        this.createdAfter = "";
+        this.createdBefore = "";
+        this.startedAfter = "";
+        this.startedBefore = "";
         this.searchText = "";
         this.selectedDomains = [];
-        this.selectedUsers = [];
         this.selectedParameters = {};
         this.selectedTemplates = [];
+        this.selectedUsers = [];
+
         this.activatedPostProc = {
           "ProDeltaD50": false,
           "DeltaFrontD50": false,
@@ -246,6 +262,7 @@ var exports = (function () {
           "DeltaFrontsorting": false,
           "DeltaTopsorting": false
         };
+
         this.selectedPostProc = {
           "ProDeltaD50": "0;1",
           "DeltaFrontD50": "0;1",

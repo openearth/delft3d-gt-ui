@@ -22,7 +22,6 @@
           </div>
 
           <div class="form-group">
-            <!-- break because of the label hack below -->
             <select
                v-model="selectedDomains"
                id="domain"
@@ -46,14 +45,37 @@
             </select>
           </div>
 
-          <!-- Dynamically generated HTML using incoming template from API -->
-
           <div class="form-group">
-            <!-- break because of the label hack below -->
             <select v-model="selectedUsers" id="user" class="select-picker form-control" title="Choose user..." multiple data-selected-text-format="count > 3">
               <option v-for="user in users" value="{{user.id}}">{{user.last_name}}, {{user.first_name}}</option>
             </select>
           </div>
+
+          <div class="panel panel-default panel-search">
+            <div class="panel-heading panel-collapse-header" data-toggle="collapse" data-parent="#template-postprocess" href="#template-postprocess" aria-expanded="true" aria-controls="template-collapse">
+              Dates &amp; Times
+            </div>
+            <div class="panel-body panel-collapse collapse" role="tabpanel" aria-labelledby="template-postprocess" id="template-postprocess">
+              <div class="form-group">
+                <label class="control-label" >Created after</label>
+                <input type="datetime-local" class="form-control" id="created_after" placeholder="" v-model="createdAfter">
+              </div>
+              <div class="form-group">
+                <label class="control-label" >Created before</label>
+                <input type="datetime-local" class="form-control" id="created_before" placeholder="" v-model="createdBefore">
+              </div>
+              <div class="form-group">
+                <label class="control-label" >Started after</label>
+                <input type="datetime-local" class="form-control" id="started_after" placeholder="" v-model="startedAfter">
+              </div>
+              <div class="form-group">
+                <label class="control-label" >Started before</label>
+                <input type="datetime-local" class="form-control" id="started_before" placeholder="" v-model="startedBefore">
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamically generated HTML using incoming template from API -->
 
           <!-- Variables -->
 
