@@ -233,11 +233,18 @@ var exports = (function() {
       updateAfterTick: function() {
 
         if ($("[data-toggle='tooltip']").tooltip !== undefined) {
-
           $("[data-toggle='tooltip']").tooltip({
             html: true,
-            // hover activation annoys some people
+            // do not user hover: we use clickable links in the tooltip
             trigger: "click"
+          });
+
+          // register event for closing tooltips when clicking anywhere else
+          $("html").click(function (evt) {
+            // clicking the tooltip element also triggers a click event on accompanying input or select elements, hence the additional tagName check
+            if (evt.target.getAttribute("data-toggle") === null && evt.target.tagName !== "INPUT" && evt.target.tagName !== "SELECT") {
+              $("[data-toggle='tooltip']").tooltip("hide");
+            }
           });
         }
 
@@ -322,7 +329,7 @@ var exports = (function() {
       submitScenario: function() {
 
         var parameters = {},
-            name = "";
+          name = "";
 
         // map each variable in each section to parameters
         _.forEach(this.scenarioConfig.sections, function(section) {
