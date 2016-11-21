@@ -40,6 +40,21 @@ var exports = (function () {
 
           return niceStrings[this.activeModel.data.shared];
         }
+      },
+      delft3DVersion: {
+        cache: false,
+        get: function () {
+          return this.activeModel.data.versions.delft3d.delft3d_version;
+        }
+      },
+      reposUrl: {
+        cache: false,
+        get: function () {
+          if (this.activeModel.data.versions.preprocess.REPOS_URL !== undefined) {
+            return this.activeModel.data.versions.preprocess.REPOS_URL + "?p=" + this.activeModel.data.versions.preprocess.SVN_REV;
+          }
+          return "";
+        }
       }
     },
     methods: {
