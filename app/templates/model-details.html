@@ -94,7 +94,7 @@
             </button>
             <button type="button"
                     class="btn btn-labeled btn-spaced-right"
-                    v-on:click="removeModel(model)"
+                    v-on:click="removeModel"
                     :class="[ (isReadOnly) ? 'disabled' : 'btn-danger']"
                     :disabled="isReadOnly">
               <span class="btn-label"><i class="fa fa-fw fa-times" aria-hidden="true"></i></span>
@@ -255,6 +255,18 @@
       </div>
 
       <!-- MODALS -->
+      <confirm-dialog dialog-id="reset" confirm-button-title="Reset">
+        <template slot="title">
+          Reset model '{{ activeModel.data.name }}'?
+        </template>
+        <template slot="body">
+          <p>Are you sure you want to reset this model?</p>
+        </template>
+        <template slot="alert">
+          This action cannot be undone.
+        </template>
+      </confirm-dialog>
+
       <confirm-dialog dialog-id="publish" confirm-button-title="Publish">
         <template slot="title">
           Share model '{{ activeModel.data.name }}'?

@@ -92,13 +92,11 @@ var exports = (function () {
         store.publishModel(this.activeModel, level);
       },
       removeModel: function () {
-
         // Get a confirm dialog
         this.deleteDialog = getDialog(this, "confirm-dialog", "delete");
 
         this.deleteDialog.onConfirm = function() {
           store.deleteModel(this.activeModel);
-
           this.deleteDialog.hide();
         }.bind(this);
 
@@ -107,10 +105,21 @@ var exports = (function () {
 
         // Show the dialog:
         this.deleteDialog.show();
-
       },
       resetModel: function () {
-        store.resetModel(this.activeModel);
+        // Get a confirm dialog
+        this.resetDialog = getDialog(this, "confirm-dialog", "reset");
+
+        this.resetDialog.onConfirm = function() {
+          store.resetModel(this.activeModel);
+          this.resetDialog.hide();
+        }.bind(this);
+
+        // We also show an extra warning in the dialog, if user chooses to remove additional files.
+        this.resetDialog.showAlert(false);
+
+        // Show the dialog:
+        this.resetDialog.show();
       },
       startModel: function () {
         store.startModel(this.activeModel);
