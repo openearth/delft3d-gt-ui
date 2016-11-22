@@ -89,7 +89,19 @@ var exports = (function () {
         return false;
       },
       publishModel: function (level) {
-        store.publishModel(this.activeModel, level);
+        // Get a confirm dialog
+        this.deleteDialog = getDialog(this, "confirm-dialog", "publish");
+
+        this.deleteDialog.onConfirm = function() {
+          store.publishModel(this.activeModel, level);
+          this.deleteDialog.hide();
+        }.bind(this);
+
+        // We also show an extra warning in the dialog, if user chooses to remove additional files.
+        this.deleteDialog.showAlert(false);
+
+        // Show the dialog:
+        this.deleteDialog.show();
       },
       removeModel: function () {
         // Get a confirm dialog

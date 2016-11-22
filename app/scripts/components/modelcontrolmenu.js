@@ -33,16 +33,45 @@ var exports = (function () {
         this.collapseShow = !this.collapseShow;
       },
 
+      resetSelectedModels: function() {
+        // Get a confirm dialog
+        this.deleteDialog = getDialog(this, "confirm-dialog", "reset-runs");
+
+        this.deleteDialog.onConfirm = function() {
+          store.resetSelectedModels();
+
+          this.deleteDialog.hide();
+        }.bind(this);
+
+        // We also show an extra warning in the dialog, if user chooses to remove additional files.
+        this.deleteDialog.showAlert(false);
+
+        // Show the dialog:
+        this.deleteDialog.show();
+      },
+
       startSelectedModels: function() {
         store.startSelectedModels();
       },
 
       stopSelectedModels: function() {
-        store.stopSelectedModels();
+        // Get a confirm dialog
+        this.deleteDialog = getDialog(this, "confirm-dialog", "stop-runs");
+
+        this.deleteDialog.onConfirm = function() {
+          store.stopSelectedModels();
+
+          this.deleteDialog.hide();
+        }.bind(this);
+
+        // We also show an extra warning in the dialog, if user chooses to remove additional files.
+        this.deleteDialog.showAlert(false);
+
+        // Show the dialog:
+        this.deleteDialog.show();
       },
 
       deleteSelectedModels: function() {
-
         // Get a confirm dialog
         this.deleteDialog = getDialog(this, "confirm-dialog", "delete-runs");
 

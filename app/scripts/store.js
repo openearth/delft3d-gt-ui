@@ -364,6 +364,12 @@ var exports = (function() {
       return _.filter(this.state.modelContainers, ["selected", true]);
     },
 
+    resetSelectedModels: function () {
+      return Promise.all(
+        _.map(this.getSelectedModels(), this.resetModel.bind(this))
+      );
+    },
+
     startSelectedModels: function () {
       return Promise.all(
         _.map(this.getSelectedModels(), this.startModel.bind(this))
@@ -371,7 +377,6 @@ var exports = (function() {
     },
 
     stopSelectedModels: function () {
-      console.log("selected models", this.getSelectedModels());
       return Promise.all(
         _.map(this.getSelectedModels(), this.stopModel.bind(this))
       );
