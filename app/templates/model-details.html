@@ -37,27 +37,32 @@
 
           <hr>
 
+          {{ activeModel.colorClass() }}
+
           <dl class="dl-horizontal">
             <dt>Progress</dt>
             <dd>
               <div class="progress progress-incell">
-                <div class="progress-bar progress-bar-info"
-                     :class="{'progress-bar-striped active': isRunning}"
-                     role="progressbar"
-                     aria-valuenow="{{activeModel.data.progress}}"
-                     aria-valuemin="0"
-                     aria-valuemax="100"
-                     v-bind:style="{width: activeModel.data.progress + '%'}"
-                     data-toggle="tooltip"
-                     data-placement="top"
-                     title="Progress"
+                <div class="progress-bar"
+                  :class="[
+                    isRunning ? 'progress-bar-striped active' : '',
+                    'progress-bar-' + activeModel.colorClass()
+                  ]"
+                  role="progressbar"
+                  aria-valuenow="{{activeModel.data.progress}}"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  v-bind:style="{width: activeModel.data.progress + '%'}"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="Progress"
                 >
                   <span class="sr-only">{{activeModel.data.progress}}% Complete</span>
                   <span class="progress-type">{{activeModel.data.progress}}%</span>
                 </div>
               </div>
             </dd>
-            <dt>Status</dt><dd><span class="label label-default label-status">{{activeModel.data.state | capitalize }}</span></dd>
+            <dt>Status</dt><dd><span class="label label-status" :class="'label-' + activeModel.colorClass()">{{activeModel.data.state | capitalize }}</span></dd>
             <dt>Simulation output:</dt><dd>
               <a class="btn btn-default btn-xs" href="{{activeModel.data.fileurl}}" target="_blank" title="A link to the file server hosting all output files.">File Server</a>
               <a class="btn btn-default btn-xs" href="/thredds/catalog/files/{{activeModel.data.suid}}/simulation/catalog.html" target="_blank" title="A link to the THREDDS server hosting Delft3D NetCDF output, which allows querying via OPeNDAP.">THREDDS Data Server</a>
