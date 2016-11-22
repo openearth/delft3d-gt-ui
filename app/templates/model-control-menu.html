@@ -19,13 +19,13 @@
 
       <li :class="{disabled: numSelectedModels === 0 }">
         <a @click="startSelectedModels">
-          Start model<span v-if="numSelectedModels > 1">s</span>
+          <i class="fa fa-fw fa-play" aria-hidden="true"></i> Start model<span v-if="numSelectedModels > 1">s</span>
         </a>
       </li>
 
       <li :class="{disabled: numSelectedModels === 0 }">
         <a @click="stopSelectedModels">
-          Stop model<span v-if="numSelectedModels > 1">s</span>
+          <i class="fa fa-fw fa-stop" aria-hidden="true"></i> Stop model<span v-if="numSelectedModels > 1">s</span>
         </a>
       </li>
 
@@ -33,7 +33,7 @@
 
       <li :class="{disabled: numSelectedModels === 0 }">
         <a @click="deleteSelectedModels">
-          Delete model<span v-if="numSelectedModels > 1">s</span>
+          <i class="fa fa-fw fa-times" aria-hidden="true"></i> Delete model<span v-if="numSelectedModels > 1">s</span>
         </a>
       </li>
 

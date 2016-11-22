@@ -1103,6 +1103,36 @@
     });
 
 
+    it("Should be possible to reset a model", function(done) {
+      var id = 4;
+
+      nock("http://0.0.0.0")
+        .intercept("/api/v1/scenes/" + id + "/reset/", "OPTIONS")
+        .reply(200, function() {
+          return "Allow: GET, HEAD, PUT, DELETE, POST";
+        })
+      // Browsers (and jquery) expect the Access-Control-Allow-Origin header
+        .defaultReplyHeaders({"Access-Control-Allow-Origin": "*"})
+        .put("/api/v1/scenes/" + id + "/reset/")
+        .reply(200, function() {
+          return "{\"a\":" + id + "}";
+        });
+
+      global.store.resetModel({
+        id: id,
+        data: {state: null}
+      })
+        .then(function() {
+          // doesn't return anything, so nothing to check....
+          done();
+        })
+        .catch(function(e) {
+          console.log(e);
+          done(new Error(e));
+        });
+    });
+
+
     it("Should be possible to start a model", function(done) {
       var id = 4;
 

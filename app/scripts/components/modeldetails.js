@@ -28,6 +28,24 @@ var exports = (function () {
           return this.activeModel.data.shared !== "p";
         }
       },
+      isIdle: {
+        cache: false,
+        get: function () {
+          return this.activeModel.data.state === "Idle: waiting for user input";
+        }
+      },
+      isRunning: {
+        cache: false,
+        get: function () {
+          return this.activeModel.data.state === "Running simulation";
+        }
+      },
+      isFinished: {
+        cache: false,
+        get: function () {
+          return this.activeModel.data.state === "Finished";
+        }
+      },
       shareLevelText: {
         cache: false,
         get: function () {
@@ -90,6 +108,9 @@ var exports = (function () {
         // Show the dialog:
         this.deleteDialog.show();
 
+      },
+      resetModel: function () {
+        store.resetModel(this.activeModel);
       },
       startModel: function () {
         store.startModel(this.activeModel);
