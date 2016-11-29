@@ -46,6 +46,12 @@ var exports = (function () {
           return this.activeModel.data.state === "Finished";
         }
       },
+      isQueued: {
+        cache: false,
+        get: function () {
+          return this.activeModel.data.state === "Queued";
+        }
+      },
       shareLevelText: {
         cache: false,
         get: function () {

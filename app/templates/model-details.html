@@ -79,8 +79,8 @@
             <button type="button"
                     v-on:click="stopModel"
                     class="btn btn-labeled btn-spaced-right" id="simulation-control-stop"
-                    :class="[(isReadOnly || !isRunning) ? 'disabled' : 'btn-success']"
-                    :disabled="(isReadOnly || !isRunning)">
+                    :class="[(isReadOnly || (!isRunning && !isQueued)) ? 'disabled' : 'btn-success']"
+                    :disabled="(isReadOnly || (!isRunning && !isQueued))">
               <span class="btn-label"><i class="fa fa-fw fa-stop" aria-hidden="true"></i></span>
               Stop
             </button>
