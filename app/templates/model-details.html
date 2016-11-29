@@ -28,7 +28,7 @@
             <dd>
               <div class="progress progress-incell">
                 <div class="progress-bar progress-bar-info"
-                     :class="{'progress-bar-striped active': (activeModel.data.state == 'Running simulation')}"
+                     :class="{'progress-bar-striped active': isRunning}"
                      role="progressbar"
                      aria-valuenow="{{activeModel.data.progress}}"
                      aria-valuemin="0"
@@ -71,22 +71,30 @@
 
             <button type="button" class="btn btn-labeled btn-spaced-right"  id="simulation-control-start"
                     v-on:click="startModel"
-                    :class="[(isReadOnly || !(activeModel.data.state === 'Idle: waiting for user input')) ? 'disabled': 'btn-success']"
-                    :disabled="(isReadOnly || !(activeModel.data.state === 'Idle: waiting for user input'))">
-              <span class="btn-label"><i class="fa fa-fw fa-check" aria-hidden="true"></i></span>
+                    :class="[(isReadOnly || !isIdle) ? 'disabled' : 'btn-info']"
+                    :disabled="(isReadOnly || !isIdle)">
+              <span class="btn-label"><i class="fa fa-fw fa-play" aria-hidden="true"></i></span>
               Start
             </button>
             <button type="button"
                     v-on:click="stopModel"
                     class="btn btn-labeled btn-spaced-right" id="simulation-control-stop"
-                    :class="[(isReadOnly || !(activeModel.data.state === 'Running simulation')) ? 'disabled' : 'btn-warning' ]"
-                    :disabled="(isReadOnly || !(activeModel.data.state === 'Running simulation'))">
+                    :class="[(isReadOnly || !isRunning) ? 'disabled' : 'btn-success']"
+                    :disabled="(isReadOnly || !isRunning)">
               <span class="btn-label"><i class="fa fa-fw fa-stop" aria-hidden="true"></i></span>
               Stop
             </button>
             <button type="button"
+                    v-on:click="resetModel"
+                    class="btn btn-labeled btn-spaced-right" id="simulation-control-stop"
+                    :class="[(isReadOnly || !isFinished) ? 'disabled' : 'btn-warning']"
+                    :disabled="(isReadOnly || !isFinished)">
+              <span class="btn-label"><i class="fa fa-fw fa-fast-backward" aria-hidden="true"></i></span>
+              Reset
+            </button>
+            <button type="button"
                     class="btn btn-labeled btn-spaced-right"
-                    v-on:click="removeModel(model)"
+                    v-on:click="removeModel"
                     :class="[ (isReadOnly) ? 'disabled' : 'btn-danger']"
                     :disabled="isReadOnly">
               <span class="btn-label"><i class="fa fa-fw fa-times" aria-hidden="true"></i></span>
@@ -104,23 +112,23 @@
         </div>
         <div class="collapse">
           <div class="panel-body">
-            <p v-if="sharedState.user.id == activeModel.data.owner.id && activeModel.data.state == 'Finished'">
+            <p v-if="sharedState.user.id == activeModel.data.owner.id && isFinished">
               You can select who to share your results with:
             </p>
-            <p v-if="sharedState.user.id == activeModel.data.owner.id && activeModel.data.state != 'Finished'">
+            <p v-if="sharedState.user.id == activeModel.data.owner.id && !isFinished">
               When the run is finished, you can select who to share your results with:
             </p>
             <p v-if="sharedState.user.id != activeModel.data.owner.id">
               You cannot share runs owned by another user.
             </p>
             <button type="button" class="btn btn-labeled btn-default"
-                    :disabled="!(activeModel.data.state == 'Finished') || sharedState.user.id != activeModel.data.owner.id || activeModel.data.shared == 'c' ||  activeModel.data.shared == 'w'"
+                    :disabled="!isFinished || sharedState.user.id != activeModel.data.owner.id || activeModel.data.shared == 'c' ||  activeModel.data.shared == 'w'"
                     @click.stop="publishModel('company')"
                     >
               <i class="fa fa-group" aria-hidden="true"></i> Share with Company
             </button>
             <button type="button" class="btn btn-labeled btn-default"
-                    :disabled="!(activeModel.data.state == 'Finished') || sharedState.user.id != activeModel.data.owner.id || activeModel.data.shared == 'w'"
+                    :disabled="!isFinished || sharedState.user.id != activeModel.data.owner.id || activeModel.data.shared == 'w'"
                     @click.stop="publishModel('world')"
                     >
               <i class="fa fa-globe" aria-hidden="true"></i> Share with World
@@ -230,12 +238,12 @@
               <span class="form-control no-fixed-height">Media: generated output movies</span>
             </div>
 
-            <div class="form-group input-group" v-bind:class="{ 'inputdisabled': !(activeModel.data.state === 'Finished')}">
+            <div class="form-group input-group" v-bind:class="{ 'inputdisabled': !isFinished}">
               <span class="input-group-addon">
-                <input type="checkbox" class="downloadoption"  value="export_thirdparty" v-on:change="downloadOptionsChange()" v-bind:disabled="activeModel.data.state !== 'Finished'">
+                <input type="checkbox" class="downloadoption"  value="export_thirdparty" v-on:change="downloadOptionsChange()" v-bind:disabled="!isFinished">
               </span>
-              <span class="form-control no-fixed-height" v-bind:class="{ 'hidden': !(activeModel.data.state === 'Finished')}">Export: files for RMS / Petrel</span>
-              <span class="form-control no-fixed-height" v-bind:class="{ 'hidden': (activeModel.data.state === 'Finished')}">Export to RMS / Petrel (will be enabled when the run is 'Finished')</span>
+              <span class="form-control no-fixed-height" v-bind:class="{'hidden': !isFinished}">Export: files for RMS / Petrel</span>
+              <span class="form-control no-fixed-height" v-bind:class="{'hidden': isFinished}">Export to RMS / Petrel (will be enabled when the run is 'Finished')</span>
             </div>
 
             <button class="btn btn-primary" type="button"  id="download-submit" v-on:click="downloadFiles()" value="">
@@ -247,15 +255,21 @@
       </div>
 
       <!-- MODALS -->
-      <confirm-dialog dialog-id="publish" confirm-button-title="Publish">
+      <confirm-dialog dialog-id="reset" confirm-button-title="Reset">
         <template slot="title">
-          Share model '{{ activeModel.data.name }}'?
+          Reset model '{{ activeModel.data.name }}'?
         </template>
         <template slot="body">
-          <p>Are you sure you want to share this model as '{{ nextPublishLevel }}'?</p>
+          <p>Are you sure you want to reset this model? This action cannot be undone.</p>
         </template>
-        <template slot="alert">
-          This action cannot be undone.
+      </confirm-dialog>
+
+      <confirm-dialog dialog-id="publish" confirm-button-title="Publish">
+        <template slot="title">
+          Publish model '{{ activeModel.data.name }}'?
+        </template>
+        <template slot="body">
+          <p>Are you sure you want to publish this model? This action cannot be undone.</p>
         </template>
       </confirm-dialog>
 
@@ -264,10 +278,7 @@
           Remove model '{{ activeModel.data.name }}'?
         </template>
         <template slot="body">
-          <p>Are you sure you want to remove this model?</p>
-        </template>
-        <template slot="alert">
-          Additional files already generated by this models will also be deleted.
+          <p>Are you sure you want to remove this model? This action cannot be undone.</p>
         </template>
       </confirm-dialog>
 
@@ -276,10 +287,7 @@
           Stop model '{{ activeModel.data.name }}'?
         </template>
         <template slot="body">
-          <p>Are you sure you want to stop this model?</p>
-        </template>
-        <template slot="alert">
-		      You will need to restart the model if you want to continue the simulation
+          <p>Are you sure you want to stop this model? This action cannot be undone.</p>
         </template>
       </confirm-dialog>
 

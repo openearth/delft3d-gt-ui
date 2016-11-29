@@ -220,6 +220,22 @@ var exports = (function() {
       });
     },
 
+    resetModel: function (modelContainer) {
+      return new Promise((resolve, reject) => {
+        if (modelContainer === undefined || modelContainer.id === undefined) {
+          reject("No model id to reset");
+        }
+        modelContainer.data.state = "New";
+        $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/reset/", method: "PUT", traditional: true, dataType: "json"})
+          .done(function(data) {
+            resolve(data);
+          })
+          .fail(function(error) {
+            reject(error);
+          });
+      });
+    },
+
     startModel: function (modelContainer) {
       return new Promise((resolve, reject) => {
         if (modelContainer === undefined || modelContainer.id === undefined) {
@@ -348,6 +364,12 @@ var exports = (function() {
       return _.filter(this.state.modelContainers, ["selected", true]);
     },
 
+    resetSelectedModels: function () {
+      return Promise.all(
+        _.map(this.getSelectedModels(), this.resetModel.bind(this))
+      );
+    },
+
     startSelectedModels: function () {
       return Promise.all(
         _.map(this.getSelectedModels(), this.startModel.bind(this))
@@ -355,7 +377,6 @@ var exports = (function() {
     },
 
     stopSelectedModels: function () {
-      console.log("selected models", this.getSelectedModels());
       return Promise.all(
         _.map(this.getSelectedModels(), this.stopModel.bind(this))
       );
