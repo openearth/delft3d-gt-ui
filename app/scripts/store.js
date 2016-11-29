@@ -358,10 +358,10 @@ var exports = (function() {
     },
 
     colorClass: function () {
-      if (this.data.state == "Finished") {
+      if (this.data.state === "Finished") {
         return "success";
       }
-      if (this.data.state == "Idle: waiting for user input") {
+      if (this.data.state === "Idle: waiting for user input") {
         return "warning";
       }
       return "info";
