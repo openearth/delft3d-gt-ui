@@ -16,9 +16,23 @@
 
           <dl class="dl-horizontal">
             <dt>Owner of run</dt><dd><a href="mailto:{{activeModel.data.owner.email}}">{{ activeModel.data.owner.first_name }} {{ activeModel.data.owner.last_name }}</a> </dd>
-            <dt>Share level</dt><dd><span>{{ shareLevelText | capitalize }}</span></dd>
-            <dt>Run environment</dt><dd><span>Amazon</span></dd>
-            <dt>Delft3D Version</dt><dd><span>Deltares, FLOW2D3D Version 6.02.07.6118</span></dd>
+
+            <dt>Share level</dt>
+            <dd><span>{{ shareLevelText | capitalize }}</span></dd>
+
+            <dt>Run environment</dt>
+            <dd><span>Amazon</span></dd>
+
+            <dt>Python Scripts</dt><dd>
+              <a href="{{reposUrl}}" target="_blank" v-if="reposUrl">{{ reposUrl }}</a>
+              <span v-else>-</span>
+            </dd>
+
+            <dt>Delft3D Version</dt>
+            <dd>
+              <template v-if="delft3DVersion">{{ delft3DVersion }}</template>
+              <template v-else>-</template>
+            </dd>
           </dl>
 
           <hr>
@@ -27,23 +41,26 @@
             <dt>Progress</dt>
             <dd>
               <div class="progress progress-incell">
-                <div class="progress-bar progress-bar-info"
-                     :class="{'progress-bar-striped active': (activeModel.data.state == 'Running simulation')}"
-                     role="progressbar"
-                     aria-valuenow="{{activeModel.data.progress}}"
-                     aria-valuemin="0"
-                     aria-valuemax="100"
-                     v-bind:style="{width: activeModel.data.progress + '%'}"
-                     data-toggle="tooltip"
-                     data-placement="top"
-                     title="Progress"
+                <div class="progress-bar"
+                  :class="[
+                    isRunning ? 'progress-bar-striped active' : '',
+                    'progress-bar-' + activeModel.statusLevel()
+                  ]"
+                  role="progressbar"
+                  aria-valuenow="{{activeModel.data.progress}}"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  v-bind:style="{width: activeModel.data.progress + '%'}"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="Progress"
                 >
                   <span class="sr-only">{{activeModel.data.progress}}% Complete</span>
                   <span class="progress-type">{{activeModel.data.progress}}%</span>
                 </div>
               </div>
             </dd>
-            <dt>Status</dt><dd><span class="label label-default label-status">{{activeModel.data.state | capitalize }}</span></dd>
+            <dt>Status</dt><dd><span class="label label-status" :class="'label-' + activeModel.statusLevel()">{{activeModel.data.state | capitalize }}</span></dd>
             <dt>Simulation output:</dt><dd>
               <a class="btn btn-default btn-xs" href="{{activeModel.data.fileurl}}" target="_blank" title="A link to the file server hosting all output files.">File Server</a>
               <a class="btn btn-default btn-xs" href="/thredds/catalog/files/{{activeModel.data.suid}}/simulation/catalog.html" target="_blank" title="A link to the THREDDS server hosting Delft3D NetCDF output, which allows querying via OPeNDAP.">THREDDS Data Server</a>
@@ -71,22 +88,30 @@
 
             <button type="button" class="btn btn-labeled btn-spaced-right"  id="simulation-control-start"
                     v-on:click="startModel"
-                    :class="[(isReadOnly || !(activeModel.data.state === 'Idle: waiting for user input')) ? 'disabled': 'btn-success']"
-                    :disabled="(isReadOnly || !(activeModel.data.state === 'Idle: waiting for user input'))">
-              <span class="btn-label"><i class="fa fa-fw fa-check" aria-hidden="true"></i></span>
+                    :class="[(isReadOnly || !isIdle) ? 'disabled' : 'btn-info']"
+                    :disabled="(isReadOnly || !isIdle)">
+              <span class="btn-label"><i class="fa fa-fw fa-play" aria-hidden="true"></i></span>
               Start
             </button>
             <button type="button"
                     v-on:click="stopModel"
                     class="btn btn-labeled btn-spaced-right" id="simulation-control-stop"
-                    :class="[(isReadOnly || !(activeModel.data.state === 'Running simulation')) ? 'disabled' : 'btn-warning' ]"
-                    :disabled="(isReadOnly || !(activeModel.data.state === 'Running simulation'))">
+                    :class="[(isReadOnly || (!isRunning && !isQueued)) ? 'disabled' : 'btn-success']"
+                    :disabled="(isReadOnly || (!isRunning && !isQueued))">
               <span class="btn-label"><i class="fa fa-fw fa-stop" aria-hidden="true"></i></span>
               Stop
             </button>
             <button type="button"
+                    v-on:click="resetModel"
+                    class="btn btn-labeled btn-spaced-right" id="simulation-control-stop"
+                    :class="[(isReadOnly || !isFinished) ? 'disabled' : 'btn-warning']"
+                    :disabled="(isReadOnly || !isFinished)">
+              <span class="btn-label"><i class="fa fa-fw fa-fast-backward" aria-hidden="true"></i></span>
+              Reset
+            </button>
+            <button type="button"
                     class="btn btn-labeled btn-spaced-right"
-                    v-on:click="removeModel(model)"
+                    v-on:click="removeModel"
                     :class="[ (isReadOnly) ? 'disabled' : 'btn-danger']"
                     :disabled="isReadOnly">
               <span class="btn-label"><i class="fa fa-fw fa-times" aria-hidden="true"></i></span>
@@ -104,23 +129,23 @@
         </div>
         <div class="collapse">
           <div class="panel-body">
-            <p v-if="sharedState.user.id == activeModel.data.owner.id && activeModel.data.state == 'Finished'">
+            <p v-if="sharedState.user.id == activeModel.data.owner.id && isFinished">
               You can select who to share your results with:
             </p>
-            <p v-if="sharedState.user.id == activeModel.data.owner.id && activeModel.data.state != 'Finished'">
+            <p v-if="sharedState.user.id == activeModel.data.owner.id && !isFinished">
               When the run is finished, you can select who to share your results with:
             </p>
             <p v-if="sharedState.user.id != activeModel.data.owner.id">
               You cannot share runs owned by another user.
             </p>
             <button type="button" class="btn btn-labeled btn-default"
-                    :disabled="!(activeModel.data.state == 'Finished') || sharedState.user.id != activeModel.data.owner.id || activeModel.data.shared == 'c' ||  activeModel.data.shared == 'w'"
+                    :disabled="!isFinished || sharedState.user.id != activeModel.data.owner.id || activeModel.data.shared == 'c' ||  activeModel.data.shared == 'w'"
                     @click.stop="publishModel('company')"
                     >
               <i class="fa fa-group" aria-hidden="true"></i> Share with Company
             </button>
             <button type="button" class="btn btn-labeled btn-default"
-                    :disabled="!(activeModel.data.state == 'Finished') || sharedState.user.id != activeModel.data.owner.id || activeModel.data.shared == 'w'"
+                    :disabled="!isFinished || sharedState.user.id != activeModel.data.owner.id || activeModel.data.shared == 'w'"
                     @click.stop="publishModel('world')"
                     >
               <i class="fa fa-globe" aria-hidden="true"></i> Share with World
@@ -230,10 +255,12 @@
               <span class="form-control no-fixed-height">Media: generated output movies</span>
             </div>
 
-            <div class="form-group input-group" v-bind:class="{ 'inputdisabled': !(activeModel.data.state === 'Finished')}">
-              <span class="input-group-addon"><input type="checkbox" class="downloadoption"  value="export_thirdparty" v-on:change="downloadOptionsChange()" ></span>
-              <span class="form-control no-fixed-height" v-bind:class="{ 'hidden': !(activeModel.data.state === 'Finished')}">Export: files for RMS / Petrel</span>
-              <span class="form-control no-fixed-height" v-bind:class="{ 'hidden': (activeModel.data.state === 'Finished')}">Export to RMS / Petrel is enabled when the run is 'Finished'</span>
+            <div class="form-group input-group" v-bind:class="{ 'inputdisabled': !isFinished}">
+              <span class="input-group-addon">
+                <input type="checkbox" class="downloadoption"  value="export_thirdparty" v-on:change="downloadOptionsChange()" v-bind:disabled="!isFinished">
+              </span>
+              <span class="form-control no-fixed-height" v-bind:class="{'hidden': !isFinished}">Export: files for RMS / Petrel</span>
+              <span class="form-control no-fixed-height" v-bind:class="{'hidden': isFinished}">Export to RMS / Petrel (will be enabled when the run is 'Finished')</span>
             </div>
 
             <button class="btn btn-primary" type="button"  id="download-submit" v-on:click="downloadFiles()" value="">
@@ -245,15 +272,21 @@
       </div>
 
       <!-- MODALS -->
-      <confirm-dialog dialog-id="publish" confirm-button-title="Publish">
+      <confirm-dialog dialog-id="reset" confirm-button-title="Reset">
         <template slot="title">
-          Share model '{{ activeModel.data.name }}'?
+          Reset model '{{ activeModel.data.name }}'?
         </template>
         <template slot="body">
-          <p>Are you sure you want to share this model as '{{ nextPublishLevel }}'?</p>
+          <p>Are you sure you want to reset this model? This action cannot be undone.</p>
         </template>
-        <template slot="alert">
-          This action cannot be undone.
+      </confirm-dialog>
+
+      <confirm-dialog dialog-id="publish" confirm-button-title="Publish">
+        <template slot="title">
+          Publish model '{{ activeModel.data.name }}'?
+        </template>
+        <template slot="body">
+          <p>Are you sure you want to publish this model? This action cannot be undone.</p>
         </template>
       </confirm-dialog>
 
@@ -262,10 +295,7 @@
           Remove model '{{ activeModel.data.name }}'?
         </template>
         <template slot="body">
-          <p>Are you sure you want to remove this model?</p>
-        </template>
-        <template slot="alert">
-          Additional files already generated by this models will also be deleted.
+          <p>Are you sure you want to remove this model? This action cannot be undone.</p>
         </template>
       </confirm-dialog>
 
@@ -274,10 +304,7 @@
           Stop model '{{ activeModel.data.name }}'?
         </template>
         <template slot="body">
-          <p>Are you sure you want to stop this model?</p>
-        </template>
-        <template slot="alert">
-		      You will need to restart the model if you want to continue the simulation
+          <p>Are you sure you want to stop this model? This action cannot be undone.</p>
         </template>
       </confirm-dialog>
 

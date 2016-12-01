@@ -28,6 +28,30 @@ var exports = (function () {
           return this.activeModel.data.shared !== "p";
         }
       },
+      isIdle: {
+        cache: false,
+        get: function () {
+          return this.activeModel.data.state === "Idle: waiting for user input";
+        }
+      },
+      isRunning: {
+        cache: false,
+        get: function () {
+          return this.activeModel.data.state === "Running simulation";
+        }
+      },
+      isFinished: {
+        cache: false,
+        get: function () {
+          return this.activeModel.data.state === "Finished";
+        }
+      },
+      isQueued: {
+        cache: false,
+        get: function () {
+          return this.activeModel.data.state === "Queued";
+        }
+      },
       shareLevelText: {
         cache: false,
         get: function () {
@@ -39,6 +63,21 @@ var exports = (function () {
           };
 
           return niceStrings[this.activeModel.data.shared];
+        }
+      },
+      delft3DVersion: {
+        cache: false,
+        get: function () {
+          return this.activeModel.data.versions.delft3d.delft3d_version;
+        }
+      },
+      reposUrl: {
+        cache: false,
+        get: function () {
+          if (_.has(this.activeModel, "data.versions.preprocess.REPOS_URL")) {
+            return this.activeModel.data.versions.preprocess.REPOS_URL + "?p=" + this.activeModel.data.versions.preprocess.SVN_REV;
+          }
+          return "";
         }
       }
     },
@@ -71,16 +110,11 @@ var exports = (function () {
         return false;
       },
       publishModel: function (level) {
-        store.publishModel(this.activeModel, level);
-      },
-      removeModel: function () {
-
         // Get a confirm dialog
-        this.deleteDialog = getDialog(this, "confirm-dialog", "delete");
+        this.deleteDialog = getDialog(this, "confirm-dialog", "publish");
 
         this.deleteDialog.onConfirm = function() {
-          store.deleteModel(this.activeModel);
-
+          store.publishModel(this.activeModel, level);
           this.deleteDialog.hide();
         }.bind(this);
 
@@ -89,7 +123,36 @@ var exports = (function () {
 
         // Show the dialog:
         this.deleteDialog.show();
+      },
+      removeModel: function () {
+        // Get a confirm dialog
+        this.deleteDialog = getDialog(this, "confirm-dialog", "delete");
 
+        this.deleteDialog.onConfirm = function() {
+          store.deleteModel(this.activeModel);
+          this.deleteDialog.hide();
+        }.bind(this);
+
+        // We also show an extra warning in the dialog, if user chooses to remove additional files.
+        this.deleteDialog.showAlert(false);
+
+        // Show the dialog:
+        this.deleteDialog.show();
+      },
+      resetModel: function () {
+        // Get a confirm dialog
+        this.resetDialog = getDialog(this, "confirm-dialog", "reset");
+
+        this.resetDialog.onConfirm = function() {
+          store.resetModel(this.activeModel);
+          this.resetDialog.hide();
+        }.bind(this);
+
+        // We also show an extra warning in the dialog, if user chooses to remove additional files.
+        this.resetDialog.showAlert(false);
+
+        // Show the dialog:
+        this.resetDialog.show();
       },
       startModel: function () {
         store.startModel(this.activeModel);

@@ -27,12 +27,17 @@
     margin: $padding 0;
   }
 
-  .btn {
-    margin-bottom: $padding;
+  // the modal-footer btn padding should remain unaffected
+  :not(.modal-footer) {
+    .btn {
+      margin-bottom: $padding;
+    }
   }
 
-  .btn-group .btn {
-    margin-right: 0;
+  .btn-group {
+    .btn {
+      margin-right: 0;
+    }
   }
 
   .panel-heading {

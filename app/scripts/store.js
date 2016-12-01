@@ -1,4 +1,4 @@
-/* global */
+/* global Vue */
 var exports = (function() {
   "use strict";
 
@@ -10,9 +10,13 @@ var exports = (function() {
       modelContainers: [],
       models: [],
       params: [],
+      reqModel: undefined,
+      reqScenario: undefined,
+      reqUser: undefined,
       scenarioContainers: [],
       scenarios: [],
       updateInterval: 2000,
+      updating: false,
       user: {id: -1,
         /*eslint-disable camelcase*/
         first_name: "Anonymous", last_name: "User"}
@@ -31,6 +35,11 @@ var exports = (function() {
     },
 
     update: function () {
+      if(this.state.updating) {
+        return;
+      }
+
+      this.state.updating = true;
       Promise.all([
         this.fetchModels(),
         this.fetchScenarios()
@@ -39,11 +48,13 @@ var exports = (function() {
         this.state.models = jsons[0];
         this.state.scenarios = jsons[1];
         this.updateContainers();
+        this.state.updating = false;
       })
       .catch(() => {
         if (this.state.failedUpdate !== null) {
           this.state.failedUpdate();
         }
+        this.state.updating = false;
       });
     },
 
@@ -57,20 +68,12 @@ var exports = (function() {
 
     // ================================ API FETCH CALLS
 
-    fetchUser: function () {
-      return new Promise((resolve, reject) => {
-        $.ajax({url: "/api/v1/users/me/", data: this.state.params, traditional: true, dataType: "json"})
-          .done(function(json) {
-            resolve(json[0]);
-          })
-          .fail(function(error) {
-            reject(error);
-          });
-      });
-    },
     fetchModels: function () {
+      if (this.state.reqModel !== undefined) {
+        this.state.reqModel.abort();
+      }
       return new Promise((resolve, reject) => {
-        $.ajax({url: "/api/v1/scenes/", data: this.state.params, traditional: true, dataType: "json"})
+        this.state.reqModel = $.ajax({url: "/api/v1/scenes/", data: this.state.params, traditional: true, dataType: "json"})
           .done(function(json) {
             resolve(json);
           })
@@ -80,10 +83,27 @@ var exports = (function() {
       });
     },
     fetchScenarios: function () {
+      if (this.state.reqScenario !== undefined) {
+        this.state.reqScenario.abort();
+      }
       return new Promise((resolve, reject) => {
-        $.ajax({url: "/api/v1/scenarios/", data: this.state.params, traditional: true, dataType: "json"})
+        this.state.reqScenario = $.ajax({url: "/api/v1/scenarios/", data: this.state.params, traditional: true, dataType: "json"})
           .done(function(json) {
             resolve(json);
+          })
+          .fail(function(error) {
+            reject(error);
+          });
+      });
+    },
+    fetchUser: function () {
+      if (this.state.reqUser !== undefined) {
+        this.state.reqUser.abort();
+      }
+      return new Promise((resolve, reject) => {
+        this.state.reqUser = $.ajax({url: "/api/v1/users/me/", data: this.state.params, traditional: true, dataType: "json"})
+          .done(function(json) {
+            resolve(json[0]);
           })
           .fail(function(error) {
             reject(error);
@@ -103,7 +123,13 @@ var exports = (function() {
 
         if(container === undefined) {
           // create new container
-          container = {"id": model.id, active: false, selected: false, data: model};
+          container = {
+            id: model.id,
+            active: false,
+            selected: false,
+            data: model,
+            statusLevel: this.statusLevel
+          };
           this.state.modelContainers.push(container);
         } else {
           // update model in container
@@ -200,6 +226,22 @@ var exports = (function() {
       });
     },
 
+    resetModel: function (modelContainer) {
+      return new Promise((resolve, reject) => {
+        if (modelContainer === undefined || modelContainer.id === undefined) {
+          reject("No model id to reset");
+        }
+        modelContainer.data.state = "New";
+        $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/reset/", method: "PUT", traditional: true, dataType: "json"})
+          .done(function(data) {
+            resolve(data);
+          })
+          .fail(function(error) {
+            reject(error);
+          });
+      });
+    },
+
     startModel: function (modelContainer) {
       return new Promise((resolve, reject) => {
         if (modelContainer === undefined || modelContainer.id === undefined) {
@@ -282,15 +324,8 @@ var exports = (function() {
 
     },
 
-//            this.$parent.$broadcast("show-alert", { message: "Error submitting scenario. Scenario has not been stored.", showTime: 5000, type: "error"});
-
-
-
-
-
 
     // ================================ OTHER SUPPORT METHODS
-
 
     fetchLog: function (modelContainer) {
       return new Promise(function(resolve, reject) {
@@ -322,10 +357,26 @@ var exports = (function() {
       });
     },
 
+    statusLevel: function () {
+      if (this.data.state === "Finished") {
+        return "success";
+      }
+      if (this.data.state === "Idle: waiting for user input") {
+        return "warning";
+      }
+      return "info";
+    },
+
     // ================================ MULTISELECTED MODEL UPDATE METHODS
 
     getSelectedModels: function () {
       return _.filter(this.state.modelContainers, ["selected", true]);
+    },
+
+    resetSelectedModels: function () {
+      return Promise.all(
+        _.map(this.getSelectedModels(), this.resetModel.bind(this))
+      );
     },
 
     startSelectedModels: function () {
@@ -335,7 +386,6 @@ var exports = (function() {
     },
 
     stopSelectedModels: function () {
-      console.log("selected models", this.getSelectedModels());
       return Promise.all(
         _.map(this.getSelectedModels(), this.stopModel.bind(this))
       );
