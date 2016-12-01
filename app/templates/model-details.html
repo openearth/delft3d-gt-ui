@@ -29,7 +29,10 @@
             </dd>
 
             <dt>Delft3D Version</dt>
-            <dd><span>{{ delft3DVersion || '-' }}</span></dd>
+            <dd>
+              <template v-if="delft3DVersion">{{ delft3DVersion }}</template>
+              <template v-else>-</template>
+            </dd>
           </dl>
 
           <hr>

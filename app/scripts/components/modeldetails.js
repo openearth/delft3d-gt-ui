@@ -68,7 +68,7 @@ var exports = (function () {
       reposUrl: {
         cache: false,
         get: function () {
-          if (this.activeModel.data.versions.preprocess.REPOS_URL !== undefined) {
+          if (_.has(this.activeModel, "data.versions.preprocess.REPOS_URL")) {
             return this.activeModel.data.versions.preprocess.REPOS_URL + "?p=" + this.activeModel.data.versions.preprocess.SVN_REV;
           }
           return "";
