@@ -128,7 +128,7 @@ var exports = (function() {
             active: false,
             selected: false,
             data: model,
-            colorClass: this.colorClass
+            statusLevel: this.statusLevel
           };
           this.state.modelContainers.push(container);
         } else {
@@ -357,7 +357,7 @@ var exports = (function() {
       });
     },
 
-    colorClass: function () {
+    statusLevel: function () {
       if (this.data.state === "Finished") {
         return "success";
       }

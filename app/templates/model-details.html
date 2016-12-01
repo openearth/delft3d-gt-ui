@@ -44,7 +44,7 @@
                 <div class="progress-bar"
                   :class="[
                     isRunning ? 'progress-bar-striped active' : '',
-                    'progress-bar-' + activeModel.colorClass()
+                    'progress-bar-' + activeModel.statusLevel()
                   ]"
                   role="progressbar"
                   aria-valuenow="{{activeModel.data.progress}}"
@@ -60,7 +60,7 @@
                 </div>
               </div>
             </dd>
-            <dt>Status</dt><dd><span class="label label-status" :class="'label-' + activeModel.colorClass()">{{activeModel.data.state | capitalize }}</span></dd>
+            <dt>Status</dt><dd><span class="label label-status" :class="'label-' + activeModel.statusLevel()">{{activeModel.data.state | capitalize }}</span></dd>
             <dt>Simulation output:</dt><dd>
               <a class="btn btn-default btn-xs" href="{{activeModel.data.fileurl}}" target="_blank" title="A link to the file server hosting all output files.">File Server</a>
               <a class="btn btn-default btn-xs" href="/thredds/catalog/files/{{activeModel.data.suid}}/simulation/catalog.html" target="_blank" title="A link to the THREDDS server hosting Delft3D NetCDF output, which allows querying via OPeNDAP.">THREDDS Data Server</a>

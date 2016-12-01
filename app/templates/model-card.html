@@ -17,7 +17,7 @@
 
           <div class="col-xs-4 col-sm-4 text-right">
             <span class="label label-status"
-                  :class="'label-' + model.colorClass()">
+                  :class="'label-' + model.statusLevel()">
               {{model.data.state | capitalize }}
             </span>
           </div>
@@ -30,7 +30,7 @@
                 class="progress-bar"
                 :class="[
                   (model.data.state === 'Running simulation') ? 'progress-bar-striped active' : '',
-                  'progress-bar-' + model.colorClass()
+                  'progress-bar-' + model.statusLevel()
                 ]"
                 role="progressbar"
                 aria-valuemin="0"
