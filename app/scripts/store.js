@@ -123,7 +123,13 @@ var exports = (function() {
 
         if(container === undefined) {
           // create new container
-          container = {"id": model.id, active: false, selected: false, data: model};
+          container = {
+            id: model.id,
+            active: false,
+            selected: false,
+            data: model,
+            statusLevel: this.statusLevel
+          };
           this.state.modelContainers.push(container);
         } else {
           // update model in container
@@ -318,15 +324,8 @@ var exports = (function() {
 
     },
 
-//            this.$parent.$broadcast("show-alert", { message: "Error submitting scenario. Scenario has not been stored.", showTime: 5000, type: "error"});
-
-
-
-
-
 
     // ================================ OTHER SUPPORT METHODS
-
 
     fetchLog: function (modelContainer) {
       return new Promise(function(resolve, reject) {
@@ -356,6 +355,16 @@ var exports = (function() {
           });
 
       });
+    },
+
+    statusLevel: function () {
+      if (this.data.state === "Finished") {
+        return "success";
+      }
+      if (this.data.state === "Idle: waiting for user input") {
+        return "warning";
+      }
+      return "info";
     },
 
     // ================================ MULTISELECTED MODEL UPDATE METHODS
