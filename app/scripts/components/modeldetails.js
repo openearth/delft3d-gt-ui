@@ -22,6 +22,14 @@ var exports = (function () {
           return this.sharedState.activeModelContainer;
         }
       },
+      dateCreatedText: {
+        cached: false,
+        get: function () {
+          var d = new Date(this.activeModel.data.date_created);
+
+          return d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
+        }
+      },
       isReadOnly: {
         cache: false,
         get: function () {
