@@ -20,6 +20,9 @@
             <dt>Share level</dt>
             <dd><span>{{ shareLevelText | capitalize }}</span></dd>
 
+            <dt>Created</dt>
+            <dd><span>{{ dateCreatedText }}</span></dd>
+
             <dt>Run environment</dt>
             <dd><span>Amazon</span></dd>
 
@@ -236,7 +239,7 @@
             </p>
 
             <div class="form-group input-group">
-              <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_d3dinput" v-on:change="downloadOptionsChange()"></span>
+              <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_d3dinput" v-model="selectedDownloads.export_d3dinput"></span>
               <span class="form-control no-fixed-height">Delft3D: input files</span>
             </div>
             <!--
@@ -246,24 +249,24 @@
                 </div>
                 -->
             <div class="form-group input-group">
-              <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_images" v-on:change="downloadOptionsChange()"></span>
+              <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_images" v-model="selectedDownloads.export_images"></span>
               <span class="form-control no-fixed-height">Media: generated output images</span>
             </div>
 
             <div class="form-group input-group">
-              <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_movie" v-on:change="downloadOptionsChange()"></span>
+              <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_movie" v-model="selectedDownloads.export_movie"></span>
               <span class="form-control no-fixed-height">Media: generated output movies</span>
             </div>
 
-            <div class="form-group input-group" v-bind:class="{ 'inputdisabled': !isFinished}">
+            <div class="form-group input-group" v-bind:class="{ 'inputdisabled': !isFinished }">
               <span class="input-group-addon">
-                <input type="checkbox" class="downloadoption"  value="export_thirdparty" v-on:change="downloadOptionsChange()" v-bind:disabled="!isFinished">
+                <input type="checkbox" class="downloadoption"  value="export_thirdparty" v-model="selectedDownloads.export_thirdparty" v-bind:disabled="!isFinished">
               </span>
               <span class="form-control no-fixed-height" v-bind:class="{'hidden': !isFinished}">Export: files for RMS / Petrel</span>
               <span class="form-control no-fixed-height" v-bind:class="{'hidden': isFinished}">Export to RMS / Petrel (will be enabled when the run is 'Finished')</span>
             </div>
 
-            <button class="btn btn-primary" type="button"  id="download-submit" v-on:click="downloadFiles()" value="">
+            <button class="btn btn-primary" type="button"  id="download-submit" v-on:click="downloadFiles()" v-bind:disabled="!anyDownloadsSelected">
               Download
             </button>
 
