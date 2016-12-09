@@ -12,7 +12,13 @@ var exports = (function () {
     },
     data: function() {
       return {
-        sharedState: store.state
+        sharedState: store.state,
+        selectedDownloads: {
+          "export_d3dinput": false,
+          "export_images": false,
+          "export_movie": false,
+          "export_thirdparty": false
+        }
       };
     },
     computed: {
@@ -20,6 +26,14 @@ var exports = (function () {
         cached: false,
         get: function () {
           return this.sharedState.activeModelContainer;
+        }
+      },
+      anyDownloadsSelected: {
+        cache: false,
+        get: function () {
+          return Object.values(this.selectedDownloads).some(function(el) {
+            return el;
+          });
         }
       },
       dateCreatedText: {
@@ -95,21 +109,20 @@ var exports = (function () {
         $(e.target).closest(".panel").children(".collapse").collapse("toggle");
       },
       downloadFiles: function () {
-        // Open download window
-        var id = this.activeModel.id;
+        if(!this.anyDownloadsSelected) {
+          return;
+        }
 
-        // Get array of checked download options.
-        var downloadOptions = $(".downloadoption:checked").map(function() {
-          return "options=" + $(this).val();
-        }).get(); //
+        var id = this.activeModel.id;
+        var downloadOptions = [];
+
+        for(var option in this.selectedDownloads) {
+          if (this.selectedDownloads[option] == true) {
+            downloadOptions.push("options=" + option);
+          }
+        }
 
         window.open("/api/v1/scenes/" + id + "/export/?" + downloadOptions.join("&"));
-      },
-      downloadOptionsChange: function() {
-        //Determine if there is any download option enabled, if not, disable button
-        var selectedOptions = $(".downloadoption:checked").length;
-
-        $("#download-submit").prop("disabled", selectedOptions === 0);
       },
       hasPostProcessData: function () {
         if(("data" in this.activeModel) && ("info" in this.activeModel.data) && "postprocess_output" in this.activeModel.data.info) {
