@@ -117,7 +117,7 @@ var exports = (function () {
         var downloadOptions = [];
 
         for(var option in this.selectedDownloads) {
-          if (this.selectedDownloads[option] == true) {
+          if (this.selectedDownloads[option] === true) {
             downloadOptions.push("options=" + option);
           }
         }
