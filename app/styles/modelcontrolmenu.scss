@@ -5,4 +5,19 @@
     cursor: pointer;
     user-select: none;
   }
+
+  .dropdown-menu-checkbox {
+    cursor: pointer;
+    padding: 3px 20px;
+
+    &:hover {
+      background-color: $col-bw-1;
+    }
+
+    input {
+      &[type='checkbox'] {
+        margin: 0 3px;
+      }
+    }
+  }
 }

@@ -11,15 +11,51 @@ var exports = (function () {
 
       return {
         collapseShow: true,
+        selectedDownloads: {
+          "exportD3dinput": false,
+          "exportImages": false,
+          "exportMovie": false,
+          "exportThirdparty": false
+        },
         sharedState: store.state
-
       };
 
     },
 
     computed: {
+      anyDownloadsSelected: function () {
+        return Object.values(this.selectedDownloads).some(function(el) {
+          return el;
+        });
+      },
       numSelectedModels: function () {
         return store.getSelectedModels().length;
+      },
+      someSelectedModelsAreFinished: function () {
+        return Object.values(store.getSelectedModels()).some(function(model) {
+          return model.data.state === "Finished";
+        });
+      }
+    },
+
+    watch: {
+      "numSelectedModels": function () {
+        if (this.numSelectedModels === 0) {
+          this.selectedDownloads.exportD3dinput = false;
+          this.selectedDownloads.exportImages = false;
+          this.selectedDownloads.exportMovie = false;
+          this.selectedDownloads.exportThirdparty = false;
+        }
+      },
+      "selectedDownloads.exportThirdparty": function () {
+        if (!this.someSelectedModelsAreFinished) {
+          this.selectedDownloads.exportThirdparty = false;
+        }
+      },
+      "someSelectedModelsAreFinished": function () {
+        if (!this.someSelectedModelsAreFinished) {
+          this.selectedDownloads.exportThirdparty = false;
+        }
       }
     },
 
@@ -88,6 +124,23 @@ var exports = (function () {
         // Show the dialog:
         this.deleteDialog.show();
 
+      },
+
+      shareSelectedModels: function (domain) {
+        console.log("Publish!", domain);
+      },
+
+      downloadSelectedModels: function () {
+        console.log("Download!");
+      },
+
+      toggle: function(id, event) {
+        event.stopPropagation();
+        this.selectedDownloads[id] = !this.selectedDownloads[id];
+      },
+      preventCheck: function (event) {
+        event.preventDefault();
+        event.stopPropagation();
       }
     }
 
