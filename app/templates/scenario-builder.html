@@ -224,7 +224,7 @@
                      id="scenario-submit"
                      @click="submitScenario"
                      value=""
-                     :class="{ 'disabled': !(totalRuns <= 20 && validForm) }" >
+                     :class="{ 'disabled': !(totalRuns <= maxRuns && validForm) }" >
                     Submit
                   </button>
                   </div>

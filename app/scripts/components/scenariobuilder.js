@@ -50,7 +50,9 @@ var exports = (function() {
         // The DOM elements used for the fixed toolbar event listener
         navBars: null,
 
-        forceTemplateUpdate: false
+        forceTemplateUpdate: false,
+
+        maxRuns: 20
 
       };
     },
@@ -327,6 +329,9 @@ var exports = (function() {
       },
 
       submitScenario: function() {
+        if (this.totalRuns > this.maxRuns || !this.validForm) {
+          return
+        }
 
         var parameters = {},
           name = "";
