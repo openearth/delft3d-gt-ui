@@ -72,8 +72,6 @@ var exports = (function() {
 
       },
       data: function(transition) {
-
-
         // if we have a template in the request, select that one
         if (_.has(this, "$route.query.template")) {
 
@@ -87,7 +85,6 @@ var exports = (function() {
         }
 
         transition.next();
-
       }
     },
 
@@ -140,15 +137,17 @@ var exports = (function() {
             variables,
             // use an arrow because we need this
             (variable) => {
-              // by default we have 1 run
-              var n = 1;
+              // if variable is an array, return the array length
+              if (_.isArray(variable.value)) {
+                return variable.value.length;
+              }
 
               // unless we have a factor, then it's the number of values
               if (variable.factor) {
-                n = factorToArray(variable).length;
+                return factorToArray(variable).length;
               }
-              return n;
-              // we need to access a function
+
+              return 1;
             });
 
           // reduce product
@@ -231,6 +230,12 @@ var exports = (function() {
       },
 
       updateAfterTick: function() {
+        // initiate the multi-select input fields
+        var pickers = $(".select-picker");
+
+        if (pickers.selectpicker !== undefined) {
+          pickers.selectpicker("refresh");
+        }
 
         if ($("[data-toggle='tooltip']").tooltip !== undefined) {
           $("[data-toggle='tooltip']").tooltip({
