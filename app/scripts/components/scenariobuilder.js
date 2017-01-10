@@ -72,6 +72,8 @@ var exports = (function() {
 
       },
       data: function(transition) {
+
+
         // if we have a template in the request, select that one
         if (_.has(this, "$route.query.template")) {
 
@@ -85,6 +87,7 @@ var exports = (function() {
         }
 
         transition.next();
+
       }
     },
 

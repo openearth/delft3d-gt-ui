@@ -110,7 +110,6 @@
                               v-validate="variable.validators"
                               />
                             </template>
-
                             <!-- select if not form -->
                             <template v-if="variable.type === 'select' && !variable.factor">
                               <select
@@ -129,7 +128,6 @@
                                 </option>
                               </select>
                             </template>
-
                             <!-- text area -->
                             <template
                               v-if="variable.type === 'textarea'"
