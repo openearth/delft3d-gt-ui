@@ -330,7 +330,7 @@ var exports = (function() {
 
       submitScenario: function() {
         if (this.totalRuns > this.maxRuns || !this.validForm) {
-          return
+          return;
         }
 
         var parameters = {},
