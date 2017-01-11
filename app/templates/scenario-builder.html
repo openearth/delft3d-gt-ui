@@ -113,11 +113,12 @@
                             <!-- select if not form -->
                             <template v-if="variable.type === 'select' && !variable.factor">
                               <select
-                                class="form-control"
+                                class="form-control select-picker"
                                 id="{{ variable.id }}"
                                 v-model="variable.value"
                                 :field="getId(variable)"
                                 v-validate="variable.validators"
+                                multiple="multiple"
                                 >
                                 <option
                                   v-for="(i, option) in variable.options"
