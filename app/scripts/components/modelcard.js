@@ -13,7 +13,10 @@ var exports = (function () {
 
     computed: {
       selectable: function () {
-        return (this.model.data.shared === "p");
+        if(_.has(this.model, "data.shared")) {
+          return (_.get(this.model, "data.shared") === "p");
+        }
+        return false;
       }
     },
 
