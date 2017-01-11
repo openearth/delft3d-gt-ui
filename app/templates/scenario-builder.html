@@ -215,12 +215,12 @@
                           class="form-control"
                           id="total-runs"
                           v-model="totalRuns"
-                          v-validate:totalRuns="{required: true, max: maxRuns}"
+                          v-validate:totalRuns="{required: true, min: 1, max: maxRuns}"
                           />
 
                         Number of runs: <strong>{{totalRuns}}</strong>
                         <p v-if="!$validation.totalruns.valid" class="help-block has-error">
-                          You cannot submit more than {{maxRuns}} runs in one scenario.
+                          You must have at least one run, but you cannot submit more than {{maxRuns}} runs in one scenario.
                         </p>
 
                         <div class="pull-right">
