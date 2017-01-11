@@ -205,33 +205,41 @@
 
 
                   </div> <!-- .section -->
-                </form>
 
+                  <div class="panel panel-default">
+                    <div class="panel-body">
+                      <div class="form-group" v-bind:class="{'has-error': !$validation.totalruns.valid}">
+                        <input
+                          type="hidden"
+                          class="form-control"
+                          id="total-runs"
+                          v-model="totalRuns"
+                          v-validate:totalRuns="{required: true, max: maxRuns}"
+                          />
+
+                        Number of runs: <strong>{{totalRuns}}</strong>
+                        <p v-if="!$validation.totalruns.valid" class="help-block has-error">
+                          You cannot submit more than {{maxRuns}} runs in one scenario.
+                        </p>
+
+                        <div class="pull-right">
+                          <a class="btn btn-default nav-bar-button" v-link="{ path: '/' }">Cancel</a>
+                          <button
+                             type="button"
+                             class="btn btn-primary nav-bar-button default"
+                             id="scenario-submit"
+                             @click="submitScenario"
+                             value=""
+                             :class="{ 'disabled': !validForm }" >
+                            Submit
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
               </validator>
 
-
-              <div class="panel panel-default">
-                <div class="panel-body">
-                  Number of runs: <strong>{{totalRuns}}</strong>
-                  <p v-if="totalRuns > 20" class="text-warning">
-                    You cannot submit more than 20 runs in one scenario.
-                  </p>
-                  <div class="pull-right">
-                  <a class="btn btn-default nav-bar-button" v-link="{ path: '/' }">Cancel</a>
-                  <button
-                     type="button"
-                     class="btn btn-primary nav-bar-button default"
-                     id="scenario-submit"
-                     @click="submitScenario"
-                     value=""
-                     :class="{ 'disabled': totalRuns > maxRuns || !validForm }" >
-                    Submit
-                  </button>
-                  </div>
-
-                </div>
-
-              </div>
             </div>
 
           </div>

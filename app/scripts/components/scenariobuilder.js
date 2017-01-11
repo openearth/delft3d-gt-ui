@@ -329,7 +329,7 @@ var exports = (function() {
       },
 
       submitScenario: function() {
-        if (this.totalRuns > this.maxRuns || !this.validForm) {
+        if (!this.validForm) {
           return;
         }
 
