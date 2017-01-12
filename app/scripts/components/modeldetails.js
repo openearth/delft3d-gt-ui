@@ -183,6 +183,12 @@ var exports = (function () {
       },
       stopModel: function () {
         store.stopModel(this.activeModel);
+      },
+      toggle: function(id, event, doFlag) {
+        event.stopPropagation();
+        if (doFlag) {
+          this.selectedDownloads[id] = !this.selectedDownloads[id];
+        }
       }
     }
   });

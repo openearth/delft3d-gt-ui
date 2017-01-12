@@ -41,6 +41,52 @@
         </a>
       </li>
 
+      <li role="separator" class="divider"></li>
+
+      <li :class="{disabled: numSelectedModels === 0 }">
+        <a @click="shareSelectedModels('company')">
+          <i class="fa fa-fw fa-group" aria-hidden="true"></i> Share model<span v-if="numSelectedModels > 1">s</span> with Company
+        </a>
+      </li>
+
+      <li :class="{disabled: numSelectedModels === 0 }">
+        <a @click="shareSelectedModels('world')">
+          <i class="fa fa-fw fa-globe" aria-hidden="true"></i> Share model<span v-if="numSelectedModels > 1">s</span> with World
+        </a>
+      </li>
+
+      <li role="separator" class="divider"></li>
+
+      <li :class="{disabled: numSelectedModels === 0 }">
+        <div class="dropdown-menu-checkbox" @click="toggle('exportD3dinput', $event)">
+          <input type="checkbox" class="downloadoption"  value="exportD3dinput" v-model="selectedDownloads.exportD3dinput" v-bind:disabled="numSelectedModels === 0"> Delft3D: input files
+        </div>
+      </li>
+
+      <li :class="{disabled: numSelectedModels === 0 }">
+        <div class="dropdown-menu-checkbox" @click="toggle('exportImages', $event)">
+          <input type="checkbox" class="downloadoption"  value="exportImages" v-model="selectedDownloads.exportImages" v-bind:disabled="numSelectedModels === 0"> Media: output images
+        </div>
+      </li>
+
+      <li :class="{disabled: numSelectedModels === 0 }">
+        <div class="dropdown-menu-checkbox" @click="toggle('exportMovie', $event)">
+          <input type="checkbox" class="downloadoption"  value="exportMovie" v-model="selectedDownloads.exportMovie" v-bind:disabled="numSelectedModels === 0"> Media: output movies
+        </div>
+      </li>
+
+      <li :class="{disabled: numSelectedModels === 0 || !someSelectedModelsAreFinished}">
+        <div class="dropdown-menu-checkbox" @click="toggle('exportThirdparty', $event)">
+          <input type="checkbox" class="downloadoption"  value="exportThirdparty" v-model="selectedDownloads.exportThirdparty" v-bind:disabled="numSelectedModels === 0 || !someSelectedModelsAreFinished"> Export: RMS / Petrel
+        </div>
+      </li>
+
+      <li :class="{disabled: numSelectedModels === 0 || !anyDownloadsSelected}">
+        <a @click="downloadSelectedModels">
+          <i class="fa fa-fw fa-download" aria-hidden="true"></i> Dowload data from model<span v-if="numSelectedModels > 1">s</span>
+        </a>
+      </li>
+
     </ul>
 
     <confirm-dialog dialog-id="delete-runs" confirm-button-title="Delete">
