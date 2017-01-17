@@ -207,16 +207,16 @@ var exports = (function() {
       });
     },
 
-    publishModel: function (modelContainer, target) {
+    publishModel: function (modelContainer, domain) {
       return new Promise((resolve, reject) => {
         if (modelContainer === undefined || modelContainer.id === undefined) {
           reject("No model id to delete");
         }
-        if (target === undefined) {
-          reject("No publication level to publish to");
+        if (domain !== "company" && domain !== "world") {
+          reject("Publication level unidentified");
         }
         modelContainer.data.shared = "u";
-        $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/publish_" + target + "/", method: "POST"})
+        $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/publish_" + domain + "/", method: "POST"})
           .done(function (data) {
             resolve(data);
           })
@@ -260,19 +260,11 @@ var exports = (function() {
 
     stopModel: function (modelContainer) {
       return new Promise((resolve, reject) => {
-        console.log("stopping model", modelContainer.id);
         if (modelContainer === undefined || modelContainer.id === undefined) {
-          reject("No model id to start");
+          reject("No model id to stop");
         }
         modelContainer.data.state = "Stopping simulation";
-        var request = {
-          url: "/api/v1/scenes/" + modelContainer.id + "/stop/",
-          method: "PUT",
-          traditional: true,
-          dataType: "json"
-        };
-
-        $.ajax(request)
+        $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/stop/", method: "PUT", traditional: true, dataType: "json"})
           .done(function(data) {
             resolve(data);
           })
@@ -395,7 +387,50 @@ var exports = (function() {
       return Promise.all(
         _.map(this.getSelectedModels(), this.deleteModel.bind(this))
       );
+    },
 
+    shareSelectedModels: function (domain) {
+      return new Promise((resolve, reject) => {
+        if (this.getSelectedModels() === []) {
+          reject("No models to test");
+        }
+        if (domain !== "company" && domain !== "world") {
+          reject("Publication level unidentified");
+        }
+
+        var selectedModelsSuid = _.map(this.getSelectedModels(), function (m) {
+          return m.data.suid;
+        });
+
+        $.ajax({url: "/api/v1/scenes/publish_" + domain + "_all/", method: "POST", traditional: true, dataType: "json", data: {"suid": selectedModelsSuid}})
+          .done(function(data) {
+            resolve(data);
+          })
+          .fail(function(error) {
+            reject(error);
+          });
+      });
+    },
+
+    downloadSelectedModels: function (selectedDownloads) {
+      return new Promise((resolve, reject) => {
+        if (this.getSelectedModels() === []) {
+          reject("No models to export");
+        }
+
+        var selectedModelsSuid = _.map(this.getSelectedModels(), function (m) {
+          return m.data.suid;
+        });
+
+        var selectedOptions = _.reduce(selectedDownloads, function (result, value, key) {
+          if (value) {
+            result.push(key);
+          }
+          return result
+        }, []);
+
+        window.open("/api/v1/scenes/export_all/?suid=" + selectedModelsSuid.join("&suid=") + "&option=" + selectedOptions.join("&option="));
+      });
     },
 
     // ================================ SEARCH METHODS

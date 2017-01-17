@@ -127,11 +127,11 @@ var exports = (function () {
       },
 
       shareSelectedModels: function (domain) {
-        console.log("Publish!", domain);
+        store.shareSelectedModels(domain);
       },
 
       downloadSelectedModels: function () {
-        console.log("Download!");
+        store.downloadSelectedModels(this.selectedDownloads);
       },
 
       toggle: function(id, event) {
