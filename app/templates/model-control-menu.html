@@ -58,26 +58,26 @@
       <li role="separator" class="divider"></li>
 
       <li :class="{disabled: numSelectedModels === 0 }">
-        <div class="dropdown-menu-checkbox" @click="toggle('exportD3dinput', $event)">
-          <input type="checkbox" class="downloadoption"  value="exportD3dinput" v-model="selectedDownloads.exportD3dinput" v-bind:disabled="numSelectedModels === 0"> Delft3D: input files
+        <div class="dropdown-menu-checkbox" @click="toggle('export_d3dinput', $event)">
+          <input type="checkbox" class="downloadoption"  value="export_d3dinput" v-model="selectedDownloads.export_d3dinput" v-bind:disabled="numSelectedModels === 0"> Delft3D: input files
         </div>
       </li>
 
       <li :class="{disabled: numSelectedModels === 0 }">
-        <div class="dropdown-menu-checkbox" @click="toggle('exportImages', $event)">
-          <input type="checkbox" class="downloadoption"  value="exportImages" v-model="selectedDownloads.exportImages" v-bind:disabled="numSelectedModels === 0"> Media: output images
+        <div class="dropdown-menu-checkbox" @click="toggle('export_images', $event)">
+          <input type="checkbox" class="downloadoption"  value="export_images" v-model="selectedDownloads.export_images" v-bind:disabled="numSelectedModels === 0"> Media: output images
         </div>
       </li>
 
       <li :class="{disabled: numSelectedModels === 0 }">
-        <div class="dropdown-menu-checkbox" @click="toggle('exportMovie', $event)">
-          <input type="checkbox" class="downloadoption"  value="exportMovie" v-model="selectedDownloads.exportMovie" v-bind:disabled="numSelectedModels === 0"> Media: output movies
+        <div class="dropdown-menu-checkbox" @click="toggle('export_thirdparty', $event)">
+          <input type="checkbox" class="downloadoption"  value="export_thirdparty" v-model="selectedDownloads.export_thirdparty" v-bind:disabled="numSelectedModels === 0"> Media: output movies
         </div>
       </li>
 
       <li :class="{disabled: numSelectedModels === 0 || !someSelectedModelsAreFinished}">
-        <div class="dropdown-menu-checkbox" @click="toggle('exportThirdparty', $event)">
-          <input type="checkbox" class="downloadoption"  value="exportThirdparty" v-model="selectedDownloads.exportThirdparty" v-bind:disabled="numSelectedModels === 0 || !someSelectedModelsAreFinished"> Export: RMS / Petrel
+        <div class="dropdown-menu-checkbox" @click="toggle('export_movie', $event)">
+          <input type="checkbox" class="downloadoption"  value="export_movie" v-model="selectedDownloads.export_movie" v-bind:disabled="numSelectedModels === 0 || !someSelectedModelsAreFinished"> Export: RMS / Petrel
         </div>
       </li>
 
@@ -95,6 +95,15 @@
       </template>
       <template slot="body">
         <p>Are you sure you want to delete <span v-if="numSelectedModels > 1">these models</span><span v-if="numSelectedModels == 1">this model</span>? This action cannot be undone.</p>
+      </template>
+    </confirm-dialog>
+
+    <confirm-dialog dialog-id="share-runs" confirm-button-title="Share">
+      <template slot="title">
+        Share model(s)?
+      </template>
+      <template slot="body">
+        <p>Are you sure you want to share <span v-if="numSelectedModels > 1">these models</span><span v-if="numSelectedModels == 1">this model</span>? This action cannot be undone.</p>
       </template>
     </confirm-dialog>
 

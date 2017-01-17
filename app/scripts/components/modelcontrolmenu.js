@@ -12,10 +12,10 @@ var exports = (function () {
       return {
         collapseShow: true,
         selectedDownloads: {
-          "exportD3dinput": false,
-          "exportImages": false,
-          "exportMovie": false,
-          "exportThirdparty": false
+          "export_d3dinput": false,
+          "export_images": false,
+          "export_thirdparty": false,
+          "export_movie": false
         },
         sharedState: store.state
       };
@@ -38,26 +38,30 @@ var exports = (function () {
       }
     },
 
+    /*eslint-disable camelcase*/
+
     watch: {
       "numSelectedModels": function () {
         if (this.numSelectedModels === 0) {
-          this.selectedDownloads.exportD3dinput = false;
-          this.selectedDownloads.exportImages = false;
-          this.selectedDownloads.exportMovie = false;
-          this.selectedDownloads.exportThirdparty = false;
+          this.selectedDownloads.export_d3dinput = false;
+          this.selectedDownloads.export_images = false;
+          this.selectedDownloads.export_thirdparty = false;
+          this.selectedDownloads.export_movie = false;
         }
       },
       "selectedDownloads.exportThirdparty": function () {
         if (!this.someSelectedModelsAreFinished) {
-          this.selectedDownloads.exportThirdparty = false;
+          this.selectedDownloads.export_thirdparty = false;
         }
       },
       "someSelectedModelsAreFinished": function () {
         if (!this.someSelectedModelsAreFinished) {
-          this.selectedDownloads.exportThirdparty = false;
+          this.selectedDownloads.export_thirdparty = false;
         }
       }
     },
+
+    /*eslint-enable camelcase*/
 
     methods: {
       expandScenarios: function() {
@@ -78,8 +82,6 @@ var exports = (function () {
 
           this.deleteDialog.hide();
         };
-
-        // We also show an extra warning in the dialog, if user chooses to remove additional files.
         this.deleteDialog.showAlert(false);
 
         // Show the dialog:
@@ -99,8 +101,6 @@ var exports = (function () {
 
           this.deleteDialog.hide();
         };
-
-        // We also show an extra warning in the dialog, if user chooses to remove additional files.
         this.deleteDialog.showAlert(false);
 
         // Show the dialog:
@@ -117,8 +117,6 @@ var exports = (function () {
           this.deleteDialog.hide();
 
         };
-
-        // We also show an extra warning in the dialog, if user chooses to remove additional files.
         this.deleteDialog.showAlert(false);
 
         // Show the dialog:
@@ -127,7 +125,18 @@ var exports = (function () {
       },
 
       shareSelectedModels: function (domain) {
-        store.shareSelectedModels(domain);
+        // Get a confirm dialog
+        this.shareDialog = getDialog(this, "confirm-dialog", "share-runs");
+
+        this.shareDialog.onConfirm = () => {
+          store.shareSelectedModels(domain);
+
+          this.shareDialog.hide();
+        };
+        this.shareDialog.showAlert(false);
+
+        // Show the dialog:
+        this.shareDialog.show();
       },
 
       downloadSelectedModels: function () {

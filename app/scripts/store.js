@@ -429,7 +429,7 @@ var exports = (function() {
           return result;
         }, []);
 
-        window.open("/api/v1/scenes/export_all/?suid=" + selectedModelsSuid.join("&suid=") + "&option=" + selectedOptions.join("&option="));
+        window.open("/api/v1/scenes/export_all/?format=json&suid=" + selectedModelsSuid.join("&suid=") + "&options=" + selectedOptions.join("&options="));
       });
     },
 

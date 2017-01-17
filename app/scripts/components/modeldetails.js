@@ -125,7 +125,7 @@ var exports = (function () {
           }
         }
 
-        window.open("/api/v1/scenes/" + id + "/export/?" + downloadOptions.join("&"));
+        window.open("/api/v1/scenes/" + id + "/export/?format=json&" + downloadOptions.join("&"));
       },
       hasPostProcessData: function () {
         if(("data" in this.activeModel) && ("info" in this.activeModel.data) && "postprocess_output" in this.activeModel.data.info) {
