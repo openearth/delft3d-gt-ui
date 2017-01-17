@@ -426,7 +426,7 @@ var exports = (function() {
           if (value) {
             result.push(key);
           }
-          return result
+          return result;
         }, []);
 
         window.open("/api/v1/scenes/export_all/?suid=" + selectedModelsSuid.join("&suid=") + "&option=" + selectedOptions.join("&option="));
