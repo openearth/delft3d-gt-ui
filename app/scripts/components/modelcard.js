@@ -25,9 +25,7 @@ var exports = (function () {
         }
       },
       "select-all": function () {
-        if (this.selectable) {
-          this.model.selected = true;
-        }
+        this.model.selected = true;
       },
       "unselect-all": function () {
         this.model.selected = false;
