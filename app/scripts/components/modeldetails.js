@@ -90,7 +90,10 @@ var exports = (function () {
       delft3DVersion: {
         cache: false,
         get: function () {
-          return this.activeModel.data.versions.delft3d.delft3d_version;
+          if(_.has(this.activeModel, "data.versions.delft3d.delft3d_version")) {
+            return this.activeModel.data.versions.delft3d.delft3d_version;
+          }
+          return "";
         }
       },
       reposUrl: {
