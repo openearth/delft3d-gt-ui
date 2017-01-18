@@ -124,6 +124,12 @@ var exports = (function() {
       }
     },
     computed: {
+      basinslope: {
+        cache: false,
+        get: function () {
+          return _.get(this.scenarioConfig, ".sections[2].variables[0].value", "")
+        }
+      },
       totalRuns: {
         cache: false,
         get: function() {

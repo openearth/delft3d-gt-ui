@@ -21,7 +21,7 @@
   }
 
   .row {
-    padding-top: $padding;
+    padding: $padding 0;
   }
 
   .scrollable {
@@ -32,6 +32,25 @@
   .align-with-button {
     padding: 8px 16px; // Extra pixel top and bottom for border on buttons
    }
+
+  .table-container {
+    overflow-x: scroll;
+
+    table {
+      margin: 0;
+    }
+
+    td,
+    th {
+      text-align: center;
+    }
+  }
+
+  .form-group {
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 
   // DUMMY FEATURES
 
@@ -48,4 +67,5 @@
   .form-file-upload {
     margin-top: $padding;
   }
+
 }

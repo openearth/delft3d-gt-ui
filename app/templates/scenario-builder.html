@@ -185,8 +185,6 @@
                                 </p>
                               </template>
                             </template>
-                          </div>
-
 
                           <!-- ===== DUMMY FEATURES START ===== -->
                           <div class="form-file-upload" v-if="variable.name === 'Tidal amplitude'">
@@ -200,6 +198,30 @@
                           </div>
                           <!-- =====  DUMMY FEATURES END  ===== -->
 
+                          <div class="calculator" v-if="variable.calculator">
+                            <div class="table-container">
+                              <table class="table">
+                                <thead>
+                                  <tr>
+                                    <th>Basin Slope</th>
+                                    <th v-for="val2 in variable.value.split(',')">
+                                      {{ val2 }}%
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr v-for="val1 in basinslope.split(',')">
+                                    <td>{{ val1 }}m</td>
+                                    <td v-for="val2 in variable.value.split(',')">
+                                      {{ val1 * val2 / 100 | currency '' 4 }}m
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+
+                          </div>
                         </div> <!-- .form-group -->
                       </div> <!-- .panel-body -->
                     </div> <!-- .panel -->
