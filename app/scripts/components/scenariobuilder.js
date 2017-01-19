@@ -52,10 +52,7 @@ var exports = (function() {
 
         forceTemplateUpdate: false,
 
-        maxRuns: 20,
-
-        showCalc: false
-
+        maxRuns: 20
       };
     },
 
