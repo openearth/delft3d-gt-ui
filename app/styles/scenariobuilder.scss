@@ -33,6 +33,16 @@
     padding: 8px 16px; // Extra pixel top and bottom for border on buttons
    }
 
+  .toggle {
+    margin-top: $padding;
+  }
+
+  .multiplytable {
+    .btn {
+      margin: $padding 0;
+    }
+  }
+
   .table-container {
     overflow-x: scroll;
 

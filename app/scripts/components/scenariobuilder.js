@@ -52,7 +52,9 @@ var exports = (function() {
 
         forceTemplateUpdate: false,
 
-        maxRuns: 20
+        maxRuns: 20,
+
+        showCalc: false
 
       };
     },
@@ -124,12 +126,6 @@ var exports = (function() {
       }
     },
     computed: {
-      basinslope: {
-        cache: false,
-        get: function () {
-          return _.get(this.scenarioConfig, ".sections[2].variables[0].value", "")
-        }
-      },
       totalRuns: {
         cache: false,
         get: function() {
@@ -337,8 +333,6 @@ var exports = (function() {
             nameVariable.value = this.scenarioConfig.name;
           }
 
-
-
         }
       },
 
@@ -430,6 +424,32 @@ var exports = (function() {
         });
 
         return scenario;
+      },
+
+      collapseToggle: function (e) {
+        e.stopPropagation();
+        $(e.target).parent(".multiplytable").children(".collapse").collapse("toggle");
+      },
+
+      split: function (string) {
+        return (string + "").split(",");
+      },
+
+      getVar: function (id) {
+        return _.filter(
+          _.flattenDeep(
+            _.map(this.scenarioConfig.sections, function (section) {
+              return section.variables;
+            })
+          ),
+          function (variable) {
+            return variable.id === id;
+          }
+        )[0];
+      },
+
+      round: function(num) {
+        return _.round(num, 4);  // precision 2
       }
     }
   });

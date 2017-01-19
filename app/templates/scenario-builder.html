@@ -198,22 +198,25 @@
                           </div>
                           <!-- =====  DUMMY FEATURES END  ===== -->
 
-                          <div class="calculator" v-if="variable.calculator">
-                            <div class="table-container">
-                              <table class="table">
+                          <div class="multiplytable text-center" v-if="variable.multiplytable">
+                            <div class="btn btn-default btn-xs" @click.stop="collapseToggle">
+                              Toggle absolute value table for {{ variable.name }}
+                            </div>
+                            <div class="table-container collapse">
+                              <table class="table table-condensed">
                                 <thead>
                                   <tr>
-                                    <th>Basin Slope</th>
-                                    <th v-for="val2 in variable.value.split(',')">
-                                      {{ val2 }}%
+                                    <th class="active" nowrap>{{ getVar(variable.multiplytable.source).name }}</th>
+                                    <th v-for="val2 in split(variable.value)">
+                                      {{ val2 }}{{ variable.units }}
                                     </th>
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  <tr v-for="val1 in basinslope.split(',')">
-                                    <td>{{ val1 }}m</td>
-                                    <td v-for="val2 in variable.value.split(',')">
-                                      {{ val1 * val2 / 100 | currency '' 4 }}m
+                                  <tr v-for="val1 in split(getVar(variable.multiplytable.source).value)">
+                                    <td class="active">{{ val1 }}m</td>
+                                    <td v-for="val2 in split(variable.value)">
+                                      {{ round( val1 * val2 / ((variable.units === "%") ? 100 : 1) ) }}m
                                     </td>
                                   </tr>
                                 </tbody>
