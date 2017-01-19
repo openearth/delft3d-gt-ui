@@ -423,6 +423,8 @@ var exports = (function() {
         return scenario;
       },
 
+      // multiplytable methods
+
       collapseToggle: function (e) {
         e.stopPropagation();
         $(e.target).parent(".multiplytable").children(".collapse").collapse("toggle");
@@ -446,7 +448,7 @@ var exports = (function() {
       },
 
       round: function(num) {
-        return _.round(num, 4);  // precision 2
+        return _.round(num, 4);
       }
     }
   });
