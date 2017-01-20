@@ -67,6 +67,44 @@
             </div>
           </div>
 
+          <div class="panel panel-default panel-search">
+            <div class="panel-heading panel-collapse-header" data-toggle="collapse" data-parent="#template-versions" href="#template-versions" aria-expanded="true" aria-controls="template-collapse">
+              Versions
+            </div>
+            <div class="panel-body panel-collapse collapse" role="tabpanel" aria-labelledby="template-versions" id="template-versions">
+              <div class="form-group">
+                <select
+                   v-model="selectedDelft3dversions"
+                   id="versions"
+                   class="select-picker form-control"
+                   title="Delft3D version"
+                   multiple
+                   data-selected-text-format="count > 3"
+                   data-actions-box="true"
+                   data-container="body">
+                   <template v-for="d3dversion in versions.delft3dversions">
+                    <option data-content="{{ d3dversion }}">{{ d3dversion }}</option>
+                   </template>
+                </select>
+              </div>
+              <div class="form-group">
+                <select
+                   v-model="selectedPPVersions"
+                   id="versions"
+                   class="select-picker form-control"
+                   title="SVN revision"
+                   multiple
+                   data-selected-text-format="count > 3"
+                   data-actions-box="true"
+                   data-container="body">
+                   <template v-for="ppversion in versions.ppversions">
+                    <option data-content="{{ ppversion }}">{{ ppversion }}</option>
+                   </template>
+                </select>
+              </div>
+            </div>
+          </div>
+
           <!-- Dynamically generated HTML using incoming template from API -->
 
           <!-- Variables -->

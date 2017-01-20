@@ -1,4 +1,4 @@
-/* global _, Vue, fetchSearchTemplate, fetchUsers, store  */
+/* global _, Vue, fetchSearchTemplate, fetchUsers, fetchVersions, store  */
 var exports = (function () {
   "use strict";
   var SearchDetails = Vue.component("search-details", {
@@ -25,9 +25,16 @@ var exports = (function () {
         users: [],
         selectedUsers: [],
 
-        // Template used for searching (probably always one)
-        searchTemplate: null
+        selectedDelft3dversions: [],
+        selectedPPVersions: [],
 
+        // Template used for searching (probably always one)
+        searchTemplate: null,
+
+        versions: {
+          "delft3dversions": [],
+          "ppversions": []
+        }
       };
     },
 
@@ -47,14 +54,16 @@ var exports = (function () {
       };
 
       // get search templates
-      Promise.all([fetchUsers(), fetchSearchTemplate()])
+      Promise.all([fetchUsers(), fetchSearchTemplate(), fetchVersions()])
         .then((jsons) => {
           var users = jsons[0];
           var template = jsons[1];
+          var versions = jsons[2];
 
           // store them
           this.users = _.sortBy(users, ["last_name", "first_name"]);
           this.searchTemplate = template;
+          this.versions = versions;
 
           // after we"re done loading the templates in the dom, start searching.
           this.$nextTick(
@@ -190,7 +199,9 @@ var exports = (function () {
           started_after: this.startedAfter,
           started_before: this.startedBefore,
           template: this.selectedTemplates,
-          users: this.selectedUsers
+          users: this.selectedUsers,
+          delft3dversions: this.selectedDelft3dversions,
+          ppversions: this.selectedPPVersions
         };
         /*eslint-enable camelcase*/
 
@@ -250,6 +261,8 @@ var exports = (function () {
         this.selectedParameters = {};
         this.selectedTemplates = [];
         this.selectedUsers = [];
+        this.selectedDelft3dversions = [];
+        this.selectedPPVersions = [];
 
         this.activatedPostProc = {
           "ProDeltaD50": false,
