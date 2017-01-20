@@ -39,7 +39,7 @@ var exports = (function () {
       dateCreatedText: {
         cached: false,
         get: function () {
-          var d = new Date(this.activeModel.data.date_created);
+          var d = new Date(_.get(this.activeModel, ".data.date_created"), "");
 
           return d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
         }
@@ -47,31 +47,31 @@ var exports = (function () {
       isReadOnly: {
         cache: false,
         get: function () {
-          return this.activeModel.data.shared !== "p";
+          return _.get(this.activeModel, ".data.shared", "p") !== "p";
         }
       },
       isIdle: {
         cache: false,
         get: function () {
-          return this.activeModel.data.state === "Idle: waiting for user input";
+          return _.get(this.activeModel, ".data.state", "") === "Idle: waiting for user input";
         }
       },
       isRunning: {
         cache: false,
         get: function () {
-          return this.activeModel.data.state === "Running simulation";
+          return _.get(this.activeModel, ".data.state", "") === "Running simulation";
         }
       },
       isFinished: {
         cache: false,
         get: function () {
-          return this.activeModel.data.state === "Finished";
+          return _.get(this.activeModel, ".data.state", "") === "Finished";
         }
       },
       isQueued: {
         cache: false,
         get: function () {
-          return this.activeModel.data.state === "Queued";
+          return _.get(this.activeModel, ".data.state", "") === "Queued";
         }
       },
       shareLevelText: {
@@ -84,22 +84,19 @@ var exports = (function () {
             "u": "updating"
           };
 
-          return niceStrings[this.activeModel.data.shared];
+          return niceStrings[_.get(this.activeModel, ".data.shared", "p")];
         }
       },
       delft3DVersion: {
         cache: false,
         get: function () {
-          if(_.has(this.activeModel, "data.versions.delft3d.delft3d_version")) {
-            return this.activeModel.data.versions.delft3d.delft3d_version;
-          }
-          return "";
+          return _.get(this.activeModel, "data.versions.delft3d.delft3d_version", "");
         }
       },
       reposUrl: {
         cache: false,
         get: function () {
-          if (_.has(this.activeModel, "data.versions.preprocess.REPOS_URL")) {
+          if (_.has(this.activeModel, "data.versions.preprocess")) {
             return this.activeModel.data.versions.preprocess.REPOS_URL + "?p=" + this.activeModel.data.versions.preprocess.SVN_REV;
           }
           return "";

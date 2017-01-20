@@ -25,16 +25,12 @@ var exports = (function () {
         users: [],
         selectedUsers: [],
 
-        selectedDelft3dversions: [],
-        selectedPPVersions: [],
+        selectedVersions: {},
 
         // Template used for searching (probably always one)
         searchTemplate: null,
 
-        versions: {
-          "delft3dversions": [],
-          "ppversions": []
-        }
+        versions: {}
       };
     },
 
@@ -200,12 +196,11 @@ var exports = (function () {
           started_before: this.startedBefore,
           template: this.selectedTemplates,
           users: this.selectedUsers,
-          delft3dversions: this.selectedDelft3dversions,
-          ppversions: this.selectedPPVersions
+          versions: JSON.stringify(this.selectedVersions)
         };
         /*eslint-enable camelcase*/
 
-        // serialize parameters corresponding to https://publicwiki.deltares.nl/display/Delft3DGT/Search
+        // serialize the post-processing params
         var paramArray = _.map(
           this.selectedParameters,
           (value, key) => {
@@ -224,7 +219,6 @@ var exports = (function () {
           }
         );
 
-        // serialize post-processing corresponding to https://publicwiki.deltares.nl/display/Delft3DGT/Search
         var postProcArray = _.map(
           this.selectedPostProc,
           (value, key) => {
@@ -236,7 +230,6 @@ var exports = (function () {
         );
 
         _.pullAll(postProcArray, [""]);
-
         params.parameter = _.merge(paramArray, postProcArray);
 
         return params;
@@ -246,6 +239,22 @@ var exports = (function () {
 
         store.updateParams(params);
         store.update();
+      },
+
+      filterVersions: function (versions) {
+        var filter = [
+          "REPOS_URL"
+        ];
+
+        return _.omit(versions, filter);
+      },
+      niceVersionTitle: function (id) {
+        var mappings = {
+          "delft3d_version": "Delft3D version",
+          "SVN_REV": "SVN revision"
+        };
+
+        return _.get(mappings, "." + id, id);
       }
     },
 
@@ -261,8 +270,7 @@ var exports = (function () {
         this.selectedParameters = {};
         this.selectedTemplates = [];
         this.selectedUsers = [];
-        this.selectedDelft3dversions = [];
-        this.selectedPPVersions = [];
+        this.selectedVersions = {};
 
         this.activatedPostProc = {
           "ProDeltaD50": false,

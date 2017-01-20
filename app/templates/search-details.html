@@ -72,33 +72,18 @@
               Versions
             </div>
             <div class="panel-body panel-collapse collapse" role="tabpanel" aria-labelledby="template-versions" id="template-versions">
-              <div class="form-group">
+              <div class="form-group" v-for="(key, values) in filterVersions(versions)">
                 <select
-                   v-model="selectedDelft3dversions"
-                   id="versions"
+                   v-model="selectedVersions[key]"
+                   id="{{ key }}"
                    class="select-picker form-control"
-                   title="Delft3D version"
+                   title="{{ niceVersionTitle(key) }}"
                    multiple
                    data-selected-text-format="count > 3"
                    data-actions-box="true"
                    data-container="body">
-                   <template v-for="d3dversion in versions.delft3dversions">
-                    <option data-content="{{ d3dversion }}">{{ d3dversion }}</option>
-                   </template>
-                </select>
-              </div>
-              <div class="form-group">
-                <select
-                   v-model="selectedPPVersions"
-                   id="versions"
-                   class="select-picker form-control"
-                   title="SVN revision"
-                   multiple
-                   data-selected-text-format="count > 3"
-                   data-actions-box="true"
-                   data-container="body">
-                   <template v-for="ppversion in versions.ppversions">
-                    <option data-content="{{ ppversion }}">{{ ppversion }}</option>
+                   <template v-for="v in values">
+                    <option data-content="{{ v }}">{{ v }}</option>
                    </template>
                 </select>
               </div>
