@@ -447,8 +447,11 @@ var exports = (function() {
         )[0];
       },
 
-      round: function(num) {
-        return _.round(num, 4);
+      calcAbsBaseLevelChange: function (basinslope, percentage) {
+        return _.round(
+          ((4 + (10000 * Math.tan(basinslope / 180 * Math.PI))) * percentage / 100),
+          2  // digit precision
+        );
       }
     }
   });
