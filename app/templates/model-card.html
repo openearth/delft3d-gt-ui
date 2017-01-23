@@ -25,7 +25,7 @@
           <div class="col-xs-11 col-sm-2 text-center no-padding">
             <div class="progress">
               <div
-                data-percentage="{{model.data.progress}}%"
+                :data-percentage="model.data.progress + '%'"
                 :style="{ width: model.data.progress + '%'}"
                 class="progress-bar"
                 :class="[

@@ -52,9 +52,8 @@ var exports = (function () {
       // get search templates
       Promise.all([fetchUsers(), fetchSearchTemplate(), fetchVersions()])
         .then((jsons) => {
-          var users = jsons[0];
-          var template = jsons[1];
-          var versions = jsons[2];
+          // Destructure the promise returns
+          var [users, template, versions] = jsons;
 
           // store them
           this.users = _.sortBy(users, ["last_name", "first_name"]);
@@ -244,17 +243,20 @@ var exports = (function () {
       filterVersions: function (versions) {
         var filter = [
           "REPOS_URL"
+          // add more keys to filter
         ];
 
         return _.omit(versions, filter);
       },
+
       niceVersionTitle: function (id) {
         var mappings = {
           "delft3d_version": "Delft3D version",
           "SVN_REV": "SVN revision"
+          // add more verbose titles if so desired
         };
 
-        return _.get(mappings, "." + id, id);
+        return _.get(mappings, id, id);
       }
     },
 

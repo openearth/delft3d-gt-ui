@@ -16,7 +16,7 @@
               <div class="form-group ">
                 <label for="select-template">Select a template</label>
                 <select class="combobox form-control" v-model="template"  id="select-template" :onchange="selectTemplate(template)">
-                  <option v-for="template in availableTemplates" v-bind:value="template">
+                  <option v-for="template in availableTemplates" :value="template">
                     {{ template.name }}
                   </option>
                   <option value="" disabled>
@@ -79,12 +79,12 @@
                         </template>
                         <!-- =====  DUMMY FEATURES END  ===== -->
 
-                        <div class="form-group" v-for="variable in section.variables" v-bind:class="{'has-error': $validation[getId(variable)] && !$validation[getId(variable)].valid}">
+                        <div class="form-group" v-for="variable in section.variables" :class="{'has-error': $validation[getId(variable)] && !$validation[getId(variable)].valid}">
 
-                          <label class="control-label" for="{{variable.id}}">
+                          <label class="control-label" :for="variable.id">
                             {{ variable.name }}
                             <!-- TODO: get rid of this space -->
-                            <span v-if="variable.description" class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="{{variable.description}}"></span>
+                            <span v-if="variable.description" class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" :title="variable.description"></span>
 
                             <span v-if="variable.validators.min !== undefined">
                               [{{ variable.validators.min }} - {{ variable.validators.max }}]
@@ -100,9 +100,9 @@
                             <!-- numeric, text, semver or factor are inputs-->
                             <template v-if="isInput(variable)">
                               <input
-                              type="{{ variable.type }}"
+                              :type="variable.type"
                               class="form-control"
-                              id="{{ variable.id }}"
+                              :id="variable.id"
                               :data-role="variable.factor ? 'tagsinput' : ''"
                               v-model="variable.value"
                               :disabled="variable.disabled"
@@ -114,7 +114,7 @@
                             <template v-if="variable.type === 'select' && !variable.factor">
                               <select
                                 class="form-control select-picker"
-                                id="{{ variable.id }}"
+                                :id="variable.id"
                                 v-model="variable.value"
                                 :field="getId(variable)"
                                 v-validate="variable.validators"
@@ -122,7 +122,7 @@
                                 >
                                 <option
                                   v-for="(i, option) in variable.options"
-                                  v-bind:value="option.value"
+                                  :value="option.value"
                                   >
                                   {{ option.text }}
                                 </option>
@@ -209,7 +209,7 @@
 
                   <div class="panel panel-default">
                     <div class="panel-body">
-                      <div class="form-group" v-bind:class="{'has-error': !$validation.totalruns.valid}">
+                      <div class="form-group" :class="{'has-error': !$validation.totalruns.valid}">
                         <input
                           type="hidden"
                           class="form-control"

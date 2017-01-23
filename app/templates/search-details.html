@@ -47,7 +47,7 @@
 
           <div class="form-group">
             <select v-model="selectedUsers" id="user" class="select-picker form-control" title="Choose user..." multiple data-selected-text-format="count > 3">
-              <option v-for="user in users" value="{{user.id}}">{{user.last_name}}, {{user.first_name}}</option>
+              <option v-for="user in users" :value="user.id">{{user.last_name}}, {{user.first_name}}</option>
             </select>
           </div>
 
@@ -74,16 +74,16 @@
             <div class="panel-body panel-collapse collapse" role="tabpanel" aria-labelledby="template-versions" id="template-versions">
               <div class="form-group" v-for="(key, values) in filterVersions(versions)">
                 <select
-                   v-model="selectedVersions[key]"
-                   id="{{ key }}"
+                   :id="key"
+                   :title="niceVersionTitle(key)"
                    class="select-picker form-control"
-                   title="{{ niceVersionTitle(key) }}"
-                   multiple
-                   data-selected-text-format="count > 3"
                    data-actions-box="true"
-                   data-container="body">
+                   data-container="body"
+                   data-selected-text-format="count > 3"
+                   v-model="selectedVersions[key]"
+                   multiple>
                    <template v-for="v in values">
-                    <option data-content="{{ v }}">{{ v }}</option>
+                    <option :data-content="v">{{ v }}</option>
                    </template>
                 </select>
               </div>
@@ -111,9 +111,9 @@
                     <div class="form-group">
 
                       <!-- Name should be excluded: already included above -->
-                      <label class="control-label" for="{{variable.id}}">{{ variable.name }}: <span v-if="variable.units" >({{ variable.units }})</span></label>
+                      <label class="control-label" :for="variable.id">{{ variable.name }}: <span v-if="variable.units" >({{ variable.units }})</span></label>
 
-                      <div v-bind:class="{ numeric: variable.type === 'numeric' }">
+                      <div :class="{ numeric: variable.type === 'numeric' }">
                         <!-- two types of input for now: textarea and other -->
 
                         <!-- other first -->
@@ -124,10 +124,10 @@
                             <input
                                type="text"
                                class="ion-range"
-                               id="{{ variable.id }}"
+                               :id="variable.id"
                                data-step="0.01"
-                               data-min="{{ variable.validators.min }}"
-                               data-max="{{ variable.validators.max }}"
+                               :data-min="variable.validators.min"
+                               :data-max="variable.validators.max"
                                data-type="double"
                                v-model="selectedParameters[variable.id]"
                                />
@@ -136,13 +136,13 @@
                           <template v-if="variable.type === 'select' && !variable.factor">
                             <div class="form-group">
                               <select class="select-picker form-control" multiple
-                                      id="{{ variable.id }}"
+                                      :id="variable.id"
                                       v-model="selectedParameters[variable.id]"
                                       data-selected-text-format="count > 3" data-actions-box="true"
                                       >
                                 <option
                                    v-for="option in variable.options"
-                                   v-bind:value="option.text"
+                                   :value="option.text"
                                    >
                                   {{ option.text }}
                                 </option>
@@ -153,9 +153,9 @@
                           <template v-if="variable.type !== 'numeric' && variable.type !== 'select'">
                             <div class="input-group">
                               <input
-                                 type="{{ variable.type }}"
+                                 :type="variable.type"
                                  class="form-control"
-                                 id="{{ variable.id }}"
+                                 :id="variable.id"
                                  value=""
                                  v-model="selectedParameters[variable.id]"
                                  />
