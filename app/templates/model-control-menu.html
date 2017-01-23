@@ -18,26 +18,54 @@
     <ul class="dropdown-menu">
 
       <li :class="{disabled: numSelectedModels === 0 }">
-        <a @click="startSelectedModels">
+        <a @click.stop="startSelectedModels">
           <i class="fa fa-fw fa-play" aria-hidden="true"></i> Start model<span v-if="numSelectedModels > 1">s</span>
         </a>
       </li>
 
       <li :class="{disabled: numSelectedModels === 0 }">
-        <a @click="stopSelectedModels">
+        <a @click.stop="stopSelectedModels">
           <i class="fa fa-fw fa-stop" aria-hidden="true"></i> Stop model<span v-if="numSelectedModels > 1">s</span>
         </a>
       </li>
 
       <li :class="{disabled: numSelectedModels === 0 }">
-        <a @click="resetSelectedModels">
+        <a @click.stop="resetSelectedModels">
           <i class="fa fa-fw fa-fast-backward" aria-hidden="true"></i> Reset model<span v-if="numSelectedModels > 1">s</span>
         </a>
       </li>
 
       <li :class="{disabled: numSelectedModels === 0 }">
-        <a @click="deleteSelectedModels">
+        <a @click.stop="deleteSelectedModels">
           <i class="fa fa-fw fa-times" aria-hidden="true"></i> Delete model<span v-if="numSelectedModels > 1">s</span>
+        </a>
+      </li>
+
+      <li role="separator" class="divider"></li>
+
+      <li :class="{disabled: numSelectedModels === 0  || !someSelectedModelsAreFinished}">
+        <a @click.stop="shareSelectedModels('company')">
+          <i class="fa fa-fw fa-group" aria-hidden="true"></i> Share model<span v-if="numSelectedModels > 1">s</span> with Company
+        </a>
+      </li>
+
+      <li :class="{disabled: numSelectedModels === 0  || !someSelectedModelsAreFinished}">
+        <a @click.stop="shareSelectedModels('world')">
+          <i class="fa fa-fw fa-globe" aria-hidden="true"></i> Share model<span v-if="numSelectedModels > 1">s</span> with World
+        </a>
+      </li>
+
+      <li role="separator" class="divider"></li>
+
+      <li :class="{disabled: numSelectedModels === 0 || (option.onlyFinished && !someSelectedModelsAreFinished)}" v-for="(key, option) in downloadOptions">
+        <div class="dropdown-menu-checkbox" @click.stop="toggle(key)">
+          <input type="checkbox" class="downloadoption"  :value="key" v-model="downloadOptions[key].active" :disabled="numSelectedModels === 0 || (option.onlyFinished && !someSelectedModelsAreFinished)"> {{ option.verbose }}
+        </div>
+      </li>
+
+      <li :class="{disabled: numSelectedModels === 0 || !anyDownloadsSelected}">
+        <a @click.stop="downloadSelectedModels">
+          <i class="fa fa-fw fa-download" aria-hidden="true"></i> Dowload data from model<span v-if="numSelectedModels > 1">s</span>
         </a>
       </li>
 
@@ -49,6 +77,15 @@
       </template>
       <template slot="body">
         <p>Are you sure you want to delete <span v-if="numSelectedModels > 1">these models</span><span v-if="numSelectedModels == 1">this model</span>? This action cannot be undone.</p>
+      </template>
+    </confirm-dialog>
+
+    <confirm-dialog dialog-id="share-runs" confirm-button-title="Share">
+      <template slot="title">
+        Share model(s)?
+      </template>
+      <template slot="body">
+        <p>Are you sure you want to share <span v-if="numSelectedModels > 1">these models</span><span v-if="numSelectedModels == 1">this model</span>? This action cannot be undone.</p>
       </template>
     </confirm-dialog>
 

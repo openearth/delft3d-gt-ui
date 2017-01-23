@@ -1,4 +1,4 @@
-/* global _, Vue, fetchSearchTemplate, fetchUsers, store  */
+/* global _, Vue, fetchSearchTemplate, fetchUsers, fetchVersions, store  */
 var exports = (function () {
   "use strict";
   var SearchDetails = Vue.component("search-details", {
@@ -25,9 +25,12 @@ var exports = (function () {
         users: [],
         selectedUsers: [],
 
-        // Template used for searching (probably always one)
-        searchTemplate: null
+        selectedVersions: {},
 
+        // Template used for searching (probably always one)
+        searchTemplate: null,
+
+        versions: {}
       };
     },
 
@@ -47,14 +50,15 @@ var exports = (function () {
       };
 
       // get search templates
-      Promise.all([fetchUsers(), fetchSearchTemplate()])
+      Promise.all([fetchUsers(), fetchSearchTemplate(), fetchVersions()])
         .then((jsons) => {
-          var users = jsons[0];
-          var template = jsons[1];
+          // Destructure the promise returns
+          var [users, template, versions] = jsons;
 
           // store them
           this.users = _.sortBy(users, ["last_name", "first_name"]);
           this.searchTemplate = template;
+          this.versions = versions;
 
           // after we"re done loading the templates in the dom, start searching.
           this.$nextTick(
@@ -190,11 +194,12 @@ var exports = (function () {
           started_after: this.startedAfter,
           started_before: this.startedBefore,
           template: this.selectedTemplates,
-          users: this.selectedUsers
+          users: this.selectedUsers,
+          versions: JSON.stringify(this.selectedVersions)
         };
         /*eslint-enable camelcase*/
 
-        // serialize parameters corresponding to https://publicwiki.deltares.nl/display/Delft3DGT/Search
+        // serialize the post-processing params
         var paramArray = _.map(
           this.selectedParameters,
           (value, key) => {
@@ -213,7 +218,6 @@ var exports = (function () {
           }
         );
 
-        // serialize post-processing corresponding to https://publicwiki.deltares.nl/display/Delft3DGT/Search
         var postProcArray = _.map(
           this.selectedPostProc,
           (value, key) => {
@@ -225,7 +229,6 @@ var exports = (function () {
         );
 
         _.pullAll(postProcArray, [""]);
-
         params.parameter = _.merge(paramArray, postProcArray);
 
         return params;
@@ -235,6 +238,25 @@ var exports = (function () {
 
         store.updateParams(params);
         store.update();
+      },
+
+      filterVersions: function (versions) {
+        var filter = [
+          "REPOS_URL"
+          // add more keys to filter
+        ];
+
+        return _.omit(versions, filter);
+      },
+
+      niceVersionTitle: function (id) {
+        var mappings = {
+          "delft3d_version": "Delft3D version",
+          "SVN_REV": "SVN revision"
+          // add more verbose titles if so desired
+        };
+
+        return _.get(mappings, id, id);
       }
     },
 
@@ -250,6 +272,7 @@ var exports = (function () {
         this.selectedParameters = {};
         this.selectedTemplates = [];
         this.selectedUsers = [];
+        this.selectedVersions = {};
 
         this.activatedPostProc = {
           "ProDeltaD50": false,

@@ -58,10 +58,23 @@ var exports = (function() {
     });
   }
 
+  function fetchVersions() {
+    return new Promise(function(resolve, reject) {
+      $.getJSON("/api/v1/scenes/versions/")
+        .done(function(data) {
+          resolve(data);
+        })
+        .fail(function(error) {
+          reject(error);
+        });
+    });
+  }
+
   return {
     fetchUsers: fetchUsers,
     fetchTemplates: fetchTemplates,
-    fetchSearchTemplate: fetchSearchTemplate
+    fetchSearchTemplate: fetchSearchTemplate,
+    fetchVersions: fetchVersions
   };
 
 }());

@@ -27,7 +27,7 @@
             <dd><span>Amazon</span></dd>
 
             <dt>Python Scripts</dt><dd>
-              <a href="{{reposUrl}}" target="_blank" v-if="reposUrl">{{ reposUrl }}</a>
+              <a :href="reposUrl" target="_blank" v-if="reposUrl">{{ reposUrl }}</a>
               <span v-else>-</span>
             </dd>
 
@@ -50,10 +50,10 @@
                     'progress-bar-' + activeModel.statusLevel()
                   ]"
                   role="progressbar"
-                  aria-valuenow="{{activeModel.data.progress}}"
+                  :aria-valuenow="activeModel.data.progress"
                   aria-valuemin="0"
                   aria-valuemax="100"
-                  v-bind:style="{width: activeModel.data.progress + '%'}"
+                  :style="{width: activeModel.data.progress + '%'}"
                   data-toggle="tooltip"
                   data-placement="top"
                   title="Progress"
@@ -65,7 +65,7 @@
             </dd>
             <dt>Status</dt><dd><span class="label label-status" :class="'label-' + activeModel.statusLevel()">{{activeModel.data.state | capitalize }}</span></dd>
             <dt>Simulation output:</dt><dd>
-              <a class="btn btn-default btn-xs" href="{{activeModel.data.fileurl}}" target="_blank" title="A link to the file server hosting all output files.">File Server</a>
+              <a class="btn btn-default btn-xs" :href="activeModel.data.fileurl" target="_blank" title="A link to the file server hosting all output files.">File Server</a>
               <a class="btn btn-default btn-xs" href="/thredds/catalog/files/{{activeModel.data.suid}}/simulation/catalog.html" target="_blank" title="A link to the THREDDS server hosting Delft3D NetCDF output, which allows querying via OPeNDAP.">THREDDS Data Server</a>
             </dd>
           </dl>
@@ -81,11 +81,11 @@
         <div class="collapse">
 
           <div class="panel-body">
-            <p v-bind:class="{ 'hidden': isReadOnly }">
+            <p :class="{ 'hidden': isReadOnly }">
               You can select an action to perform on this simulation:
             </p>
 
-            <p v-bind:class="{ 'hidden': !isReadOnly }">
+            <p :class="{ 'hidden': !isReadOnly }">
               Simulation controls are disabled for already published runs.
             </p>
 
@@ -238,35 +238,35 @@
               Please check what you would like to download. Your download will be a ZIP file which contains the requested files.
             </p>
 
-            <div class="form-group input-group">
+            <div class="form-group input-group" @click="toggle('export_d3dinput', true)">
               <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_d3dinput" v-model="selectedDownloads.export_d3dinput"></span>
               <span class="form-control no-fixed-height">Delft3D: input files</span>
             </div>
             <!--
-                <div class="form-group input-group">
+                <div class="form-group input-group" @click="toggle('export_d3doutput', true)">
                   <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_d3doutput" v-on:change="downloadOptionsChange()"></span>
                   <span class="form-control no-fixed-height">Delft3D: output files</span>
                 </div>
                 -->
-            <div class="form-group input-group">
+            <div class="form-group input-group" @click="toggle('export_images', true)">
               <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_images" v-model="selectedDownloads.export_images"></span>
               <span class="form-control no-fixed-height">Media: generated output images</span>
             </div>
 
-            <div class="form-group input-group">
+            <div class="form-group input-group" @click="toggle('export_movie', true)">
               <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_movie" v-model="selectedDownloads.export_movie"></span>
               <span class="form-control no-fixed-height">Media: generated output movies</span>
             </div>
 
-            <div class="form-group input-group" v-bind:class="{ 'inputdisabled': !isFinished }">
+            <div class="form-group input-group" :class="{ 'inputdisabled': !isFinished }" @click="toggle('export_thirdparty', isFinished);">
               <span class="input-group-addon">
-                <input type="checkbox" class="downloadoption"  value="export_thirdparty" v-model="selectedDownloads.export_thirdparty" v-bind:disabled="!isFinished">
+                <input type="checkbox" class="downloadoption"  value="export_thirdparty" v-model="selectedDownloads.export_thirdparty" :disabled="!isFinished">
               </span>
-              <span class="form-control no-fixed-height" v-bind:class="{'hidden': !isFinished}">Export: files for RMS / Petrel</span>
-              <span class="form-control no-fixed-height" v-bind:class="{'hidden': isFinished}">Export to RMS / Petrel (will be enabled when the run is 'Finished')</span>
+              <span class="form-control no-fixed-height" :class="{'hidden': !isFinished}">Export: files for RMS / Petrel</span>
+              <span class="form-control no-fixed-height not-allowed" :class="{'hidden': isFinished}">Export: files for RMS / Petrel (will be enabled when the run is 'Finished')</span>
             </div>
 
-            <button class="btn btn-primary" type="button"  id="download-submit" v-on:click="downloadFiles()" v-bind:disabled="!anyDownloadsSelected">
+            <button class="btn btn-primary" type="button"  id="download-submit" v-on:click="downloadFiles()" :disabled="!anyDownloadsSelected">
               Download
             </button>
 
