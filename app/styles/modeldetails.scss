@@ -55,4 +55,9 @@
       cursor: pointer;
     }
   }
+
+  .not-allowed {
+    color: $col-bw-4;
+    cursor: not-allowed;
+  }
 }
