@@ -20,4 +20,13 @@
       }
     }
   }
+
+  .disabled {
+    cursor: not-allowed;
+
+    .dropdown-menu-checkbox {
+      color: $col-bw-5;
+      cursor: not-allowed;
+    }
+  }
 }

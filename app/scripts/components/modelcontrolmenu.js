@@ -11,11 +11,27 @@ var exports = (function () {
 
       return {
         collapseShow: true,
-        selectedDownloads: {
-          "export_d3dinput": false,
-          "export_images": false,
-          "export_thirdparty": false,
-          "export_movie": false
+        downloadOptions: {
+          "export_d3dinput": {
+            "active": false,
+            "onlyFinished": false,
+            "verbose": "Delft3D: input files"
+          },
+          "export_images": {
+            "active": false,
+            "onlyFinished": false,
+            "verbose": "Media: output images"
+          },
+          "export_movie": {
+            "active": false,
+            "onlyFinished": false,
+            "verbose": "Media: output movies"
+          },
+          "export_thirdparty": {
+            "active": false,
+            "onlyFinished": true,
+            "verbose": "Export: RMS / Petrel"
+          }
         },
         sharedState: store.state
       };
@@ -24,8 +40,8 @@ var exports = (function () {
 
     computed: {
       anyDownloadsSelected: function () {
-        return Object.values(this.selectedDownloads).some(function(el) {
-          return el;
+        return Object.values(this.downloadOptions).some(function(el) {
+          return el.active;
         });
       },
       numSelectedModels: function () {
@@ -43,20 +59,18 @@ var exports = (function () {
     watch: {
       "numSelectedModels": function () {
         if (this.numSelectedModels === 0) {
-          this.selectedDownloads.export_d3dinput = false;
-          this.selectedDownloads.export_images = false;
-          this.selectedDownloads.export_thirdparty = false;
-          this.selectedDownloads.export_movie = false;
+          _.each(this.downloadOptions, function (option) {
+            option.active = false;
+          });
         }
-      },
-      "selectedDownloads.exportThirdparty": function () {
         if (!this.someSelectedModelsAreFinished) {
-          this.selectedDownloads.export_thirdparty = false;
-        }
-      },
-      "someSelectedModelsAreFinished": function () {
-        if (!this.someSelectedModelsAreFinished) {
-          this.selectedDownloads.export_thirdparty = false;
+          _.each(
+            _.filter(this.downloadOptions, function (option) {
+              return option.onlyFinished;
+            }),
+            function (option) {
+              option.active = false;
+            });
         }
       }
     },
@@ -140,16 +154,17 @@ var exports = (function () {
       },
 
       downloadSelectedModels: function () {
-        store.downloadSelectedModels(this.selectedDownloads);
+        if (this.numSelectedModels === 0 || !this.anyDownloadsSelected) {
+          return;  // nothing to do
+        }
+        store.downloadSelectedModels(this.downloadOptions);
       },
 
-      toggle: function(id, event) {
-        event.stopPropagation();
-        this.selectedDownloads[id] = !this.selectedDownloads[id];
-      },
-      preventCheck: function (event) {
-        event.preventDefault();
-        event.stopPropagation();
+      toggle: function(id) {
+        if (this.downloadOptions[id].onlyFinished && !this.someSelectedModelsAreFinished) {
+          return;
+        }
+        this.downloadOptions[id].active = !this.downloadOptions[id].active;
       }
     }
 

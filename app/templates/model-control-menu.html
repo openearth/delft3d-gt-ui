@@ -18,25 +18,25 @@
     <ul class="dropdown-menu">
 
       <li :class="{disabled: numSelectedModels === 0 }">
-        <a @click="startSelectedModels">
+        <a @click.stop="startSelectedModels">
           <i class="fa fa-fw fa-play" aria-hidden="true"></i> Start model<span v-if="numSelectedModels > 1">s</span>
         </a>
       </li>
 
       <li :class="{disabled: numSelectedModels === 0 }">
-        <a @click="stopSelectedModels">
+        <a @click.stop="stopSelectedModels">
           <i class="fa fa-fw fa-stop" aria-hidden="true"></i> Stop model<span v-if="numSelectedModels > 1">s</span>
         </a>
       </li>
 
       <li :class="{disabled: numSelectedModels === 0 }">
-        <a @click="resetSelectedModels">
+        <a @click.stop="resetSelectedModels">
           <i class="fa fa-fw fa-fast-backward" aria-hidden="true"></i> Reset model<span v-if="numSelectedModels > 1">s</span>
         </a>
       </li>
 
       <li :class="{disabled: numSelectedModels === 0 }">
-        <a @click="deleteSelectedModels">
+        <a @click.stop="deleteSelectedModels">
           <i class="fa fa-fw fa-times" aria-hidden="true"></i> Delete model<span v-if="numSelectedModels > 1">s</span>
         </a>
       </li>
@@ -44,45 +44,27 @@
       <li role="separator" class="divider"></li>
 
       <li :class="{disabled: numSelectedModels === 0  || !someSelectedModelsAreFinished}">
-        <a @click="shareSelectedModels('company')">
+        <a @click.stop="shareSelectedModels('company')">
           <i class="fa fa-fw fa-group" aria-hidden="true"></i> Share model<span v-if="numSelectedModels > 1">s</span> with Company
         </a>
       </li>
 
       <li :class="{disabled: numSelectedModels === 0  || !someSelectedModelsAreFinished}">
-        <a @click="shareSelectedModels('world')">
+        <a @click.stop="shareSelectedModels('world')">
           <i class="fa fa-fw fa-globe" aria-hidden="true"></i> Share model<span v-if="numSelectedModels > 1">s</span> with World
         </a>
       </li>
 
       <li role="separator" class="divider"></li>
 
-      <li :class="{disabled: numSelectedModels === 0 }">
-        <div class="dropdown-menu-checkbox" @click="toggle('export_d3dinput', $event)">
-          <input type="checkbox" class="downloadoption"  value="export_d3dinput" v-model="selectedDownloads.export_d3dinput" v-bind:disabled="numSelectedModels === 0"> Delft3D: input files
-        </div>
-      </li>
-
-      <li :class="{disabled: numSelectedModels === 0 }">
-        <div class="dropdown-menu-checkbox" @click="toggle('export_images', $event)">
-          <input type="checkbox" class="downloadoption"  value="export_images" v-model="selectedDownloads.export_images" v-bind:disabled="numSelectedModels === 0"> Media: output images
-        </div>
-      </li>
-
-      <li :class="{disabled: numSelectedModels === 0 }">
-        <div class="dropdown-menu-checkbox" @click="toggle('export_thirdparty', $event)">
-          <input type="checkbox" class="downloadoption"  value="export_thirdparty" v-model="selectedDownloads.export_thirdparty" v-bind:disabled="numSelectedModels === 0"> Media: output movies
-        </div>
-      </li>
-
-      <li :class="{disabled: numSelectedModels === 0 || !someSelectedModelsAreFinished}">
-        <div class="dropdown-menu-checkbox" @click="toggle('export_movie', $event)">
-          <input type="checkbox" class="downloadoption"  value="export_movie" v-model="selectedDownloads.export_movie" v-bind:disabled="numSelectedModels === 0 || !someSelectedModelsAreFinished"> Export: RMS / Petrel
+      <li :class="{disabled: numSelectedModels === 0 || (option.onlyFinished && !someSelectedModelsAreFinished)}" v-for="(key, option) in downloadOptions">
+        <div class="dropdown-menu-checkbox" @click.stop="toggle(key)">
+          <input type="checkbox" class="downloadoption"  :value="key" v-model="downloadOptions[key].active" :disabled="numSelectedModels === 0 || (option.onlyFinished && !someSelectedModelsAreFinished)"> {{ option.verbose }}
         </div>
       </li>
 
       <li :class="{disabled: numSelectedModels === 0 || !anyDownloadsSelected}">
-        <a @click="downloadSelectedModels">
+        <a @click.stop="downloadSelectedModels">
           <i class="fa fa-fw fa-download" aria-hidden="true"></i> Dowload data from model<span v-if="numSelectedModels > 1">s</span>
         </a>
       </li>

@@ -423,7 +423,7 @@ var exports = (function() {
         });
 
         var selectedOptions = _.reduce(selectedDownloads, function (result, value, key) {
-          if (value) {
+          if (value.active) {
             result.push(key);
           }
           return result;
