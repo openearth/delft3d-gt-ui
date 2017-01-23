@@ -185,8 +185,6 @@
                                 </p>
                               </template>
                             </template>
-                          </div>
-
 
                           <!-- ===== DUMMY FEATURES START ===== -->
                           <div class="form-file-upload" v-if="variable.name === 'Tidal amplitude'">
@@ -200,6 +198,33 @@
                           </div>
                           <!-- =====  DUMMY FEATURES END  ===== -->
 
+                          <div class="multiplytable text-center" v-if="variable.id === 'baselevel'">
+                            <div class="btn btn-default btn-xs" @click.stop="collapseToggle">
+                              Toggle absolute value table for {{ variable.name }}
+                            </div>
+                            <div class="table-container collapse">
+                              <table class="table table-condensed">
+                                <thead>
+                                  <tr>
+                                    <th class="active" nowrap>Basin slope</th>
+                                    <th v-for="val in split(variable.value)">
+                                      {{ val }} {{ variable.units }}
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr v-for="basinslope in split(getVar('basinslope').value)">
+                                    <td class="active" nowrap>{{ basinslope }} {{ getVar('basinslope').units }}</td>
+                                    <td v-for="percentage in split(variable.value)" nowrap>
+                                      {{ calcAbsBaseLevelChange(basinslope, percentage) }} m
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+
+                          </div>
                         </div> <!-- .form-group -->
                       </div> <!-- .panel-body -->
                     </div> <!-- .panel -->
@@ -229,7 +254,7 @@
                              type="button"
                              class="btn btn-primary nav-bar-button default"
                              id="scenario-submit"
-                             @click="submitScenario"
+                             @click.stop="submitScenario"
                              value=""
                              :class="{ 'disabled': !validForm }" >
                             Submit

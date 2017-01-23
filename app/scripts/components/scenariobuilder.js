@@ -53,7 +53,6 @@ var exports = (function() {
         forceTemplateUpdate: false,
 
         maxRuns: 20
-
       };
     },
 
@@ -331,8 +330,6 @@ var exports = (function() {
             nameVariable.value = this.scenarioConfig.name;
           }
 
-
-
         }
       },
 
@@ -424,6 +421,43 @@ var exports = (function() {
         });
 
         return scenario;
+      },
+
+      // multiplytable methods
+
+      collapseToggle: function (e) {
+        $(e.target).parent(".multiplytable").children(".collapse").collapse("toggle");
+      },
+
+      split: function (string) {
+        return _.split(string, ",");
+      },
+
+      getVar: function (id) {
+        return _.first(
+          _.filter(
+            _.flattenDeep(
+              _.map(this.scenarioConfig.sections, "variables")
+            ),
+            ["id", id]
+          )
+        );
+      },
+
+      calcAbsBaseLevelChange: function (basinslope, percentage) {
+
+        // This method computes the absolute values of base level change (m), based on:
+        // - the basin slope angle (rad)
+        // - the relative base level change (%).
+        // The basin itself has a length of 10.000m and has a 4m starting depth.
+
+        // This method is very specific and unique with regards to the template!!
+        // TODO: implement a generic means to include calculations in tables based on template json
+
+        return _.round(
+          ((4 + (10000 * Math.tan(basinslope / 180 * Math.PI))) * percentage / 100),
+          2  // digit precision
+        );
       }
     }
   });
