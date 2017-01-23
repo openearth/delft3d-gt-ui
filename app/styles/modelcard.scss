@@ -11,4 +11,20 @@
   .panel-active {
     background-color: $col-bw-2;
   }
+
+  .label {
+    float: right;
+  }
+
+  .row {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  div {
+    [class^='col-'] {
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+  }
 }
