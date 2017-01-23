@@ -254,7 +254,7 @@
                              type="button"
                              class="btn btn-primary nav-bar-button default"
                              id="scenario-submit"
-                             @click="submitScenario"
+                             @click.stop="submitScenario"
                              value=""
                              :class="{ 'disabled': !validForm }" >
                             Submit
