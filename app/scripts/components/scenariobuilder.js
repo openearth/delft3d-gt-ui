@@ -434,16 +434,14 @@ var exports = (function() {
       },
 
       getVar: function (id) {
-        return _.filter(
-          _.flattenDeep(
-            _.map(this.scenarioConfig.sections, function (section) {
-              return section.variables;
-            })
-          ),
-          function (variable) {
-            return variable.id === id;
-          }
-        )[0];
+        return _.first(
+          _.filter(
+            _.flattenDeep(
+              _.map(this.scenarioConfig.sections, "variables")
+            ),
+            ["id", id]
+          )
+        );
       },
 
       calcAbsBaseLevelChange: function (basinslope, percentage) {
