@@ -46,7 +46,16 @@
 
   .row {
     margin: 0;
+    padding-bottom: 0;
   }
+
+  div {
+    [class^='col-'] {
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+  }
+
 }
 
 @media (min-width: $screen-xs-sm) {
