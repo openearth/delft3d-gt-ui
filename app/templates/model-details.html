@@ -238,27 +238,27 @@
               Please check what you would like to download. Your download will be a ZIP file which contains the requested files.
             </p>
 
-            <div class="form-group input-group">
+            <div class="form-group input-group" @click="toggle('export_d3dinput', $event, true)">
               <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_d3dinput" v-model="selectedDownloads.export_d3dinput"></span>
               <span class="form-control no-fixed-height">Delft3D: input files</span>
             </div>
             <!--
-                <div class="form-group input-group">
+                <div class="form-group input-group" @click="toggle('export_d3doutput', $event, true)">
                   <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_d3doutput" v-on:change="downloadOptionsChange()"></span>
                   <span class="form-control no-fixed-height">Delft3D: output files</span>
                 </div>
                 -->
-            <div class="form-group input-group">
+            <div class="form-group input-group" @click="toggle('export_images', $event, true)">
               <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_images" v-model="selectedDownloads.export_images"></span>
               <span class="form-control no-fixed-height">Media: generated output images</span>
             </div>
 
-            <div class="form-group input-group">
+            <div class="form-group input-group" @click="toggle('export_movie', $event, true)">
               <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_movie" v-model="selectedDownloads.export_movie"></span>
               <span class="form-control no-fixed-height">Media: generated output movies</span>
             </div>
 
-            <div class="form-group input-group" v-bind:class="{ 'inputdisabled': !isFinished }">
+            <div class="form-group input-group" v-bind:class="{ 'inputdisabled': !isFinished }" @click="toggle('export_thirdparty', $event, isFinished);">
               <span class="input-group-addon">
                 <input type="checkbox" class="downloadoption"  value="export_thirdparty" v-model="selectedDownloads.export_thirdparty" v-bind:disabled="!isFinished">
               </span>

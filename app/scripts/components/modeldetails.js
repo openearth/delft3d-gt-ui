@@ -125,7 +125,7 @@ var exports = (function () {
           }
         }
 
-        window.open("/api/v1/scenes/" + id + "/export/?" + downloadOptions.join("&"));
+        window.open("/api/v1/scenes/" + id + "/export/?format=json&" + downloadOptions.join("&"));
       },
       hasPostProcessData: function () {
         if(("data" in this.activeModel) && ("info" in this.activeModel.data) && "postprocess_output" in this.activeModel.data.info) {
@@ -183,6 +183,12 @@ var exports = (function () {
       },
       stopModel: function () {
         store.stopModel(this.activeModel);
+      },
+      toggle: function(id, event, doFlag) {
+        event.stopPropagation();
+        if (doFlag) {
+          this.selectedDownloads[id] = !this.selectedDownloads[id];
+        }
       }
     }
   });
