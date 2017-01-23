@@ -11,15 +11,6 @@ var exports = (function () {
       }
     },
 
-    computed: {
-      selectable: function () {
-        if(_.has(this.model, "data.shared")) {
-          return (_.get(this.model, "data.shared") === "p");
-        }
-        return false;
-      }
-    },
-
     methods: {
       toggleActive: function() {
         this.model.active = true;
@@ -34,9 +25,7 @@ var exports = (function () {
         }
       },
       "select-all": function () {
-        if (this.selectable) {
-          this.model.selected = true;
-        }
+        this.model.selected = true;
       },
       "unselect-all": function () {
         this.model.selected = false;

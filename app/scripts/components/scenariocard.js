@@ -14,11 +14,6 @@ var exports = (function () {
       hasModels: function () {
         return this.scenario.models.length > 0;
       },
-      hasPrivateModels: function() {
-        var privateModels = _.filter(this.scenario.models, ["data.shared", "p"]);
-
-        return privateModels.length > 0;
-      },
       someModelsSelected: {
         cache: false,
         get: function() {
@@ -30,10 +25,8 @@ var exports = (function () {
       allModelsSelected: {
         cache: false,
         get: function() {
-          var privateModels = _.filter(this.scenario.models, ["data.shared", "p"]);
-
-          if (privateModels.length > 0) {
-            return _.every(privateModels, ["selected", true]);
+          if (this.scenario.models.length > 0) {
+            return _.every(this.scenario.models, ["selected", true]);
           } else {
             return false;
           }
