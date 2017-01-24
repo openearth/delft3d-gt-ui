@@ -58,7 +58,7 @@
       <li role="separator" class="divider"></li>
 
       <li :class="{disabled: numSelectedModels === 0 || (option.onlyFinished && !someSelectedModelsAreFinished)}" v-for="(key, option) in downloadOptions">
-        <div class="dropdown-menu-checkbox" @click.stop="toggle(key)">
+        <div class="dropdown-menu-checkbox" @click.self.stop.prevent="toggle(key)">
           <input type="checkbox" class="downloadoption"  :value="key" v-model="downloadOptions[key].active" :disabled="numSelectedModels === 0 || (option.onlyFinished && !someSelectedModelsAreFinished)"> {{ option.verbose }}
         </div>
       </li>
