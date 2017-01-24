@@ -31,7 +31,7 @@ var exports = (function () {
       anyDownloadsSelected: {
         cache: false,
         get: function () {
-          return Object.values(this.selectedDownloads).some(function(el) {
+          return _.values(this.selectedDownloads).some(function(el) {
             return el;
           });
         }
@@ -39,7 +39,7 @@ var exports = (function () {
       dateCreatedText: {
         cached: false,
         get: function () {
-          var d = new Date(_.get(this.activeModel, "data.date_created"), "");
+          var d = new Date(_.get(this.activeModel, "data.date_created", ""));
 
           return d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
         }
