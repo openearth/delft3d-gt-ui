@@ -28,10 +28,11 @@
           </div>
 
           <!-- if user selected something, show GUI -->
-          <div>
+          <div v-if="template">
             <div>
               <!-- the vue validator config, stores form validation result in validation -->
               <validator name="validation">
+                <div>Validation: {{ $validation | json }}</div>
                 <form novalidate>
 
                   <div v-for="section in scenarioConfig.sections">
@@ -185,6 +186,7 @@
                                 </p>
                               </template>
                             </template>
+                          </div>
 
                           <!-- ===== DUMMY FEATURES START ===== -->
                           <div class="form-file-upload" v-if="variable.name === 'Tidal amplitude'">
@@ -224,7 +226,6 @@
                             </div>
                           </div>
 
-                          </div>
                         </div> <!-- .form-group -->
                       </div> <!-- .panel-body -->
                     </div> <!-- .panel -->

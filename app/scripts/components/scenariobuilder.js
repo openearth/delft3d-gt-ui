@@ -60,7 +60,6 @@ var exports = (function() {
 
     },
     route: {
-
       activate: function (transition) {
         // We force the template to be reloaded when this page is openend
         // Otherwise old values will stay in the form, and the validator is not reactivated.
@@ -70,11 +69,8 @@ var exports = (function() {
         this.fetchTemplateList();
 
         transition.next();
-
       },
       data: function(transition) {
-
-
         // if we have a template in the request, select that one
         if (_.has(this, "$route.query.template")) {
 
@@ -88,7 +84,6 @@ var exports = (function() {
         }
 
         transition.next();
-
       }
     },
 
@@ -214,7 +209,6 @@ var exports = (function() {
           return;
         }
 
-
         this.currentSelectedId = template.id;
 
         // First set data, then the template. Order is important!
@@ -228,7 +222,6 @@ var exports = (function() {
         // Initialize the tooltips:
         // We do this after the DOM update.
         this.$nextTick(function () {
-
           this.updateAfterTick();
         });
       },

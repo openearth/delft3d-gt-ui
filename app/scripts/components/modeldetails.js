@@ -185,6 +185,9 @@ var exports = (function () {
         if (doFlag) {
           this.selectedDownloads[id] = !this.selectedDownloads[id];
         }
+      },
+      doNothing: function () {
+        return false;
       }
     }
   });
