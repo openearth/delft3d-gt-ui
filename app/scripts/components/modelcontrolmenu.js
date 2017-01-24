@@ -160,7 +160,7 @@ var exports = (function () {
         store.downloadSelectedModels(this.downloadOptions);
       },
 
-      toggle: function(id, e) {
+      toggle: function(id) {
         if (this.downloadOptions[id].onlyFinished && !this.someSelectedModelsAreFinished) {
           return;
         }
