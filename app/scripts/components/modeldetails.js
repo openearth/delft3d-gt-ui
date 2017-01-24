@@ -31,7 +31,7 @@ var exports = (function () {
       anyDownloadsSelected: {
         cache: false,
         get: function () {
-          return Object.values(this.selectedDownloads).some(function(el) {
+          return _.values(this.selectedDownloads).some(function(el) {
             return el;
           });
         }

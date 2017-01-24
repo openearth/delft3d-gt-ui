@@ -40,7 +40,7 @@ var exports = (function () {
 
     computed: {
       anyDownloadsSelected: function () {
-        return Object.values(this.downloadOptions).some(function(el) {
+        return _.values(this.downloadOptions).some(function(el) {
           return el.active;
         });
       },
@@ -48,7 +48,7 @@ var exports = (function () {
         return store.getSelectedModels().length;
       },
       someSelectedModelsAreFinished: function () {
-        return Object.values(store.getSelectedModels()).some(function(model) {
+        return _.values(store.getSelectedModels()).some(function(model) {
           return model.data.state === "Finished";
         });
       }
@@ -160,7 +160,7 @@ var exports = (function () {
         store.downloadSelectedModels(this.downloadOptions);
       },
 
-      toggle: function(id) {
+      toggle: function(id, e) {
         if (this.downloadOptions[id].onlyFinished && !this.someSelectedModelsAreFinished) {
           return;
         }
