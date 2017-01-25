@@ -5,10 +5,12 @@
 
   // Import chai
   let chai = require("chai");
+  let chaiAsPromised = require("chai-as-promised");
   let sinon = require("sinon");
   let sinonChai = require("sinon-chai");
 
   // setup chai
+  chai.use(chaiAsPromised);
   chai.use(sinonChai);
   let should = chai.should();
 
@@ -22,12 +24,16 @@
       // import component
       store = require("../../app/scripts/store.js").store;
       sinon.spy(Promise, "all");
+      sinon.spy(Promise, "resolve");
+      sinon.spy(Promise, "reject");
       sinon.spy($, "ajax");
     });
 
     afterEach(function () {
       // Unwrap spies
       Promise.all.restore();
+      Promise.resolve.restore();
+      Promise.reject.restore();
       $.ajax.restore();
     });
 
@@ -187,21 +193,40 @@
     // ***************************************************************************** publishModel()
 
     describe(".publishModel()", function() {
-      it("publishes properly", function() {
-        let model = {"id": "a"};
+      it("rejects properly with no model", function(done) {
+        // call with erronous input
+        store.publishModel().should.be.rejected.notify(done);
+      });
 
+      it("rejects properly with no target", function(done) {
         // add models and update containers
-        store.state.models = [model];
+        store.state.models = [{"id": "a"}];
         store.updateModelContainers();
-
-        // check if all containers are there
-        store.state.modelContainers.length.should.be.equal(1);
-
-        // set an active model
         store.state.activeModelContainer = store.state.modelContainers[0];
 
-        // delete this active model
-        store.publishModel(store.state.activeModelContainer);
+        // call with erronous input
+        store.publishModel(store.state.activeModelContainer).should.be.rejected.notify(done);
+      });
+
+      it("rejects properly with wrong target", function(done) {
+        // add models and update containers
+        store.state.models = [{"id": "a"}];
+        store.updateModelContainers();
+        store.state.activeModelContainer = store.state.modelContainers[0];
+
+        // call with erronous input
+        store.publishModel(store.state.activeModelContainer, "whooogarghblblbl").should.be.rejected.notify(done);
+      });
+
+      it("publishes properly", function() {
+        // add models and update containers
+        store.state.models = [{"id": "a"}];
+        store.updateModelContainers();
+        store.state.activeModelContainer = store.state.modelContainers[0];
+
+        // call with correct input
+        store.publishModel(store.state.activeModelContainer, "company");
+        $.ajax.should.have.been.called;
       });
     });
 
