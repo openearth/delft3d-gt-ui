@@ -135,7 +135,6 @@ var exports = (function () {
 
         // Show the dialog:
         this.deleteDialog.show();
-
       },
 
       shareSelectedModels: function (domain) {
