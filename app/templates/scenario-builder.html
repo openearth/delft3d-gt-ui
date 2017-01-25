@@ -28,7 +28,8 @@
           </div>
 
           <!-- if user selected something, show GUI -->
-          <div>
+          <!-- There is also an option for an async components if one needs to load data at component instantiation. TODO: convert component. -->
+          <div v-if="template && dataLoaded">
             <div>
               <!-- the vue validator config, stores form validation result in validation -->
               <validator name="validation">
@@ -185,6 +186,7 @@
                                 </p>
                               </template>
                             </template>
+                          </div>
 
                           <!-- ===== DUMMY FEATURES START ===== -->
                           <div class="form-file-upload" v-if="variable.name === 'Tidal amplitude'">
@@ -224,7 +226,6 @@
                             </div>
                           </div>
 
-                          </div>
                         </div> <!-- .form-group -->
                       </div> <!-- .panel-body -->
                     </div> <!-- .panel -->
