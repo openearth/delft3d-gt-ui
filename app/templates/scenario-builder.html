@@ -28,11 +28,10 @@
           </div>
 
           <!-- if user selected something, show GUI -->
-          <div v-if="template">
+          <div v-if="template && dataLoaded">
             <div>
               <!-- the vue validator config, stores form validation result in validation -->
               <validator name="validation">
-                <div>Validation: {{ $validation | json }}</div>
                 <form novalidate>
 
                   <div v-for="section in scenarioConfig.sections">
