@@ -184,6 +184,27 @@
       });
     });
 
+    // ***************************************************************************** publishModel()
+
+    describe(".publishModel()", function() {
+      it("publishes properly", function() {
+        let model = {"id": "a"};
+
+        // add models and update containers
+        store.state.models = [model];
+        store.updateModelContainers();
+
+        // check if all containers are there
+        store.state.modelContainers.length.should.be.equal(1);
+
+        // set an active model
+        store.state.activeModelContainer = store.state.modelContainers[0];
+
+        // delete this active model
+        store.publishModel(store.state.activeModelContainer);
+      });
+    });
+
   });
 
 })();

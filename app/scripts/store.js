@@ -212,7 +212,7 @@ var exports = (function() {
     publishModel: function (modelContainer, domain) {
       return new Promise((resolve, reject) => {
         if (modelContainer === undefined || modelContainer.id === undefined) {
-          reject("No model id to delete");
+          reject("No model id to publish");
         }
         if (domain !== "company" && domain !== "world") {
           reject("Publication level unidentified");
