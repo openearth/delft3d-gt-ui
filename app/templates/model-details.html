@@ -239,16 +239,25 @@
             </p>
 
             <div class="form-group input-group" @click.stop.prevent="toggle('export_d3dinput', true)">
-              <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_d3dinput" v-model="selectedDownloads.export_d3dinput" @click.stop="doNothing"></span>
+              <span class="input-group-addon">
+                <!-- @click.stop="doNothing" captures an event and avoids bubbling it down, so we don't get 2 toggles -->
+                <input type="checkbox" class="downloadoption" value="export_d3dinput" v-model="selectedDownloads.export_d3dinput" @click.stop="doNothing">
+              </span>
               <span class="form-control no-fixed-height">Delft3D: input files</span>
             </div>
             <div class="form-group input-group" @click.stop.prevent="toggle('export_images', true)">
-              <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_images" v-model="selectedDownloads.export_images" @click.stop="doNothing"></span>
+              <span class="input-group-addon">
+                <!-- @click.stop="doNothing" captures an event and avoids bubbling it down, so we don't get 2 toggles -->
+                <input type="checkbox" class="downloadoption" value="export_images" v-model="selectedDownloads.export_images" @click.stop="doNothing">
+              </span>
               <span class="form-control no-fixed-height">Media: generated output images</span>
             </div>
 
             <div class="form-group input-group" @click.stop.prevent="toggle('export_movie', true)">
-              <span class="input-group-addon"><input type="checkbox" class="downloadoption" value="export_movie" v-model="selectedDownloads.export_movie" @click.stop="doNothing"></span>
+              <span class="input-group-addon">
+                <!-- @click.stop="doNothing" captures an event and avoids bubbling it down, so we don't get 2 toggles -->
+                <input type="checkbox" class="downloadoption" value="export_movie" v-model="selectedDownloads.export_movie" @click.stop="doNothing">
+              </span>
               <span class="form-control no-fixed-height">Media: generated output movies</span>
             </div>
 
