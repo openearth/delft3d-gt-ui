@@ -6,7 +6,7 @@ var exports = (function() {
 
     state: {
       activeModelContainer: undefined,
-      failedUpdate: null, // If promise of updates failed, this callback will be called.
+      failedUpdate: function () {}, // If promise of updates failed, this callback will be called.
       modelContainers: [],
       models: [],
       params: [],
@@ -17,10 +17,13 @@ var exports = (function() {
       scenarios: [],
       updateInterval: 2000,
       updating: false,
-      user: {id: -1,
+      user: {
+        id: -1,
         /*eslint-disable camelcase*/
-        first_name: "Anonymous", last_name: "User"}
-        /*eslint-ensable camelcase*/
+        first_name: "Anonymous",
+        last_name: "User"
+        /*eslint-enable camelcase*/
+      }
     },
 
     // ================================ SYNCHRONISATION
@@ -51,9 +54,7 @@ var exports = (function() {
         this.state.updating = false;
       })
       .catch(() => {
-        if (this.state.failedUpdate !== null) {
-          this.state.failedUpdate();
-        }
+        this.state.failedUpdate();
         this.state.updating = false;
       });
     },
@@ -192,7 +193,8 @@ var exports = (function() {
           this.state.activeModelContainer = undefined;
         }
         this.state.modelContainers = _.without(this.state.modelContainers, modelContainer);
-        _.each(this.state.scenariosContainers, function (container) {
+
+        _.each(this.state.scenarioContainers, function (container) {
           container.models = _.without(container.models, modelContainer);
         });
 
