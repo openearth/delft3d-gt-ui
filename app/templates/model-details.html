@@ -254,6 +254,7 @@
 
             <div class="form-group input-group" :class="{ 'inputdisabled': !isFinished }" @click.stop.prevent="toggle('export_thirdparty', isFinished);">
               <span class="input-group-addon">
+                <!-- @click.stop="doNothing" captures an event and avoids bubbling it down, so we don't get 2 toggles -->
                 <input type="checkbox" class="downloadoption" value="export_thirdparty" v-model="selectedDownloads.export_thirdparty" :disabled="!isFinished" @click.stop="doNothing">
               </span>
               <span class="form-control no-fixed-height" :class="{'hidden': !isFinished}">Export: files for RMS / Petrel</span>
