@@ -221,6 +221,11 @@ var exports = (function() {
 
         // set the selected template
         this.template = template;
+
+        // Initialize the tooltips: We do this after the DOM update.
+        this.$nextTick(function () {
+          this.updateAfterTick();
+        });
       },
 
       updateAfterTick: function() {
