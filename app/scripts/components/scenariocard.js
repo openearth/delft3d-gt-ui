@@ -114,8 +114,6 @@ var exports = (function () {
         };
 
         router.go(req);
-
-
       },
       collapse: function(e) {
         e.stopPropagation();
