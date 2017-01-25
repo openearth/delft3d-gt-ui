@@ -56,25 +56,19 @@ var exports = (function() {
       };
     },
 
-    created: function() {
-
-    },
     route: {
-
       activate: function (transition) {
         // We force the template to be reloaded when this page is openend
         // Otherwise old values will stay in the form, and the validator is not reactivated.
         // The data function changes the function if needed.
+        this.dataLoaded = false;
         this.currentSelectedId = null;
         this.template = null;
         this.fetchTemplateList();
 
         transition.next();
-
       },
       data: function(transition) {
-
-
         // if we have a template in the request, select that one
         if (_.has(this, "$route.query.template")) {
 
@@ -88,7 +82,6 @@ var exports = (function() {
         }
 
         transition.next();
-
       }
     },
 
@@ -198,8 +191,13 @@ var exports = (function() {
             // set the template, somehow a computed setter was not working...
             this.selectTemplate(template);
 
+            // set the dataloaded to true, such that the <form> DOM will be rendered
             this.dataLoaded = true;
 
+            // Initialize the tooltips: We do this after the DOM update.
+            this.$nextTick(function () {
+              this.updateAfterTick();
+            });
           });
       },
 
@@ -214,7 +212,6 @@ var exports = (function() {
           return;
         }
 
-
         this.currentSelectedId = template.id;
 
         // First set data, then the template. Order is important!
@@ -225,10 +222,8 @@ var exports = (function() {
         // set the selected template
         this.template = template;
 
-        // Initialize the tooltips:
-        // We do this after the DOM update.
+        // Initialize the tooltips: We do this after the DOM update.
         this.$nextTick(function () {
-
           this.updateAfterTick();
         });
       },

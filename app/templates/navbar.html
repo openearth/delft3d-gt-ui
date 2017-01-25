@@ -22,7 +22,7 @@
 
           <ul class="nav navbar-nav navbar-left">
             <li :class="{'active': $route.path === '/'}"><a href="#" title="Create scenario">Database</a></li>
-            <li :class="{'active': $route.path === '/scenarios/create'}"><a v-link="{ path: '/scenarios/create'}" title="Create scenario">Scenario builder</a></li>
+            <li :class="{'active': $route.path.startsWith('/scenarios/create') }"><a v-link="{ path: '/scenarios/create'}" title="Create scenario">Scenario builder</a></li>
           </ul>
 
           <user-details></user-details>
