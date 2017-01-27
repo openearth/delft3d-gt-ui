@@ -153,17 +153,15 @@ gulp.task("pre-coverage", () => {
 
 gulp.task("coverage", ["pre-coverage"], () => {
   return gulp.src(["test/**/*.js"])
-    .pipe(mocha({reporter: "mocha-teamcity-reporter"})).on('error', errorHandler)
+    .pipe(mocha({reporter: "mocha-teamcity-reporter"})).on("error", (error) => {
+      console.log(error.toString());
+      this.emit("end");
+    })
   // Creating the reports after tests ran
     .pipe(istanbul.writeReports())
   // Enforce a coverage of at least 90%
     .pipe(istanbul.enforceThresholds({ thresholds: { global: 20 } }));
 });
-// Handle the error
-function errorHandler (error) {
-  console.log(error.toString());
-  this.emit('end');
-}
 
 gulp.task("teamcity", ["scripts", "lint", "lint:test", "lint:scss", "coverage"], () => {
   // Just run all the dependencies.
