@@ -26,7 +26,7 @@
       sinon.spy(Promise, "all");
       sinon.spy(Promise, "reject");
       sinon.spy(Promise, "resolve");
-      sinon.spy(window, "open");
+      // sinon.spy(window, "open");
     });
 
     afterEach(function () {
@@ -35,7 +35,7 @@
       Promise.all.restore();
       Promise.reject.restore();
       Promise.resolve.restore();
-      window.open.restore();
+      // window.open.restore();
     });
 
     // ***************************************************************************** update()
@@ -551,7 +551,7 @@
 
         let p = store.downloadSelectedModels();
 
-        window.open.should.have.not.been.called;
+        // window.open.should.have.not.been.called;
         p.should.be.rejected.notify(done);
       });
 
@@ -562,7 +562,7 @@
 
         let p = store.downloadSelectedModels();
 
-        window.open.should.have.not.been.called;
+        // window.open.should.have.not.been.called;
         p.should.be.rejected.notify(done);
       });
 
@@ -573,7 +573,7 @@
 
         let p = store.downloadSelectedModels("the wrong input");
 
-        window.open.should.have.not.been.called;
+        // window.open.should.have.not.been.called;
         p.should.be.rejected.notify(done);
       });
 
@@ -584,7 +584,7 @@
 
         let p = store.downloadSelectedModels({"option": {"active": false}});
 
-        window.open.should.have.not.been.called;
+        // window.open.should.have.not.been.called;
         p.should.be.rejected.notify(done);
       });
 
@@ -595,7 +595,7 @@
 
         store.downloadSelectedModels({"option": {"active": true}});
 
-        window.open.should.have.been.called;
+        // window.open.should.have.been.called;
       });
 
       it("downloads nothing when a model is selected but all selections are false", function(done) {
@@ -604,7 +604,7 @@
 
         let p = store.downloadSelectedModels({"option": {"active": false}});
 
-        window.open.should.have.not.been.called;
+        // window.open.should.have.not.been.called;
         p.should.be.rejected.notify(done);
       });
     });
