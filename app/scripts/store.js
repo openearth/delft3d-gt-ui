@@ -6,7 +6,7 @@ var exports = (function() {
 
     state: {
       activeModelContainer: undefined,
-      failedUpdate: null, // If promise of updates failed, this callback will be called.
+      failedUpdate: function () {}, // If promise of updates failed, this callback will be called.
       modelContainers: [],
       models: [],
       params: [],
@@ -17,10 +17,13 @@ var exports = (function() {
       scenarios: [],
       updateInterval: 2000,
       updating: false,
-      user: {id: -1,
+      user: {
+        id: -1,
         /*eslint-disable camelcase*/
-        first_name: "Anonymous", last_name: "User"}
-        /*eslint-ensable camelcase*/
+        first_name: "Anonymous",
+        last_name: "User"
+        /*eslint-enable camelcase*/
+      }
     },
 
     // ================================ SYNCHRONISATION
@@ -51,9 +54,7 @@ var exports = (function() {
         this.state.updating = false;
       })
       .catch(() => {
-        if (this.state.failedUpdate !== null) {
-          this.state.failedUpdate();
-        }
+        this.state.failedUpdate();
         this.state.updating = false;
       });
     },
@@ -192,7 +193,8 @@ var exports = (function() {
           this.state.activeModelContainer = undefined;
         }
         this.state.modelContainers = _.without(this.state.modelContainers, modelContainer);
-        _.each(this.state.scenariosContainers, function (container) {
+
+        _.each(this.state.scenarioContainers, function (container) {
           container.models = _.without(container.models, modelContainer);
         });
 
@@ -210,10 +212,10 @@ var exports = (function() {
     publishModel: function (modelContainer, domain) {
       return new Promise((resolve, reject) => {
         if (modelContainer === undefined || modelContainer.id === undefined) {
-          reject("No model id to delete");
+          return reject("No model id to publish");
         }
         if (domain !== "company" && domain !== "world") {
-          reject("Publication level unidentified");
+          return reject("Publication level unidentified");
         }
         modelContainer.data.shared = "u";
         $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/publish_" + domain + "/", method: "POST"})
@@ -229,7 +231,7 @@ var exports = (function() {
     resetModel: function (modelContainer) {
       return new Promise((resolve, reject) => {
         if (modelContainer === undefined || modelContainer.id === undefined) {
-          reject("No model id to reset");
+          return reject("No model id to reset");
         }
         modelContainer.data.state = "New";
         $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/reset/", method: "PUT", traditional: true, dataType: "json"})
@@ -245,7 +247,7 @@ var exports = (function() {
     startModel: function (modelContainer) {
       return new Promise((resolve, reject) => {
         if (modelContainer === undefined || modelContainer.id === undefined) {
-          reject("No model id to start");
+          return reject("No model id to start");
         }
         modelContainer.data.state = "Queued";
         $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/start/", method: "PUT", traditional: true, dataType: "json"})
@@ -261,7 +263,7 @@ var exports = (function() {
     stopModel: function (modelContainer) {
       return new Promise((resolve, reject) => {
         if (modelContainer === undefined || modelContainer.id === undefined) {
-          reject("No model id to stop");
+          return reject("No model id to stop");
         }
         modelContainer.data.state = "Stopping simulation";
         $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/stop/", method: "PUT", traditional: true, dataType: "json"})
@@ -319,36 +321,6 @@ var exports = (function() {
 
     // ================================ OTHER SUPPORT METHODS
 
-    fetchLog: function (modelContainer) {
-      return new Promise(function(resolve, reject) {
-        if (modelContainer === undefined || modelContainer.data === undefined) {
-          reject("No model to fetch log of.");
-        }
-
-        var model = modelContainer.data;
-
-        // Working dir is at: modeldata.fileurl + delf3d + delft3d.log
-        var url = model.fileurl + model.info.logfile.location + model.info.logfile.file;
-
-        // Without a filename, we just give back a custom string.
-        if (model.info.logfile.file.length === 0) {
-
-          resolve("No log output available yet");
-          return;
-        }
-
-        $.ajax(url)
-          .done(function(text) {
-            resolve(text);
-          })
-          .fail(function(error) {
-            console.log("Failed to get log", error);
-            reject(error);
-          });
-
-      });
-    },
-
     statusLevel: function () {
       if (this.data.state === "Finished") {
         return "success";
@@ -391,11 +363,12 @@ var exports = (function() {
 
     shareSelectedModels: function (domain) {
       return new Promise((resolve, reject) => {
-        if (this.getSelectedModels() === []) {
-          reject("No models to test");
+
+        if (this.getSelectedModels().length === 0) {
+          return reject("No models to test");
         }
         if (domain !== "company" && domain !== "world") {
-          reject("Publication level unidentified");
+          return reject("Publication level unidentified");
         }
 
         var selectedModelsSuid = _.map(this.getSelectedModels(), function (m) {
@@ -414,8 +387,8 @@ var exports = (function() {
 
     downloadSelectedModels: function (selectedDownloads) {
       return new Promise((resolve, reject) => {
-        if (this.getSelectedModels() === []) {
-          reject("No models to export");
+        if (this.getSelectedModels().length === 0) {
+          return reject("No models to export");
         }
 
         var selectedModelsSuid = _.map(this.getSelectedModels(), function (m) {
@@ -429,7 +402,13 @@ var exports = (function() {
           return result;
         }, []);
 
-        window.open("/api/v1/scenes/export_all/?format=json&suid=" + selectedModelsSuid.join("&suid=") + "&options=" + selectedOptions.join("&options="));
+        if (selectedOptions.length === 0) {
+          return reject("No downloads selected");
+        }
+
+        resolve(window.open(
+            "/api/v1/scenes/export_all/?format=json&suid=" + selectedModelsSuid.join("&suid=") + "&options=" + selectedOptions.join("&options=")
+        ));
       });
     },
 

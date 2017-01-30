@@ -52,8 +52,9 @@ var exports = (function () {
       // get search templates
       Promise.all([fetchUsers(), fetchSearchTemplate(), fetchVersions()])
         .then((jsons) => {
-          // Destructure the promise returns
-          var [users, template, versions] = jsons;
+          var users = jsons[0];
+          var template = jsons[1];
+          var versions = jsons[2];
 
           // store them
           this.users = _.sortBy(users, ["last_name", "first_name"]);
@@ -83,6 +84,7 @@ var exports = (function () {
 
         });
     },
+
     computed: {
       modelEngines: {
         get: function () {

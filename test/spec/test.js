@@ -1063,21 +1063,6 @@
 
   describe("Store: Test model related API calls", function() {
 
-    it("Should be possible to fetchLog - NON existing model", function(done) {
-      var container = {id: 405};
-
-      // We expect an error! As there are no models yet
-      global.store.fetchLog(container)
-        .then(done)
-        .catch(function() {
-          // We expect an error.
-          done();
-        });
-    });
-
-
-
-
     it("Should be possible to delete a model", function(done) {
 
       var deleteID = 4;
