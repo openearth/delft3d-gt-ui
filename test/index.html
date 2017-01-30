@@ -1,45 +1,48 @@
 <!doctype html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>Mocha Spec Runner</title>
-  <link rel="stylesheet" href="../bower_components/mocha/mocha.css">
+<meta charset="utf-8">
+<title>Mocha Spec Runner</title>
+<link rel="stylesheet" href="../bower_components/mocha/mocha.css">
 </head>
 <body>
-  <div id="mocha"></div>
-  <script src="../bower_components/mocha/mocha.js"></script>
-  <script>mocha.setup('bdd');</script>
-  <script src="../bower_components/chai/chai.js"></script>
-  <script>
-    var assert = chai.assert;
-    var expect = chai.expect;
-    var should = chai.should();
-  </script>
-  <!-- bower:js -->
-  <script src="/bower_components/modernizr/modernizr.js"></script>
-  <script src="/bower_components/jquery/dist/jquery.js"></script>
-  <script src="/bower_components/lodash/lodash.js"></script>
-  <script src="/bower_components/fetch/fetch.js"></script>
-  <script src="/bower_components/validator-js/validator.js"></script>
-  <script src="/bower_components/clipboard/dist/clipboard.js"></script>
-  <script src="/bower_components/vue/dist/vue.js"></script>
-  <script src="/bower_components/vue-router/dist/vue-router.js"></script>
-  <script src="/bower_components/bootstrap-combobox/js/bootstrap-combobox.js"></script>
-  <script src="/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.js"></script>
-  <script src="/bower_components/vue-validator/dist/vue-validator.js"></script>
-  <script src="/bower_components/moment/moment.js"></script>
-  <script src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
-  <script src="/bower_components/ion.rangeSlider/js/ion.rangeSlider.js"></script>
-  <script src="/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
-  <script src="/bower_components/typeahead.js/dist/typeahead.bundle.js"></script>
-  <!-- endbower -->
-  <!-- include source files here... -->
-  <!-- include spec files here... -->
-  <script src="spec/test.js"></script>
-  <script>
-    if (navigator.userAgent.indexOf('PhantomJS') === -1) {
-      mocha.run();
-    }
-  </script>
+<div id="mocha"></div>
+<script src="../bower_components/mocha/mocha.js"></script>
+<script>
+mocha.setup("bdd");
+</script>
+<script src="../bower_components/chai/chai.js"></script>
+<script>
+var assert = chai.assert;
+var expect = chai.expect;
+var should = chai.should();
+</script>
+<!-- bower:js -->
+<script src="/bower_components/bootstrap-combobox/js/bootstrap-combobox.js"></script>
+<script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/collapse.js"></script>
+<script src="/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
+<script src="/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.js"></script>
+<script src="/bower_components/clipboard/dist/clipboard.js"></script>
+<script src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/bower_components/fetch/fetch.js"></script>
+<script src="/bower_components/ion.rangeSlider/js/ion.rangeSlider.js"></script>
+<script src="/bower_components/jquery/dist/jquery.js"></script>
+<script src="/bower_components/lodash/lodash.js"></script>
+<script src="/bower_components/modernizr/modernizr.js"></script>
+<script src="/bower_components/moment/moment.js"></script>
+<script src="/bower_components/typeahead.js/dist/typeahead.bundle.js"></script>
+<script src="/bower_components/validator-js/validator.js"></script>
+<script src="/bower_components/vue-router/dist/vue-router.js"></script>
+<script src="/bower_components/vue-validator/dist/vue-validator.js"></script>
+<script src="/bower_components/vue/dist/vue.js"></script>
+<!-- endbower -->
+<!-- include source files here... -->
+<!-- include spec files here... -->
+<script src="spec/test.js"></script>
+<script>
+if (navigator.userAgent.indexOf("PhantomJS") === -1) {
+  mocha.run();
+}
+</script>
 </body>
 </html>

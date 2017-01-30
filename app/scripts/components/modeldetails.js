@@ -41,6 +41,10 @@ var exports = (function () {
         get: function () {
           var d = new Date(_.get(this.activeModel, "data.date_created", ""));
 
+          if (isNaN(d.getTime())) {  // something went wront here
+            return "";  // elegant fail
+          }
+
           return d.getDate() + "/" + (d.getMonth() + 1) + "/" + d.getFullYear();
         }
       },

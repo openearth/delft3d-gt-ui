@@ -153,7 +153,10 @@ gulp.task("pre-coverage", () => {
 
 gulp.task("coverage", ["pre-coverage"], () => {
   return gulp.src(["test/**/*.js"])
-    .pipe(mocha({reporter: "mocha-teamcity-reporter"}))
+    .pipe(mocha({reporter: "mocha-teamcity-reporter"})).on("error", (error) => {
+      console.log(error.toString());
+      this.emit("end");
+    })
   // Creating the reports after tests ran
     .pipe(istanbul.writeReports())
   // Enforce a coverage of at least 90%
