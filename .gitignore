@@ -42,3 +42,6 @@ build/Release
 
 # Optional REPL history
 .node_repl_history
+
+# external scripts
+app/scripts/external/3DViewer.js
