@@ -75,6 +75,17 @@
 
       <div class="panel panel-default">
         <div class="panel-heading" @click.stop="collapseToggle">
+          3D Viewer
+        </div>
+
+        <canvas id="glcanvas">
+        Your browser doesn't appear to support the <code>&lt;canvas&gt;</code> element.
+        </canvas>
+        <canvas id="overlayuicanvas"></canvas>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading" @click.stop="collapseToggle">
           Simulation controls
         </div>
 
