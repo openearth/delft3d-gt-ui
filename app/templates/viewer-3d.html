@@ -1,0 +1,21 @@
+<template id="template-viewer-threedee">
+  <div class="panel-body viewer-3d">
+    <div class="text-center" v-if="!started">
+        <button type="button"
+                class="btn btn-labeled btn-default btn-spaced-right"
+                @click="start3dviewer"
+                >
+          <span class="btn-label"><i class="fa fa-fw fa-play" aria-hidden="true"></i></span>
+          Start 3D Viewer
+        </button>
+    </div>
+  	<div id="glcanvas-container" class="glcanvas-container"></div>
+    <div class="text-center" v-if="started">
+        <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('reset')">Reset</button>
+        <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('right')">Front</button>
+        <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('top')">Top</button>
+        <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('front')">Side</button>
+        <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('fit')">Fit</button>
+    </div>
+  </div>
+</template>

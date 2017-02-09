@@ -1,4 +1,4 @@
-/* global ImageAnimation, ConfirmDialog, UserDetails, store, getDialog  */
+/* global ImageAnimation, ConfirmDialog, UserDetails, viewer3D, store, getDialog  */
 var exports = (function () {
   "use strict";
 
@@ -8,7 +8,8 @@ var exports = (function () {
       // <my-component> will only be available in Parent's template
       "image-animation": ImageAnimation,
       "confirm-dialog": ConfirmDialog,
-      "user-details": UserDetails
+      "user-details": UserDetails,
+      "viewer-3d": viewer3D
     },
     data: function() {
       return {
