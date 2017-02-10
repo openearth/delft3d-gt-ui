@@ -1,21 +1,68 @@
 <template id="template-viewer-threedee">
   <div class="panel-body viewer-3d">
-    <div class="text-center" v-if="!started">
-        <button type="button"
-                class="btn btn-labeled btn-default btn-spaced-right"
-                @click="start3dviewer"
-                >
-          <span class="btn-label"><i class="fa fa-fw fa-play" aria-hidden="true"></i></span>
-          Start 3D Viewer
-        </button>
+    <div class="btn-group btn-group-justified" v-if="!started || !isFinished">
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-labeled btn-default btn-spaced-right" :class="{'disabled': !isFinished }" @click="start3dviewer">
+              <span class="btn-label"><i class="fa fa-fw fa-play" aria-hidden="true"></i></span> Start 3D Viewer <span v-if="!isFinished">(please wait for simulation to finish)</span>
+            </button>
+        </div>
     </div>
-  	<div id="glcanvas-container" class="glcanvas-container"></div>
-    <div class="text-center" v-if="started">
-        <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('reset')">Reset</button>
-        <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('right')">Front</button>
-        <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('top')">Top</button>
-        <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('front')">Side</button>
-        <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('fit')">Fit</button>
+    <div id="glcanvas-container" class="glcanvas-container"></div>
+    <div class="text-center" v-if="started && isFinished">
+
+        <div>
+
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('reset')">Reset</button>
+                <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('fit')">Fit</button>
+            </div>
+
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('front')">South</button>
+                <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('right')">West</button>
+                <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('back')">North</button>
+                <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('left')">East</button>
+            </div>
+
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('top')">Top</button>
+                <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('bottom')">Bottom</button>
+            </div>
+
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('up')">Up</button>
+                <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('down')">Down</button>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary" @click="goStart">
+                    <span class="glyphicon glyphicon-fast-backward"></span>
+                </button>
+                <button type="button" class="btn btn-primary" @click="goPrev">
+                    <span class="glyphicon glyphicon-backward"></span>
+                </button>
+                <button type="button" class="btn btn-primary">
+                    {{ curTimeStep }}
+                </button>
+                <button type="button" class="btn btn-primary" @click="goNext">
+                    <span class="glyphicon glyphicon-forward"></span>
+                </button>
+                <button type="button" class="btn btn-primary" @click="goEnd">
+                    <span class="glyphicon glyphicon-fast-forward"></span>
+                </button>
+            </div>
+
+        </div>
+
+        <div>
+
+            <div class="form-group">
+                <input type="text" class="ion-range slice-w" id="slice-w" data-step="1" data-min="1" :data-max="dimensions.x" data-type="double" value="1,100"/>
+                <input type="text" class="ion-range slice-p" id="slice-p" data-step="1" data-min="1" :data-max="dimensions.x" data-type="single" value="50"/>
+            </div>
+
+        </div>
+
     </div>
   </div>
 </template>

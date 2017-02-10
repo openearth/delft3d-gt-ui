@@ -56,6 +56,11 @@
     color: $col-bw-5;
     padding: 2px 8px 8px; // 8px;
     top: -14px;
+
+    &::after {
+      border-top-color: $col-bw-2; //The arrow down part.
+    }
+
   }
 
   .irs-bar-edge {
@@ -65,12 +70,6 @@
   .irs-slider,
   .irs-bar {
     background: $col-bw-4;
-  }
-
-  .irs-from::after,
-  .irs-to::after,
-  .irs-single::after {
-    border-top-color: $col-bw-2; //The arrow down part.
   }
 
   .irs-bar {
@@ -89,10 +88,11 @@
   }
 
   // Horizontal background bar.
-  .irs-line span {
-    background: none;
-    background-color: $col-bw-2;
-    height: 4px;
+  .irs-line {
+    span {
+      background: none;
+      background-color: $col-bw-2;
+      height: 4px;
+    }
   }
-
 }
