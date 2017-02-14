@@ -1,8 +1,8 @@
-/* global Vue, viewer3D */
+/* global store, Vue */
 var exports = (function () {
   "use strict";
 
-  var Viewer3D = Vue.component("viewer-threedee", {
+  var Viewer3DComponent = Vue.component("viewer-threedee", {
     template: "#template-viewer-threedee",
     props: {
       model: {
@@ -19,7 +19,8 @@ var exports = (function () {
         "from": 0,
         "sharedState": store.state,
         "started": false,
-        "to": 1
+        "to": 1,
+        "viewer3d": undefined
       };
     },
     computed: {
@@ -39,17 +40,14 @@ var exports = (function () {
     watch: {
       activeModel: function () {
         let glcanvas = document.getElementById("glcanvas");
-        let glcanvasContainer = document.getElementById("glcanvas-hidden-container");
 
-        glcanvasContainer.appendChild(glcanvas);
         glcanvas.setAttribute("width", 0);
         glcanvas.setAttribute("height", 0);
-
         this.started = false;
       },
       curTimeStep: function () {
-        viewer3D.volume.setTimeStep(this.curTimeStep);
-        viewer3D.volume.refreshData();
+        this.viewer3d.volume.setTimeStep(this.curTimeStep);
+        this.viewer3d.volume.refreshData();
       },
       dimensions: function () {
         $(".ion-range.slice-w").data("ionRangeSlider").update({
@@ -65,46 +63,48 @@ var exports = (function () {
         });
       },
       from: function () {
-        viewer3D.volume.setSlicePosition(viewer3D.side.LEFT, this.from - 1);
-        viewer3D.volume.refreshData();
+        this.viewer3d.volume.setSlicePosition(this.viewer3d.side.LEFT, this.from - 1);
+        this.viewer3d.volume.refreshData();
       },
       to: function () {
-        viewer3D.volume.setSlicePosition(viewer3D.side.RIGHT, this.to - 1);
-        viewer3D.volume.refreshData();
+        this.viewer3d.volume.setSlicePosition(this.viewer3d.side.RIGHT, this.to - 1);
+        this.viewer3d.volume.refreshData();
       }
+    },
+    ready: function () {
     },
     methods: {
       camera: function (side) {
         if (side === "back") {
-          viewer3D.camera.alignToSide(viewer3D.side.BACK);
+          this.viewer3d.camera.alignToSide(this.viewer3d.side.BACK);
         }
         if (side === "bottom") {
-          viewer3D.camera.alignToSide(viewer3D.side.BOTTOM);
+          this.viewer3d.camera.alignToSide(this.viewer3d.side.BOTTOM);
         }
         if (side === "down") {
-          viewer3D.camera.stepDown();
+          this.viewer3d.camera.stepDown();
         }
         if (side === "fit") {
-          viewer3D.camera.fit();
+          this.viewer3d.camera.fit();
         }
         if (side === "front") {
-          viewer3D.camera.alignToSide(viewer3D.side.FRONT);
+          this.viewer3d.camera.alignToSide(this.viewer3d.side.FRONT);
         }
         if (side === "left") {
-          viewer3D.camera.alignToSide(viewer3D.side.LEFT);
+          this.viewer3d.camera.alignToSide(this.viewer3d.side.LEFT);
         }
         if (side === "reset") {
-          viewer3D.camera.rotateToTopRightCorner();
-          viewer3D.camera.fit();
+          this.viewer3d.camera.rotateToTopRightCorner();
+          this.viewer3d.camera.fit();
         }
         if (side === "right") {
-          viewer3D.camera.alignToSide(viewer3D.side.RIGHT);
+          this.viewer3d.camera.alignToSide(this.viewer3d.side.RIGHT);
         }
         if (side === "top") {
-          viewer3D.camera.alignToSide(viewer3D.side.TOP);
+          this.viewer3d.camera.alignToSide(this.viewer3d.side.TOP);
         }
         if (side === "up") {
-          viewer3D.camera.stepUp();
+          this.viewer3d.camera.stepUp();
         }
       },
       goEnd: function () {
@@ -123,25 +123,24 @@ var exports = (function () {
         if (!this.isFinished) {
           return;
         }
-
         this.started = true;
 
-        let glcanvas = document.getElementById("glcanvas");
-        let glcanvasContainer = document.getElementById("glcanvas-container");
+        document.getElementById("glcanvas").setAttribute("width", document.getElementById("viewer-3d").scrollWidth);
+        document.getElementById("glcanvas").setAttribute("height", 400);
 
-        glcanvasContainer.appendChild(glcanvas);
-        glcanvas.setAttribute("width", glcanvasContainer.scrollWidth);
-        glcanvas.setAttribute("height", glcanvasContainer.scrollWidth / 1.6);
+        /* eslint-disable */
+        this.viewer3d = new window.Viewer3D.viewer3D();
+        /* eslint-enable */
 
-        viewer3D.dataSet.load({
+        this.viewer3d.dataSet.load({
           url: "/thredds/dodsC/files/" + this.model.suid + "/simulation/trim-medium-sand.nc",
           displacementVariable: "DP_BEDLYR",
           dataVariable: "LYRFRAC",
           bedLevelVariable: "DPS"
         }, () => {
-          viewer3D.camera.rotateToTopRightCorner();
-          viewer3D.camera.fit();
-          this.dimensions = viewer3D.volume.getDimensions();
+          this.viewer3d.camera.rotateToTopRightCorner();
+          this.viewer3d.camera.fit();
+          this.dimensions = this.viewer3d.volume.getDimensions();
         });
 
         this.$nextTick(() => {
@@ -181,7 +180,7 @@ var exports = (function () {
   });
 
   return {
-    Viewer3D: Viewer3D
+    Viewer3DComponent: Viewer3DComponent
   };
 
 }());

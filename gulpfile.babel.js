@@ -233,7 +233,8 @@ gulp.task("serve", ["styles", "scripts", "fonts", "images", "templates"], () => 
     server: {
       baseDir: [".tmp", "app"],
       routes: {
-        "/bower_components": "bower_components"
+        "/bower_components": "bower_components",
+        "/3dviewer": "3dviewer",
       }
 
     }

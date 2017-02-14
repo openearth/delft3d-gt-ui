@@ -1,5 +1,5 @@
 <template id="template-viewer-threedee">
-  <div class="panel-body viewer-3d">
+  <div id="viewer-3d" class="panel-body viewer-3d">
     <div class="btn-group btn-group-justified" v-if="!started || !isFinished">
         <div class="btn-group" role="group">
             <button type="button" class="btn btn-labeled btn-default btn-spaced-right" :class="{'disabled': !isFinished }" @click="start3dviewer">
@@ -7,7 +7,11 @@
             </button>
         </div>
     </div>
-    <div id="glcanvas-container" class="glcanvas-container"></div>
+
+    <div id="glcanvas-container" class="glcanvas-container text-center" v-show="started && isFinished">
+        <canvas id="glcanvas" height="400">Your browser doesn't appear to support the <code>&lt;canvas&gt;</code> element.</canvas>
+    </div>
+
     <div class="text-center" v-if="started && isFinished">
 
         <div>
