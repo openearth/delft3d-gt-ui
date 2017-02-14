@@ -82,13 +82,14 @@ var exports = (function () {
         cache: false,
         get: function () {
           var niceStrings = {
+            "": "-",
             "p": "private",
             "c": "company",
             "w": "world",
             "u": "updating"
           };
 
-          return niceStrings[_.get(this.activeModel, "data.shared", "p")];
+          return niceStrings[_.get(this.activeModel, "data.shared", "")];
         }
       },
       delft3DVersion: {
@@ -112,6 +113,9 @@ var exports = (function () {
         e.stopPropagation();
         $(e.target).closest(".panel").children(".collapse").collapse("toggle");
       },
+      getActiveModelData: function (str) {
+        return _.get(this.activeModel, "data." + str, "");
+      },
       downloadFiles: function () {
         if(!this.anyDownloadsSelected) {
           return;
@@ -129,10 +133,7 @@ var exports = (function () {
         window.open("/api/v1/scenes/" + id + "/export/?format=json&" + downloadOptions.join("&"));
       },
       hasPostProcessData: function () {
-        if(("data" in this.activeModel) && ("info" in this.activeModel.data) && "postprocess_output" in this.activeModel.data.info) {
-          return (Object.keys(this.activeModel.data.info.postprocess_output).length > 0);
-        }
-        return false;
+        return (Object.keys(_.get(this.activeModel, "data.info.postprocess_output", {})).length > 0);
       },
       publishModel: function (level) {
         // Get a confirm dialog

@@ -11,6 +11,7 @@ var exports = (function() {
       models: [],
       params: [],
       reqModel: undefined,
+      reqModelDetails: undefined,
       reqScenario: undefined,
       reqUser: undefined,
       scenarioContainers: [],
@@ -45,11 +46,19 @@ var exports = (function() {
       this.state.updating = true;
       Promise.all([
         this.fetchModels(),
-        this.fetchScenarios()
+        this.fetchScenarios(),
+        this.fetchModelDetails()
       ])
       .then((jsons) => {
-        this.state.models = jsons[0];
-        this.state.scenarios = jsons[1];
+        this.state.models = jsons[0];  // Array of Models
+        this.state.scenarios = jsons[1];  // Array of Scenes
+
+        this.state.models = _.map(this.state.models, (m) => {
+          let modelDetails = jsons[2];  // Dictionary of Model Details
+
+          return (m.id === modelDetails.id) ? modelDetails : m;
+        });
+
         this.updateContainers();
         this.state.updating = false;
       })
@@ -68,6 +77,30 @@ var exports = (function() {
     },
 
     // ================================ API FETCH CALLS
+
+    fetchModelDetails: function () {
+      if (this.state.reqModelDetails !== undefined) {
+        this.state.reqModelDetails.abort();
+      }
+
+      let activeModelContainerId = _.get(this.state, "activeModelContainer.id", -1);
+
+      if (activeModelContainerId === -1) {
+        return new Promise((resolve) => {
+          resolve({"id": -1});
+        });
+      }
+
+      return new Promise((resolve, reject) => {
+        this.state.reqModel = $.ajax({url: "/api/v1/scenes/" + activeModelContainerId + "/", data: this.state.params, traditional: true, dataType: "json"})
+          .done(function(json) {
+            resolve(json);
+          })
+          .fail(function(error) {
+            reject(error);
+          });
+      });
+    },
 
     fetchModels: function () {
       if (this.state.reqModel !== undefined) {

@@ -101,6 +101,8 @@
     describe(".updateModelContainers()", function() {
       it("updates properly", function() {
         // make sure there are no model containers
+        store.state.models = [];
+        store.updateModelContainers();
         store.state.modelContainers.length.should.be.equal(0);
 
         // change models and call update
