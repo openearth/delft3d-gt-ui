@@ -50,10 +50,13 @@ var exports = (function() {
         this.fetchModelDetails()
       ])
       .then((jsons) => {
-        this.state.models = jsons[0];
-        this.state.scenarios = jsons[1];
+        this.state.models = jsons[0];  // Array of Models
+        this.state.scenarios = jsons[1];  // Array of Scenes
+
         this.state.models = _.map(this.state.models, (m) => {
-          return (m.id === jsons[2].id) ? jsons[2] : m;
+          let modelDetails = jsons[2];  // Dictionary of Model Details
+
+          return (m.id === modelDetails.id) ? modelDetails : m;
         });
 
         this.updateContainers();
