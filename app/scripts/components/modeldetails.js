@@ -1,4 +1,4 @@
-/* global ImageAnimation, ConfirmDialog, UserDetails, viewer3D, store, getDialog  */
+/* global ImageAnimation, ConfirmDialog, UserDetails, Viewer3DComponent, store, getDialog  */
 var exports = (function () {
   "use strict";
 
@@ -9,7 +9,7 @@ var exports = (function () {
       "image-animation": ImageAnimation,
       "confirm-dialog": ConfirmDialog,
       "user-details": UserDetails,
-      "viewer-3d": viewer3D
+      "viewer-3d": Viewer3DComponent
     },
     data: function() {
       return {

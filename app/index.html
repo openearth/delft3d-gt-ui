@@ -40,10 +40,6 @@
 
     <!-- ==============================   APP   ============================== -->
 
-    <div id="glcanvas-hidden-container" class="hidden">
-        <canvas id="glcanvas" height="400">Your browser doesn't appear to support the <code>&lt;canvas&gt;</code> element.</canvas>
-    </div>
-
     <!-- black bar on the top -->
     <navigation-bar></navigation-bar>
 
@@ -93,11 +89,12 @@
     <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tab.js"></script>
     <!-- endbuild -->
 
-    <!-- build:js scripts/main.js -->
-    <!-- external code  -->
-    <script src="scripts/external/jsdap-8.1.0.min.js"></script>
-    <script src="scripts/external/3DViewer.js"></script>
+    <!-- build:js scripts/3dviewer.js -->
+    <script src="/3dviewer/jsdap-8.1.0.min.js"></script>
+    <script src="/3dviewer/Viewer3D.js"></script>
+    <!-- endbuild -->
 
+    <!-- build:js scripts/main.js -->
     <!-- First the functions that we use to exchange data and validate it  -->
     <!-- these should have corresponding tests -->
     <!-- no vue code in here.... -->
@@ -108,6 +105,7 @@
     <!-- load components, these provide webcomponents (with corresponding templates in app/templates)-->
     <!-- mainly tested using integration tests -->
     <!-- these should be replaceable if someone wants to switch to a different webcomponent platform -->
+    <script src="scripts/components/viewer3dcomponent.js"></script>
     <script src="scripts/components/navbar.js"></script>
     <script src="scripts/components/modelcontrolmenu.js"></script>
     <script src="scripts/components/confirmdialog.js"></script>
@@ -122,7 +120,6 @@
     <script src="scripts/components/searchcolumns.js"></script>
     <script src="scripts/components/scenariobuilder.js"></script>
     <script src="scripts/components/alert.js"></script>
-    <script src="scripts/components/viewer3d.js"></script>
 
     <!-- and the application (router and loading of components goes in here)-->
     <!-- this should contain only loading of the app code. -->
