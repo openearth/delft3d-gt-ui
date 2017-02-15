@@ -91,6 +91,7 @@ var exports = (function () {
       "activated": function (model) {
         this.$broadcast("deactivate", model);
         this.sharedState.activeModelContainer = model;
+        store.update();
       }
     }
   });

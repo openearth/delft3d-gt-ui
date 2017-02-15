@@ -174,6 +174,9 @@
     describe(".shareLevelText", function() {
       it("", function() {
         store.state.activeModelContainer = undefined;
+        modelDetails.shareLevelText.should.equal("-");
+
+        store.state.activeModelContainer = {"data": {"shared": "p"}};
         modelDetails.shareLevelText.should.equal("private");
 
         store.state.activeModelContainer = {"data": {"shared": "c"}};
