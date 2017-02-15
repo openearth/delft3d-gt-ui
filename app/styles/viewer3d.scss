@@ -20,10 +20,37 @@
 
   // ======================= ION RANGE SLIDER
 
+  .legend-container {
+    height: 100%;
+  }
+
+  .legend {
+    height: 100%;
+    padding-left: $padding;
+    width: 50%;
+  }
+
+  .glcanvas {
+    height: 100%;
+    width: 100%;
+  }
+
+  .nav-tabs {
+    margin: $padding 0;
+  }
+
+  .slider-label {
+    margin-top: $padding;
+  }
+
+  .gradient-input {
+    width: 80%;
+  }
+
   .irs {
     height: 30px;
     margin-right: 6px;
-    margin-top: 20px;
+    margin-top: $padding;
   }
 
   .irs-line,
@@ -48,7 +75,7 @@
     background-color: $col-bw-2;
     color: $col-bw-5;
     padding: 2px 8px 8px; // 8px;
-    top: -14px;
+    top: -8px;
 
     &::after {
       border-top-color: $col-bw-2; //The arrow down part.
@@ -76,9 +103,9 @@
     background-color: $col-bw-0;
     border: 1px solid $col-bw-5;
     border-radius: 10px;
-    height: 20px;
-    top: 16px;
-    width: 20px;
+    height: 7px;
+    top: 22px;
+    width: 7px;
   }
 
   // Horizontal background bar.
