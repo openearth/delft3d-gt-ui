@@ -19,7 +19,8 @@ var exports = (function () {
           "export_images": false,
           "export_movie": false,
           "export_thirdparty": false
-        }
+        },
+        viewerActive: false
       };
     },
     computed: {
@@ -110,8 +111,10 @@ var exports = (function () {
       }
     },
     methods: {
-      collapseToggle: function (e) {
-        e.stopPropagation();
+      collapseToggle: function (viewerFlag, e) {
+        if (viewerFlag) {
+          this.viewerActive = !this.viewerActive;
+        }
         $(e.target).closest(".panel").children(".collapse").collapse("toggle");
       },
       getActiveModelData: function (str) {

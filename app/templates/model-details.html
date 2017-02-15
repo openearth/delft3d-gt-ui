@@ -81,25 +81,16 @@
       </div>
 
       <div class="panel panel-default">
-        <div class="panel-heading" @click.stop="collapseToggle">
+        <div class="panel-heading" @click.stop="collapseToggle(true, $event)">
           3D Viewer
         </div>
         <div class="collapse">
-          <viewer-threedee :model="activeModel.data"></viewer-threedee>
+          <viewer-threedee :model="activeModel.data" :activated="viewerActive"></viewer-threedee>
         </div>
       </div>
 
       <div class="panel panel-default">
-        <div class="panel-heading" @click.stop="collapseToggle">
-          3D Viewer
-        </div>
-        <div class="collapse">
-          <viewer-threedee :model="activeModel.data"></viewer-threedee>
-        </div>
-      </div>
-
-      <div class="panel panel-default">
-        <div class="panel-heading" @click.stop="collapseToggle">
+        <div class="panel-heading" @click.stop="collapseToggle(false, $event)">
           Simulation controls
         </div>
 
@@ -152,7 +143,7 @@
       </div>
 
       <div class="panel panel-default">
-        <div class="panel-heading" @click.stop="collapseToggle">
+        <div class="panel-heading" @click.stop="collapseToggle(false, $event)">
           Share controls
         </div>
         <div class="collapse">
@@ -183,7 +174,7 @@
       </div>
 
       <div class="panel panel-default">
-        <div class="panel-heading" @click.stop="collapseToggle">
+        <div class="panel-heading" @click.stop="collapseToggle(false, $event)">
           Run input parameters
         </div>
         <div class="collapse">
@@ -215,7 +206,7 @@
       </div>
 
       <div class="panel panel-default">
-        <div class="panel-heading" @click.stop="collapseToggle">
+        <div class="panel-heading" @click.stop="collapseToggle(false, $event)">
           Generated images
         </div>
         <div class="collapse">
@@ -227,7 +218,7 @@
 
       <!-- Post processing information -->
       <div class="panel panel-default">
-        <div class="panel-heading" @click.stop="collapseToggle">
+        <div class="panel-heading" @click.stop="collapseToggle(false, $event)">
           Post processing output
         </div>
         <div class="collapse">
@@ -254,7 +245,7 @@
       </div>
 
       <div class="panel panel-default">
-        <div class="panel-heading" @click.stop="collapseToggle">
+        <div class="panel-heading" @click.stop="collapseToggle(false, $event)">
           Download files
         </div>
         <div class="collapse">

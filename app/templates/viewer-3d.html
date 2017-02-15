@@ -8,7 +8,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" v-if="started && isFinished">
             <div id="col-glcanvas-container" class="col-xs-11" :style="canvasStyle">
                 <div id="glcanvas-container" class="glcanvas-container text-center" :style="canvasStyle" v-show="started && isFinished">
                     <canvas id="glcanvas" class="glcanvas">Your browser doesn't appear to support the <code>&lt;canvas&gt;</code> element.</canvas>

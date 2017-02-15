@@ -5,6 +5,12 @@ var exports = (function () {
   var Viewer3DComponent = Vue.component("viewer-threedee", {
     template: "#template-viewer-threedee",
     props: {
+      activated: {
+        type: Boolean,
+        default: function () {
+          return false;
+        }
+      },
       model: {
         type: Object,
         default: function () {
@@ -66,6 +72,9 @@ var exports = (function () {
       }
     },
     watch: {
+      activated: function () {
+        this.loadData();
+      },
       activeModel: {
         "deep": true,
         "handler": function () {
@@ -207,21 +216,28 @@ var exports = (function () {
         });
       },
       loadData: function () {
-        this.viewer3d.dataSet.load({
-          url: "/thredds/dodsC/files/" + this.model.suid + "/simulation/trim-medium-sand.nc",
-          displacementVariable: this.dataSetVariables.displacement,
-          dataVariable: this.dataSetVariables.data,
-          bedLevelVariable: this.dataSetVariables.bedLevel
-        }, () => {
-          this.dimensions = this.viewer3d.volume.getDimensions();
-          this.loadGradient();
-          this.loadTime();
+        if(this.activated) {
+          try {
+            this.viewer3d.dataSet.load({
+              url: "/thredds/dodsC/files/" + this.model.suid + "/simulation/trim-medium-sand.nc",
+              displacementVariable: this.dataSetVariables.displacement,
+              dataVariable: this.dataSetVariables.data,
+              bedLevelVariable: this.dataSetVariables.bedLevel
+            }, () => {
+              this.dimensions = this.viewer3d.volume.getDimensions();
+              this.loadGradient();
+              this.loadTime();
 
-          this.refreshData();
+              this.refreshData();
 
-          this.viewer3d.camera.rotateToTopRightCorner();
-          this.viewer3d.camera.fit();
-        });
+              this.viewer3d.camera.rotateToTopRightCorner();
+              this.viewer3d.camera.fit();
+            });
+          } catch (err) {
+            console.error(err);
+            return;
+          }
+        }
       },
       loadGradient: function () {
         let colors = _.reverse(_.map(this.gradient, (c) => {
@@ -288,9 +304,13 @@ var exports = (function () {
           _.set(this.slices, [d, "from"], 1);
           _.set(this.slices, [d, "to"], val);
 
-          $(".ion-range.slice-" + d + "-w").data("ionRangeSlider").update({
-            "min": 1, "max": val, "from": 1, "to": val
-          });
+          let ionRangeFinderData = $(".ion-range.slice-" + d + "-w").data("ionRangeSlider");
+
+          if (ionRangeFinderData !== undefined) {
+            ionRangeFinderData.update({
+              "min": 1, "max": val, "from": 1, "to": val
+            });
+          }
         });
       },
       resetViewer: function () {
