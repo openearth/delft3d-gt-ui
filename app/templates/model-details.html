@@ -91,6 +91,15 @@
 
       <div class="panel panel-default">
         <div class="panel-heading" @click.stop="collapseToggle">
+          3D Viewer
+        </div>
+        <div class="collapse">
+          <viewer-threedee :model="activeModel.data"></viewer-threedee>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading" @click.stop="collapseToggle">
           Simulation controls
         </div>
 
