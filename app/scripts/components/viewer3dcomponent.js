@@ -84,6 +84,9 @@ var exports = (function () {
             this.curSuid = suid;
             this.startOrLoad3dViewer();
           }
+
+          this.initPickAColor();
+          this.initIonSliders();
         }
       },
       dataSetVariables: {
@@ -335,9 +338,6 @@ var exports = (function () {
         /* eslint-enable */
 
         this.loadData();
-
-        this.initPickAColor();
-        this.initIonSliders();
       },
       startOrLoad3dViewer: function () {
         if (this.curSuid !== undefined) {
