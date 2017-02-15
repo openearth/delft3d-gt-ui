@@ -3,19 +3,13 @@
   <div class="image-animation">
 
     <div class="row">
-      <div class="col-sm-12 text-center" >
-        <button type="button" class="btn btn-primary" :class="{ 'btn-success': currentAnimationKey === 'delta_fringe_images' }"  v-on:click="switchAnimation('delta_fringe_images')">
-          Delta fringe
-        </button>
-        <button type="button" class="btn btn-primary" :class="{ 'btn-success': currentAnimationKey === 'channel_network_images' }" v-on:click="switchAnimation('channel_network_images')">
-          Channel network
-        </button>
-        <button type="button" class="btn btn-primary" :class="{ 'btn-success': currentAnimationKey === 'sediment_fraction_images' }" v-on:click="switchAnimation('sediment_fraction_images')">
-          Sediment fraction
-        </button>
-        <button type="button" class="btn btn-primary" :class="{ 'btn-success': currentAnimationKey === 'subenvironment_images' }" v-on:click="switchAnimation('subenvironment_images')">
-          Sub-environment
-        </button>
+      <div class="col-sm-12" >
+        <ul class="nav nav-tabs nav-justified">
+          <li role="presentation" :class="{'active': currentAnimationKey === 'delta_fringe_images'}" @click.stop="switchAnimation('delta_fringe_images')"><a href="#">Delta fringe</a></li>
+          <li role="presentation" :class="{'active': currentAnimationKey === 'channel_network_images'}" @click.stop="switchAnimation('channel_network_images')"><a href="#">Channel network</a></li>
+          <li role="presentation" :class="{'active': currentAnimationKey === 'sediment_fraction_images'}" @click.stop="switchAnimation('sediment_fraction_images')"><a href="#">Sediment fraction</a></li>
+          <li role="presentation" :class="{'active': currentAnimationKey === 'subenvironment_images'}" @click.stop="switchAnimation('subenvironment_images')"><a href="#">Sub-environment</a></li>
+        </ul>
       </div>
     </div>
 
