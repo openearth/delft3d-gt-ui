@@ -23,8 +23,10 @@ var exports = (function () {
         "canvasStyle": {
           "height": "10px"
         },
+        "curFrameLength": 0,
+        "curSedimentClass": undefined,
         "curSuid": undefined,
-        "curTimeStep": 15,
+        "curTimeStep": 0,
         "dataSetVariables": {
           "bedLevelVariable": "DPS",
           "dataVariable": "MSED",
@@ -52,7 +54,7 @@ var exports = (function () {
           "y": {"from": 1, "to": 1},
           "z": {"from": 1, "to": 1}
         },
-        "tab": "data",
+        "tab": "slices",
         "viewer3d": undefined,
         "width": 0
       };
@@ -78,9 +80,11 @@ var exports = (function () {
       activeModel: {
         "deep": true,
         "handler": function () {
-          let suid = _.get(this.activeModel, ".data.suid");
+          let suid = _.get(this.activeModel, "data.suid");
 
           if (suid !== this.curSuid) {
+            this.curFrameLength = this.curTimeStep = _.get(this.activeModel, "data.info.subenvironment_images.images", []).length;
+            this.curSedimentClass = _.get(this.activeModel, "data.parameters.composition.value");
             this.curSuid = suid;
             this.startOrLoad3dViewer();
           }
@@ -178,10 +182,10 @@ var exports = (function () {
         }
       },
       goEnd: function () {
-        this.curTimeStep = 15;
+        this.curTimeStep = this.curFrameLength;
       },
       goNext: function () {
-        this.curTimeStep = Math.min(this.curTimeStep + 1, 15);
+        this.curTimeStep = Math.min(this.curTimeStep + 1, this.curFrameLength);
       },
       goPrev: function () {
         this.curTimeStep = Math.max(this.curTimeStep - 1, 0);
@@ -221,21 +225,20 @@ var exports = (function () {
       loadData: function () {
         if(this.activated) {
           try {
-            this.viewer3d.dataSet.load({
-              url: "/thredds/dodsC/files/" + this.model.suid + "/simulation/trim-medium-sand.nc",
-              displacementVariable: this.dataSetVariables.displacement,
-              dataVariable: this.dataSetVariables.data,
-              bedLevelVariable: this.dataSetVariables.bedLevel
-            }, () => {
-              this.dimensions = this.viewer3d.volume.getDimensions();
-              this.loadGradient();
-              this.loadTime();
+            if (this.model.suid !== undefined && this.curSedimentClass !== undefined) {
+              this.viewer3d.dataSet.load({
+                url: "/thredds/dodsC/files/" + this.model.suid + "/simulation/trim-" + this.curSedimentClass + ".nc",
+                displacementVariable: this.dataSetVariables.displacement,
+                dataVariable: this.dataSetVariables.data,
+                bedLevelVariable: this.dataSetVariables.bedLevel
+              }, () => {
+                this.dimensions = this.viewer3d.volume.getDimensions();
+                this.loadGradient();
+                this.loadTime();
+                this.resetViewer();
+              });
+            }
 
-              this.refreshData();
-
-              this.viewer3d.camera.rotateToTopRightCorner();
-              this.viewer3d.camera.fit();
-            });
           } catch (err) {
             console.error(err);
             return;
@@ -262,7 +265,7 @@ var exports = (function () {
         }));
 
         if (colors.length > 1) {
-          this.gradientStyle.background = "linear-gradient(" + _.join(posColors, ",") + ")"
+          this.gradientStyle.background = "linear-gradient(" + _.join(posColors, ",") + ")";
         }
         if (colors.length === 1) {
           this.gradientStyle.background = colors[0];
@@ -279,7 +282,7 @@ var exports = (function () {
       },
       loadSliders: function () {
         this.viewer3d.volume.setSlicePosition(this.viewer3d.side.LEFT, this.slices.x.from - 1);
-        this.viewer3d.volume.setSlicePosition(this.viewer3d.side.RIGHT, this.slices.x.to - 1);
+        this.viewer3d.volume.setSlicePosition(this.viewer3d.side.RIGHT, this.slices.x.to - 2);
 
         this.viewer3d.volume.setSlicePosition(this.viewer3d.side.BACK, this.slices.y.to - 1);
         this.viewer3d.volume.setSlicePosition(this.viewer3d.side.FRONT, this.slices.y.from - 1);
@@ -303,6 +306,11 @@ var exports = (function () {
       resetSliders: function () {
         _.each(["x", "y", "z"], (d) => {
           let val = _.get(this.dimensions, d);
+
+          // don't show dummy values on max X
+          if (d === "x") {
+            val--;
+          }
 
           _.set(this.slices, [d, "from"], 1);
           _.set(this.slices, [d, "to"], val);

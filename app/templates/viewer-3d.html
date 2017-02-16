@@ -61,42 +61,10 @@
             </div>
 
             <ul class="nav nav-tabs nav-justified">
-                <template v-for="name in ['data', 'slices', 'colors']">
+                <template v-for="name in ['slices', 'colors']">
                     <li role="presentation" :class="{'active': tab === name}" @click.stop="setTab(name)"><a href="#">{{ name }}</a></li>
                 </template>
             </ul>
-
-            <div class="tab-content">
-                <div role="tabpanel" class="tab-pane" :class="{'active': tab === 'data'}">
-                    <div class="form-horizontal">
-                        <div class=form-group>
-                            <label for="slice-x-w" class="col-lg-3 control-label">displacement variable</label>
-                            <div class="col-lg-7">
-                                <select class="form-control" v-model="dataSetVariables.displacement">
-                                  <option selected>DP_BEDLYR</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class=form-group>
-                            <label for="slice-x-w" class="col-lg-3 control-label">data variable</label>
-                            <div class="col-lg-7">
-                                <select class="form-control" v-model="dataSetVariables.data">
-                                  <option selected>LYRFRAC</option>
-                                  <option>MSED</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class=form-group>
-                            <label for="slice-x-w" class="col-lg-3 control-label">bed level variable</label>
-                            <div class="col-lg-7">
-                                <select class="form-control" v-model="dataSetVariables.bedLevel">
-                                  <option selected>DPS</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane" :class="{'active': tab === 'slices'}">
@@ -125,8 +93,7 @@
                 <div role="tabpanel" class="tab-pane" :class="{'active': tab === 'colors'}">
                     <div class="form-horizontal">
                         <div class=form-group v-for="point in gradient">
-                            <label class="col-sm-3 control-label">color {{ $index }}</label>
-                            <div class="col-sm-4">
+                            <div class="col-sm-4 col-sm-offset-3">
                                 <input class="pick-a-color form-control text-center" type="text" name="gradient-color" v-model="point.color">
                             </div>
                             <div class="col-sm-2">
