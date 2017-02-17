@@ -9,12 +9,35 @@
         </div>
 
         <div class="row" v-if="started && isFinished">
-            <div id="col-glcanvas-container" class="col-xs-11" :style="canvasStyle">
+            <div class="col-sm-12 text-center">
+                <h4>Sediment Fraction</h4>
+            </div>
+        </div>
+
+        <div class="row" v-if="started && isFinished">
+            <div id="col-glcanvas-container" class="col-xs-10" :style="canvasStyle">
                 <div id="glcanvas-container" class="glcanvas-container text-center" :style="canvasStyle" v-show="started && isFinished">
                     <canvas id="glcanvas" class="glcanvas">Your browser doesn't appear to support the <code>&lt;canvas&gt;</code> element.</canvas>
                 </div>
             </div>
-            <div class="col-xs-1">
+            <div class="col-xs-2">
+                <div id="svg-container" class="svg-container" v-show="started && isFinished">
+                    <svg :style="svgStyle" width="100" :height="height">
+
+                        <line x1="0" y1="1" x2="20" y2="1" style="stroke:#999;stroke-width:3" />
+                        <line x1="0" :y1="height - 1" x2="20" :y2="height - 1" style="stroke:#999;stroke-width:3" />
+
+                        <template v-for="x in 9">
+                            <line x1="0" x2="10" :y1="(x + 1) / 10 * height" :y2="(x + 1) / 10 * height" style="stroke:#999;stroke-width:2"/>
+                            <text x="13" :y="((x + 1) / 10 * height) + 5" fill="#999"> 0.{{9 - x}}</text>
+                        </template>
+
+                        <template v-for="x in 10">
+                            <line x1="0" x2="5" :y1="(x + 0.5)  / 10 * height" :y2="(x + 0.5)  / 10 * height" style="stroke:#aaa;stroke-width:2"/>
+                        </template>
+
+                    </svg>
+                </div>
                 <div id="legend-container" class="legend-container text-center" v-show="started && isFinished">
                     <div clas="legend" :style="gradientStyle"></div>
                 </div>

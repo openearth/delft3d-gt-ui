@@ -42,9 +42,7 @@ var exports = (function () {
         ],
         "gradientStyle": {
           "background": "#fff",
-          "height": "100%",
-          "margin-left": "8px",
-          "width": "50%"
+          "height": "100%"
         },
         "height": 0,
         "sharedState": store.state,
@@ -53,6 +51,9 @@ var exports = (function () {
           "x": {"from": 1, "to": 1},
           "y": {"from": 1, "to": 1},
           "z": {"from": 1, "to": 1}
+        },
+        "svgStyle": {
+          "height": "100%"
         },
         "tab": "slices",
         "viewer3d": undefined,
@@ -141,8 +142,9 @@ var exports = (function () {
 
       this.width = width;
       this.height = Math.floor(width / 1.6);  // golden ratio
-      this.canvasStyle.height = Math.floor(width / 1.6) + "px";
-      this.gradientStyle.height = Math.floor(width / 1.6) + "px";
+      this.canvasStyle.height = this.height + "px";
+      this.gradientStyle.height = this.height + "px";
+      this.svgStyle.height = this.height + "px";
     },
     methods: {
       addPoint: function () {

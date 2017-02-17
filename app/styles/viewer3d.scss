@@ -21,13 +21,22 @@
   // ======================= ION RANGE SLIDER
 
   .legend-container {
-    height: 100%;
+    width: 30%;
   }
 
   .legend {
     height: 100%;
-    padding-left: $padding;
-    width: 50%;
+    width: 100%;
+  }
+
+  .svg-container {
+    float: right;
+    display: block;
+    width: 70%;
+  }
+  svg {
+    height: 100%;
+    width: 100%;
   }
 
   .glcanvas {
