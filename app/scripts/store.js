@@ -97,6 +97,9 @@ var exports = (function() {
             resolve(json);
           })
           .fail(function(error) {
+            if (error.status === 404) {
+              resolve(undefined);  // expected behaviour as too strict filtering results in a 404 (as you're filtering out the model you're requesting): resolve with undefined
+            }
             reject(error);
           });
       });
