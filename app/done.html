@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Delft3D-GT Login</title>
+    <title>Delft3D-GT Email Sent</title>
 
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <!-- Place favicon.ico in the root directory -->
@@ -37,30 +37,10 @@
 
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title"><img src="/login/images/logo/delft3d-gt.svg" alt="logo"/> Delft3D Geological Tool - Login</h3>
+        <h3 class="panel-title"><img src="/login/images/logo/delft3d-gt.svg" alt="logo"/> Delft3D Geological Tool - Email Sent</h3>
       </div>
       <div class="panel-body">
-        <form role="form" method="POST" action="{% url 'django.contrib.auth.views.login' %}">
-          {% csrf_token %}
-
-          {% if form.non_field_errors %}
-          {% for error in form.non_field_errors %}
-          <p class="text-danger">{{ error }}</p>
-          {% endfor %}
-          {% endif %}
-
-          <div class="form-group{% if form.username.errors %} has-error{% endif %}">
-            <label for="id_username">Username</label>
-            <input class="form-control" id="id_username" name="username" placeholder="Username or e-mail address" value="{{ request.POST.username }}">
-            <p class="{% if form.username.errors %}text-danger{% endif %}">{{ form.username.errors.as_text }}</p>
-          </div>
-          <div class="form-group{% if form.password.errors %} has-error{% endif %}">
-            <label for="id_password">Password</label>
-            <input type="password" class="form-control" id="id_password" name="password" placeholder="Password">
-            <p class="{% if form.password.errors %}text-danger{% endif %}">{{ form.password.errors.as_text }}</p>
-          </div>
-          <button type="submit" class="btn btn-success">Sign in</button><a href="/forgot/" class="pull-right">Forgot your password?</a>
-        </form>
+        An email has been sent with details on how to reset your password. Please check your inbox.
       </div>
 
     </div>
