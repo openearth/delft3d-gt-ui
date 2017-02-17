@@ -212,12 +212,14 @@
                 <tr>
                   <th>Parameter</th>
                   <th>Value</th>
+                  <th>Unit</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(key, param) in getActiveModelData('info.postprocess_output') | orderBy '$key'">
-                  <td>{{ key | capitalize }}</td>
-                  <td>{{ param || "-"}}</td>
+                <tr v-for="(key, param) in getActiveModelPPData()">
+                  <td>{{ param.order }} {{ param.name }}</td>
+                  <td>{{ param.value || "-"}}</td>
+                  <td>{{ param.unit || "-"}}</td>
                 </tr>
               </tbody>
             </table>

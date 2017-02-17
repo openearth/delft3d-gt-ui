@@ -38,15 +38,15 @@ var exports = (function () {
 
       // should be initialised with values: it needs values when post processing search is activated
       this.selectedPostProc = {
-        "ProDeltaD50": "0;1",
-        "DeltaFrontD50": "0;1",
-        "DeltaTopD50": "0;1",
-        "ProDeltaSandFraction": "0;1",
-        "DeltaFrontSandFraction": "0;1",
-        "DeltaTopSandFraction": "0;1",
-        "ProDeltasorting": "0;10",
+        "DeltaTopD50": "0;2",
+        "DeltaTopsand_fraction": "0;100",
+        "DeltaTopsorting": "0;10",
+        "DeltaFrontD50": "0;2",
+        "DeltaFrontsand_fraction": "0;100",
         "DeltaFrontsorting": "0;10",
-        "DeltaTopsorting": "0;10"
+        "ProDeltaD50": "0;2",
+        "ProDeltasand_fraction": "0;100",
+        "ProDeltasorting": "0;10"
       };
 
       // get search templates
@@ -224,7 +224,11 @@ var exports = (function () {
           this.selectedPostProc,
           (value, key) => {
             if (this.activatedPostProc[key]) {
-              return key + "," + _.replace(value, ";", ",");
+              if (_.endsWith(key, "_fraction")) {
+                return key + "," + _.join(_.map(_.split(value, ";"), (d) => { return d / 100; }), ",");
+              } else {
+                return key + "," + _.replace(value, ";", ",");
+              }
             }
             return "";
           }
@@ -292,12 +296,12 @@ var exports = (function () {
           "ProDeltaD50": "0;1",
           "DeltaFrontD50": "0;1",
           "DeltaTopD50": "0;1",
-          "ProDeltaSandFraction": "0;1",
-          "DeltaFrontSandFraction": "0;1",
-          "DeltaTopSandFraction": "0;1",
-          "ProDeltasorting": "0;10",
-          "DeltaFrontsorting": "0;10",
-          "DeltaTopsorting": "0;10"
+          "ProDeltaSandFraction": "0;100",
+          "DeltaFrontSandFraction": "0;100",
+          "DeltaTopSandFraction": "0;100",
+          "ProDeltasorting": "-10;10",
+          "DeltaFrontsorting": "-10;10",
+          "DeltaTopsorting": "-10;10"
         };
 
         this.search();
