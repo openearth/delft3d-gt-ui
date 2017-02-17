@@ -225,7 +225,9 @@ var exports = (function () {
           (value, key) => {
             if (this.activatedPostProc[key]) {
               if (_.endsWith(key, "_fraction")) {
-                return key + "," + _.join(_.map(_.split(value, ";"), (d) => { return d / 100; }), ",");
+                return key + "," + _.join(_.map(_.split(value, ";"), (d) => {
+                  return d / 100;
+                }), ",");
               } else {
                 return key + "," + _.replace(value, ";", ",");
               }

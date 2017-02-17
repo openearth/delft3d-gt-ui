@@ -128,14 +128,14 @@ var exports = (function () {
           "ProDeltasand_fraction": {"name": "Sand Fraction for Prodelta", "unit": "%", "value": undefined},
           "ProDeltasorting": {"name": "Sorting for Prodelta", "unit": "-", "value": undefined}
         };
-        let pp_json = _.get(this.activeModel, "data.info.postprocess_output");
+        let ppJson = _.get(this.activeModel, "data.info.postprocess_output");
 
         _.each(_.keys(rv), (key) => {
 
           if (_.endsWith(key, "_fraction")) {
-            rv[key].value = parseFloat(pp_json[key]) * 100;  // fractions are in percentages
+            rv[key].value = parseFloat(ppJson[key]) * 100;  // fractions are in percentages
           } else {
-            rv[key].value = pp_json[key];
+            rv[key].value = ppJson[key];
           }
 
         });
