@@ -26,10 +26,12 @@
 
                         <line x1="0" y1="1" x2="20" y2="1" style="stroke:#999;stroke-width:3" />
                         <line x1="0" :y1="height - 1" x2="20" :y2="height - 1" style="stroke:#999;stroke-width:3" />
+                        <text x="24" :y="18" fill="#999" style="font-size: 1.5em;">1</text>
+                        <text x="20" :y="height - 6" fill="#999" style="font-size: 1.5em;">0</text>
 
                         <template v-for="x in 9">
                             <line x1="0" x2="10" :y1="(x + 1) / 10 * height" :y2="(x + 1) / 10 * height" style="stroke:#999;stroke-width:2"/>
-                            <text x="13" :y="((x + 1) / 10 * height) + 5" fill="#999"> 0.{{9 - x}}</text>
+                            <text x="13" :y="((x + 1) / 10 * height) + 5" fill="#999">0.{{9 - x}}</text>
                         </template>
 
                         <template v-for="x in 10">
