@@ -51,5 +51,8 @@
   "devDependencies": {
     "mocha": "~2.3.4",
     "chai": "~3.4.2"
+  },
+  "resolutions": {
+    "jquery": "~2.1.1"
   }
 }
