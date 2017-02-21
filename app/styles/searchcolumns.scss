@@ -10,7 +10,12 @@
     border-bottom: $border;
     margin-bottom: $padding;
     padding: $padding 0;
+
+    .hidden-md {
+      display: inline-block !important;
+    }
   }
+
 
   .bordered {
     border-right: $border;
