@@ -1,11 +1,13 @@
 <!doctype html>
-<html class="no-js" lang="en">
+<html class="no-js" lang="">
   <head>
     <meta charset="utf-8">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Delft3D-GT Forgot Password</title>
 
-    <title>Delft3D-GT Login</title>
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <!-- Place favicon.ico in the root directory -->
 
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="icon" type="image/png" href="apple-touch-icon.png" />
@@ -23,10 +25,10 @@
 
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title"><img src="/static/images/logo/delft3d-gt.svg" alt="logo"/> Delft3D Geological Tool - Login</h3>
+        <h3 class="panel-title"><img src="/static/images/logo/delft3d-gt.svg" alt="logo"/> Delft3D Geological Tool - Retrieve Password</h3>
       </div>
       <div class="panel-body">
-        <form role="form" method="POST" action="{% url 'django.contrib.auth.views.login' %}">
+        <form role="form" method="POST" action="">
           {% csrf_token %}
 
           {% if form.non_field_errors %}
@@ -35,20 +37,14 @@
           {% endfor %}
           {% endif %}
 
-          <div class="form-group{% if form.username.errors %} has-error{% endif %}">
-            <label for="id_username">Username</label>
-            <input class="form-control" id="id_username" name="username" placeholder="Username" value="{{ request.POST.username }}">
-            <p class="{% if form.username.errors %}text-danger{% endif %}">{{ form.username.errors.as_text }}</p>
+          <div class="form-group{% if form.email.errors %} has-error{% endif %}">
+            <label for="id_email">Please enter your e-mail address:</label>
+            <input class="form-control" id="id_email" name="email" placeholder="your@email.adress" value="{{ request.POST.email }}">
+            <p class="{% if form.email.errors %}text-danger{% endif %}">{{ form.email.errors.as_text }}</p>
           </div>
-          <div class="form-group{% if form.password.errors %} has-error{% endif %}">
-            <label for="id_password">Password</label>
-            <input type="password" class="form-control" id="id_password" name="password" placeholder="Password">
-            <p class="{% if form.password.errors %}text-danger{% endif %}">{{ form.password.errors.as_text }}</p>
-          </div>
-          <button type="submit" class="btn btn-success">Sign in</button><a href="/forgot/" class="pull-right">Forgot your password?</a>
+          <button type="submit" class="btn btn-success">Retrieve password</button><a href="/" class="pull-right">Back to the login page</a>
         </form>
       </div>
-
     </div>
 
     <script src="/static/scripts/vendor.js"></script>

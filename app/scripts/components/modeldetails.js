@@ -120,6 +120,32 @@ var exports = (function () {
       getActiveModelData: function (str) {
         return _.get(this.activeModel, "data." + str, "");
       },
+      getActiveModelPPData: function () {
+        let rv = {
+          "DeltaTopD50": {"name": "D50 for Delta Top", "unit": "mm", "value": undefined},
+          "DeltaTopsand_fraction": {"name": "Sand Fraction for Delta Top", "unit": "%", "value": undefined},
+          "DeltaTopsorting": {"name": "Sorting for Delta Top", "unit": "-", "value": undefined},
+          "DeltaFrontD50": {"name": "D50 for Delta Front", "unit": "mm", "value": undefined},
+          "DeltaFrontsand_fraction": {"name": "Sand Fraction for Delta Front", "unit": "%", "value": undefined},
+          "DeltaFrontsorting": {"name": "Sorting for Delta Front", "unit": "-", "value": undefined},
+          "ProDeltaD50": {"name": "D50 for Prodelta", "unit": "mm", "value": undefined},
+          "ProDeltasand_fraction": {"name": "Sand Fraction for Prodelta", "unit": "%", "value": undefined},
+          "ProDeltasorting": {"name": "Sorting for Prodelta", "unit": "-", "value": undefined}
+        };
+        let ppJson = _.get(this.activeModel, "data.info.postprocess_output");
+
+        _.each(_.keys(rv), (key) => {
+
+          if (_.endsWith(key, "_fraction")) {
+            rv[key].value = parseFloat(ppJson[key]) * 100;  // fractions are in percentages
+          } else {
+            rv[key].value = ppJson[key];
+          }
+
+        });
+
+        return rv;
+      },
       downloadFiles: function () {
         if(!this.anyDownloadsSelected) {
           return;
