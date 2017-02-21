@@ -46,11 +46,6 @@ var exports = (function () {
       },
       numSelectedModels: function () {
         return store.getSelectedModels().length;
-      },
-      someSelectedModelsAreFinished: function () {
-        return _.values(store.getSelectedModels()).some(function(model) {
-          return model.data.state === "Finished";
-        });
       }
     },
 
@@ -88,6 +83,10 @@ var exports = (function () {
       },
 
       resetSelectedModels: function() {
+        if (this.someSelectedModelsArePublished()) {
+          return;
+        }
+
         // Get a confirm dialog
         this.deleteDialog = getDialog(this, "confirm-dialog", "reset-runs");
 
@@ -101,12 +100,41 @@ var exports = (function () {
         // Show the dialog:
         this.deleteDialog.show();
       },
-
+      someSelectedModelsAreFinished: function () {
+        return _.values(store.getSelectedModels()).some(function(model) {
+          return model.data.state === "Finished";
+        });
+      },
+      someSelectedModelsArePublished: function () {
+        return _.values(store.getSelectedModels()).some(function(model) {
+          return model.data.shared !== "p";
+        });
+      },
+      someSelectedModelsAreAlreadyPublished: function (domain) {
+        if (domain === "world") {
+          return _.values(store.getSelectedModels()).some(function(model) {
+            return model.data.shared === "w";
+          });
+        }
+        if (domain === "company") {
+          return _.values(store.getSelectedModels()).some(function(model) {
+            return model.data.shared === "c" || model.data.shared === "w";
+          });
+        }
+        return false;
+      },
       startSelectedModels: function() {
+        if (this.someSelectedModelsArePublished()) {
+          return;
+        }
         store.startSelectedModels();
       },
 
       stopSelectedModels: function() {
+        if (this.someSelectedModelsArePublished()) {
+          return;
+        }
+
         // Get a confirm dialog
         this.deleteDialog = getDialog(this, "confirm-dialog", "stop-runs");
 
@@ -122,6 +150,10 @@ var exports = (function () {
       },
 
       deleteSelectedModels: function() {
+        if (this.someSelectedModelsArePublished()) {
+          return;
+        }
+
         // Get a confirm dialog
         this.deleteDialog = getDialog(this, "confirm-dialog", "delete-runs");
 
@@ -138,6 +170,10 @@ var exports = (function () {
       },
 
       shareSelectedModels: function (domain) {
+        if (!this.someSelectedModelsAreFinished || this.someSelectedModelsAreAlreadyPublished(domain)) {
+          return;
+        }
+
         // Get a confirm dialog
         this.shareDialog = getDialog(this, "confirm-dialog", "share-runs");
 

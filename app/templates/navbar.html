@@ -23,6 +23,7 @@
           <ul class="nav navbar-nav navbar-left">
             <li :class="{'active': $route.path === '/'}"><a href="#" title="Create scenario">Database</a></li>
             <li :class="{'active': $route.path.startsWith('/scenarios/create') }"><a v-link="{ path: '/scenarios/create'}" title="Create scenario">Scenario builder</a></li>
+            <li><a href="docs/User_Manual_Delft3D-Geological_Tool_Version_1.0.pdf" title="Download Manual" target="_blank">Manual</a></li>
           </ul>
 
           <user-details></user-details>
