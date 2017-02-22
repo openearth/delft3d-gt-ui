@@ -152,7 +152,9 @@ var exports = (function () {
         this.initPickAColor();
       },
       camera: function (side) {
-        if (_.isUndefined(this.viewer3d)) { return; }
+        if (_.isUndefined(this.viewer3d)) {
+          return;
+        }
 
         if (side === "back") {
           this.viewer3d.camera.alignToSide(this.viewer3d.side.BACK);
@@ -227,13 +229,15 @@ var exports = (function () {
         });
       },
       loadData: function () {
-        if (_.isUndefined(this.viewer3d)) { return; }
+        if (_.isUndefined(this.viewer3d)) {
+          return;
+        }
 
         if(this.activated) {
           try {
             if (this.model.suid !== undefined && this.curSedimentClass !== undefined) {
               this.viewer3d.dataSet.load({
-                url: "/thredds/dodsC/files/" + this.model.suid + "/simulation/trim-" + this.curSedimentClass + ".nc",
+                url: "http://dl-026.xtr.deltares.nl:8080/thredds/dodsC/files/" + this.model.suid + "/simulation/trim-" + this.curSedimentClass + ".nc",
                 displacementVariable: this.dataSetVariables.displacement,
                 dataVariable: this.dataSetVariables.data,
                 bedLevelVariable: this.dataSetVariables.bedLevel
@@ -251,7 +255,9 @@ var exports = (function () {
         }
       },
       loadGradient: function () {
-        if (_.isUndefined(this.viewer3d)) { return; }
+        if (_.isUndefined(this.viewer3d)) {
+          return;
+        }
 
         let colors = _.reverse(_.map(this.gradient, (c) => {
           return "#" + c.color;
@@ -288,7 +294,9 @@ var exports = (function () {
         this.refreshData();
       },
       loadSliders: function () {
-        if (_.isUndefined(this.viewer3d)) { return; }
+        if (_.isUndefined(this.viewer3d)) {
+          return;
+        }
 
         this.viewer3d.volume.setSlicePosition(this.viewer3d.side.LEFT, this.slices.x.from - 1);
         this.viewer3d.volume.setSlicePosition(this.viewer3d.side.RIGHT, this.slices.x.to - 2);
@@ -302,14 +310,18 @@ var exports = (function () {
         this.refreshData();
       },
       loadTime: function () {
-        if (_.isUndefined(this.viewer3d)) { return; }
+        if (_.isUndefined(this.viewer3d)) {
+          return;
+        }
 
         this.viewer3d.volume.setTimeStep(this.curTimeStep);
 
         this.refreshData();
       },
       refreshData: _.debounce(function () {
-        if (_.isUndefined(this.viewer3d)) { return; }
+        if (_.isUndefined(this.viewer3d)) {
+          return;
+        }
 
         this.viewer3d.volume.refreshData();
       }, 500),
@@ -338,7 +350,9 @@ var exports = (function () {
         });
       },
       resetViewer: function () {
-        if (_.isUndefined(this.viewer3d)) { return; }
+        if (_.isUndefined(this.viewer3d)) {
+          return;
+        }
 
         this.resetSliders();
         this.loadSliders();
