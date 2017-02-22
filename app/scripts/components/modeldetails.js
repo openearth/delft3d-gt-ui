@@ -113,7 +113,9 @@ var exports = (function () {
         deep: false,
         handler: function () {
           if (!this.isFinished) {
-            this.selectedDownloads["export_thirdparty"] = false;
+            /* eslint-disable camelcase */
+            this.selectedDownloads.export_thirdparty = false;
+            /* eslint-enable camelcase */
           }
         }
       }
