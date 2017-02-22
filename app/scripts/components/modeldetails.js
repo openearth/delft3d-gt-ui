@@ -113,7 +113,7 @@ var exports = (function () {
         deep: false,
         handler: function () {
           if (!this.isFinished) {
-            this.selectedDownloads.export_thirdparty = false;
+            this.selectedDownloads["export_thirdparty"] = false;
           }
         }
       }
