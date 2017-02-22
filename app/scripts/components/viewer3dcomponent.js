@@ -237,7 +237,7 @@ var exports = (function () {
           try {
             if (this.model.suid !== undefined && this.curSedimentClass !== undefined) {
               this.viewer3d.dataSet.load({
-                url: "http://dl-026.xtr.deltares.nl:8080/thredds/dodsC/files/" + this.model.suid + "/simulation/trim-" + this.curSedimentClass + ".nc",
+                url: "/thredds/dodsC/files/" + this.model.suid + "/simulation/trim-" + this.curSedimentClass + ".nc",
                 displacementVariable: this.dataSetVariables.displacement,
                 dataVariable: this.dataSetVariables.data,
                 bedLevelVariable: this.dataSetVariables.bedLevel
