@@ -152,7 +152,7 @@ var exports = (function () {
         this.initPickAColor();
       },
       camera: function (side) {
-        if (_.isUndefined(this.viewer3d)) return;
+        if (_.isUndefined(this.viewer3d)) { return; }
 
         if (side === "back") {
           this.viewer3d.camera.alignToSide(this.viewer3d.side.BACK);
@@ -227,7 +227,7 @@ var exports = (function () {
         });
       },
       loadData: function () {
-        if (_.isUndefined(this.viewer3d)) return;
+        if (_.isUndefined(this.viewer3d)) { return; }
 
         if(this.activated) {
           try {
@@ -244,7 +244,6 @@ var exports = (function () {
                 this.resetViewer();
               });
             }
-
           } catch (err) {
             console.error(err);
             return;
@@ -252,7 +251,7 @@ var exports = (function () {
         }
       },
       loadGradient: function () {
-        if (_.isUndefined(this.viewer3d)) return;
+        if (_.isUndefined(this.viewer3d)) { return; }
 
         let colors = _.reverse(_.map(this.gradient, (c) => {
           return "#" + c.color;
@@ -289,7 +288,7 @@ var exports = (function () {
         this.refreshData();
       },
       loadSliders: function () {
-        if (_.isUndefined(this.viewer3d)) return;
+        if (_.isUndefined(this.viewer3d)) { return; }
 
         this.viewer3d.volume.setSlicePosition(this.viewer3d.side.LEFT, this.slices.x.from - 1);
         this.viewer3d.volume.setSlicePosition(this.viewer3d.side.RIGHT, this.slices.x.to - 2);
@@ -303,14 +302,14 @@ var exports = (function () {
         this.refreshData();
       },
       loadTime: function () {
-        if (_.isUndefined(this.viewer3d)) return;
+        if (_.isUndefined(this.viewer3d)) { return; }
 
         this.viewer3d.volume.setTimeStep(this.curTimeStep);
 
         this.refreshData();
       },
       refreshData: _.debounce(function () {
-        if (_.isUndefined(this.viewer3d)) return;
+        if (_.isUndefined(this.viewer3d)) { return; }
 
         this.viewer3d.volume.refreshData();
       }, 500),
@@ -339,7 +338,7 @@ var exports = (function () {
         });
       },
       resetViewer: function () {
-        if (_.isUndefined(this.viewer3d)) return;
+        if (_.isUndefined(this.viewer3d)) { return; }
 
         this.resetSliders();
         this.loadSliders();
