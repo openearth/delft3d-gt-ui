@@ -110,6 +110,18 @@ var exports = (function () {
         }
       }
     },
+    watch: {
+      isFinished: {
+        deep: false,
+        handler: function () {
+          if (!this.isFinished) {
+            /* eslint-disable camelcase */
+            this.selectedDownloads.export_thirdparty = false;
+            /* eslint-enable camelcase */
+          }
+        }
+      }
+    },
     methods: {
       collapseToggle: function (viewerFlag, e) {
         if (viewerFlag) {
