@@ -1,0 +1,132 @@
+@import 'variables';
+
+.viewer-3d {
+  .btn-group {
+    margin: $padding $padding 0;
+  }
+
+  .btn {
+    margin-bottom: 0 !important;
+  }
+
+  .btn-group-justified {
+    margin: 0;
+  }
+
+  .pagination {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  // ======================= ION RANGE SLIDER
+
+  h4 {
+    margin-bottom: $padding;
+  }
+
+  .legend-container {
+    width: 30%;
+  }
+
+  .legend {
+    height: 100%;
+    width: 100%;
+  }
+
+  .svg-container {
+    float: right;
+    display: block;
+    width: 70%;
+  }
+  svg {
+    height: 100%;
+    width: 100%;
+  }
+
+  .glcanvas {
+    height: 100%;
+    width: 100%;
+  }
+
+  .nav-tabs {
+    margin: $padding 0;
+  }
+
+  .slider-label {
+    margin-top: $padding;
+  }
+
+  .gradient-input {
+    width: 80%;
+  }
+
+  .irs {
+    height: 30px;
+    margin-right: 6px;
+    margin-top: $padding;
+  }
+
+  .irs-line,
+  .irs-bar,
+  .irs-bar-edge {
+    height: 4px;
+    top: 24px;
+  }
+
+  .irs-slider {
+    top: 7px;
+    width: 8px;
+  }
+
+  .input-group-addon {
+    border-left: 1px solid $col-bw-2;
+  }
+
+  .irs-from,
+  .irs-to,
+  .irs-single {
+    background-color: $col-bw-2;
+    color: $col-bw-5;
+    padding: 2px 8px 8px; // 8px;
+    top: -8px;
+
+    &::after {
+      border-top-color: $col-bw-2; //The arrow down part.
+    }
+
+  }
+
+  .irs-bar-edge {
+    background: $col-bw-4;
+  }
+
+  .irs-slider,
+  .irs-bar {
+    background: $col-bw-4;
+  }
+
+  .irs-bar {
+    height: 4px; //Height of horizontal bar
+  }
+
+  // Dimensions of the handles
+  .to,
+  .from,
+  .single {
+    background-color: $col-bw-0;
+    border: 1px solid $col-bw-5;
+    border-radius: 10px;
+    height: 7px;
+    top: 22px;
+    width: 7px;
+  }
+
+  // Horizontal background bar.
+  .irs-line {
+    span {
+      background: none;
+      background-color: $col-bw-2;
+      height: 4px;
+    }
+  }
+}

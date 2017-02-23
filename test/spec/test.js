@@ -60,6 +60,10 @@
   global.VueRouter = VueRouter;
 
   // Load components
+  var Viewer3DComponent = require("../../app/scripts/components/viewer3dcomponent.js").Viewer3DComponent;
+
+  global.Viewer3DComponent = Viewer3DComponent;
+
   var UserDetails = require("../../app/scripts/components/userdetails.js").UserDetails;
 
   global.UserDetails = UserDetails;

@@ -35,7 +35,7 @@ processOptionalArguments();
 // Proxy paths which we map to a different source, for testing locally or
 // running the actual build.
 var paths = [
-  "api", "static", "login", "logout",
+  "api", "static", "login", "logout", "thredds",
   // old apis
   "runs", "createrun", "deleterun", "dorun", "scene", "files", "scenario", "scenario/template"
 ];
@@ -233,7 +233,8 @@ gulp.task("serve", ["styles", "scripts", "fonts", "images", "templates"], () => 
     server: {
       baseDir: [".tmp", "app"],
       routes: {
-        "/bower_components": "bower_components"
+        "/bower_components": "bower_components",
+        "/3dviewer": "3dviewer",
       }
 
     }

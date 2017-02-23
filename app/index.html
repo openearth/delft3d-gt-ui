@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="/bower_components/ion.rangeSlider/css/ion.rangeSlider.skinFlat.css" />
     <link rel="stylesheet" href="/bower_components/bootstrap-select/dist/css/bootstrap-select.css" />
     <link rel="stylesheet" href="/bower_components/open-sans-fontface/open-sans.css" />
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="/bower_components/pick-a-color/build/1.2.0/css/pick-a-color-1.2.0.min.css" />
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -25,12 +27,10 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
 
-
     <!-- build:js scripts/vendor/modernizr.js -->
     <script src="/bower_components/modernizr/modernizr.js"></script>
     <script src="/bower_components/validator-js/validator.js"></script>
     <!-- endbuild -->
-
 
   </head>
   <body id="app">
@@ -72,6 +72,8 @@
     <script src="/bower_components/ion.rangeSlider/js/ion.rangeSlider.js"></script>
     <script src="/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
     <script src="/bower_components/typeahead.js/dist/typeahead.bundle.js"></script>
+    <script src="/bower_components/tinycolor/tinycolor.js"></script>
+    <script src="/bower_components/pick-a-color/build/1.2.2/js/pick-a-color-1.2.2.min.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -90,10 +92,12 @@
     <script src="/bower_components/bootstrap-sass/assets/javascripts/bootstrap/tab.js"></script>
     <!-- endbuild -->
 
-    <!-- build:js scripts/main.js -->
-    <!-- external code  -->
-    <!-- <script src="scripts/external/listgroup.js"></script> -->
+    <!-- build:js scripts/3dviewer.js -->
+    <script src="/3dviewer/jsdap-8.1.0.min.js"></script>
+    <script src="/3dviewer/Viewer3D.min.js"></script>
+    <!-- endbuild -->
 
+    <!-- build:js scripts/main.js -->
     <!-- First the functions that we use to exchange data and validate it  -->
     <!-- these should have corresponding tests -->
     <!-- no vue code in here.... -->
@@ -104,6 +108,7 @@
     <!-- load components, these provide webcomponents (with corresponding templates in app/templates)-->
     <!-- mainly tested using integration tests -->
     <!-- these should be replaceable if someone wants to switch to a different webcomponent platform -->
+    <script src="scripts/components/viewer3dcomponent.js"></script>
     <script src="scripts/components/navbar.js"></script>
     <script src="scripts/components/modelcontrolmenu.js"></script>
     <script src="scripts/components/confirmdialog.js"></script>
@@ -123,6 +128,7 @@
     <!-- this should contain only loading of the app code. -->
     <!-- this can be very vue specific vuex, vue-router etc... -->
     <script src="scripts/app.js"></script>
+    <!-- endbuild -->
 
   </body>
 </html>
