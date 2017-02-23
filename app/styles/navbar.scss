@@ -18,12 +18,21 @@
   .navbar-brand {
     font-size: 1em;
   }
+
 }
 
 @media (min-width: $screen-xs-sm) {
   .navbar {
     a.navbar-brand {
       font-size: 18px;
+    }
+  }
+
+  .navbar-collapse {
+    .navbar-nav.navbar-left{
+      &:first-child {
+        margin-left: 0;
+      }
     }
   }
 }

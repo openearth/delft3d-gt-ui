@@ -70,11 +70,18 @@
             </dd>
           </dl>
 
+
+          <!-- reference: this element is used for a size reference for the 3D Viewer -->
+          <div class="row">
+            <div id="col-glcanvas-container-reference" class="col-xs-11"></div>
+          </div>
+          <!-- end-reference  -->
+
         </div>
       </div>
 
       <div class="panel panel-default">
-        <div class="panel-heading" @click.stop="collapseToggle">
+        <div class="panel-heading" @click.stop="collapseToggle(false, $event)">
           Simulation controls
         </div>
 
@@ -127,7 +134,7 @@
       </div>
 
       <div class="panel panel-default">
-        <div class="panel-heading" @click.stop="collapseToggle">
+        <div class="panel-heading" @click.stop="collapseToggle(false, $event)">
           Share controls
         </div>
         <div class="collapse">
@@ -157,8 +164,28 @@
         </div>
       </div>
 
+      <div class="panel panel-default hidden-xs hidden-sm">
+        <div class="panel-heading" @click.stop="collapseToggle(true, $event)">
+          3D Viewer
+        </div>
+        <div class="collapse">
+          <viewer-threedee :model="activeModel.data" :activated="viewerActive"></viewer-threedee>
+        </div>
+      </div>
+
       <div class="panel panel-default">
-        <div class="panel-heading" @click.stop="collapseToggle">
+        <div class="panel-heading" @click.stop="collapseToggle(false, $event)">
+          Generated images
+        </div>
+        <div class="collapse">
+          <div class="panel-body">
+            <image-animation :model="activeModel.data"></image-animation>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading" @click.stop="collapseToggle(false, $event)">
           Run input parameters
         </div>
         <div class="collapse">
@@ -190,19 +217,7 @@
       </div>
 
       <div class="panel panel-default">
-        <div class="panel-heading" @click.stop="collapseToggle">
-          Generated images
-        </div>
-        <div class="collapse">
-          <div class="panel-body">
-            <image-animation :model="activeModel.data"></image-animation>
-          </div>
-        </div>
-      </div>
-
-      <!-- Post processing information -->
-      <div class="panel panel-default">
-        <div class="panel-heading" @click.stop="collapseToggle">
+        <div class="panel-heading" @click.stop="collapseToggle(false, $event)">
           Post processing output
         </div>
         <div class="collapse">
@@ -231,7 +246,7 @@
       </div>
 
       <div class="panel panel-default">
-        <div class="panel-heading" @click.stop="collapseToggle">
+        <div class="panel-heading" @click.stop="collapseToggle(false, $event)">
           Download files
         </div>
         <div class="collapse">

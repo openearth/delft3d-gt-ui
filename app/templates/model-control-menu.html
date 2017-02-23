@@ -7,7 +7,7 @@
 
     <button type="button"
             class="btn btn-default dropdown-toggle nav-bar-button"
-            :class="{disabled: numSelectedModels === 0 }"
+            :class="{ disabled: numSelectedModels === 0 }"
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false">
@@ -17,25 +17,25 @@
 
     <ul class="dropdown-menu">
 
-      <li :class="{disabled: numSelectedModels === 0 }">
+      <li :class="{ disabled: numSelectedModels === 0 || someSelectedModelsArePublished() }">
         <a @click.stop="startSelectedModels">
           <i class="fa fa-fw fa-play" aria-hidden="true"></i> Start model<span v-if="numSelectedModels > 1">s</span>
         </a>
       </li>
 
-      <li :class="{disabled: numSelectedModels === 0 }">
+      <li :class="{ disabled: numSelectedModels === 0 || someSelectedModelsArePublished() }">
         <a @click.stop="stopSelectedModels">
           <i class="fa fa-fw fa-stop" aria-hidden="true"></i> Stop model<span v-if="numSelectedModels > 1">s</span>
         </a>
       </li>
 
-      <li :class="{disabled: numSelectedModels === 0 }">
+      <li :class="{ disabled: numSelectedModels === 0 || someSelectedModelsArePublished() }">
         <a @click.stop="resetSelectedModels">
           <i class="fa fa-fw fa-fast-backward" aria-hidden="true"></i> Reset model<span v-if="numSelectedModels > 1">s</span>
         </a>
       </li>
 
-      <li :class="{disabled: numSelectedModels === 0 }">
+      <li :class="{ disabled: numSelectedModels === 0 || someSelectedModelsArePublished() }">
         <a @click.stop="deleteSelectedModels">
           <i class="fa fa-fw fa-times" aria-hidden="true"></i> Delete model<span v-if="numSelectedModels > 1">s</span>
         </a>
@@ -43,13 +43,13 @@
 
       <li role="separator" class="divider"></li>
 
-      <li :class="{disabled: numSelectedModels === 0  || !someSelectedModelsAreFinished}">
+      <li :class="{ disabled: numSelectedModels === 0  || !someSelectedModelsAreFinished() || someSelectedModelsAreAlreadyPublished('company') }">
         <a @click.stop="shareSelectedModels('company')">
           <i class="fa fa-fw fa-group" aria-hidden="true"></i> Share model<span v-if="numSelectedModels > 1">s</span> with Company
         </a>
       </li>
 
-      <li :class="{disabled: numSelectedModels === 0  || !someSelectedModelsAreFinished}">
+      <li :class="{ disabled: numSelectedModels === 0  || !someSelectedModelsAreFinished()  || someSelectedModelsAreAlreadyPublished('world') }">
         <a @click.stop="shareSelectedModels('world')">
           <i class="fa fa-fw fa-globe" aria-hidden="true"></i> Share model<span v-if="numSelectedModels > 1">s</span> with World
         </a>
@@ -57,13 +57,13 @@
 
       <li role="separator" class="divider"></li>
 
-      <li :class="{disabled: numSelectedModels === 0 || (option.onlyFinished && !someSelectedModelsAreFinished)}" v-for="(key, option) in downloadOptions">
+      <li :class="{ disabled: numSelectedModels === 0 || (option.onlyFinished && !someSelectedModelsAreFinished()) }" v-for="(key, option) in downloadOptions">
         <div class="dropdown-menu-checkbox" @click.self.stop.prevent="toggle(key)">
-          <input type="checkbox" class="downloadoption"  :value="key" v-model="downloadOptions[key].active" :disabled="numSelectedModels === 0 || (option.onlyFinished && !someSelectedModelsAreFinished)"> {{ option.verbose }}
+          <input type="checkbox" class="downloadoption"  :value="key" v-model="downloadOptions[key].active" :disabled="numSelectedModels === 0 || (option.onlyFinished && !someSelectedModelsAreFinished())"> {{ option.verbose }}
         </div>
       </li>
 
-      <li :class="{disabled: numSelectedModels === 0 || !anyDownloadsSelected}">
+      <li :class="{ disabled: numSelectedModels === 0 || !anyDownloadsSelected }">
         <a @click.stop="downloadSelectedModels">
           <i class="fa fa-fw fa-download" aria-hidden="true"></i> Dowload data from model<span v-if="numSelectedModels > 1">s</span>
         </a>

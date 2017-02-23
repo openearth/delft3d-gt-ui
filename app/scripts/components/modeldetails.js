@@ -1,4 +1,4 @@
-/* global ImageAnimation, ConfirmDialog, UserDetails, store, getDialog  */
+/* global ImageAnimation, ConfirmDialog, UserDetails, Viewer3DComponent, store, getDialog  */
 var exports = (function () {
   "use strict";
 
@@ -8,7 +8,8 @@ var exports = (function () {
       // <my-component> will only be available in Parent's template
       "image-animation": ImageAnimation,
       "confirm-dialog": ConfirmDialog,
-      "user-details": UserDetails
+      "user-details": UserDetails,
+      "viewer-3d": Viewer3DComponent
     },
     data: function() {
       return {
@@ -18,7 +19,8 @@ var exports = (function () {
           "export_images": false,
           "export_movie": false,
           "export_thirdparty": false
-        }
+        },
+        viewerActive: false
       };
     },
     computed: {
@@ -108,9 +110,23 @@ var exports = (function () {
         }
       }
     },
+    watch: {
+      isFinished: {
+        deep: false,
+        handler: function () {
+          if (!this.isFinished) {
+            /* eslint-disable camelcase */
+            this.selectedDownloads.export_thirdparty = false;
+            /* eslint-enable camelcase */
+          }
+        }
+      }
+    },
     methods: {
-      collapseToggle: function (e) {
-        e.stopPropagation();
+      collapseToggle: function (viewerFlag, e) {
+        if (viewerFlag) {
+          this.viewerActive = !this.viewerActive;
+        }
         $(e.target).closest(".panel").children(".collapse").collapse("toggle");
       },
       getActiveModelData: function (str) {

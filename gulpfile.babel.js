@@ -35,7 +35,7 @@ processOptionalArguments();
 // Proxy paths which we map to a different source, for testing locally or
 // running the actual build.
 var paths = [
-  "api", "static", "login", "logout",
+  "api", "static", "login", "logout", "thredds",
   // old apis
   "runs", "createrun", "deleterun", "dorun", "scene", "files", "scenario", "scenario/template"
 ];
@@ -206,6 +206,11 @@ gulp.task("images", () => {
     .pipe(gulp.dest("dist/images"));
 });
 
+gulp.task("docs", () => {
+  return gulp.src("app/docs/**/*")
+    .pipe(gulp.dest("dist/docs"));
+});
+
 gulp.task("fonts", () => {
   return gulp.src(
     // load from bower files
@@ -226,14 +231,15 @@ gulp.task("extras", () => {
 
 gulp.task("clean", del.bind(null, [".tmp", "dist"]));
 
-gulp.task("serve", ["styles", "scripts", "fonts", "images", "templates"], () => {
+gulp.task("serve", ["styles", "scripts", "fonts", "images", "docs", "templates"], () => {
   var options = {
     notify: false,
     port: 9000,
     server: {
       baseDir: [".tmp", "app"],
       routes: {
-        "/bower_components": "bower_components"
+        "/bower_components": "bower_components",
+        "/3dviewer": "3dviewer",
       }
 
     }
@@ -326,7 +332,7 @@ gulp.task("wiredep", () => {
 
 });
 
-gulp.task("build", ["lint", "html", "images", "fonts", "extras", "templates"], () => {
+gulp.task("build", ["lint", "html", "images", "docs", "fonts", "extras", "templates"], () => {
   return gulp.src("dist/**/*").pipe($.size({title: "build", gzip: true}));
 });
 
