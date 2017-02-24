@@ -83,6 +83,9 @@ var exports = (function () {
         "handler": function () {
           let suid = _.get(this.activeModel, "data.suid");
 
+          console.log("**********************************************************************");
+          console.log(suid);
+
           if (suid !== this.curSuid) {
             this.curFrameLength = this.curTimeStep = _.get(this.activeModel, "data.info.delta_fringe_images.images", []).length;
             this.curSedimentClass = _.get(this.activeModel, "data.parameters.composition.value");
@@ -229,29 +232,27 @@ var exports = (function () {
         });
       },
       loadData: function () {
-        if (_.isUndefined(this.viewer3d)) {
+        if (!this.activated || _.isUndefined(this.viewer3d)) {
           return;
         }
 
-        if(this.activated) {
-          try {
-            if (this.model.suid !== undefined && this.curSedimentClass !== undefined) {
-              this.viewer3d.dataSet.load({
-                url: "/thredds/dodsC/files/" + this.model.suid + "/simulation/trim-" + this.curSedimentClass + ".nc",
-                displacementVariable: this.dataSetVariables.displacement,
-                dataVariable: this.dataSetVariables.data,
-                bedLevelVariable: this.dataSetVariables.bedLevel
-              }, () => {
-                this.dimensions = this.viewer3d.volume.getDimensions();
-                this.loadGradient();
-                this.loadTime();
-                this.resetViewer();
-              });
-            }
-          } catch (err) {
-            console.error(err);
-            return;
+        try {
+          if (this.curSuid !== undefined && this.curSedimentClass !== undefined) {
+            this.viewer3d.dataSet.load({
+              url: "/thredds/dodsC/files/" + this.curSuid + "/simulation/trim-" + this.curSedimentClass + ".nc",
+              displacementVariable: this.dataSetVariables.displacement,
+              dataVariable: this.dataSetVariables.data,
+              bedLevelVariable: this.dataSetVariables.bedLevel
+            }, () => {
+              this.dimensions = this.viewer3d.volume.getDimensions();
+              this.loadGradient();
+              this.loadTime();
+              this.resetViewer();
+            });
           }
+        } catch (err) {
+          console.error(err);
+          return;
         }
       },
       loadGradient: function () {
