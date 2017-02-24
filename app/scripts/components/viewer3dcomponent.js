@@ -83,9 +83,6 @@ var exports = (function () {
         "handler": function () {
           let suid = _.get(this.activeModel, "data.suid");
 
-          console.log("**********************************************************************");
-          console.log(suid);
-
           if (suid !== this.curSuid) {
             this.curFrameLength = this.curTimeStep = _.get(this.activeModel, "data.info.delta_fringe_images.images", []).length;
             this.curSedimentClass = _.get(this.activeModel, "data.parameters.composition.value");
