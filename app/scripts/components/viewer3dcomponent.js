@@ -157,10 +157,10 @@ var exports = (function () {
         }
 
         if (side === "back") {
-          this.viewer3d.camera.alignToSide(this.viewer3d.side.BACK);
+          this.viewer3d.camera.alignToSide(this.viewer3d.side.BACK, true);
         }
         if (side === "bottom") {
-          this.viewer3d.camera.alignToSide(this.viewer3d.side.BOTTOM);
+          this.viewer3d.camera.alignToSide(this.viewer3d.side.BOTTOM, true);
         }
         if (side === "down") {
           this.viewer3d.camera.stepDown();
@@ -169,19 +169,19 @@ var exports = (function () {
           this.viewer3d.camera.fit();
         }
         if (side === "front") {
-          this.viewer3d.camera.alignToSide(this.viewer3d.side.FRONT);
+          this.viewer3d.camera.alignToSide(this.viewer3d.side.FRONT, true);
         }
         if (side === "left") {
-          this.viewer3d.camera.alignToSide(this.viewer3d.side.LEFT);
+          this.viewer3d.camera.alignToSide(this.viewer3d.side.LEFT, true);
         }
         if (side === "reset") {
           this.resetViewer();
         }
         if (side === "right") {
-          this.viewer3d.camera.alignToSide(this.viewer3d.side.RIGHT);
+          this.viewer3d.camera.alignToSide(this.viewer3d.side.RIGHT, true);
         }
         if (side === "top") {
-          this.viewer3d.camera.alignToSide(this.viewer3d.side.TOP);
+          this.viewer3d.camera.alignToSide(this.viewer3d.side.TOP, true);
         }
         if (side === "up") {
           this.viewer3d.camera.stepUp();
@@ -229,29 +229,27 @@ var exports = (function () {
         });
       },
       loadData: function () {
-        if (_.isUndefined(this.viewer3d)) {
+        if (!this.activated || _.isUndefined(this.viewer3d)) {
           return;
         }
 
-        if(this.activated) {
-          try {
-            if (this.model.suid !== undefined && this.curSedimentClass !== undefined) {
-              this.viewer3d.dataSet.load({
-                url: "/thredds/dodsC/files/" + this.model.suid + "/simulation/trim-" + this.curSedimentClass + ".nc",
-                displacementVariable: this.dataSetVariables.displacement,
-                dataVariable: this.dataSetVariables.data,
-                bedLevelVariable: this.dataSetVariables.bedLevel
-              }, () => {
-                this.dimensions = this.viewer3d.volume.getDimensions();
-                this.loadGradient();
-                this.loadTime();
-                this.resetViewer();
-              });
-            }
-          } catch (err) {
-            console.error(err);
-            return;
+        try {
+          if (this.curSuid !== undefined && this.curSedimentClass !== undefined) {
+            this.viewer3d.dataSet.load({
+              url: "/thredds/dodsC/files/" + this.curSuid + "/simulation/trim-" + this.curSedimentClass + ".nc",
+              displacementVariable: this.dataSetVariables.displacement,
+              dataVariable: this.dataSetVariables.data,
+              bedLevelVariable: this.dataSetVariables.bedLevel
+            }, () => {
+              this.dimensions = this.viewer3d.volume.getDimensions();
+              this.loadGradient();
+              this.loadTime();
+              this.resetViewer();
+            });
           }
+        } catch (err) {
+          console.error(err);
+          return;
         }
       },
       loadGradient: function () {
@@ -358,7 +356,7 @@ var exports = (function () {
         this.loadSliders();
         this.refreshData();
 
-        this.viewer3d.camera.rotateToTopRightCorner();
+        this.viewer3d.camera.rotateToTopRightCorner(true);
         this.viewer3d.camera.fit();
       },
       setTab: function (tab) {
