@@ -65,8 +65,14 @@
             </dd>
             <dt>Status</dt><dd><span class="label label-status" :class="'label-' + activeModel.statusLevel()">{{ getActiveModelData('state') | capitalize }}</span></dd>
             <dt>Simulation output:</dt><dd>
-              <a class="btn btn-default btn-xs" :href="getActiveModelData('fileurl')" target="_blank" title="A link to the file server hosting all output files.">File Server</a>
-              <a class="btn btn-default btn-xs" href="/thredds/catalog/files/{{ getActiveModelData('suid') }}/simulation/catalog.html" target="_blank" title="A link to the THREDDS server hosting Delft3D NetCDF output, which allows querying via OPeNDAP.">THREDDS Data Server</a>
+              <template v-if="getActiveModelData('date_created') === ''">
+                <button class="btn btn-default btn-xs btn-output" disabled>File Server</a>
+                <button class="btn btn-default btn-xs btn-output" disabled>THREDDS Data Server</a>
+              </template>
+              <template v-else>
+                <a class="btn btn-default btn-xs" :href="getActiveModelData('fileurl')" target="_blank" title="A link to the file server hosting all output files.">File Server</a>
+                <a class="btn btn-default btn-xs" href="/thredds/catalog/files/{{ getActiveModelData('suid') }}/simulation/catalog.html" target="_blank" title="A link to the THREDDS server hosting Delft3D NetCDF output, which allows querying via OPeNDAP.">THREDDS Data Server</a>
+              </template>
             </dd>
           </dl>
 
