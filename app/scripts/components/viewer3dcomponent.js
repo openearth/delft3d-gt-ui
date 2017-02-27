@@ -82,11 +82,13 @@ var exports = (function () {
         "deep": true,
         "handler": function () {
           let suid = _.get(this.activeModel, "data.suid");
+          let timestep = _.get(this.activeModel, "data.info.delta_fringe_images.images", []).length;
+          let sedimentClass = _.get(this.activeModel, "data.parameters.composition.value");
 
-          if (suid !== this.curSuid) {
-            this.curFrameLength = this.curTimeStep = _.get(this.activeModel, "data.info.delta_fringe_images.images", []).length;
-            this.curSedimentClass = _.get(this.activeModel, "data.parameters.composition.value");
+          if (suid !== this.curSuid timestep !== 0 && sedimentClass !== undefined) {
             this.curSuid = suid;
+            this.curFrameLength = this.curTimeStep = timestep;
+            this.curSedimentClass = sedimentClass;
             this.startOrLoad3dViewer();
           }
 
