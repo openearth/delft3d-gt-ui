@@ -82,12 +82,13 @@ var exports = (function () {
         "deep": true,
         "handler": function () {
           let suid = _.get(this.activeModel, "data.suid");
+          let progress = _.get(this.activeModel, "progress", 0);
           let timestep = _.get(this.activeModel, "data.info.delta_fringe_images.images", []).length;
           let sedimentClass = _.get(this.activeModel, "data.parameters.composition.value");
 
           if (suid !== this.curSuid && timestep !== 0 && sedimentClass !== undefined) {
             this.curSuid = suid;
-            this.curFrameLength = this.curTimeStep = timestep;
+            this.curFrameLength = this.curTimeStep = timestep - ((progress < 100) ? 1 : 0);  // if the model is not finished, do not show final timestep (as it will not render)
             this.curSedimentClass = sedimentClass;
             this.startOrLoad3dViewer();
           }
