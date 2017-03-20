@@ -62,8 +62,8 @@ var exports = (function() {
         this.updateContainers();
         this.state.updating = false;
       })
-      .catch(() => {
-        this.state.failedUpdate();
+      .catch((jqXhr) => {
+        this.state.failedUpdate(jqXhr);
         this.state.updating = false;
       });
     },
@@ -71,8 +71,10 @@ var exports = (function() {
     updateUser: function () {
       this.fetchUser().then((json) => {
         this.state.user = json;
-      }).catch(function (reason) {
-        console.error("Promise rejected: " + reason);
+      })
+      .catch((jqXhr) => {
+        this.state.failedUpdate(jqXhr);
+        this.state.updating = false;
       });
     },
 
@@ -96,8 +98,11 @@ var exports = (function() {
           .done(function(json) {
             resolve(json);
           })
-          .fail(function(error) {
-            reject(error);
+          .error(function(jqXhr) {
+            if (jqXhr.statusText === "NOT FOUND") {  // filters too strict
+              resolve({});  // is ok: just return empty response
+            }
+            reject(jqXhr);
           });
       });
     },
@@ -111,8 +116,8 @@ var exports = (function() {
           .done(function(json) {
             resolve(json);
           })
-          .fail(function(error) {
-            reject(error);
+          .error(function(jqXhr) {
+            reject(jqXhr);
           });
       });
     },
@@ -125,8 +130,8 @@ var exports = (function() {
           .done(function(json) {
             resolve(json);
           })
-          .fail(function(error) {
-            reject(error);
+          .error(function(jqXhr) {
+            reject(jqXhr);
           });
       });
     },
@@ -139,8 +144,8 @@ var exports = (function() {
           .done(function(json) {
             resolve(json[0]);
           })
-          .fail(function(error) {
-            reject(error);
+          .error(function(jqXhr) {
+            reject(jqXhr);
           });
       });
     },
@@ -236,8 +241,8 @@ var exports = (function() {
           .done(function(data) {
             resolve(data);
           })
-          .fail(function(error) {
-            reject(error);
+          .error(function(jqXhr) {
+            reject(jqXhr);
           });
       });
     },
@@ -255,8 +260,8 @@ var exports = (function() {
           .done(function (data) {
             resolve(data);
           })
-          .fail(function(error) {
-            reject(error);
+          .error(function(jqXhr) {
+            reject(jqXhr);
           });
       });
     },
@@ -271,8 +276,8 @@ var exports = (function() {
           .done(function(data) {
             resolve(data);
           })
-          .fail(function(error) {
-            reject(error);
+          .error(function(jqXhr) {
+            reject(jqXhr);
           });
       });
     },
@@ -287,8 +292,8 @@ var exports = (function() {
           .done(function(data) {
             resolve(data);
           })
-          .fail(function(error) {
-            reject(error);
+          .error(function(jqXhr) {
+            reject(jqXhr);
           });
       });
     },
@@ -303,8 +308,8 @@ var exports = (function() {
           .done(function(data) {
             resolve(data);
           })
-          .fail(function(error) {
-            reject(error);
+          .error(function(jqXhr) {
+            reject(jqXhr);
           });
       });
     },
@@ -327,8 +332,8 @@ var exports = (function() {
           .done(function(json) {
             resolve(json);
           })
-          .fail(function(error) {
-            reject(error);
+          .error(function(jqXhr) {
+            reject(jqXhr);
           });
       });
     },
@@ -344,8 +349,8 @@ var exports = (function() {
         .done(function() {
           resolve();
         })
-        .fail(function(error) {
-          reject(error);
+        .error(function(jqXhr) {
+          reject(jqXhr);
         });
       });
 
@@ -412,8 +417,8 @@ var exports = (function() {
           .done(function(data) {
             resolve(data);
           })
-          .fail(function(error) {
-            reject(error);
+          .error(function(jqXhr) {
+            reject(jqXhr);
           });
       });
     },
