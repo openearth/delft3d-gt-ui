@@ -49,6 +49,18 @@ var exports = (function () {
         "ProDeltasorting": "0;10"
       };
 
+      // set store failedUpdate handling
+      store.state.failedUpdate = function(jqXhr) {
+        console.error(jqXhr);
+
+        let status = jqXhr.statusText || "error";
+        let response = jqXhr.responseText || jqXhr.responseJson || "An error occurred.";
+
+        this.$root.$broadcast("show-alert", {
+          message: status + ": " + response, showTime: 3000, type: "danger"
+        });
+      }.bind(this);
+
       // get search templates
       Promise.all([fetchUsers(), fetchSearchTemplate(), fetchVersions()])
         .then((jsons) => {
@@ -69,13 +81,6 @@ var exports = (function () {
 
               // update the search results
               this.search();
-
-              store.state.failedUpdate = function() {
-
-                // This is not practical, but the only way in vue? (using $parent)
-                this.$root.$broadcast("show-alert", { message: "Cannot connect to server...", showTime: 1000, type: "warning"});
-
-              }.bind(this);
 
               // as soon as this component is loaded we can start to sync models
               // startSyncModels();

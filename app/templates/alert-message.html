@@ -4,7 +4,7 @@
         <!-- dismissable alert-->
         <!-- this alert message is created using the alert component -->
         <div class="alert message-alert alert-dismissible alert-{{type}}" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" @click="hide"><span aria-hidden="true">&times;</span></button>
         <p>{{message}}</div>
     </div>
     </footer>

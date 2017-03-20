@@ -16,15 +16,14 @@ var exports = (function () {
         visible: false,
 
         // And no text by default:
-        message: ""
+        message: "",
+
+        timeoutID: undefined
       };
     },
 
     events: {
-
       "show-alert": function (msg) {
-        var that = this;
-
         this.visible = true;
 
         this.message = msg.message;
@@ -34,16 +33,20 @@ var exports = (function () {
           this.type = msg.type;
         }
 
-
         // Automatically hide this message in how many ms?
         if (msg.showTime !== undefined) {
+          window.clearTimeout(this.timeoutID);
 
-          setTimeout(function() {
-            that.visible = false;
+          this.timeoutID = setTimeout(() => {
+            this.visible = false;
           }, msg.showTime);
-
         }
+      }
+    },
 
+    methods: {
+      "hide": function () {
+        this.visible = false;
       }
     }
 
