@@ -82,12 +82,12 @@ var exports = (function () {
         "deep": true,
         "handler": function () {
           let suid = _.get(this.activeModel, "data.suid");
-          let timestep = _.get(this.activeModel, "data.info.delta_fringe_images.images", []).length;
           let sedimentClass = _.get(this.activeModel, "data.parameters.composition.value");
+          let maxTimeStepIndex = _.get(this.activeModel, "data.info.delta_fringe_images.images", []).length - 1;  // obtain max TimeStep index based on number of Delta Fringe images
 
-          if (suid !== this.curSuid && timestep !== 0 && sedimentClass !== undefined) {
+          if (suid !== this.curSuid && maxTimeStepIndex !== -1 && sedimentClass !== undefined) {
             this.curSuid = suid;
-            this.curFrameLength = this.curTimeStep = timestep;
+            this.curFrameLength = this.curTimeStep = maxTimeStepIndex;  // if the model is not finished, do not show final maxTimeStepIndex (as it will not render)
             this.curSedimentClass = sedimentClass;
             this.startOrLoad3dViewer();
           }
@@ -199,7 +199,7 @@ var exports = (function () {
         this.curTimeStep = Math.max(this.curTimeStep - 1, 0);
       },
       goStart: function () {
-        this.curTimeStep = 1;
+        this.curTimeStep = 0;
       },
       initIonSliders: function () {
         this.$nextTick(() => {
