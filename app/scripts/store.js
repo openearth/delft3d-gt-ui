@@ -16,7 +16,7 @@ var exports = (function() {
       reqUser: undefined,
       scenarioContainers: [],
       scenarios: [],
-      updateInterval: 2000,
+      updateInterval: 60000,
       updating: false,
       user: {
         id: -1,

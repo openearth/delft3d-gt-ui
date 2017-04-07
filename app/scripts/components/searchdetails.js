@@ -1,4 +1,4 @@
-/* global _, Vue, fetchSearchTemplate, fetchUsers, fetchVersions, store  */
+/* global _, Vue, moment, fetchSearchTemplate, fetchUsers, fetchVersions, store  */
 var exports = (function () {
   "use strict";
   var SearchDetails = Vue.component("search-details", {
@@ -7,29 +7,18 @@ var exports = (function () {
     template: "#template-search-details",
     data: function() {
       return {
-
-        // all the user input that is not in a template parameter
-        searchText: "",
-        selectedParameters: {},
-        selectedTemplates: [],
-        selectedDomains: [],
-
+        activatedPostProc: {},
         createdAfter: "",
         createdBefore: "",
-        startedAfter: "",
-        startedBefore: "",
-
-        activatedPostProc: {},
-        selectedPostProc: {},
-
-        users: [],
-        selectedUsers: [],
-
-        selectedVersions: {},
-
-        // Template used for searching (probably always one)
         searchTemplate: null,
-
+        searchText: "",
+        selectedDomains: [],
+        selectedParameters: {},
+        selectedPostProc: {},
+        selectedTemplates: [],
+        selectedUsers: [],
+        selectedVersions: {},
+        users: [],
         versions: {}
       };
     },
@@ -128,7 +117,59 @@ var exports = (function () {
           });
           return parameters;
         }
+      },
+      createdAfterValid: {
+        get: function () {
+          return this.createdAfter === "" || moment(this.createdAfter, "YYYY-MM-DD", true).isValid();
+        }
+      },
+      createdBeforeValid: {
+        get: function () {
+          return this.createdBefore === "" || moment(this.createdBefore, "YYYY-MM-DD", true).isValid();
+        }
       }
+    },
+
+    watch: {
+      activatedPostProc: function () {
+        this.search();
+      },
+      createdAfter: function () {
+        this.search();
+      },
+      createdBefore: function () {
+        this.search();
+      },
+      searchTemplate: function () {
+        this.search();
+      },
+      searchText: function () {
+        this.search();
+      },
+      selectedDomains: function () {
+        this.search();
+      },
+      selectedParameters: function () {
+        this.search();
+      },
+      selectedPostProc: function () {
+        this.search();
+      },
+      selectedTemplates: function () {
+        this.search();
+      },
+      selectedUsers: function () {
+        this.search();
+      },
+      selectedVersions: function () {
+        this.search();
+      },
+      users: function () {
+        this.search();
+      },
+      versions: function () {
+        this.search();
+      },
     },
 
     methods: {
@@ -141,6 +182,18 @@ var exports = (function () {
         if (pickers.selectpicker !== undefined) {
           pickers.selectpicker("refresh");
         }
+
+        $(".datepicker").datetimepicker({
+          "allowInputToggle": true,
+          "format": "YYYY-MM-DD",
+          "widgetPositioning": {"horizontal": "auto", "vertical": "top"},
+          "widgetParent": ".search-columns"
+<<<<<<< HEAD
+=======
+        }).on("dp.hide", function () {
+          that.search();
+>>>>>>> a195a051e41fd675611c644d3975c515e0dd0a0c
+        });
 
         // Domain selection boxes - enable all.
         $(".domain-selection-box input[type='checkbox']").prop("checked", "checked");
@@ -175,16 +228,13 @@ var exports = (function () {
 
         });
 
-
         // Set event handlers for search collapsibles.
         $(".panel-search").on("show.bs.collapse", function() {
           $(this).find(".glyphicon-triangle-right").removeClass("glyphicon-triangle-right").addClass("glyphicon-triangle-bottom");
         });
 
         $(".panel-search").on("hide.bs.collapse", function() {
-
           $(this).find(".glyphicon-triangle-bottom").removeClass("glyphicon-triangle-bottom").addClass("glyphicon-triangle-right");
-
         });
 
 
@@ -194,16 +244,19 @@ var exports = (function () {
 
         /*eslint-disable camelcase*/
         var params = {
-          created_after: this.createdAfter,
-          created_before: this.createdBefore,
           search: this.searchText,
           shared: this.selectedDomains,
-          started_after: this.startedAfter,
-          started_before: this.startedBefore,
           template: this.selectedTemplates,
           users: this.selectedUsers,
           versions: JSON.stringify(this.selectedVersions)
         };
+
+        if (this.createdBeforeValid) {
+          params.created_before = this.createdBefore;
+        }
+        if (this.createdAfterValid) {
+          params.created_after = this.createdAfter;
+        }
         /*eslint-enable camelcase*/
 
         // serialize the post-processing params
@@ -278,8 +331,6 @@ var exports = (function () {
       "clearSearch": function () {
         this.createdAfter = "";
         this.createdBefore = "";
-        this.startedAfter = "";
-        this.startedBefore = "";
         this.searchText = "";
         this.selectedDomains = [];
         this.selectedParameters = {};
