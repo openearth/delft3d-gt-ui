@@ -188,6 +188,11 @@ var exports = (function () {
           "format": "YYYY-MM-DD",
           "widgetPositioning": {"horizontal": "auto", "vertical": "top"},
           "widgetParent": ".search-columns"
+        }).on("dp.show", function () {
+          $(".bootstrap-datetimepicker-widget").css({
+            top: $(this).offset().top - 260,
+            left: $(this).offset().left
+          });
         });
 
         // Domain selection boxes - enable all.
@@ -215,12 +220,15 @@ var exports = (function () {
 
           if (id === "search") {
             that.searchText = "";
+          } else if (id === "created_before") {
+            that.createdBefore = "";
+          } else if (id === "created_after") {
+            that.createdAfter = "";
           } else {
             that.selectedParameters[id] = "";
           }
           // Search up to the div, and then find the input child. This is the actual input field.
           that.search();
-
         });
 
         // Set event handlers for search collapsibles.
