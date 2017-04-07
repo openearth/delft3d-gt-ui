@@ -188,11 +188,6 @@ var exports = (function () {
           "format": "YYYY-MM-DD",
           "widgetPositioning": {"horizontal": "auto", "vertical": "top"},
           "widgetParent": ".search-columns"
-<<<<<<< HEAD
-=======
-        }).on("dp.hide", function () {
-          that.search();
->>>>>>> a195a051e41fd675611c644d3975c515e0dd0a0c
         });
 
         // Domain selection boxes - enable all.
