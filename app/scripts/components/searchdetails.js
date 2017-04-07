@@ -169,7 +169,7 @@ var exports = (function () {
       },
       versions: function () {
         this.search();
-      },
+      }
     },
 
     methods: {

@@ -617,8 +617,6 @@
 
         createdAfter: "",
         createdBefore: "",
-        startedAfter: "",
-        startedBefore: "",
 
         activatedPostProc: {},
         selectedPostProc: {},
@@ -720,8 +718,6 @@
         created_before: "",
         search: "",
         shared: [],
-        started_after: "",
-        started_before: "",
         template: [],
         users: [],
         parameter: [],
@@ -745,7 +741,7 @@
           "Access-Control-Allow-Origin": "*"
         })
         .get("/api/v1/scenarios/")
-        .query({"search": "", "created_after": "", "created_before": "", "started_after": "", "started_before": "", "versions": "{}"})
+        .query({"search": "", "created_after": "", "created_before": "", "versions": "{}"})
         .reply(200, function() {
           replyCount++;
           return "[{'id':357,'name':'New Delta Plain Scenario','owner_url':'http://localhost:9000/api/v1/users/500/','template':1,'parameters':{'engine':{'values':['Delft3D Curvilinear'],'name':'Model Engine'},'simstoptime':{'units':'days','values':[60],'name':'Stop time'},'clayvolcomposition':{'units':'%','values':[1],'name':'Clay volumetric composition'},'sandvolcomposition':{'units':'%','values':[1],'name':'Sand volumetric composition'},'version':{'values':['v0.1'],'name':'Version'},'riverdischarge':{'units':'m³/s','values':[1000],'name':'River discharge'},'riverwidth':{'units':'m','values':[555],'name':'River width'},'dt':{'units':'min','values':[1],'name':'Timestep'},'tidalamplitude':{'units':'m','values':[1],'name':'Tidal amplitude'},'outputinterval':{'units':'days','values':[1],'name':'Output timestep','description':'Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.'},'basinslope':{'units':'deg','values':[0.0143],'name':'Basin slope'}},'progress':0,'scene_set':[897]}]";
@@ -757,7 +753,7 @@
           "Access-Control-Allow-Origin": "*"
         })
         .get("/api/v1/scenes/")
-        .query({"search": "", "created_after": "", "created_before": "", "started_after": "", "started_before": "", "versions": "{}"})
+        .query({"search": "", "created_after": "", "created_before": "", "versions": "{}"})
         .reply(200, function() {
           replyCount++;
           return "[{'id':897,'name':'New Delta Plain Scenario: Run 1','state':'INACTIVE','progress':0,'owner':{'id':500,'username':'foo','first_name':'Foo','last_name':'User','email':'foo@bar.com','groups':[42,500]},'shared':'p','suid':'cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e','scenario':[357],'fileurl':'/files/cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e/','info':{'channel_network_images':{'images':[],'location':'process/'},'logfile':{'location':'simulation/','file':''},'delta_fringe_images':{'images':[],'location':'process/'},'procruns':0,'sediment_fraction_images':{'images':[],'location':'process/'}},'parameters':{'engine':{'name':'Model Engine','value':'Delft3D Curvilinear'},'simstoptime':{'units':'days','name':'Stop time','value':60},'clayvolcomposition':{'units':'%','name':'Clay volumetric composition','value':1},'sandvolcomposition':{'units':'%','name':'Sand volumetric composition','value':1},'version':{'name':'Version','value':'v0.1'},'riverdischarge':{'units':'m³/s','name':'River discharge','value':1000},'riverwidth':{'units':'m','name':'River width','value':555},'dt':{'units':'min','name':'Timestep','value':1},'tidalamplitude':{'units':'m','name':'Tidal amplitude','value':1},'outputinterval':{'units':'days','name':'Output timestep','value':1,'description':'Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.'},'basinslope':{'units':'deg','name':'Basin slope','value':0.0143}},'task_id':'afbc3296-1679-450a-8c5e-5b6431c5cf20','workingdir':'/data/container/files/cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e/'}]";
