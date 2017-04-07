@@ -4,7 +4,7 @@
   margin-top: -50px;
   padding-bottom: (50px + $padding);
   padding-top: 50px;
-  position: relative;
+  position: relative;  // needs to be relative for the DateTimePicker.js widget
 
   .action-bar {
     border-bottom: $border;
