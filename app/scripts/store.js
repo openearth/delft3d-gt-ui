@@ -16,7 +16,7 @@ var exports = (function() {
       reqUser: undefined,
       scenarioContainers: [],
       scenarios: [],
-      updateInterval: 2000,
+      updateInterval: 60000,
       updating: false,
       user: {
         id: -1,
@@ -327,6 +327,11 @@ var exports = (function() {
         if (_.indexOf(scenarioContainer.models, this.state.activeModelContainer) > -1) {
           this.state.activeModelContainer = undefined;
         }
+
+        // TODO: find better solution - now we do this to trigger an update on the front-end (vm.$forceUpdate() is added in Vue 2.0)
+        _.each(this.state.modelContainers, el => {
+          el.selected = false;
+        });
 
         $.ajax({url: "/api/v1/scenarios/" + scenarioContainer.id + "/", method: "DELETE", traditional: true, dataType: "json"})
           .done(function(json) {

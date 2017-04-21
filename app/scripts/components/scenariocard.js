@@ -125,9 +125,6 @@ var exports = (function () {
         // Get a confirm dialog
         this.deleteDialog = getDialog(this, "confirm-dialog", "delete-scenario-" + this.scenario.id);
 
-
-        console.log(this.deleteDialog);
-
         this.deleteDialog.onConfirm = function() {
           store.deleteScenario(this.scenario);
 

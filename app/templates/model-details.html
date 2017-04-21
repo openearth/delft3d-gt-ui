@@ -91,7 +91,7 @@
           Simulation controls
         </div>
 
-        <div class="collapse">
+        <div id="simulation-controls-collapse" class="collapse">
 
           <div class="panel-body">
             <p :class="{ 'hidden': isReadOnly }">
@@ -238,8 +238,8 @@
               </thead>
               <tbody>
                 <tr v-for="(key, param) in getActiveModelPPData()">
-                  <td>{{ param.order }} {{ param.name }}</td>
-                  <td>{{ param.value || "-"}}</td>
+                  <td>{{ param.name.substring(0,1).toUpperCase() }}{{ param.name.substring(1).toLowerCase() }}</td>
+                  <td>{{ param.value && param.value.toExponential(2) || "-"}}</td>
                   <td>{{ param.unit || "-"}}</td>
                 </tr>
               </tbody>

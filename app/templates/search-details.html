@@ -56,13 +56,27 @@
               Dates &amp; Times
             </div>
             <div class="panel-body panel-collapse collapse" role="tabpanel" aria-labelledby="template-datetimes" id="template-datetimes">
-              <div class="form-group">
+              <div class="form-group" :class="{ 'has-error': !createdAfterValid }">
                 <label class="control-label" >Created after</label>
-                <input type="date" class="form-control" id="created_after" placeholder="" v-model="createdAfter">
+                <div class="input-group">
+                  <input type="text" class="form-control datepicker" id="created_after" placeholder="yyyy-mm-dd" v-model="createdAfter">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default button-empty-input-field" type="button">
+                      <i class="fa fa-times" aria-hidden="true"></i>
+                    </button>
+                  </span>
+                </div>
               </div>
-              <div class="form-group">
+              <div class="form-group" :class="{ 'has-error': !createdBeforeValid }">
                 <label class="control-label" >Created before</label>
-                <input type="date" class="form-control" id="created_before" placeholder="" v-model="createdBefore">
+                <div class="input-group">
+                  <input type="text" class="form-control datepicker" id="created_before" placeholder="yyyy-mm-dd" v-model="createdBefore">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default button-empty-input-field" type="button">
+                      <i class="fa fa-times" aria-hidden="true"></i>
+                    </button>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -197,42 +211,42 @@
             <div class="panel-body panel-collapse collapse" role="tabpanel" aria-labelledby="template-postprocess" id="template-postprocess">
 
               <div class="form-group">
-                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaTopD50']"> D50 for Delta Top (mm)</label>
+                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaTopD50']"> D50 for delta top (mm)</label>
                 <input type="text" id="DeltaTopD50" v-model="selectedPostProc['DeltaTopD50']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="2" data-type="double"/>
               </div>
               <div class="form-group">
-                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaTopsand_fraction']"> Sand Fraction for Delta Top (%)</label>
+                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaTopsand_fraction']"> Sand fraction for delta top (%)</label>
                 <input type="text" id="DeltaTopsand_fraction" v-model="selectedPostProc['DeltaTopsand_fraction']" class="ion-range" id="parameter1" data-step="1" data-min="0" data-max="100" data-type="double"/>
               </div>
               <div class="form-group">
-                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaTopsorting']"> Sorting for Delta Top (-)</label>
+                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaTopsorting']"> Sorting for delta top (-)</label>
                 <input type="text" id="DeltaTopsorting" v-model="selectedPostProc['DeltaTopsorting']" class="ion-range" id="parameter1" data-step="0.1" data-min="0" data-max="10" data-type="double"/>
               </div>
 
 
               <div class="form-group">
-                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaFrontD50']"> D50 for Delta Front (mm)</label>
+                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaFrontD50']"> D50 for delta front (mm)</label>
                 <input type="text" id="DeltaFrontD50" v-model="selectedPostProc['DeltaFrontD50']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="2" data-type="double"/>
               </div>
               <div class="form-group">
-                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaFrontsand_fraction']"> Sand Fraction for Delta Front (%)</label>
+                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaFrontsand_fraction']"> Sand fraction for delta front (%)</label>
                 <input type="text" id="DeltaFrontsand_fraction" v-model="selectedPostProc['DeltaFrontsand_fraction']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="1" data-type="double"/>
               </div>
               <div class="form-group">
-                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaFrontsorting']"> Sorting for Delta Front (-)</label>
+                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaFrontsorting']"> Sorting for delta front (-)</label>
                 <input type="text" id="DeltaFrontsorting" v-model="selectedPostProc['DeltaFrontsorting']" class="ion-range" id="parameter1" data-step="0.1" data-min="0" data-max="10" data-type="double"/>
               </div>
 
               <div class="form-group">
-                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['ProDeltaD50']"> D50 for Prodelta (mm)</label>
+                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['ProDeltaD50']"> D50 for prodelta (mm)</label>
                 <input type="text" id="ProDeltaD50" v-model="selectedPostProc['ProDeltaD50']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="2" data-type="double"/>
               </div>
               <div class="form-group">
-                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['ProDeltasand_fraction']"> Sand Fraction for Prodelta (%)</label>
+                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['ProDeltasand_fraction']"> Sand fraction for prodelta (%)</label>
                 <input type="text" id="ProDeltasand_fraction" v-model="selectedPostProc['ProDeltasand_fraction']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="1" data-type="double"/>
               </div>
               <div class="form-group">
-                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['ProDeltasorting']"> Sorting for Prodelta (-)</label>
+                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['ProDeltasorting']"> Sorting for prodelta (-)</label>
                 <input type="text" id="ProDeltasorting" v-model="selectedPostProc['ProDeltasorting']" class="ion-range" id="parameter1" data-step="0.1" data-min="0" data-max="10" data-type="double"/>
               </div>
 

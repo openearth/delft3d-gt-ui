@@ -86,8 +86,6 @@
           parameter: [],
           search: "",
           shared: [],
-          started_after: "",
-          started_before: "",
           template: [],
           users: [],
           versions: "{}"
