@@ -123,8 +123,8 @@ var exports = (function () {
       },
       isIdle: {
         deep: false,
-        handler: function () {
-          if(this.isIdle) {
+        handler: function (newIsIdleValue) {
+          if(newIsIdleValue) {
             $("#simulation-controls-collapse").collapse("show");
           }
         }
