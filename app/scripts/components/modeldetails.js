@@ -120,6 +120,14 @@ var exports = (function () {
             /* eslint-enable camelcase */
           }
         }
+      },
+      isIdle: {
+        deep: false,
+        handler: function (newIsIdleValue) {
+          if(newIsIdleValue) {
+            $("#simulation-controls-collapse").collapse("show");
+          }
+        }
       }
     },
     methods: {
