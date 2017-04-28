@@ -122,20 +122,12 @@
               Reset
             </button>
             <button type="button"
-                    v-on:click="redoModelProcessing"
+                    v-on:click="redoModel"
                     class="btn btn-labeled btn-spaced-right" id="simulation-control-stop"
-                    :class="[(isReadOnly || !isFinished) ? 'disabled' : 'btn-warning btn-pink']"
+                    :class="[(isReadOnly || !isFinished) ? 'disabled' : 'btn-warning']"
                     :disabled="(isReadOnly || !isFinished)">
               <span class="btn-label"><i class="fa fa-fw fa-fast-backward" aria-hidden="true"></i></span>
-              Redo processing
-            </button>
-            <button type="button"
-                    v-on:click="redoModelPostProcessing"
-                    class="btn btn-labeled btn-spaced-right" id="simulation-control-stop"
-                    :class="[(isReadOnly || !isFinished) ? 'disabled' : 'btn-warning btn-pink']"
-                    :disabled="(isReadOnly || !isFinished)">
-              <span class="btn-label"><i class="fa fa-fw fa-fast-backward" aria-hidden="true"></i></span>
-              Redo postprocessing
+              Update
             </button>
             <button type="button"
                     class="btn btn-labeled btn-spaced-right"
@@ -323,18 +315,9 @@
         </template>
       </confirm-dialog>
 
-      <confirm-dialog dialog-id="redo-processing" confirm-button-title="Redo">
+      <confirm-dialog dialog-id="redo" confirm-button-title="Redo">
         <template slot="title">
-          Redo processing of model '{{ getActiveModelData('name') }}'?
-        </template>
-        <template slot="body">
-          <p>Are you sure you want to redo this model's processing? This action cannot be undone.</p>
-        </template>
-      </confirm-dialog>
-
-      <confirm-dialog dialog-id="redo-postprocessing" confirm-button-title="Redo">
-        <template slot="title">
-          Redo post-processing of model '{{ getActiveModelData('name') }}'?
+          Update model '{{ getActiveModelData('name') }}'?
         </template>
         <template slot="body">
           <p>Are you sure you want to redo the post-processing of this model? This action cannot be undone.</p>
