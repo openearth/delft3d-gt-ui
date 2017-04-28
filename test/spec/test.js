@@ -626,7 +626,7 @@
         selectedUsers: [],
 
         // Template used for searching (probably always one)
-        searchTemplate: undefined
+        searchTemplate: null
       };
 
       /*eslint-disable no-underscore-dangle*/

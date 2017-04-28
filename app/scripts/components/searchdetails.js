@@ -10,7 +10,7 @@ var exports = (function () {
         activatedPostProc: {},
         createdAfter: "",
         createdBefore: "",
-        searchTemplate: undefined,
+        searchTemplate: null,
         searchText: "",
         selectedDomains: [],
         selectedOutdated: [],
