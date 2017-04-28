@@ -126,6 +126,14 @@
               Reset
             </button>
             <button type="button"
+                    v-on:click="redoModel"
+                    class="btn btn-labeled btn-spaced-right" id="simulation-control-stop"
+                    :class="[(isReadOnly || !isFinished) ? 'disabled' : 'btn-warning']"
+                    :disabled="(isReadOnly || !isFinished)">
+              <span class="btn-label"><i class="fa fa-fw fa-fast-backward" aria-hidden="true"></i></span>
+              Update
+            </button>
+            <button type="button"
                     class="btn btn-labeled btn-spaced-right"
                     v-on:click="removeModel"
                     :class="[ (isReadOnly) ? 'disabled' : 'btn-danger']"
@@ -308,6 +316,15 @@
         </template>
         <template slot="body">
           <p>Are you sure you want to reset this model? This action cannot be undone.</p>
+        </template>
+      </confirm-dialog>
+
+      <confirm-dialog dialog-id="redo" confirm-button-title="Redo">
+        <template slot="title">
+          Update model '{{ getActiveModelData('name') }}'?
+        </template>
+        <template slot="body">
+          <p>Are you sure you want to redo the post-processing of this model? This action cannot be undone.</p>
         </template>
       </confirm-dialog>
 

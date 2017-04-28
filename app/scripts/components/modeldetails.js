@@ -230,6 +230,21 @@ var exports = (function () {
         // Show the dialog:
         this.resetDialog.show();
       },
+      redoModel: function () {
+        // Get a confirm dialog
+        this.resetDialog = getDialog(this, "confirm-dialog", "redo");
+
+        this.resetDialog.onConfirm = function() {
+          store.redoModel(this.activeModel);
+          this.resetDialog.hide();
+        }.bind(this);
+
+        // We also show an extra warning in the dialog, if user chooses to remove additional files.
+        this.resetDialog.showAlert(false);
+
+        // Show the dialog:
+        this.resetDialog.show();
+      },
       startModel: function () {
         store.startModel(this.activeModel);
       },
