@@ -99,7 +99,8 @@ var exports = (function() {
             resolve(json);
           })
           .error(function(jqXhr) {
-            if (jqXhr.statusText === "NOT FOUND") {  // filters too strict
+            console.log(jqXhr);
+            if (jqXhr.status === 404) {  // filters too strict
               resolve({});  // is ok: just return empty response
             }
             reject(jqXhr);

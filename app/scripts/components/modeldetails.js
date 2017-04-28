@@ -94,10 +94,10 @@ var exports = (function () {
           return niceStrings[_.get(this.activeModel, "data.shared", "")];
         }
       },
-      delft3DVersion: {
+      outdated: {
         cache: false,
         get: function () {
-          return _.get(this.activeModel, "data.versions.delft3d.delft3d_version", "");
+          return _.get(this.activeModel, "data.outdated", undefined);
         }
       },
       reposUrl: {

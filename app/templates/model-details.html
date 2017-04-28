@@ -26,15 +26,11 @@
             <dt>Run environment</dt>
             <dd><span v-if="getActiveModelData('date_created') === ''">-</span><span v-else>Amazon</span></dd>
 
-            <dt>Python Scripts</dt><dd>
-              <a :href="reposUrl" target="_blank" v-if="reposUrl">{{ reposUrl }}</a>
-              <span v-else>-</span>
-            </dd>
-
-            <dt>Delft3D Version</dt>
+            <dt>Updates available</dt>
             <dd>
-              <template v-if="delft3DVersion">{{ delft3DVersion }}</template>
-              <template v-else>-</template>
+              <span v-if="outdated === undefined">-</span>
+              <span v-if="outdated === false">No updates available</span>
+              <span v-if="outdated === true">Updates available ({{ getActiveModelData('outdated_changelog') }})</span>
             </dd>
           </dl>
 
