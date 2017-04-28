@@ -230,6 +230,36 @@ var exports = (function () {
         // Show the dialog:
         this.resetDialog.show();
       },
+      redoModelProcessing: function () {
+        // Get a confirm dialog
+        this.resetDialog = getDialog(this, "confirm-dialog", "redo-processing");
+
+        this.resetDialog.onConfirm = function() {
+          store.redoModelProcessing(this.activeModel);
+          this.resetDialog.hide();
+        }.bind(this);
+
+        // We also show an extra warning in the dialog, if user chooses to remove additional files.
+        this.resetDialog.showAlert(false);
+
+        // Show the dialog:
+        this.resetDialog.show();
+      },
+      redoModelPostProcessing: function () {
+        // Get a confirm dialog
+        this.resetDialog = getDialog(this, "confirm-dialog", "redo-postprocessing");
+
+        this.resetDialog.onConfirm = function() {
+          store.redoModelPostProcessing(this.activeModel);
+          this.resetDialog.hide();
+        }.bind(this);
+
+        // We also show an extra warning in the dialog, if user chooses to remove additional files.
+        this.resetDialog.showAlert(false);
+
+        // Show the dialog:
+        this.resetDialog.show();
+      },
       startModel: function () {
         store.startModel(this.activeModel);
       },
