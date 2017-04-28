@@ -1,4 +1,4 @@
-/* global _, Vue, moment, fetchSearchTemplate, fetchUsers, fetchVersions, store  */
+/* global _, Vue, moment, fetchSearchTemplate, fetchUsers, store  */
 var exports = (function () {
   "use strict";
   var SearchDetails = Vue.component("search-details", {
@@ -163,9 +163,6 @@ var exports = (function () {
       },
       users: function () {
         this.search();
-      },
-      versions: function () {
-        this.search();
       }
     },
 
@@ -249,7 +246,7 @@ var exports = (function () {
           search: this.searchText,
           shared: this.selectedDomains,
           template: this.selectedTemplates,
-          users: this.selectedUsers,
+          users: this.selectedUsers
         };
 
         if (this.selectedOutdated.length === 1) {  // filter should only be applied if one of the two options is selected

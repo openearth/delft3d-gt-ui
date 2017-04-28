@@ -28,6 +28,7 @@ var exports = (function () {
         cached: false,
         get: function () {
           var model = this.sharedState.activeModelContainer;
+
           if (model !== undefined) {
             this.$nextTick(this.activateTooltips);
           }
@@ -264,7 +265,9 @@ var exports = (function () {
         return false;
       },
       activateTooltips: function () {
-        $("[data-toggle='tooltip']").tooltip();
+        if($("[data-toggle='tooltip']").tooltip) {
+          $("[data-toggle='tooltip']").tooltip();
+        }
       }
     }
   });
