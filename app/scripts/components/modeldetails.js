@@ -29,9 +29,8 @@ var exports = (function () {
         get: function () {
           var model = this.sharedState.activeModelContainer;
 
-          if (model !== undefined) {
-            this.$nextTick(this.activateTooltips);
-          }
+          // model details are conditionally rendered: activating jQuery tooltips when there is a model
+          this.$nextTick(this.activateTooltips);
           return model;
         }
       },
