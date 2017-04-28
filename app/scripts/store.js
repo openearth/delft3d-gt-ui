@@ -415,6 +415,12 @@ var exports = (function() {
       );
     },
 
+    redoSelectedModels: function () {
+      return Promise.all(
+        _.map(this.getSelectedModels(), this.redoModel.bind(this))
+      );
+    },
+
     deleteSelectedModels: function () {
       return Promise.all(
         _.map(this.getSelectedModels(), this.deleteModel.bind(this))

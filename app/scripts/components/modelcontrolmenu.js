@@ -100,6 +100,24 @@ var exports = (function () {
         // Show the dialog:
         this.deleteDialog.show();
       },
+      redoSelectedModels: function() {
+        if (this.someSelectedModelsArePublished()) {
+          return;
+        }
+
+        // Get a confirm dialog
+        this.redoDialog = getDialog(this, "confirm-dialog", "redo-runs");
+
+        this.redoDialog.onConfirm = () => {
+          store.redoSelectedModels();
+
+          this.redoDialog.hide();
+        };
+        this.redoDialog.showAlert(false);
+
+        // Show the dialog:
+        this.redoDialog.show();
+      },
       someSelectedModelsAreFinished: function () {
         return _.values(store.getSelectedModels()).some(function(model) {
           return model.data.state === "Finished";

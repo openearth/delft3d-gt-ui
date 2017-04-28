@@ -27,7 +27,11 @@ var exports = (function () {
       activeModel: {
         cached: false,
         get: function () {
-          return this.sharedState.activeModelContainer;
+          var model = this.sharedState.activeModelContainer;
+          if (model !== undefined) {
+            this.$nextTick(this.activateTooltips);
+          }
+          return model;
         }
       },
       anyDownloadsSelected: {
@@ -97,7 +101,7 @@ var exports = (function () {
       outdated: {
         cache: false,
         get: function () {
-          return _.get(this.activeModel, "data.outdated", undefined);
+          return _.get(this.activeModel, "data.outdated", false);
         }
       },
       reposUrl: {
@@ -258,6 +262,9 @@ var exports = (function () {
       },
       doNothing: function () {
         return false;
+      },
+      activateTooltips: function () {
+        $("[data-toggle='tooltip']").tooltip();
       }
     }
   });
