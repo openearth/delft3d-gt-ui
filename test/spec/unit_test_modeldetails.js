@@ -192,35 +192,18 @@
       });
     });
 
-    // ***************************************************************************** delft3DVersion
+    // ***************************************************************************** outdated
 
-    describe(".delft3DVersion", function() {
+    describe(".outdated", function() {
       it("", function() {
         store.state.activeModelContainer = undefined;
-        modelDetails.delft3DVersion.should.equal("");
+        modelDetails.outdated.should.equal(false);
 
-        store.state.activeModelContainer = {"data": {}};
-        modelDetails.delft3DVersion.should.equal("");
+        store.state.activeModelContainer = {"data": {"outdated": undefined}};
+        modelDetails.outdated.should.equal(false);
 
-        store.state.activeModelContainer = {"data": {"versions": {"delft3d": {"delft3d_version": "Version ###"}}}};
-        modelDetails.delft3DVersion.should.equal("Version ###");
-
-        store.state.activeModelContainer = undefined;
-      });
-    });
-
-    // ***************************************************************************** reposUrl
-
-    describe(".reposUrl", function() {
-      it("", function() {
-        store.state.activeModelContainer = undefined;
-        modelDetails.reposUrl.should.equal("");
-
-        store.state.activeModelContainer = {"data": {}};
-        modelDetails.reposUrl.should.equal("");
-
-        store.state.activeModelContainer = {"data": {"versions": {"preprocess": {"REPOS_URL": "http://url/", "SVN_REV": "#"}}}};
-        modelDetails.reposUrl.should.equal("http://url/?p=#");
+        store.state.activeModelContainer = {"data": {"outdated": true}};
+        modelDetails.outdated.should.equal(true);
 
         store.state.activeModelContainer = undefined;
       });

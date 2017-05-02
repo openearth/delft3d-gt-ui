@@ -1,4 +1,4 @@
-/* global _, Vue, moment, fetchSearchTemplate, fetchUsers, fetchVersions, store  */
+/* global _, Vue, moment, fetchSearchTemplate, fetchUsers, store  */
 var exports = (function () {
   "use strict";
   var SearchDetails = Vue.component("search-details", {
@@ -13,13 +13,12 @@ var exports = (function () {
         searchTemplate: null,
         searchText: "",
         selectedDomains: [],
+        selectedOutdated: [],
         selectedParameters: {},
         selectedPostProc: {},
         selectedTemplates: [],
         selectedUsers: [],
-        selectedVersions: {},
-        users: [],
-        versions: {}
+        users: []
       };
     },
 
@@ -51,16 +50,14 @@ var exports = (function () {
       }.bind(this);
 
       // get search templates
-      Promise.all([fetchUsers(), fetchSearchTemplate(), fetchVersions()])
+      Promise.all([fetchUsers(), fetchSearchTemplate()])
         .then((jsons) => {
           var users = jsons[0];
           var template = jsons[1];
-          var versions = jsons[2];
 
           // store them
           this.users = _.sortBy(users, ["last_name", "first_name"]);
           this.searchTemplate = template;
-          this.versions = versions;
 
           // after we"re done loading the templates in the dom, start searching.
           this.$nextTick(
@@ -161,13 +158,10 @@ var exports = (function () {
       selectedUsers: function () {
         this.search();
       },
-      selectedVersions: function () {
+      selectedOutdated: function () {
         this.search();
       },
       users: function () {
-        this.search();
-      },
-      versions: function () {
         this.search();
       }
     },
@@ -252,9 +246,12 @@ var exports = (function () {
           search: this.searchText,
           shared: this.selectedDomains,
           template: this.selectedTemplates,
-          users: this.selectedUsers,
-          versions: JSON.stringify(this.selectedVersions)
+          users: this.selectedUsers
         };
+
+        if (this.selectedOutdated.length === 1) {  // filter should only be applied if one of the two options is selected
+          params.outdated = this.selectedOutdated[0];
+        }
 
         if (this.createdBeforeValid) {
           params.created_before = this.createdBefore;
@@ -309,25 +306,6 @@ var exports = (function () {
 
         store.updateParams(params);
         store.update();
-      },
-
-      filterVersions: function (versions) {
-        var filter = [
-          "REPOS_URL"
-          // add more keys to filter
-        ];
-
-        return _.omit(versions, filter);
-      },
-
-      niceVersionTitle: function (id) {
-        var mappings = {
-          "delft3d_version": "Delft3D version",
-          "SVN_REV": "SVN revision"
-          // add more verbose titles if so desired
-        };
-
-        return _.get(mappings, id, id);
       }
     },
 
@@ -341,7 +319,7 @@ var exports = (function () {
         this.selectedParameters = {};
         this.selectedTemplates = [];
         this.selectedUsers = [];
-        this.selectedVersions = {};
+        this.selectedOutdated = [];
 
         this.activatedPostProc = {
           "ProDeltaD50": false,

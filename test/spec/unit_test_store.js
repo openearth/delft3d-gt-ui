@@ -87,8 +87,7 @@
           search: "",
           shared: [],
           template: [],
-          users: [],
-          versions: "{}"
+          users: []
           /*eslint-enable camelcase*/
         }, traditional: true, dataType: "json"});
       });

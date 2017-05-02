@@ -99,7 +99,7 @@ var exports = (function() {
             resolve(json);
           })
           .error(function(jqXhr) {
-            if (jqXhr.statusText === "NOT FOUND") {  // filters too strict
+            if (jqXhr.status === 404) {  // filters too strict
               resolve({});  // is ok: just return empty response
             }
             reject(jqXhr);
@@ -282,6 +282,22 @@ var exports = (function() {
       });
     },
 
+    redoModel: function (modelContainer) {
+      return new Promise((resolve, reject) => {
+        if (modelContainer === undefined || modelContainer.id === undefined) {
+          return reject("No model id to redo");
+        }
+        modelContainer.data.state = "Queued";
+        $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/redo/", method: "PUT", traditional: true, dataType: "json"})
+          .done(function(data) {
+            resolve(data);
+          })
+          .error(function(jqXhr) {
+            reject(jqXhr);
+          });
+      });
+    },
+
     startModel: function (modelContainer) {
       return new Promise((resolve, reject) => {
         if (modelContainer === undefined || modelContainer.id === undefined) {
@@ -395,6 +411,12 @@ var exports = (function() {
     stopSelectedModels: function () {
       return Promise.all(
         _.map(this.getSelectedModels(), this.stopModel.bind(this))
+      );
+    },
+
+    redoSelectedModels: function () {
+      return Promise.all(
+        _.map(this.getSelectedModels(), this.redoModel.bind(this))
       );
     },
 
