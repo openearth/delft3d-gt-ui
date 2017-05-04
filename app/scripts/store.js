@@ -16,7 +16,7 @@ var exports = (function() {
       reqUser: undefined,
       scenarioContainers: [],
       scenarios: [],
-      updateInterval: 2000,
+      updateInterval: 4000,
       updating: false,
       user: {
         id: -1,
@@ -99,7 +99,7 @@ var exports = (function() {
             resolve(json);
           })
           .error(function(jqXhr) {
-            if (jqXhr.statusText === "NOT FOUND") {  // filters too strict
+            if (jqXhr.status === 404) {  // filters too strict
               resolve({});  // is ok: just return empty response
             }
             reject(jqXhr);
@@ -282,6 +282,22 @@ var exports = (function() {
       });
     },
 
+    redoModel: function (modelContainer) {
+      return new Promise((resolve, reject) => {
+        if (modelContainer === undefined || modelContainer.id === undefined) {
+          return reject("No model id to redo");
+        }
+        modelContainer.data.state = "Queued";
+        $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/redo/", method: "PUT", traditional: true, dataType: "json"})
+          .done(function(data) {
+            resolve(data);
+          })
+          .error(function(jqXhr) {
+            reject(jqXhr);
+          });
+      });
+    },
+
     startModel: function (modelContainer) {
       return new Promise((resolve, reject) => {
         if (modelContainer === undefined || modelContainer.id === undefined) {
@@ -327,6 +343,11 @@ var exports = (function() {
         if (_.indexOf(scenarioContainer.models, this.state.activeModelContainer) > -1) {
           this.state.activeModelContainer = undefined;
         }
+
+        // TODO: find better solution - now we do this to trigger an update on the front-end (vm.$forceUpdate() is added in Vue 2.0)
+        _.each(this.state.modelContainers, el => {
+          el.selected = false;
+        });
 
         $.ajax({url: "/api/v1/scenarios/" + scenarioContainer.id + "/", method: "DELETE", traditional: true, dataType: "json"})
           .done(function(json) {
@@ -390,6 +411,12 @@ var exports = (function() {
     stopSelectedModels: function () {
       return Promise.all(
         _.map(this.getSelectedModels(), this.stopModel.bind(this))
+      );
+    },
+
+    redoSelectedModels: function () {
+      return Promise.all(
+        _.map(this.getSelectedModels(), this.redoModel.bind(this))
       );
     },
 

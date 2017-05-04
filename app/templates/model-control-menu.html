@@ -36,6 +36,12 @@
       </li>
 
       <li :class="{ disabled: numSelectedModels === 0 || someSelectedModelsArePublished() }">
+        <a @click.stop="redoSelectedModels">
+          <i class="fa fa-fw fa-level-up" aria-hidden="true"></i> Update model<span v-if="numSelectedModels > 1">s</span>
+        </a>
+      </li>
+
+      <li :class="{ disabled: numSelectedModels === 0 || someSelectedModelsArePublished() }">
         <a @click.stop="deleteSelectedModels">
           <i class="fa fa-fw fa-times" aria-hidden="true"></i> Delete model<span v-if="numSelectedModels > 1">s</span>
         </a>
@@ -95,6 +101,15 @@
       </template>
       <template slot="body">
         <p>Are you sure you want to reset <span v-if="numSelectedModels > 1">these models</span><span v-if="numSelectedModels == 1">this model</span>? This action cannot be undone.</p>
+      </template>
+    </confirm-dialog>
+
+    <confirm-dialog dialog-id="redo-runs" confirm-button-title="Update">
+      <template slot="title">
+        Update model(s)?
+      </template>
+      <template slot="body">
+        <p>Are you sure you want to update <span v-if="numSelectedModels > 1">these models</span><span v-if="numSelectedModels == 1">this model</span>? This action cannot be undone.</p>
       </template>
     </confirm-dialog>
 

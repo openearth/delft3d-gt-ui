@@ -86,11 +86,8 @@
           parameter: [],
           search: "",
           shared: [],
-          started_after: "",
-          started_before: "",
           template: [],
-          users: [],
-          versions: "{}"
+          users: []
           /*eslint-enable camelcase*/
         }, traditional: true, dataType: "json"});
       });

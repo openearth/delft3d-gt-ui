@@ -15,26 +15,31 @@
         <div class="panel-body">
 
           <dl class="dl-horizontal" :class="{ 'loading': getActiveModelData('date_created') === '' }">
-            <dt>Owner of run</dt><dd><a href="mailto:{{ getActiveModelData('owner.email') }}">{{ getActiveModelData('owner.first_name') }} {{ getActiveModelData('owner.last_name') }}</a> </dd>
+            <dt>Owner of run</dt><dd>
+              <span v-if="getActiveModelData('date_created') === ''">-</span>
+              <span v-else>
+                <a href="mailto:{{ getActiveModelData('owner.email') }}">{{ getActiveModelData('owner.first_name') }} {{ getActiveModelData('owner.last_name') }}</a>
+              </span>
+            </dd>
 
             <dt>Share level</dt>
-            <dd><span>{{ shareLevelText | capitalize }}</span></dd>
+            <dd><span v-if="getActiveModelData('date_created') === ''">-</span><span v-else>{{ shareLevelText | capitalize }}</span></dd>
 
             <dt>Created</dt>
-            <dd><span>{{ dateCreatedText }}</span></dd>
+            <dd><span v-if="getActiveModelData('date_created') === ''">-</span><span v-else>{{ dateCreatedText }}</span></dd>
 
             <dt>Run environment</dt>
             <dd><span v-if="getActiveModelData('date_created') === ''">-</span><span v-else>Amazon</span></dd>
 
-            <dt>Python Scripts</dt><dd>
-              <a :href="reposUrl" target="_blank" v-if="reposUrl">{{ reposUrl }}</a>
-              <span v-else>-</span>
-            </dd>
-
-            <dt>Delft3D Version</dt>
+            <dt>Updates available</dt>
             <dd>
-              <template v-if="delft3DVersion">{{ delft3DVersion }}</template>
-              <template v-else>-</template>
+              <template v-if="getActiveModelData('date_created') === ''">
+                <span >-</span>
+              </template>
+              <template v-else>
+                <span v-if="outdated === false">No updates available</span>
+                <span v-if="outdated === true">Updates available ({{ getActiveModelData('outdated_changelog') }})</span>
+              </template>
             </dd>
           </dl>
 
@@ -54,8 +59,6 @@
                   aria-valuemin="0"
                   aria-valuemax="100"
                   :style="{width: getActiveModelData('progress') + '%'}"
-                  data-toggle="tooltip"
-                  data-placement="top"
                   title="Progress"
                 >
                   <span class="sr-only">{{ getActiveModelData('progress') }}% Complete</span>
@@ -91,7 +94,7 @@
           Simulation controls
         </div>
 
-        <div class="collapse">
+        <div id="simulation-controls-collapse" class="collapse">
 
           <div class="panel-body">
             <p :class="{ 'hidden': isReadOnly }">
@@ -108,7 +111,7 @@
                     :disabled="(isReadOnly || !isIdle)">
               <span class="btn-label"><i class="fa fa-fw fa-play" aria-hidden="true"></i></span>
               Start
-            </button>
+            </button>&nbsp;
             <button type="button"
                     v-on:click="stopModel"
                     class="btn btn-labeled btn-spaced-right" id="simulation-control-stop"
@@ -116,7 +119,7 @@
                     :disabled="(isReadOnly || (!isRunning && !isQueued))">
               <span class="btn-label"><i class="fa fa-fw fa-stop" aria-hidden="true"></i></span>
               Stop
-            </button>
+            </button>&nbsp;
             <button type="button"
                     v-on:click="resetModel"
                     class="btn btn-labeled btn-spaced-right" id="simulation-control-stop"
@@ -124,7 +127,19 @@
                     :disabled="(isReadOnly || !isFinished)">
               <span class="btn-label"><i class="fa fa-fw fa-fast-backward" aria-hidden="true"></i></span>
               Reset
-            </button>
+            </button>&nbsp;
+            <button type="button"
+                    v-on:click="redoModel"
+                    class="btn btn-labeled btn-spaced-right" id="simulation-control-redo"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    :class="[(isReadOnly || !isFinished || outdated == false) ? 'disabled' : 'btn-info']"
+                    :disabled="(isReadOnly || !isFinished || outdated == false)"
+                    :data-original-title="(outdated == false) ? 'no updates available' : getActiveModelData('outdated_workflow')"
+                    >
+              <span class="btn-label"><i class="fa fa-fw fa-level-up" aria-hidden="true"></i></span>
+              Update
+            </button>&nbsp;
             <button type="button"
                     class="btn btn-labeled btn-spaced-right"
                     v-on:click="removeModel"
@@ -132,7 +147,7 @@
                     :disabled="isReadOnly">
               <span class="btn-label"><i class="fa fa-fw fa-times" aria-hidden="true"></i></span>
               Remove run
-            </button>
+            </button>&nbsp;
 
           </div>
         </div>
@@ -238,8 +253,8 @@
               </thead>
               <tbody>
                 <tr v-for="(key, param) in getActiveModelPPData()">
-                  <td>{{ param.order }} {{ param.name }}</td>
-                  <td>{{ param.value || "-"}}</td>
+                  <td>{{ param.name.substring(0,1).toUpperCase() }}{{ param.name.substring(1).toLowerCase() }}</td>
+                  <td>{{ param.value && param.value.toExponential(2) || "-"}}</td>
                   <td>{{ param.unit || "-"}}</td>
                 </tr>
               </tbody>
@@ -308,6 +323,15 @@
         </template>
         <template slot="body">
           <p>Are you sure you want to reset this model? This action cannot be undone.</p>
+        </template>
+      </confirm-dialog>
+
+      <confirm-dialog dialog-id="redo" confirm-button-title="Redo">
+        <template slot="title">
+          Update model '{{ getActiveModelData('name') }}'?
+        </template>
+        <template slot="body">
+          <p>Are you sure you want to update this model? This action cannot be undone.</p>
         </template>
       </confirm-dialog>
 

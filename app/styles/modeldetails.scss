@@ -41,8 +41,17 @@
   }
 
   .btn-output {
-    margin-right: 4px;
     display: inline-block;
+    margin-right: 4px;
+  }
+
+  .btn-pink {
+    background: #faa;
+    border-color: rgba(77,77,77,.2);
+
+    &:active {
+      background: #d88;
+    }
   }
 
   .loading {

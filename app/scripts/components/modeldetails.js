@@ -27,7 +27,11 @@ var exports = (function () {
       activeModel: {
         cached: false,
         get: function () {
-          return this.sharedState.activeModelContainer;
+          var model = this.sharedState.activeModelContainer;
+
+          // model details are conditionally rendered: activating jQuery tooltips when there is a model
+          this.$nextTick(this.activateTooltips);
+          return model;
         }
       },
       anyDownloadsSelected: {
@@ -94,10 +98,10 @@ var exports = (function () {
           return niceStrings[_.get(this.activeModel, "data.shared", "")];
         }
       },
-      delft3DVersion: {
+      outdated: {
         cache: false,
         get: function () {
-          return _.get(this.activeModel, "data.versions.delft3d.delft3d_version", "");
+          return _.get(this.activeModel, "data.outdated", false);
         }
       },
       reposUrl: {
@@ -118,6 +122,14 @@ var exports = (function () {
             /* eslint-disable camelcase */
             this.selectedDownloads.export_thirdparty = false;
             /* eslint-enable camelcase */
+          }
+        }
+      },
+      isIdle: {
+        deep: false,
+        handler: function (newIsIdleValue) {
+          if(newIsIdleValue) {
+            $("#simulation-controls-collapse").collapse("show");
           }
         }
       }
@@ -222,6 +234,21 @@ var exports = (function () {
         // Show the dialog:
         this.resetDialog.show();
       },
+      redoModel: function () {
+        // Get a confirm dialog
+        this.resetDialog = getDialog(this, "confirm-dialog", "redo");
+
+        this.resetDialog.onConfirm = function() {
+          store.redoModel(this.activeModel);
+          this.resetDialog.hide();
+        }.bind(this);
+
+        // We also show an extra warning in the dialog, if user chooses to remove additional files.
+        this.resetDialog.showAlert(false);
+
+        // Show the dialog:
+        this.resetDialog.show();
+      },
       startModel: function () {
         store.startModel(this.activeModel);
       },
@@ -235,6 +262,11 @@ var exports = (function () {
       },
       doNothing: function () {
         return false;
+      },
+      activateTooltips: function () {
+        if($("[data-toggle='tooltip']").tooltip) {
+          $("[data-toggle='tooltip']").tooltip();
+        }
       }
     }
   });
