@@ -98,7 +98,7 @@ var exports = (function() {
           .done(function(json) {
             resolve(json);
           })
-          .error(function(jqXhr) {
+          .fail(function(jqXhr) {
             if (jqXhr.status === 404) {  // filters too strict
               resolve({});  // is ok: just return empty response
             }
@@ -116,7 +116,7 @@ var exports = (function() {
           .done(function(json) {
             resolve(json);
           })
-          .error(function(jqXhr) {
+          .fail(function(jqXhr) {
             reject(jqXhr);
           });
       });
@@ -130,7 +130,7 @@ var exports = (function() {
           .done(function(json) {
             resolve(json);
           })
-          .error(function(jqXhr) {
+          .fail(function(jqXhr) {
             reject(jqXhr);
           });
       });
@@ -144,7 +144,7 @@ var exports = (function() {
           .done(function(json) {
             resolve(json[0]);
           })
-          .error(function(jqXhr) {
+          .fail(function(jqXhr) {
             reject(jqXhr);
           });
       });
@@ -241,7 +241,7 @@ var exports = (function() {
           .done(function(data) {
             resolve(data);
           })
-          .error(function(jqXhr) {
+          .fail(function(jqXhr) {
             reject(jqXhr);
           });
       });
@@ -260,7 +260,7 @@ var exports = (function() {
           .done(function (data) {
             resolve(data);
           })
-          .error(function(jqXhr) {
+          .fail(function(jqXhr) {
             reject(jqXhr);
           });
       });
@@ -276,7 +276,7 @@ var exports = (function() {
           .done(function(data) {
             resolve(data);
           })
-          .error(function(jqXhr) {
+          .fail(function(jqXhr) {
             reject(jqXhr);
           });
       });
@@ -292,7 +292,7 @@ var exports = (function() {
           .done(function(data) {
             resolve(data);
           })
-          .error(function(jqXhr) {
+          .fail(function(jqXhr) {
             reject(jqXhr);
           });
       });
@@ -308,7 +308,7 @@ var exports = (function() {
           .done(function(data) {
             resolve(data);
           })
-          .error(function(jqXhr) {
+          .fail(function(jqXhr) {
             reject(jqXhr);
           });
       });
@@ -324,7 +324,7 @@ var exports = (function() {
           .done(function(data) {
             resolve(data);
           })
-          .error(function(jqXhr) {
+          .fail(function(jqXhr) {
             reject(jqXhr);
           });
       });
@@ -353,7 +353,7 @@ var exports = (function() {
           .done(function(json) {
             resolve(json);
           })
-          .error(function(jqXhr) {
+          .fail(function(jqXhr) {
             reject(jqXhr);
           });
       });
@@ -370,7 +370,7 @@ var exports = (function() {
         .done(function() {
           resolve();
         })
-        .error(function(jqXhr) {
+        .fail(function(jqXhr) {
           reject(jqXhr);
         });
       });
@@ -444,7 +444,7 @@ var exports = (function() {
           .done(function(data) {
             resolve(data);
           })
-          .error(function(jqXhr) {
+          .fail(function(jqXhr) {
             reject(jqXhr);
           });
       });
