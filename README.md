@@ -34,6 +34,8 @@ $ npm install
 $ bower install
 ```
 
+For OSX if you need to run `CXX=clang++ npm install` if your default compiler is not clang, but g++.
+
 #### Run gulp:
 
 Serve a local development website:
