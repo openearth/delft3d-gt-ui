@@ -11,6 +11,7 @@ import gulpLoadPlugins from "gulp-load-plugins";
 import istanbul from "gulp-istanbul";
 
 // Use this to debug the contents of a pipe
+// import debug from "gulp-debug";
 // import filelog from 'gulp-filelog';
 
 import mainBowerFiles from "gulp-main-bower-files";
@@ -170,9 +171,9 @@ gulp.task("teamcity", ["scripts", "lint", "lint:test", "lint:scss", "coverage"],
 gulp.task("html", ["styles", "scripts"], () => {
   return gulp.src("app/*.html")
     .pipe($.useref({searchPath: [".tmp", "app", "."]}))
-    .pipe($.if("*.js", $.uglify()))
-    .pipe($.if("*.css", $.cssnano()))
-    .pipe($.if("*.html", $.htmlmin({collapseWhitespace: true})))
+    .pipe($.if(name => /\.js$/.test(name), $.uglify()))
+    .pipe($.if(name => /\.css$/.test(name), $.cssnano()))
+    .pipe($.if(name => /\.html$/.test(name), $.htmlmin({collapseWhitespace: true})))
     .pipe(gulp.dest("dist"));
 });
 
