@@ -1,0 +1,11 @@
+@import 'variables';
+
+#map {
+  width: 100%;
+  height: 40vh;
+  left: 0;
+}
+
+.mapboxgl-canvas-container.mapboxgl-touch-zoom-rotate.mapboxgl-touch-drag-pan, .mapboxgl-canvas-container.mapboxgl-touch-zoom-rotate.mapboxgl-touch-drag-pan .mapboxgl-canvas {
+  position: absolute;
+}

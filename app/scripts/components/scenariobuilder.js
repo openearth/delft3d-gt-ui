@@ -1,5 +1,5 @@
 /* global Vue,  fetchTemplates, store */
-
+import MapComponent from "./components/mapcomponent"
 // Exported globals
 var ScenarioCreate;
 
@@ -55,6 +55,9 @@ var exports = (function() {
         maxRuns: 20
       };
     },
+    components: {
+      "map-component": MapComponent
+    }
 
     route: {
       activate: function (transition) {

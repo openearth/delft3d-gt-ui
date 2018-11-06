@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
     <link rel="stylesheet" href="/bower_components/ion.rangeSlider/css/ion.rangeSlider.css" />
     <link rel="stylesheet" href="/bower_components/ion.rangeSlider/css/ion.rangeSlider.skinFlat.css" />
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="/bower_components/bootstrap-select/dist/css/bootstrap-select.css" />
     <link rel="stylesheet" href="/bower_components/open-sans-fontface/open-sans.css" />
     <link rel="stylesheet" href="/bower_components/pick-a-color/build/1.2.0/css/pick-a-color-1.2.0.min.css" />
@@ -69,6 +70,7 @@
     <script src="/bower_components/moment/moment.js"></script>
     <script src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
     <script src="/bower_components/ion.rangeSlider/js/ion.rangeSlider.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
     <script src="/bower_components/typeahead.js/dist/typeahead.bundle.js"></script>
     <script src="/bower_components/tinycolor/tinycolor.js"></script>
@@ -122,12 +124,16 @@
     <script src="scripts/components/searchcolumns.js"></script>
     <script src="scripts/components/scenariobuilder.js"></script>
     <script src="scripts/components/alert.js"></script>
+    <script src="scripts/components/mapcomponent.js"></script>
 
     <!-- and the application (router and loading of components goes in here)-->
     <!-- this should contain only loading of the app code. -->
     <!-- this can be very vue specific vuex, vue-router etc... -->
     <script src="scripts/app.js"></script>
     <!-- endbuild -->
+
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.css' rel='stylesheet' />
 
   </body>
 </html>
