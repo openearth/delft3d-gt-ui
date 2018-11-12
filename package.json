@@ -105,6 +105,6 @@
     "@babel/register": "^7.0.0",
     "babel-register": "^6.26.0",
     "gulp-cli": "^2.0.1",
-    "mapbox-gl": "^0.51.0-beta.2",
+    "mapbox-gl-draw-rectangle-mode": "^1.0.3"
   }
 }
