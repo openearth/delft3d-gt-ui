@@ -163,6 +163,14 @@ var exports = (function() {
           }
           return true;
         }
+      },
+      bbox: {
+        get () {
+          return store.state.bbox
+        },
+        set (bbox) {
+          store.commit('setbbox', bbox)
+        }
       }
     },
     methods: {

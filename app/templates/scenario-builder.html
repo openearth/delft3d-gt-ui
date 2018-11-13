@@ -101,7 +101,7 @@
 
                           <div class="input-group">
                             <!-- numeric, text, semver or factor are inputs-->
-                            <template v-if="isInput(variable)">
+                            <template v-if="isInput(variable) ">
                               <input
                               :type="variable.type"
                               class="form-control"
@@ -143,8 +143,50 @@
                               v-validate="variable.validators"
                               >{{ variable.value }}</textarea>
                             </template>
+
+                            <!-- date -->
+                            <template
+                              v-if="variable.type === 'date'"
+                              >
+                              <div
+                                class="input-group date"
+                                data-provide="datepicker"
+                                data-date-format="yyyymmdd"
+                                todayHighlight
+                                >
+                                  <input
+                                  class="form-control"
+                                  v-model="variable.value"
+                                  :disabled="variable.disabled"
+                                  :field="getId(variable)"
+                                  name="field"
+                                  v-validate="variable.validators"
+                                  />
+                                <div class="input-group-addon">
+                                  <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                              </div>
+
+                            </template>
+                            <!-- text array -->
+                            <template
+                              v-if="variable.id === 'bbox'"
+                              >
+                              <input
+                              type="text"
+                              :id="variable.id"
+                              class="form-control"
+                              :disabled="variable.disabled"
+                              :field="getId(variable)"
+                              v-model="variable.value"
+                              default="variable.value"
+                              :value="bbox"
+                              v-validate="variable.validators"
+                              />
+                            </template>
+
                             <!-- if we add this to 1 we need to add it to all, bug in bootstrap -->
-                            <span class="input-group-addon" >
+                            <span class="input-group-addon" v-if="variable.units !='-'" >
                               {{ variable.units || '-' }}
                             </span>
                           </div>
@@ -299,8 +341,15 @@
               </div>
               <!-- template details -->
               <div class="panel-body text-center">
-                <map-component>
-                  </map-component>
+                <map-component
+                  v-if="template.name==='GTSM world template'"
+                >
+                </map-component>
+                <img
+                  v-if="template.name==='River dominated delta'"
+                  src="images/schematic.svg"
+                  class="scenariobuilder-schematic"
+                />
               </div>
             </div>
           </div>

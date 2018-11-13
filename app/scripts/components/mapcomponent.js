@@ -1,4 +1,4 @@
-/* global Vue, mapboxgl*/
+/* global Vue, mapboxgl, store*/
 
 var exports = (function () {
   "use strict";
@@ -129,7 +129,7 @@ var exports = (function () {
         this.map.on("moveend", () => {
           if (this.map.getZoom() > 8) {
             var bbox = this.getbbox();
-
+            store.setbbox([bbox.latmin, bbox.lonmin, bbox.latmax, bbox.lonmax])
             this.showSelection(bbox);
           }
         });
