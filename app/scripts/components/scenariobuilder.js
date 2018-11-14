@@ -370,8 +370,11 @@ var exports = (function() {
 
                 // if we have a number return parsed otherwise original string
                 var result = (_.isNumber(parsed) && !isNaN(parsed)) ? parsed : d;
-
-                return result;
+                if (variable.type === "bbox-array"){
+                  return [result]
+                } else {
+                  return result;
+                }
               });
 
               parameters[variable.id] = {
@@ -391,7 +394,6 @@ var exports = (function() {
           "template": this.currentSelectedId,
           "parameters": JSON.stringify(parameters)
         };
-
         store.createScenario(postdata)
           .then(function() {
 
