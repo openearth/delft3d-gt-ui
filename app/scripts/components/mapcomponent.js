@@ -15,20 +15,36 @@ var exports = (function () {
         }
       };
     },
+    computed: {
+      bbox: {
+        get () {
+          return store.state.bbox;
+        },
+        set (bbox) {
+          this.map.fitBounds([[
+              bbox[0],
+              bbox[1]
+          ], [
+              bbox[2],
+              bbox[3]
+          ]]);
+        }
+      }
+    },
     methods: {
       getbbox: function() {
         // Get the bounding box of the current map view
         var bounds = this.map.getBounds();
         var bbox = {
-          "latmin": bounds.getWest(),
-          "lonmin": bounds.getSouth(),
-          "latmax": bounds.getEast(),
-          "lonmax": bounds.getNorth()
+          "latmin": bounds.getWest().toFixed(4),
+          "lonmin": bounds.getSouth().toFixed(4),
+          "latmax": bounds.getEast().toFixed(4),
+          "lonmax": bounds.getNorth().toFixed(4)
         };
 
         return bbox;
       },
-      showSelection(bbox) {
+      setSelection(bbox) {
         var features = this.map.queryRenderedFeatures(bbox).filter(x => (x.layer.id === "locations"));
         var insiderect = features.filter(x => {
           var coords = x.geometry.coordinates;
@@ -54,7 +70,6 @@ var exports = (function () {
             "properties": feature.properties
           });
         });
-        this.map.getSource("selection").setData(this.selection);
       }
     },
     ready() {
@@ -64,7 +79,7 @@ var exports = (function () {
         container: "map",
         style: "mapbox://styles/mapbox/light-v9",
         center: [0, 0],
-        zoom: 0
+        zoom: 1
       });
       this.map.resize();
 
@@ -75,6 +90,9 @@ var exports = (function () {
       });
 
       this.map.on("load", () => {
+        var bbox = this.getbbox();
+
+        store.setbbox([bbox.latmin, bbox.lonmin, bbox.latmax, bbox.lonmax]);
 
         // Add geojson with locations to the map
         this.map.addLayer({
@@ -127,10 +145,14 @@ var exports = (function () {
 
         // When zoomed in beyond zoom level 8, enable the bbox button
         this.map.on("moveend", () => {
-          if (this.map.getZoom() > 8) {
-            var bbox = this.getbbox();
-            store.setbbox([bbox.latmin, bbox.lonmin, bbox.latmax, bbox.lonmax])
-            this.showSelection(bbox);
+          // if (this.map.getZoom() > 8) {
+          var bboxvar = this.getbbox();
+
+          this.setSelection(bboxvar);
+          if(this.selection.features.length < 10) {
+            this.map.getSource("selection").setData(this.selection);
+            store.setbbox([bboxvar.latmin, bboxvar.lonmin, bboxvar.latmax, bboxvar.lonmax]);
+            store.setbboxvalidation(true);
           }
         });
       });

@@ -168,9 +168,9 @@
                               </div>
 
                             </template>
-                            <!-- text array -->
+                            <!-- bbox array -->
                             <template
-                              v-if="variable.id === 'bbox'"
+                              v-if="variable.type === 'bbox-array'"
                               >
                               <input
                               type="text"
@@ -179,9 +179,10 @@
                               :disabled="variable.disabled"
                               :field="getId(variable)"
                               v-model="variable.value"
-                              default="variable.value"
+                              :default="variable.value"
                               :value="bbox"
-                              v-validate="variable.validators"
+                              v-validate="variable.validations"
+                              readonly
                               />
                             </template>
 
@@ -191,6 +192,10 @@
                             </span>
                           </div>
 
+                          <p class="help-block has-error" v-if="!validbbox
+                            && variable.type === 'bbox-array'">
+                            Zoom to a bounding box on the map with less than 10 locations.
+                          </p>
                           <!-- TODO: replace this part by messages -->
                           <div v-if="$validation[getId(variable)]">
                             <p  v-if="$validation[getId(variable)].required"
@@ -301,7 +306,8 @@
                              id="scenario-submit"
                              @click.stop="submitScenario"
                              value=""
-                             :class="{ 'disabled': !validForm }" >
+                             :disabled="disableSubmit()"
+                             >
                             Submit
                           </button>
                         </div>

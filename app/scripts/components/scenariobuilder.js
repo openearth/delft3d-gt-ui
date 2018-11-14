@@ -164,12 +164,22 @@ var exports = (function() {
           return true;
         }
       },
+      // get the bounding box from the map from the store
       bbox: {
         get () {
-          return store.state.bbox
+          return store.state.bbox;
         },
         set (bbox) {
-          store.commit('setbbox', bbox)
+          store.setbbox(bbox);
+        }
+      },
+      // state for when a valid bounding box is selected
+      validbbox: {
+        get () {
+          return store.state.validbbox;
+        },
+        set (validbbox) {
+          store.setbboxvalidation(validbbox);
         }
       }
     },
@@ -177,6 +187,10 @@ var exports = (function() {
       // check if variable should generate an input element
       isInput: function(variable) {
         return _.includes(["numeric", "text", "semver"], variable.type) || variable.factor;
+      },
+      // Check is submit button should be disabled
+      disableSubmit: function() {
+        return (!(this.validForm && this.validbbox));
       },
       // Moved so that we can test it better.
       fetchTemplateList: function() {
