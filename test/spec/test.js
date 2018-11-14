@@ -96,6 +96,9 @@
 
   var SearchColumns = require("../../app/scripts/components/searchcolumns.js").SearchColumns;
 
+  var MapComponent = require("../../app/scripts/components/mapcomponent.js").MapComponent;
+
+  global.MapComponent = MapComponent;
   // why is this necessary....
   var factorToArray = require("../../app/scripts/components/scenariobuilder.js").factorToArray;
 
@@ -447,6 +450,13 @@
       var aSearchList = new SearchList();
 
       assert.isOk(aSearchList);
+      done();
+    });
+
+    it("Is possible to create a Map component", function(done) {
+      var aMapComponent = new MapComponent();
+
+      assert.isOk(aMapComponent);
       done();
     });
 
@@ -1962,6 +1972,28 @@
   });
 
 
+  // describe("Map component", function() {
+  //   var aMapComponent = new MapComponent();
+  //   var wrapper = mount(MapComponent);
+  //   it("Map should not be null but filled with a mapbox object", function(done) {
+  //     try {
+  //       assert.notEqual(aMapComponent.map, null);
+  //       done();
+  //     } catch (e) {
+  //       done(e);
+  //     }
+  //   });
+  //
+  //   it("if map is zoomed in to > 8, getbbox() is called", function(done) {
+  //     aMapComponent.map.setZoom(9);
+  //     try {
+  //       assert.called(aMapComponent.getbbox());
+  //       done();
+  //     } catch (e) {
+  //       done(e);
+  //     }
+  //   });
+  // });
 
 
   // This test doesn't work, since it gets stuck when loading the main template.

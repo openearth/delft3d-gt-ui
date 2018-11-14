@@ -16,9 +16,11 @@
     <link rel="stylesheet" href="/bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" />
     <link rel="stylesheet" href="/bower_components/ion.rangeSlider/css/ion.rangeSlider.css" />
     <link rel="stylesheet" href="/bower_components/ion.rangeSlider/css/ion.rangeSlider.skinFlat.css" />
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="/bower_components/bootstrap-select/dist/css/bootstrap-select.css" />
     <link rel="stylesheet" href="/bower_components/open-sans-fontface/open-sans.css" />
     <link rel="stylesheet" href="/bower_components/pick-a-color/build/1.2.0/css/pick-a-color-1.2.0.min.css" />
+    <link rel="stylesheet" href="/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css" />
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -57,22 +59,24 @@
 
     <!-- build:js scripts/vendor.js -->
     <!-- bower:js -->
-    <script src="/bower_components/jquery/dist/jquery.js"></script>
-    <script src="/bower_components/lodash/lodash.js"></script>
-    <script src="/bower_components/fetch/fetch.js"></script>
-    <script src="/bower_components/clipboard/dist/clipboard.js"></script>
-    <script src="/bower_components/vue/dist/vue.js"></script>
-    <script src="/bower_components/vue-router/dist/vue-router.js"></script>
-    <script src="/bower_components/bootstrap-combobox/js/bootstrap-combobox.js"></script>
-    <script src="/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.js"></script>
-    <script src="/bower_components/vue-validator/dist/vue-validator.js"></script>
-    <script src="/bower_components/moment/moment.js"></script>
-    <script src="/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
-    <script src="/bower_components/ion.rangeSlider/js/ion.rangeSlider.js"></script>
-    <script src="/bower_components/bootstrap-select/dist/js/bootstrap-select.js"></script>
-    <script src="/bower_components/typeahead.js/dist/typeahead.bundle.js"></script>
-    <script src="/bower_components/tinycolor/tinycolor.js"></script>
-    <script src="/bower_components/pick-a-color/build/1.2.2/js/pick-a-color-1.2.2.min.js"></script>
+    <script src='/bower_components/jquery/dist/jquery.js'></script>
+    <script src='/bower_components/lodash/lodash.js'></script>
+    <script src='/bower_components/fetch/fetch.js'></script>
+    <script src='/bower_components/clipboard/dist/clipboard.js'></script>
+    <script src='/bower_components/vue/dist/vue.js'></script>
+    <script src='/bower_components/vue-router/dist/vue-router.js'></script>
+    <script src='/bower_components/bootstrap-combobox/js/bootstrap-combobox.js'></script>
+    <script src='/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.js'></script>
+    <script src='/bower_components/vue-validator/dist/vue-validator.js'></script>
+    <script src='/bower_components/moment/moment.js'></script>
+    <script src='/bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js'></script>
+    <script src='/bower_components/ion.rangeSlider/js/ion.rangeSlider.js'></script>
+    <script src='/bower_components/bootstrap/dist/js/bootstrap.js'></script>
+    <script src='/bower_components/bootstrap-select/dist/js/bootstrap-select.js'></script>
+    <script src='/bower_components/typeahead.js/dist/typeahead.bundle.js'></script>
+    <script src='/bower_components/tinycolor/tinycolor.js'></script>
+    <script src='/bower_components/pick-a-color/build/1.2.2/js/pick-a-color-1.2.2.min.js'></script>
+    <script src='/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.js'></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -122,12 +126,23 @@
     <script src="scripts/components/searchcolumns.js"></script>
     <script src="scripts/components/scenariobuilder.js"></script>
     <script src="scripts/components/alert.js"></script>
+    <script src="scripts/components/mapcomponent.js"></script>
 
     <!-- and the application (router and loading of components goes in here)-->
     <!-- this should contain only loading of the app code. -->
     <!-- this can be very vue specific vuex, vue-router etc... -->
     <script src="scripts/app.js"></script>
     <!-- endbuild -->
+
+    <!-- NOTE! These packages should be imported using a package manager (NPM) -->
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css' rel='stylesheet' />
+    <!-- <script src='https://github.com/edgespatial/mapbox-gl-draw-rectangle-mode'></script> -->
+    <!-- <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css' type='text/css'/> -->
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
+
 
   </body>
 </html>

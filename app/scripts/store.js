@@ -24,7 +24,9 @@ var exports = (function() {
         first_name: "Anonymous",
         last_name: "User"
         /*eslint-enable camelcase*/
-      }
+      },
+      bbox: [],
+      validbbox: false
     },
 
     // ================================ SYNCHRONISATION
@@ -481,8 +483,14 @@ var exports = (function() {
 
     updateParams: function (params) {
       this.state.params = params;
-    }
+    },
 
+    setbbox: function (bbox) {
+      this.state.bbox = bbox;
+    },
+    setbboxvalidation: function (val) {
+      this.state.validbbox = val;
+    }
   };
 
   // get this baby up and running:
