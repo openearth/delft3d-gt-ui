@@ -20,7 +20,8 @@ var exports = (function () {
           "export_movie": false,
           "export_thirdparty": false
         },
-        viewerActive: false
+        viewerActive: false,
+        model: "GTSM"
       };
     },
     computed: {
@@ -28,7 +29,7 @@ var exports = (function () {
         cached: false,
         get: function () {
           var model = this.sharedState.activeModelContainer;
-
+          console.log(model)
           // model details are conditionally rendered: activating jQuery tooltips when there is a model
           this.$nextTick(this.activateTooltips);
           return model;

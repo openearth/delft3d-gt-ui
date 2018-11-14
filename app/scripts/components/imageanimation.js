@@ -25,7 +25,7 @@ var exports = (function () {
         timerAnimation: -1,
 
         // Which imagelist are we currently watching?
-        currentAnimationKey: "delta_fringe_images",
+        currentAnimationKey: "map_waterlevel_images",
 
         isAnimating: false
       };
