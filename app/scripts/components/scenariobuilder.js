@@ -370,13 +370,11 @@ var exports = (function() {
 
                 // if we have a number return parsed otherwise original string
                 var result = (_.isNumber(parsed) && !isNaN(parsed)) ? parsed : d;
-                if (variable.type === "bbox-array"){
-                  return [result]
-                } else {
-                  return result;
-                }
+                return result;
               });
-
+              if (variable.type === "bbox-array"){
+                valuearray = [valuearray];
+              }
               parameters[variable.id] = {
                 values: valuearray,
                 // we need these in the table
