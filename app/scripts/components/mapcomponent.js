@@ -3,6 +3,7 @@
 var exports = (function () {
   "use strict";
 
+  // The map component
   var MapComponent = Vue.component("map-component", {
     template: "#template-map-component",
     data: function() {
@@ -158,6 +159,7 @@ var exports = (function () {
       });
     }
   });
+  
   return {
     MapComponent: MapComponent
   };

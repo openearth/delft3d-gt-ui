@@ -29,7 +29,7 @@ var exports = (function () {
         cached: false,
         get: function () {
           var model = this.sharedState.activeModelContainer;
-          console.log(model)
+
           // model details are conditionally rendered: activating jQuery tooltips when there is a model
           this.$nextTick(this.activateTooltips);
           return model;

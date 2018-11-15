@@ -5,7 +5,6 @@ var exports = (function () {
 
   // The image animation component
   var ImageAnimation = Vue.component("image-animation", {
-
     template: "#template-image-animation",
     props: {
       model: {
