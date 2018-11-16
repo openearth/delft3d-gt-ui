@@ -20,7 +20,8 @@ var exports = (function () {
           "export_movie": false,
           "export_thirdparty": false
         },
-        viewerActive: false
+        viewerActive: false,
+        model: "GTSM"
       };
     },
     computed: {

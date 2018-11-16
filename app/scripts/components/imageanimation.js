@@ -5,7 +5,6 @@ var exports = (function () {
 
   // The image animation component
   var ImageAnimation = Vue.component("image-animation", {
-
     template: "#template-image-animation",
     props: {
       model: {
@@ -25,7 +24,7 @@ var exports = (function () {
         timerAnimation: -1,
 
         // Which imagelist are we currently watching?
-        currentAnimationKey: "delta_fringe_images",
+        currentAnimationKey: "map_waterlevel_images",
 
         isAnimating: false
       };
