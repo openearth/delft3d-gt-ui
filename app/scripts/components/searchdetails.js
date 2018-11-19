@@ -177,19 +177,19 @@ var exports = (function () {
           pickers.selectpicker("refresh");
         }
 
-        $(".datepicker").datetimepicker({
-          "allowInputToggle": true,
-          "format": "YYYY-MM-DD",
-          "widgetPositioning": {"horizontal": "auto", "vertical": "top"},
-          // widgetparent needs to be .search-columns, otherwise the date widget will overflow the column and be partially hidden
-          "widgetParent": ".search-columns"
-        }).on("dp.show", function () {
-          // the widget doesn't render at the right position when setting .search-columns as parent, so on a show() we reposition the widget
-          $(".bootstrap-datetimepicker-widget").css({
-            top: $(this).offset().top - 260,
-            left: $(this).offset().left
-          });
-        });
+        // $(".datepicker").datepicker({
+        //   "allowInputToggle": true,
+        //   "format": "YYYY-MM-DD",
+        //   "widgetPositioning": {"horizontal": "auto", "vertical": "top"},
+        //   // widgetparent needs to be .search-columns, otherwise the date widget will overflow the column and be partially hidden
+        //   "widgetParent": ".search-columns"
+        // }).on("dp.show", function () {
+        //   // the widget doesn't render at the right position when setting .search-columns as parent, so on a show() we reposition the widget
+        //   $(".bootstrap-datetimepicker-widget").css({
+        //     top: $(this).offset().top - 260,
+        //     left: $(this).offset().left
+        //   });
+        // });
 
         // Domain selection boxes - enable all.
         $(".domain-selection-box input[type='checkbox']").prop("checked", "checked");
