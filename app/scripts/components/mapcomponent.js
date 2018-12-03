@@ -159,7 +159,7 @@ var exports = (function () {
       });
     }
   });
-  
+
   return {
     MapComponent: MapComponent
   };
