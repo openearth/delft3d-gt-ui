@@ -176,10 +176,8 @@
                               type="text"
                               :id="variable.id"
                               class="form-control"
-                              :disabled="variable.disabled"
                               :field="getId(variable)"
                               v-model="variable.value"
-                              :default="variable.value"
                               :value="bbox"
                               v-validate="variable.validations"
                               readonly

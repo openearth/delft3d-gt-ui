@@ -16,24 +16,26 @@ var exports = (function () {
         }
       };
     },
-    computed: {
-      bbox: {
-        get () {
-          return store.state.bbox;
-        },
-        set (bbox) {
-          this.map.fitBounds([[
-              bbox[0],
-              bbox[1]
-          ], [
-              bbox[2],
-              bbox[3]
-          ]]);
-        }
-      }
-    },
+    // computed: {
+    //   bbox: {
+    //     get () {
+    //       console.log('getting bbox')
+    //       return store.state.bbox;
+    //     },
+    //     set (bbox) {
+    //       console.log('setting', bbox)
+    //       this.map.fitBounds([[
+    //           bbox[0],
+    //           bbox[1]
+    //       ], [
+    //           bbox[2],
+    //           bbox[3]
+    //       ]]);
+    //     }
+    //   }
+    // },
     methods: {
-      getbbox: function() {
+      getbbox() {
         // Get the bounding box of the current map view
         var bounds = this.map.getBounds();
         var bbox = {
@@ -42,9 +44,15 @@ var exports = (function () {
           "latmax": bounds.getEast().toFixed(4),
           "lonmax": bounds.getNorth().toFixed(4)
         };
-
         return bbox;
       },
+
+      setbbox(bbox) {
+        console.log('setting bbox', bbox)
+        var bounds = [[bbox.latmin, bbox.lonmin], [bbox.latmax, bbox.lonmax]]
+        this.map.fitBounds(bounds)
+      },
+
       setSelection(bbox) {
         var features = this.map.queryRenderedFeatures(bbox).filter(x => (x.layer.id === "locations"));
         var insiderect = features.filter(x => {
@@ -91,8 +99,12 @@ var exports = (function () {
       });
 
       this.map.on("load", () => {
-        var bbox = this.getbbox();
-
+        console.log('bbox', store.state.bbox, store.state.bbox===[])
+        if(store.state.bbox.length === 0) {
+          var bbox = this.getbbox();
+        } else {
+          this.setbbox(store.state.bbox);
+        }
         store.setbbox([bbox.latmin, bbox.lonmin, bbox.latmax, bbox.lonmax]);
 
         // Add geojson with locations to the map
