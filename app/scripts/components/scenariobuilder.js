@@ -167,12 +167,10 @@ var exports = (function() {
       // get the bounding box from the map from the store
       bbox: {
         get () {
-          console.log('getting', store.state.bbox)
           return store.state.bbox;
         },
         set (bbox) {
           store.setbbox(bbox);
-          console.log('setting', store.state.bbox, bbox)
         }
       },
       // state for when a valid bounding box is selected
@@ -325,6 +323,9 @@ var exports = (function() {
               } else {
                 // just set it (first item)
                 variable.value = _.get(parameters[variable.id].values, 0);
+                if (variable.id === "bbox") {
+                  store.setbbox(variable.value);
+                }
               }
 
             }

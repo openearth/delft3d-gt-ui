@@ -157,7 +157,6 @@
                                   <input
                                   class="form-control"
                                   v-model="variable.value"
-                                  :disabled="variable.disabled"
                                   :field="getId(variable)"
                                   name="field"
                                   v-validate="variable.validators"
@@ -316,9 +315,7 @@
               </validator>
 
             </div>
-
           </div>
-
         </div>
 
 
@@ -347,6 +344,7 @@
               <div class="panel-body text-center">
                 <map-component
                   v-if="template.name==='GTSM world template'"
+                  @route-data-loaded="initialBbox()"
                 >
                 </map-component>
                 <img
