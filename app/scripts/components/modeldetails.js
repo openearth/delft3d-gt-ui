@@ -22,7 +22,8 @@ var exports = (function () {
         },
         viewerActive: false,
         model: "GTSM",
-        updates: ['dit', 'is', 'een', 'test']
+        updates: ['dit', 'is', 'een', 'test'],
+        selectedUpdate: ""
       };
     },
     computed: {
@@ -236,12 +237,12 @@ var exports = (function () {
         // Show the dialog:
         this.resetDialog.show();
       },
-      redoModel: function () {
+      redoModel: function (update) {
         // Get a confirm dialog
         this.resetDialog = getDialog(this, "confirm-dialog", "redo");
 
         this.resetDialog.onConfirm = function() {
-          store.redoModel(this.activeModel);
+          store.redoModel(this.activeModel, update);
           this.resetDialog.hide();
         }.bind(this);
 
