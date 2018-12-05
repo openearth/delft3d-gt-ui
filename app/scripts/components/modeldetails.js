@@ -21,7 +21,8 @@ var exports = (function () {
           "export_thirdparty": false
         },
         viewerActive: false,
-        model: "GTSM"
+        model: "GTSM",
+        updates: ['dit', 'is', 'een', 'test']
       };
     },
     computed: {

@@ -128,7 +128,15 @@
               <span class="btn-label"><i class="fa fa-fw fa-fast-backward" aria-hidden="true"></i></span>
               Reset
             </button>&nbsp;
-            <button v-if="model !== 'GTSM'"
+
+            <select
+              :key="update"
+              class="form-control"
+              data-placement="top"
+              >
+              <option v-for="update in updates">{{update}}</option>
+            </select>
+            <!-- <button v-if="model !== 'GTSM'"
                     type="button"
                     v-on:click="redoModel"
                     class="btn btn-labeled btn-spaced-right" id="simulation-control-redo"
@@ -140,7 +148,8 @@
                     >
               <span class="btn-label"><i class="fa fa-fw fa-level-up" aria-hidden="true"></i></span>
               Update
-            </button>&nbsp;
+            </button>&nbsp; -->
+
             <button type="button"
                     class="btn btn-labeled btn-spaced-right"
                     v-on:click="removeModel"
