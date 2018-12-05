@@ -16,27 +16,31 @@ var exports = (function () {
         }
       };
     },
-    watch:{
-      $route (to, from){
+
+    watch: {
+      $route (to) {
         if (to.name === "scenarios-create") {
           if(store.state.bbox.length === 0) {
-            this.initialBbox()
+            this.initialBbox();
           } else {
             this.setbbox(store.state.bbox);
           }
         }
       }
     },
+
     methods: {
       getbbox() {
         // Get the bounding box of the current map view
         var bounds = this.map.getBounds();
+
         var bbox = {
           "latmin": bounds.getWest().toFixed(4),
           "lonmin": bounds.getSouth().toFixed(4),
           "latmax": bounds.getEast().toFixed(4),
           "lonmax": bounds.getNorth().toFixed(4)
         };
+
         return bbox;
       },
 
@@ -52,6 +56,7 @@ var exports = (function () {
 
       initialBbox() {
         var bbox = this.getbbox();
+
         store.setbbox([bbox.latmin, bbox.lonmin, bbox.latmax, bbox.lonmax]);
       },
 
@@ -99,7 +104,7 @@ var exports = (function () {
         closeButton: false,
         closeOnClick: false
       });
-      this.initialBbox()
+      this.initialBbox();
 
       this.map.on("load", () => {
 
@@ -154,6 +159,7 @@ var exports = (function () {
 
         this.map.on("moveend", () => {
           var bboxvar = this.getbbox();
+
           this.setSelection(bboxvar);
 
           // If less than 10 locations are within view, set bounding box
