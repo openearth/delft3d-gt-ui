@@ -20,7 +20,7 @@ var exports = (function () {
     watch: {
       $route (to) {
         if (to.name === "scenarios-create") {
-          console.log(store.state.bbox)
+          console.log(store.state.bbox);
           this.setbbox(store.state.bbox);
         }
       }
@@ -52,10 +52,10 @@ var exports = (function () {
       },
 
       initialBbox() {
-        console.log('initrial')
-        this.map.setZoom(1)
-        this.map.setCenter([0,0])
+        this.map.setZoom(1);
+        this.map.setCenter([0, 0]);
         var bbox = this.getbbox();
+
         store.setbbox([bbox.latmin, bbox.lonmin, bbox.latmax, bbox.lonmax]);
       },
 
@@ -105,12 +105,10 @@ var exports = (function () {
       });
 
       this.map.on("load", () => {
-        console.log(this.$route.path)
-        // console.log(this.template)
-        if(this.$route.path === "/scenarios/create"){
-          this.initialBbox()
+        if(this.$route.path === "/scenarios/create") {
+          this.initialBbox();
         } else {
-          this.setbbox(store.state.bbox)
+          this.setbbox(store.state.bbox);
         }
 
         // Add geojson with locations to the map
