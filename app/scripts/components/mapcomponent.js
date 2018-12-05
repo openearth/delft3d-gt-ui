@@ -105,7 +105,7 @@ var exports = (function () {
           },
           "paint": {
             "circle-opacity": 0.5,
-            "circle-color": "#45afd9",
+            "circle-color": "#009AEB",
             "circle-stroke-color": "#000000",
             "circle-stroke-width": 1,
             "circle-radius": 3
@@ -150,7 +150,7 @@ var exports = (function () {
           var bboxvar = this.getbbox();
 
           this.setSelection(bboxvar);
-          if(this.selection.features.length < 10) {
+          if(this.selection.features.length < 200) {
             this.map.getSource("selection").setData(this.selection);
             store.setbbox([bboxvar.latmin, bboxvar.lonmin, bboxvar.latmax, bboxvar.lonmax]);
             store.setbboxvalidation(true);

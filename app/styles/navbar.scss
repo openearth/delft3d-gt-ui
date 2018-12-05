@@ -13,21 +13,23 @@
   100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); display: block; }
 
 }
+
+.navbar-static-top {
+  border-width: 0 0 0px;
+}
+
 .navbar {
   margin-bottom: 0;  // override default bootstrap value
 
-  #bgimage {
-    height: 51px;
-    margin: -15px 15px 15px -15px;
-    left: 15px;
-    top: 15px;
-    position: absolute;
-    z-index: 0;
-  }
+  background-image: -webkit-linear-gradient(left, #103551, #3a5a6f, #66818e, #96a9af, #cad2d3);
+  background-image: -o-linear-gradient(left, #103551, #3a5a6f, #66818e, #96a9af, #cad2d3);
+  background-image: linear-gradient(to right, #103551, #3a5a6f, #66818e, #96a9af, #cad2d3);
+
   #logoimage {
     float: left;
     position: relative;
     height: 51px;
+    width: 51px;
     margin: -15px 15px 15px -15px;
     z-index: 1;
     -webkit-animation-name: spin;
@@ -51,16 +53,10 @@
     font-size: 1em;
   }
 
-  .disabled {
-    pointer-events: none;
-    cursor: default;
-  }
 }
 
 @media (min-width: $screen-xs-sm) {
   .navbar {
-    background: $col-bw-2;
-
     a.navbar-brand {
       font-size: 18px;
     }
