@@ -343,8 +343,7 @@
               <!-- template details -->
               <div class="panel-body text-center">
                 <map-component
-                  v-if="template.name==='GTSM world template'"
-                  @route-data-loaded="initialBbox()"
+                  v-show="template.name==='GTSM world template'"
                 >
                 </map-component>
                 <img
