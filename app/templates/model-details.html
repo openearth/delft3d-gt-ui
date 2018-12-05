@@ -31,8 +31,8 @@
             <dt>Run environment</dt>
             <dd><span v-if="getActiveModelData('date_created') === ''">-</span><span v-else>Amazon</span></dd>
 
-            <dt v-if="model !== 'GTSM'">Updates available</dt>
-            <dd v-if="model !== 'GTSM'">
+            <dt>Updates available</dt>
+            <dd>
               <template v-if="getActiveModelData('date_created') === ''">
                 <span >-</span>
               </template>
