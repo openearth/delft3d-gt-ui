@@ -2,7 +2,6 @@
 @-moz-keyframes spin {
   95% { -moz-transform: rotate(380deg); }
   100% { -moz-transform: rotate(360deg); display: block;}
-
 }
 @-webkit-keyframes spin {
   95% { -webkit-transform: rotate(380deg); }
@@ -11,23 +10,17 @@
 @keyframes spin {
   95% { -webkit-transform: rotate(380deg); transform:rotate(380deg); }
   100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); display: block; }
-
 }
 
 .navbar-static-top {
   border-width: 0 0 0px;
 }
 
+.disabled {
+  pointer-events: none;
+  cursor: default;
 }
-@-webkit-keyframes spin {
-  95% { -webkit-transform: rotate(380deg); }
-  100% { -webkit-transform: rotate(360deg); display: block;}
-}
-@keyframes spin {
-  95% { -webkit-transform: rotate(380deg); transform:rotate(380deg); }
-  100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); display: block; }
 
-}
 .navbar {
   margin-bottom: 0;  // override default bootstrap value
 
@@ -63,16 +56,10 @@
     font-size: 1em;
   }
 
-  .disabled {
-    pointer-events: none;
-    cursor: default;
-  }
 }
 
 @media (min-width: $screen-xs-sm) {
   .navbar {
-    background: $col-bw-2;
-
     a.navbar-brand {
       font-size: 18px;
     }
