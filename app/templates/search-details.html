@@ -11,8 +11,8 @@
         <div class="panel-group" id="run-accordion" role="tablist" aria-multiselectable="true">
 
           <div class="form-group clear-left">
-            <div class="input-group">
-              <input type="text" class="form-control" id="search" placeholder="Search name..." v-model="searchText">
+            <div class="input-group input-group-sm ">
+              <input type="text" class="form-control" id="search" placeholder="Search name..." v-model="searchText" aria-describedby="inputGroup-sizing-sm">
               <span class="input-group-btn">
                 <button class="btn btn-default button-empty-input-field" type="button">
                   <i class="fa fa-times" aria-hidden="true"></i>
@@ -21,7 +21,7 @@
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group form-group-sm">
             <select
                v-model="selectedDomains"
                id="domain"
@@ -45,7 +45,7 @@
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group form-group-sm">
             <select v-model="selectedUsers" id="user" class="select-picker form-control" title="Choose user..." multiple data-selected-text-format="count > 3" data-live-search="true">
               <option v-for="user in users" :value="user.id">{{user.last_name}}, {{user.first_name}}</option>
             </select>
@@ -58,8 +58,12 @@
             <div class="panel-body panel-collapse collapse" role="tabpanel" aria-labelledby="template-datetimes" id="template-datetimes">
               <div class="form-group" :class="{ 'has-error': !createdAfterValid }">
                 <label class="control-label" >Created after</label>
-                <div class="input-group">
-                  <input type="text" class="form-control datepicker" id="created_after" placeholder="yyyy-mm-dd" v-model="createdAfter">
+                <div
+                  class="input-group date input-group-sm"
+                  data-provide="datepicker"
+                  data-date-format="yyyy-mm-dd"
+                  >
+                  <input type="text" class="form-control datepicker" id="created_after" placeholder="yyyy-mm-dd" v-model="createdAfter" todayHighlight>
                   <span class="input-group-btn">
                     <button class="btn btn-default button-empty-input-field" type="button">
                       <i class="fa fa-times" aria-hidden="true"></i>
@@ -69,8 +73,12 @@
               </div>
               <div class="form-group" :class="{ 'has-error': !createdBeforeValid }">
                 <label class="control-label" >Created before</label>
-                <div class="input-group">
-                  <input type="text" class="form-control datepicker" id="created_before" placeholder="yyyy-mm-dd" v-model="createdBefore">
+                <div
+                  class="input-group date input-group-sm"
+                  data-provide="datepicker"
+                  data-date-format="yyyy-mm-dd"
+                  >
+                  <input type="text" class="form-control datepicker" id="created_before" placeholder="yyyy-mm-dd" v-model="createdBefore" todayHighlight>
                   <span class="input-group-btn">
                     <button class="btn btn-default button-empty-input-field" type="button">
                       <i class="fa fa-times" aria-hidden="true"></i>

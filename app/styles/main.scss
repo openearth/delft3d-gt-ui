@@ -56,7 +56,7 @@ dt {
 }
 
 .info-secondary {
-  color: $col-bw-4;
+  color: $col-bw-7;
 }
 
 .label-default {
@@ -86,7 +86,7 @@ dt {
   }
 
   &::after {
-    background: url('/static/images/delta.jpg') no-repeat center center fixed;
+    background: url('/static/images/gtsm-login.jpg') no-repeat center center fixed;
     background-size: cover;
     bottom: 0;
     content: '';
@@ -126,6 +126,9 @@ dt {
   padding: 5px;
 }
 
+.row {
+  padding-bottom: 15px;
+}
 // ============ responsiveness
 
 @media (min-width: $screen-xs-sm) {

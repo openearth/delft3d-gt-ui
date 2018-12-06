@@ -1,12 +1,46 @@
 @import 'variables';
+@-moz-keyframes spin {
+  95% { -moz-transform: rotate(380deg); }
+  100% { -moz-transform: rotate(360deg); display: block;}
+
+}
+@-webkit-keyframes spin {
+  95% { -webkit-transform: rotate(380deg); }
+  100% { -webkit-transform: rotate(360deg); display: block;}
+}
+@keyframes spin {
+  95% { -webkit-transform: rotate(380deg); transform:rotate(380deg); }
+  100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); display: block; }
+
+}
+
+.navbar-static-top {
+  border-width: 0 0 0px;
+}
 
 .navbar {
   margin-bottom: 0;  // override default bootstrap value
 
-  img {
+  background-image: -webkit-linear-gradient(left, #103551, #3a5a6f, #66818e, #96a9af, #cad2d3);
+  background-image: -o-linear-gradient(left, #103551, #3a5a6f, #66818e, #96a9af, #cad2d3);
+  background-image: linear-gradient(to right, #103551, #3a5a6f, #66818e, #96a9af, #cad2d3);
+
+  #logoimage {
     float: left;
+    position: relative;
     height: 51px;
+    width: 51px;
     margin: -15px 15px 15px -15px;
+    z-index: 1;
+    -webkit-animation-name: spin;
+    -webkit-animation-duration: 4s;
+    -webkit-animation-timing-function: ease-in;
+    -moz-animation-name: spin;
+    -moz-animation-duration: 4s;
+    -moz-animation-timing-function: ease-in;
+    animation-name: spin;
+    animation-duration: 4s;
+    animation-timing-function: ease-in;
   }
 
   &.navbar-default .active > a,

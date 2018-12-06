@@ -394,7 +394,7 @@ var exports = (function() {
           "template": this.currentSelectedId,
           "parameters": JSON.stringify(parameters)
         };
-        
+
         store.createScenario(postdata)
           .then(function() {
 
