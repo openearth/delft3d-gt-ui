@@ -63,6 +63,13 @@ var exports = (function () {
           return _.get(this.activeModel, "data.shared", "p") !== "p";
         }
       },
+      entrypoints: {
+        cache: false,
+        get: function () {
+          console.log('entrypoints', _.get(this.activeModel, "data.entrypoints", ""))
+          return _.get(this.activeModel, "data.entrypoints", "")
+        }
+      }
       isIdle: {
         cache: false,
         get: function () {
@@ -237,20 +244,22 @@ var exports = (function () {
         // Show the dialog:
         this.resetDialog.show();
       },
-      redoModel: function (update) {
-        // Get a confirm dialog
-        this.resetDialog = getDialog(this, "confirm-dialog", "redo");
+      redoModel: function (entrypoints) {
+        store.redoModel(this.activeModel, entrypoints);
 
-        this.resetDialog.onConfirm = function() {
-          store.redoModel(this.activeModel, update);
-          this.resetDialog.hide();
-        }.bind(this);
-
-        // We also show an extra warning in the dialog, if user chooses to remove additional files.
-        this.resetDialog.showAlert(false);
-
-        // Show the dialog:
-        this.resetDialog.show();
+        // // Get a confirm dialog
+        // this.resetDialog = getDialog(this, "confirm-dialog", "redo");
+        //
+        // this.resetDialog.onConfirm = function() {
+        //   store.redoModel(this.activeModel, update);
+        //   this.resetDialog.hide();
+        // }.bind(this);
+        //
+        // // We also show an extra warning in the dialog, if user chooses to remove additional files.
+        // this.resetDialog.showAlert(false);
+        //
+        // // Show the dialog:
+        // this.resetDialog.show();
       },
       startModel: function () {
         store.startModel(this.activeModel);

@@ -268,7 +268,8 @@ var exports = (function() {
       });
     },
 
-    resetModel: function (modelContainer) {
+    resetModel: function (modelContainer, entrypoints) {
+      // console.log( "/api/v1/scenes/" + modelContainer.id + "/reset/", entrypoints)
       return new Promise((resolve, reject) => {
         if (modelContainer === undefined || modelContainer.id === undefined) {
           return reject("No model id to reset");
@@ -284,7 +285,8 @@ var exports = (function() {
       });
     },
 
-    redoModel: function (modelContainer) {
+    redoModel:  function (modelContainer, entrypoints) {
+      console.log( "/api/v1/scenes/" + modelContainer.id + "/reset/", entrypoints)
       return new Promise((resolve, reject) => {
         if (modelContainer === undefined || modelContainer.id === undefined) {
           return reject("No model id to redo");
