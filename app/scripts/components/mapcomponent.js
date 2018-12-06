@@ -13,7 +13,8 @@ var exports = (function () {
         selection: {
           "type": "FeatureCollection",
           "features": []
-        }
+        },
+        fixate: false
       };
     },
 
@@ -50,13 +51,39 @@ var exports = (function () {
             bbox[3]
         ]]);
       },
-
+      setMapBbox(bbox) {
+        var bbox = store.state.bbox
+        this.map.getSource("boundingbox").setData({
+          "type": "LineString",
+          "coordinates": [
+            [bbox[0], bbox[1]],
+            [bbox[2], bbox[1]],
+            [bbox[2], bbox[3]],
+            [bbox[0], bbox[3]],
+            [bbox[0], bbox[1]]
+        ]})
+      },
       initialBbox() {
+        console.log('initializing')
         this.map.setZoom(1);
         this.map.setCenter([0, 0]);
         var bbox = this.getbbox();
-
         store.setbbox([bbox.latmin, bbox.lonmin, bbox.latmax, bbox.lonmax]);
+        if(this.map.getSource("boundingbox") !== undefined){
+          this.map.getSource("boundingbox").setData({
+              "type": "LineString",
+              "coordinates": []
+            }
+          )
+        };
+        if(this.map.getSource("selection") !== undefined){
+          this.map.getSource("selection").setData({
+              "type": "LineString",
+              "coordinates": []
+            }
+          )
+        };
+        this.fixate = false;
       },
 
       setSelection(bbox) {
@@ -97,6 +124,7 @@ var exports = (function () {
         zoom: 1
       });
       this.map.resize();
+      this.map.addControl(new mapboxgl.NavigationControl());
 
       // create empty popup
       this.popup = new mapboxgl.Popup({
@@ -142,6 +170,21 @@ var exports = (function () {
           }
         });
 
+
+        this.map.addLayer({
+          "id": "boundingbox",
+          "type": "line",
+          "source": {
+            "type": "geojson",
+            "data": {
+                "type": "LineString",
+                "coordinates": []
+            }
+          },
+          "paint": {
+          }
+        });
+
           // When hovering over a location, show a popup and change the cursor
         this.map.on("mouseenter", "locations", (e) => {
           this.map.getCanvas().style.cursor = "pointer";
@@ -166,10 +209,11 @@ var exports = (function () {
           this.setSelection(bboxvar);
 
           // If less than X locations are within view, set bounding box
-          if(this.selection.features.length < 200) {
+          if(this.selection.features.length < 200 && this.fixate === false) {
             this.map.getSource("selection").setData(this.selection);
             store.setbbox([bboxvar.latmin, bboxvar.lonmin, bboxvar.latmax, bboxvar.lonmax]);
             store.setbboxvalidation(true);
+            this.setMapBbox()
           }
         });
       });
