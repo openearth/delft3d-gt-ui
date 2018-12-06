@@ -1,12 +1,11 @@
 <template id="template-navbar">
 
-    <nav class="navbar navbar-default navbar-static-top" id="top-bar">
+    <nav class="navbar navbar-inverse navbar-default navbar-static-top" id="top-bar">
 
       <div class="container-fluid">
 
         <div class="navbar-header">
 
-          <img src="images/logo/delft3d-gt-background.svg" alt="logo" id="bgimage"/>
           <a href="/" class="navbar-brand">
             <img src="images/logo/delft3d-gt-logo.svg" alt="logo" id="logoimage"/> Global Tide and Surge Model
           </a>
@@ -25,7 +24,7 @@
           <ul class="nav navbar-nav navbar-left">
             <li :class="{'active': $route.path === '/'}"><a href="#" title="Create scenario">Database</a></li>
             <li :class="{'active': $route.path.startsWith('/scenarios/create') }"><a v-link="{ path: '/scenarios/create'}" title="Create scenario">Scenario builder</a></li>
-            <li><a href="docs/User_Manual_Delft3D-Geological_Tool.pdf" title="Download Manual" target="_blank" class="disabled">Manual</a></li>
+            <li><a href="" title="Download Manual" target="_blank" class="disabled">Manual</a></li>
           </ul>
 
           <user-details></user-details>
