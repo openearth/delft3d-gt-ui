@@ -125,8 +125,8 @@
         store.state.activeModelContainer = {"data": {}};
         modelDetails.isRunning.should.equal(false);
 
-        store.state.activeModelContainer = {"data": {"state": "Running"}};
-        modelDetails.isRunning.should.equal(false);  // it checks whether the string is exactly as below
+        store.state.activeModelContainer = {"data": {"state": "Finished"}};
+        modelDetails.isRunning.should.equal(false);
 
         store.state.activeModelContainer = {"data": {"state": "Running simulation"}};
         modelDetails.isRunning.should.equal(true);

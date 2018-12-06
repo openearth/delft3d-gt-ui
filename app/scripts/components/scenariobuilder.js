@@ -323,6 +323,9 @@ var exports = (function() {
               } else {
                 // just set it (first item)
                 variable.value = _.get(parameters[variable.id].values, 0);
+                if (variable.id === "bbox") {
+                  store.setbbox(variable.value);
+                }
               }
 
             }

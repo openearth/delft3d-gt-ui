@@ -16,26 +16,21 @@ var exports = (function () {
         }
       };
     },
-    computed: {
-      bbox: {
-        get () {
-          return store.state.bbox;
-        },
-        set (bbox) {
-          this.map.fitBounds([[
-              bbox[0],
-              bbox[1]
-          ], [
-              bbox[2],
-              bbox[3]
-          ]]);
+
+    watch: {
+      $route (to) {
+        if (to.name === "scenarios-create") {
+          console.log(store.state.bbox);
+          this.setbbox(store.state.bbox);
         }
       }
     },
+
     methods: {
-      getbbox: function() {
+      getbbox() {
         // Get the bounding box of the current map view
         var bounds = this.map.getBounds();
+
         var bbox = {
           "latmin": bounds.getWest().toFixed(4),
           "lonmin": bounds.getSouth().toFixed(4),
@@ -45,6 +40,25 @@ var exports = (function () {
 
         return bbox;
       },
+
+      setbbox(bbox) {
+        this.map.fitBounds([[
+            bbox[0],
+            bbox[1]
+        ], [
+            bbox[2],
+            bbox[3]
+        ]]);
+      },
+
+      initialBbox() {
+        this.map.setZoom(1);
+        this.map.setCenter([0, 0]);
+        var bbox = this.getbbox();
+
+        store.setbbox([bbox.latmin, bbox.lonmin, bbox.latmax, bbox.lonmax]);
+      },
+
       setSelection(bbox) {
         var features = this.map.queryRenderedFeatures(bbox).filter(x => (x.layer.id === "locations"));
         var insiderect = features.filter(x => {
@@ -91,9 +105,11 @@ var exports = (function () {
       });
 
       this.map.on("load", () => {
-        var bbox = this.getbbox();
-
-        store.setbbox([bbox.latmin, bbox.lonmin, bbox.latmax, bbox.lonmax]);
+        if(this.$route.path === "/scenarios/create") {
+          this.initialBbox();
+        } else {
+          this.setbbox(store.state.bbox);
+        }
 
         // Add geojson with locations to the map
         this.map.addLayer({
@@ -144,12 +160,12 @@ var exports = (function () {
           this.popup.remove();
         });
 
-        // When zoomed in beyond zoom level 8, enable the bbox button
         this.map.on("moveend", () => {
-          // if (this.map.getZoom() > 8) {
           var bboxvar = this.getbbox();
 
           this.setSelection(bboxvar);
+
+          // If less than X locations are within view, set bounding box
           if(this.selection.features.length < 200) {
             this.map.getSource("selection").setData(this.selection);
             store.setbbox([bboxvar.latmin, bboxvar.lonmin, bboxvar.latmax, bboxvar.lonmax]);

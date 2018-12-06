@@ -157,9 +157,8 @@
                                 todayHighlight
                                 >
                                   <input
-                                  class="form-control"
+                                  class="form-control date"
                                   v-model="variable.value"
-                                  :disabled="variable.disabled"
                                   :field="getId(variable)"
                                   name="field"
                                   v-validate="variable.validators"
@@ -178,10 +177,8 @@
                               type="text"
                               :id="variable.id"
                               class="form-control"
-                              :disabled="variable.disabled"
                               :field="getId(variable)"
                               v-model="variable.value"
-                              :default="variable.value"
                               :value="bbox"
                               v-validate="variable.validations"
                               readonly
@@ -320,9 +317,7 @@
               </validator>
 
             </div>
-
           </div>
-
         </div>
 
 
@@ -350,7 +345,7 @@
               <!-- template details -->
               <div class="panel-body text-center">
                 <map-component
-                  v-if="template.name==='GTSM world template'"
+                  v-show="template.name==='GTSM world template'"
                 >
                 </map-component>
                 <img

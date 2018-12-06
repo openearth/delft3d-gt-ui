@@ -142,6 +142,15 @@ dt {
     height: 100%;
   }
 
+  .modal-dialog {
+    left: 0;
+  }
+
+  .modal-open {
+    padding-right: 0px !important;
+    margin: 0 !important;
+  }
+
   .login-body {
     .panel {
       left: 50%;
