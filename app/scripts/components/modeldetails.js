@@ -77,7 +77,7 @@ var exports = (function () {
       isRunning: {
         cache: false,
         get: function () {
-          return _.get(this.activeModel, "data.state", "") === "Running simulation";
+          return _.get(this.activeModel, "data.state", "").includes("Running");
         }
       },
       isFinished: {

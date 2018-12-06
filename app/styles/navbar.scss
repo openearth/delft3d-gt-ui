@@ -2,7 +2,6 @@
 @-moz-keyframes spin {
   95% { -moz-transform: rotate(380deg); }
   100% { -moz-transform: rotate(360deg); display: block;}
-
 }
 @-webkit-keyframes spin {
   95% { -webkit-transform: rotate(380deg); }
@@ -11,11 +10,15 @@
 @keyframes spin {
   95% { -webkit-transform: rotate(380deg); transform:rotate(380deg); }
   100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); display: block; }
-
 }
 
 .navbar-static-top {
   border-width: 0 0 0px;
+}
+
+.disabled {
+  pointer-events: none;
+  cursor: default;
 }
 
 .navbar {
