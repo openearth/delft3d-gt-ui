@@ -135,6 +135,23 @@
       });
     });
 
+    // ***************************************************************************** getEntrypoints
+
+    describe(".getEntrypoints", function() {
+      it("", function() {
+        store.state.activeModelContainer = undefined;
+        modelDetails.isRunning.should.equal(false);
+
+        store.state.activeModelContainer = {"notdata": {}};
+        modelDetails.isRunning.should.equal(false);
+        //
+        store.state.activeModelContainer = {"data": {"entrypoints": ["test1", "test2"]}};
+        modelDetails.isRunning.should.equal(["test1", "test2"]);
+
+        store.state.activeModelContainer = undefined;
+      });
+    });
+
     // ***************************************************************************** isFinished
 
     describe(".isFinished", function() {
