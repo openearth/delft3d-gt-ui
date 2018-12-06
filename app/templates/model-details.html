@@ -128,34 +128,20 @@
               <span class="btn-label"><i class="fa fa-fw fa-fast-backward" aria-hidden="true"></i></span>
               Reset
             </button>&nbsp;
-            <!-- <button
-                    type="button"
-                    v-on:click="redoModel"
-                    class="btn btn-labeled btn-spaced-right" id="simulation-control-redo"
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    :class="[(isReadOnly || !isFinished || outdated == false) ? 'disabled' : 'btn-info']"
-                    :disabled="(isReadOnly || !isFinished || outdated == false)"
-                    :data-original-title="(outdated == false) ? 'no updates available' : getActiveModelData('outdated_workflow')"
-                    >
-              <span class="btn-label"><i class="fa fa-fw fa-level-up" aria-hidden="true"></i></span>
-              Update
-            </button>&nbsp; -->
             <div class="btn-group">
               <a class="btn btn-primary dropdown-toggle"
-                :class="[(isReadOnly || !isFinished) ? 'disabled' : 'btn-warning']"
+                :class="'btn-warning'"
                 data-toggle="dropdown"
                 href="#"
-                :data-original-title="(outdated == false) ? 'no updates available' : getActiveModelData('outdated_workflow')"
                 :disabled="(isReadOnly || !isFinished || outdated == false)"
-
+                :data-original-title="(outdated == false) ? 'no updates available' : getActiveModelData('outdated_workflow')"
                 >
                 <span class="btn-label"><i class="fa fa-fw fa-level-up" aria-hidden="true"></i></span>
                 Update
                 <span class="caret"></span>
               </a>
-              <ul class="dropdown-menu" >
-                <li v-for="entrypoint in entrypoints"><a @click="redoModel(entrypoint)" href="#">{{entrypoint}}</a></li>
+              <ul class="dropdown-menu" :disabled="(isReadOnly || !isFinished || outdated == false)">
+                <li v-for="entrypoint in getEntrypoints"><a @click="redoModel(entrypoint)" href="#">{{entrypoint}}</a></li>
               </ul>
             </div>&nbsp;
             <button type="button"

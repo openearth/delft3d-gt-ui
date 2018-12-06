@@ -283,22 +283,22 @@ var exports = (function() {
           });
       });
     },
-    redoModel: function (modelContainer, entrypoints) {
-      console.log("/api/v1/scenes/" + modelContainer.id + "/reset/", entrypoints);
-      return;
-      // return new Promise((resolve, reject) => {
-      //   if (modelContainer === undefined || modelContainer.id === undefined) {
-      //     return reject("No model id to redo");
-      //   }
-      //   modelContainer.data.state = "Queued";
-      //   $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/redo/", method: "PUT", traditional: true, dataType: "json"})
-      //     .done(function(data) {
-      //       resolve(data);
-      //     })
-      //     .fail(function(jqXhr) {
-      //       reject(jqXhr);
-      //     });
-      // });
+    redoModel: function (modelContainer, entrypoint) {
+      var body = {"entrypoint": entrypoint};
+
+      return new Promise((resolve, reject) => {
+        if (modelContainer === undefined || modelContainer.id === undefined) {
+          return reject("No model id to redo");
+        }
+        modelContainer.data.state = "Queued";
+        $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/redo/", method: "PUT", traditional: true, dataType: "json", data: body})
+          .done(function(data) {
+            resolve(data);
+          })
+          .fail(function(jqXhr) {
+            reject(jqXhr);
+          });
+      });
     },
 
     startModel: function (modelContainer) {

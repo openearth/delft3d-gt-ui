@@ -140,13 +140,13 @@
     describe(".getEntrypoints", function() {
       it("", function() {
         store.state.activeModelContainer = undefined;
-        modelDetails.isRunning.should.equal(false);
+        modelDetails.getEntrypoints.should.equal(false);
 
         store.state.activeModelContainer = {"notdata": {}};
-        modelDetails.isRunning.should.equal(false);
+        modelDetails.getEntrypoints.should.equal(false);
         //
-        store.state.activeModelContainer = {"data": {"entrypoints": ["test1", "test2"]}};
-        modelDetails.isRunning.should.equal(["test1", "test2"]);
+        store.state.activeModelContainer = {"data": {"entrypoints": ["gtsm-main"]}};
+        modelDetails.getEntrypoints.should.eql(["gtsm-main"]);
 
         store.state.activeModelContainer = undefined;
       });
