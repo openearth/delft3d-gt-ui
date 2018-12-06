@@ -166,7 +166,7 @@ var exports = (function () {
           this.setSelection(bboxvar);
 
           // If less than 10 locations are within view, set bounding box
-          if(this.selection.features.length < 10) {
+          if(this.selection.features.length < 200) {
             this.map.getSource("selection").setData(this.selection);
             store.setbbox([bboxvar.latmin, bboxvar.lonmin, bboxvar.latmax, bboxvar.lonmax]);
             store.setbboxvalidation(true);
