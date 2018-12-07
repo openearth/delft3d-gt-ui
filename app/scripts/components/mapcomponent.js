@@ -21,8 +21,8 @@ var exports = (function () {
     watch: {
       $route (to) {
         if (to.name === "scenarios-create") {
-          console.log(store.state.bbox);
           this.setbbox(store.state.bbox);
+          this.fixate = false;
         }
       }
     },
@@ -51,6 +51,7 @@ var exports = (function () {
             bbox[3]
         ]]);
       },
+
       setMapBbox(bbox) {
         var bbox = store.state.bbox
         this.map.getSource("boundingbox").setData({
@@ -68,6 +69,7 @@ var exports = (function () {
         this.map.setZoom(1);
         this.map.setCenter([0, 0]);
         var bbox = this.getbbox();
+        this.$parent.validbbox = false;
         store.setbbox([bbox.latmin, bbox.lonmin, bbox.latmax, bbox.lonmax]);
         if(this.map.getSource("boundingbox") !== undefined){
           this.map.getSource("boundingbox").setData({
