@@ -1,15 +1,18 @@
 @import 'variables';
 @-moz-keyframes spin {
-  95% { -moz-transform: rotate(380deg); }
-  100% { -moz-transform: rotate(360deg); display: block;}
+  0% {width: 0; height: 0; left: 0px; }
+  95% { -moz-transform: rotate(380deg); width: 51px; height: 51px; }
+  100% { -moz-transform: rotate(360deg); }
 }
 @-webkit-keyframes spin {
-  95% { -webkit-transform: rotate(380deg); }
-  100% { -webkit-transform: rotate(360deg); display: block;}
+  0% {width: 0; height: 0; left: 0px; }
+  95% { -webkit-transform: rotate(380deg); width: 51px; height: 51px; }
+  100% { -webkit-transform: rotate(360deg); }
 }
 @keyframes spin {
-  95% { -webkit-transform: rotate(380deg); transform:rotate(380deg); }
-  100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); display: block; }
+  0% {width: 0; height: 0; left: 0px; }
+  95% { transform: rotate(380deg); width: 51px; height: 51px;}
+  100% { transform: rotate(360deg); }
 }
 
 .navbar-static-top {
@@ -35,15 +38,10 @@
     width: 51px;
     margin: -15px 15px 15px -15px;
     z-index: 1;
-    -webkit-animation-name: spin;
-    -webkit-animation-duration: 4s;
-    -webkit-animation-timing-function: ease-in;
-    -moz-animation-name: spin;
-    -moz-animation-duration: 4s;
-    -moz-animation-timing-function: ease-in;
-    animation-name: spin;
-    animation-duration: 4s;
-    animation-timing-function: ease-in;
+    -webkit-animation: sping 4s ease-in;
+    -moz-animation: spin 4s ease-in;
+    animation: spin 4s ease-in;
+    min-width: 51px;
   }
 
   &.navbar-default .active > a,
@@ -55,14 +53,25 @@
   .navbar-brand {
     font-size: 1em;
   }
-
 }
 
 @media (min-width: $screen-xs-sm) {
   .navbar {
     a.navbar-brand {
       font-size: 18px;
+      color: $col-bw-6;
     }
+    a.navbar-brand:hover {
+      color: $col-bw-4;
+    }
+  }
+
+  .navbar-inverse .navbar-nav > li > a {
+    color: $col-bw-6;
+  }
+
+  .navbar-inverse .navbar-nav > li > a:hover {
+    color: $col-bw-4;
   }
 
   .navbar-collapse {
