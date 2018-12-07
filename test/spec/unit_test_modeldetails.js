@@ -135,6 +135,23 @@
       });
     });
 
+    // ***************************************************************************** getEntrypoints
+
+    describe(".getEntrypoints", function() {
+      it("", function() {
+        store.state.activeModelContainer = undefined;
+        modelDetails.getEntrypoints.should.equal(false);
+
+        store.state.activeModelContainer = {"notdata": {}};
+        modelDetails.getEntrypoints.should.equal(false);
+        //
+        store.state.activeModelContainer = {"data": {"entrypoints": ["gtsm-main"]}};
+        modelDetails.getEntrypoints.should.eql(["gtsm-main"]);
+
+        store.state.activeModelContainer = undefined;
+      });
+    });
+
     // ***************************************************************************** isFinished
 
     describe(".isFinished", function() {

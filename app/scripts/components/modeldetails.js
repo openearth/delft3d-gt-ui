@@ -21,7 +21,8 @@ var exports = (function () {
           "export_thirdparty": false
         },
         viewerActive: false,
-        model: "GTSM"
+        model: "GTSM",
+        selectedUpdate: ""
       };
     },
     computed: {
@@ -59,6 +60,18 @@ var exports = (function () {
         cache: false,
         get: function () {
           return _.get(this.activeModel, "data.shared", "p") !== "p";
+        }
+      },
+      getEntrypoints: {
+        cache: false,
+        get: function () {
+          var entrypoints = _.get(this.activeModel, "data.entrypoints", "");
+
+          if(entrypoints.length > 0) {
+            return entrypoints;
+          } else {
+            return false;
+          }
         }
       },
       isIdle: {
@@ -235,12 +248,12 @@ var exports = (function () {
         // Show the dialog:
         this.resetDialog.show();
       },
-      redoModel: function () {
+      redoModel: function (entrypoint) {
         // Get a confirm dialog
         this.resetDialog = getDialog(this, "confirm-dialog", "redo");
 
         this.resetDialog.onConfirm = function() {
-          store.redoModel(this.activeModel);
+          store.redoModel(this.activeModel, entrypoint);
           this.resetDialog.hide();
         }.bind(this);
 

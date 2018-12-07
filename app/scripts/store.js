@@ -283,14 +283,15 @@ var exports = (function() {
           });
       });
     },
+    redoModel: function (modelContainer, entrypoint) {
+      var body = {"entrypoint": entrypoint};
 
-    redoModel: function (modelContainer) {
       return new Promise((resolve, reject) => {
         if (modelContainer === undefined || modelContainer.id === undefined) {
           return reject("No model id to redo");
         }
         modelContainer.data.state = "Queued";
-        $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/redo/", method: "PUT", traditional: true, dataType: "json"})
+        $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/redo/", method: "PUT", traditional: true, dataType: "json", data: body})
           .done(function(data) {
             resolve(data);
           })
