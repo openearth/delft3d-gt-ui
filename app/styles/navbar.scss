@@ -1,18 +1,18 @@
 @import 'variables';
 @-moz-keyframes spin {
   0% {width: 0; height: 0; left: 0px; }
-  90% { -moz-transform: rotate(380deg); width: 51px; height: 51px; : 5px;}
-  100% { -moz-transform: rotate(360deg); display: block; top: 0px; }
+  95% { -moz-transform: rotate(380deg); width: 51px; height: 51px; }
+  100% { -moz-transform: rotate(360deg); }
 }
 @-webkit-keyframes spin {
   0% {width: 0; height: 0; left: 0px; }
-  90% { -webkit-transform: rotate(380deg); width: 51px; height: 51px; }
-  100% { -webkit-transform: rotate(360deg); display: block; top: 0px; }
+  95% { -webkit-transform: rotate(380deg); width: 51px; height: 51px; }
+  100% { -webkit-transform: rotate(360deg); }
 }
 @keyframes spin {
   0% {width: 0; height: 0; left: 0px; }
-  90% { transform: rotate(380deg); width: 51px; height: 51px; left: 5px;}
-  100% { transform: rotate(360deg); display: block; top: 0px; }
+  95% { transform: rotate(380deg); width: 51px; height: 51px;}
+  100% { transform: rotate(360deg); }
 }
 
 .navbar-static-top {
