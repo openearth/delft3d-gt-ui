@@ -52,8 +52,9 @@ var exports = (function () {
         ]]);
       },
 
-      setMapBbox(bbox) {
-        var bbox = store.state.bbox
+      setMapBbox() {
+        var bbox = store.state.bbox;
+
         this.map.getSource("boundingbox").setData({
           "type": "LineString",
           "coordinates": [
@@ -62,29 +63,29 @@ var exports = (function () {
             [bbox[2], bbox[3]],
             [bbox[0], bbox[3]],
             [bbox[0], bbox[1]]
-        ]})
+        ]});
       },
       initialBbox() {
-        console.log('initializing')
         this.map.setZoom(1);
         this.map.setCenter([0, 0]);
         var bbox = this.getbbox();
+
         this.$parent.validbbox = false;
         store.setbbox([bbox.latmin, bbox.lonmin, bbox.latmax, bbox.lonmax]);
-        if(this.map.getSource("boundingbox") !== undefined){
+        if(this.map.getSource("boundingbox") !== undefined) {
           this.map.getSource("boundingbox").setData({
               "type": "LineString",
               "coordinates": []
             }
-          )
-        };
-        if(this.map.getSource("selection") !== undefined){
+          );
+        }
+        if(this.map.getSource("selection") !== undefined) {
           this.map.getSource("selection").setData({
               "type": "LineString",
               "coordinates": []
             }
-          )
-        };
+          );
+        }
         this.fixate = false;
       },
 
@@ -215,7 +216,7 @@ var exports = (function () {
             this.map.getSource("selection").setData(this.selection);
             store.setbbox([bboxvar.latmin, bboxvar.lonmin, bboxvar.latmax, bboxvar.lonmax]);
             store.setbboxvalidation(true);
-            this.setMapBbox()
+            this.setMapBbox();
           }
         });
       });
