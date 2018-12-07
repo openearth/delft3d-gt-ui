@@ -74,6 +74,10 @@
     color: $col-bw-4;
   }
 
+  .navbar-inverse .navbar-nav > li > a.disabled {
+    color: $col-bw-7;
+  }
+
   .navbar-collapse {
     .navbar-nav.navbar-left{
       &:first-child {
