@@ -34,28 +34,20 @@
                 </span>
               </button>
 
-              <!-- <button type="button" class="btn btn-primary" v-on:click="previousImageFrame('channel_network_images')">
+              <button type="button" class="btn btn-primary" v-on:click="previousImageFrame()">
                 <span class="glyphicon glyphicon-backward">
                 </span>
               </button>
-              <button type="button" class="btn btn-primary" v-if="isAnimating" v-on:click="stopImageFrame('channel_network_images')">
+              <button type="button" class="btn btn-primary" v-if="isAnimating" v-on:click="stopImageFrame()">
                 <span class="glyphicon glyphicon-stop">
                 </span>
               </button>
-              <button class="btn btn-primary" v-if="isAnimating == false" v-on:click="playImageFrame('channel_network_images')">
+              <button class="btn btn-primary" v-if="isAnimating == false" v-on:click="playImageFrame()">
                 <span class="glyphicon glyphicon-play">
                 </span>
               </button>
-              <button type="button" class="btn btn-primary" v-on:click="nextImageFrame('channel_network_images')">
-                <span class="glyphicon glyphicon-forward">
-                </span>
-              </button> -->
-              <button type="button" class="btn btn-primary" v-on:click="nextImageFrame('waterlevel_id_images')">
-                <span class="glyphicon glyphicon-forward">
-                </span>
-              </button>
 
-              <button type="button" class="btn btn-primary" v-on:click="nextImageFrame('map_waterlevel_images')">
+              <button type="button" class="btn btn-primary" v-on:click="nextImageFrame()">
                 <span class="glyphicon glyphicon-forward">
                 </span>
               </button>
