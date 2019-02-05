@@ -16,17 +16,17 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
-          </button>
+          </button> -->
 
         </div>
 
-        <div id="navbar" class="collapse navbar-collapse"> -->
+        <div id="navbar" class="collapse navbar-collapse">
 
-          <!-- <ul class="nav navbar-nav navbar-left">
-            <li><router-link to="/" title="Create scenario">Database</router-link></li>
+          <ul class="nav navbar-nav navbar-left">
+            <li :class="{'active': true}"><router-link to="/" title="Create scenario">Database</router-link></li>
             <li><router-link to="/" title="Create scenario">Scenario builder</router-link></li>
             <li><a href="docs/User_Manual_Delft3D-Geological_Tool.pdf" title="Download Manual" target="_blank">Manual</a></li>
-          </ul> -->
+          </ul>
 
           <!-- <ul class="nav navbar-nav navbar-left">
             <li :class="{'active': $route.path === '/'}"><router-link to="/" title="Create scenario">Database</router-link></li>
