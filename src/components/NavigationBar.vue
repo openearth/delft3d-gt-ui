@@ -7,24 +7,24 @@
         <div class="navbar-header">
 
           <a href="/" class="navbar-brand">
-            <img src="images/logo/delft3d-gt-logo.svg" alt="logo" id="logoimage"/>
+            <img src="../assets/images/logo/delft3d-gt-logo.svg" alt="logo" id="logoimage"/>
             Global Tide and Surge Model
           </a>
 
-          <!-- <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
-          </button> -->
+          </button>
 
         </div>
 
         <div id="navbar" class="collapse navbar-collapse">
 
           <ul class="nav navbar-nav navbar-left">
-            <li :class="{'active': true}"><router-link to="/" title="Create scenario">Database</router-link></li>
-            <li><router-link to="/" title="Create scenario">Scenario builder</router-link></li>
+            <li :class="{'active': $route.name === 'home'}"><router-link :to="{name: 'home'}" title="Create scenario">Database</router-link></li>
+            <li :class="{'active': $route.name === 'scenarios-create'}"><router-link :to="{name: 'scenarios-create'}" title="Create scenario">Scenario builder</router-link></li>
             <li><a href="docs/User_Manual_Delft3D-Geological_Tool.pdf" title="Download Manual" target="_blank">Manual</a></li>
           </ul>
 
