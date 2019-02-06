@@ -3,15 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --port 9000",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "lint:fix": "npm run lint -- --fix",
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
-    "bootstrap": "^3.3.5",
+    "bootstrap": "^4.2.1",
     "bootstrap-sass": "^3.4.0",
     "font-awesome": "^4.7.0",
+    "ion-rangeslider": "^2.3.0",
+    "jquery": "^3.3.1",
+    "moment": "^2.24.0",
     "register-service-worker": "^1.5.2",
     "vue": "^2.5.22",
     "vue-router": "^3.0.1",

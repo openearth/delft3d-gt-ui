@@ -1,0 +1,1 @@
+[{"model": "demoapp.modelrun", "pk": 95, "fields": {"name": "1", "uuid": "cbf9cc7f-70d6-4b0a-9911-236688280bf3", "status": "running", "progress": 5, "timeleft": 573891}}, {"model": "demoapp.modelrun", "pk": 96, "fields": {"name": "2", "uuid": "470700af-0494-452f-be60-a998778204b1", "status": "running", "progress": 2, "timeleft": 992722}}]

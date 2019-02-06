@@ -1,16 +1,14 @@
 <template>
   <div id="app">
-    <navigation-bar></navigation-bar>
-    <!-- <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div> -->
+    <navigation-bar>
+    </navigation-bar>
     <router-view/>
   </div>
 </template>
 
 <script>
 import NavigationBar from './components/NavigationBar'
+
 export default {
   components: {
     NavigationBar
@@ -21,5 +19,4 @@ export default {
 
 <style lang="scss">
 @import './assets/main.scss';
-
 </style>

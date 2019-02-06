@@ -5,7 +5,12 @@
 
 // it's better to include the main package
 @import "~bootstrap/dist/css/bootstrap.min.css";
-// @import "~bootstrap-sass/assets/stylesheets/bootstrap";
+$fa-font-path:"../node_modules/font-awesome/fonts";
+@import "../node_modules/font-awesome/scss/font-awesome";
+.icon-user {
+  @extend .fa;
+  @extend .fa-user;
+}// @import "~bootstrap-sass/assets/stylesheets/bootstrap";
 // @import "~font-awesome/scss/font-awesome.scss";
 
 //
