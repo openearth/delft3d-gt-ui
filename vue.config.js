@@ -8,9 +8,8 @@ module.exports = {
       '^/logout': {
         target: 'http://dl-026.xtr.deltares.nl/login/?next=/'
       },
-      '^/api/v1/': {
-        target: 'http://dl-026.xtr.deltares.nl',
-        changeOrigin: true
+      '^/api/v1/*': {
+        target: 'http://dl-026.xtr.deltares.nl'
       }
     }
   }

@@ -2,7 +2,6 @@
 <div id="template-model-details" class="model-details">
     <div v-if="(activeModel !== undefined)">
       <!-- model window for deletation -->
-
       <div class="panel panel-default">
 
         <div class="panel-heading">
@@ -15,7 +14,7 @@
             <dt>Owner of run</dt><dd>
               <span v-if="getActiveModelData('date_created') === ''">-</span>
               <span v-else>
-                <a href="mailto:{{ getActiveModelData('owner.email') }}">{{ getActiveModelData('owner.first_name') }} {{ getActiveModelData('owner.last_name') }}</a>
+                <a :href="'mailto:' + getActiveModelData(owner.email)">{{ getActiveModelData(owner.first_name) }} {{ getActiveModelData('owner.last_name') }}</a>
               </span>
             </dd>
 
@@ -70,8 +69,8 @@
                 <a class="btn btn-default btn-xs btn-output" disabled>THREDDS Data Server</a>
               </template>
               <template v-else>
-                <a class="btn btn-default btn-xs" :href="getActiveModelData('fileurl')" target="_blank" title="A link to the file server hosting all output files.">File Server</a>
-                <a class="btn btn-default btn-xs" href="/thredds/catalog/files/{{ getActiveModelData('suid') }}/simulation/catalog.html" target="_blank" title="A link to the THREDDS server hosting Delft3D NetCDF output, which allows querying via OPeNDAP.">THREDDS Data Server</a>
+                <a class="btn btn-default btn-xs" :href="getActiveModelData(fileurl)" target="_blank" title="A link to the file server hosting all output files.">File Server</a>
+                <a class="btn btn-default btn-xs" :href="'/thredds/catalog/files/'+ getActiveModelData('suid') + '/simulation/catalog.html'" target="_blank" title="A link to the THREDDS server hosting Delft3D NetCDF output, which allows querying via OPeNDAP.">THREDDS Data Server</a>
               </template>
             </dd>
           </dl>
@@ -584,7 +583,7 @@ export default {
       this.deleteDialog = getDialog(this, 'confirm-dialog', 'publish')
 
       this.deleteDialog.onConfirm = function () {
-        store.commit('publishModel', { modelContainer: this.activeModel, domain: level })
+        store.dispatch('publishModel', { modelContainer: this.activeModel, domain: level })
         this.deleteDialog.hide()
       }.bind(this)
 
@@ -599,7 +598,7 @@ export default {
       this.deleteDialog = getDialog(this, 'confirm-dialog', 'delete')
 
       this.deleteDialog.onConfirm = function () {
-        store.commit('deleteModel', this.activeModel)
+        store.dispatch('deleteModel', this.activeModel)
         this.deleteDialog.hide()
       }.bind(this)
 
@@ -614,7 +613,7 @@ export default {
       this.resetDialog = getDialog(this, 'confirm-dialog', 'reset')
 
       this.resetDialog.onConfirm = function () {
-        store.commit('resetModel'.this.activeModel)
+        store.dispatch('resetModel'.this.activeModel)
         this.resetDialog.hide()
       }.bind(this)
 
@@ -629,7 +628,7 @@ export default {
       this.resetDialog = getDialog(this, 'confirm-dialog', 'redo')
 
       this.resetDialog.onConfirm = function () {
-        store.commit('redoModel', { 'modelContainer': this.activeModel, 'entrypoint': entrypoint })
+        store.dispatch('redoModel', { 'modelContainer': this.activeModel, 'entrypoint': entrypoint })
         this.resetDialog.hide()
       }.bind(this)
 
@@ -640,10 +639,10 @@ export default {
       this.resetDialog.show()
     },
     startModel: function () {
-      store.commit('startModel', this.activeModel)
+      store.dispatch('startModel', this.activeModel)
     },
     stopModel: function () {
-      store.commit('stopModel', this.activeModel)
+      store.dispatch('stopModel', this.activeModel)
     },
     toggle: function (id, doFlag) {
       if (doFlag) {

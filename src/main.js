@@ -5,11 +5,15 @@ import './registerServiceWorker'
 import router from './router'
 import 'bootstrap/js/dist/util'
 import 'bootstrap/js/dist/dropdown'
-
+import $ from 'jquery'
 Vue.config.productionTip = false
 
 new Vue({
   store,
   router,
-  render: h => h(App)
+  render: h => h(App),
+  created () {
+    $.ajaxSetup({ cache: false })
+    console.log('app created')
+  }
 }).$mount('#app')

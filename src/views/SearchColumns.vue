@@ -18,7 +18,7 @@
 
         <div class="col-sm-5 col-md-4 col-lg-4 bordered">
           <div class="btn-text">Database (search results)</div>
-          <model-control-menu :items="items" :models="models"></model-control-menu>
+          <!-- <model-control-menu :items="items" :models="models"></model-control-menu> -->
         </div>
 
         <div class="col-sm-5 col-md-6 col-lg-6">
@@ -45,13 +45,13 @@
               <button type="button" class="btn btn-default" id="btn-reset-search-form" v-on:click="resetFields">Reset</button>
             </div>
           </div>
-          <search-details></search-details>
+          <!-- <search-details></search-details> -->
         </div>
 
         <div class="col-sm-5 col-md-4 col-lg-4 column full-height bordered scrollable">
           <div class="visible-xs-block">
             <span class="btn-text">Database</span>
-            <model-control-menu :items="items" :models="models"></model-control-menu>
+            <!-- <model-control-menu :items="items" :models="models"></model-control-menu> -->
           </div>
           <search-list :items="items" :models="models" ref="search-list"></search-list>
         </div>
@@ -63,7 +63,7 @@
               <i class="fa" :class="[(collapseDetailsShow)? 'fa-arrow-down' : 'fa-arrow-up']" aria-hidden="true"></i>
             </button>
           </div>
-          <model-details></model-details>
+          <!-- <model-details></model-details> -->
         </div>
 
       </div>
@@ -76,10 +76,12 @@
 import SearchDetails from '../components/SearchDetails'
 import SearchList from '../components/SearchList'
 import ModelDetails from './ModelDetails'
-import ModelControlMenu from '../components/ModelControlMenu'
+// import ModelControlMenu from '../components/ModelControlMenu'
 import $ from 'jquery'
+import store from '../store.js'
 
 export default {
+  store,
   template: '#template-search-columns',
   data: function () {
     return {
@@ -93,22 +95,20 @@ export default {
   components: {
     'search-details': SearchDetails,
     'search-list': SearchList,
-    'model-details': ModelDetails,
-    'model-control-menu': ModelControlMenu
+    'model-details': ModelDetails
+    // 'model-control-menu': ModelControlMenu
   },
   mounted () {
+    store.dispatch('startSync')
+    console.log('search columns mounted')
+    this.$emit('updateSearch')
+
     // TODO, consistent naming
     this.$on('items-found', function (items, models) {
+      console.log('search columns, items-found', items, models)
       this.set('items', items)
       this.set('models', models)
     })
-  },
-  route: {
-    data: function (transition) {
-      // Refresh data immediatly if user gets here.
-      this.$broadcast('updateSearch')
-      transition.next()
-    }
   },
 
   computed: {
@@ -159,7 +159,7 @@ export default {
         })
       })
 
-      this.$broadcast('clearSearch')
+      this.$emit('clearSearch')
     }
 
   }
@@ -170,9 +170,9 @@ export default {
 @import '../assets/variables.scss';
 
 .search-columns {
-  margin-top: -50px;
   padding-bottom: (50px + $padding);
   padding-top: 50px;
+  height: 100vh;
   position: relative;  // needs to be relative for the DateTimePicker.js widget
 
   .action-bar {
