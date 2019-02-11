@@ -3,7 +3,10 @@ import Vuex from 'vuex'
 import $ from 'jquery'
 import _ from 'lodash'
 
+import startSync from './actions/startSync'
+import stopSync from './actions/stopSync'
 import update from './actions/update'
+import updateUser from './actions/updateUser'
 
 Vue.use(Vuex)
 
@@ -37,37 +40,10 @@ export default new Vuex.Store({
   actions: {
 
     // ================================ SYNCHRONISATION
-
-    startSync (context) {
-      // var x = 0
-      // var intervalID = setInterval(() => {
-      //   this.dispatch('update')
-      //   // Your logic here
-      //
-      //   if (++x === 5) {
-      //     window.clearInterval(intervalID)
-      //   }
-      // }, )
-      console.log('startSync, checking updateInterval', this.state.updateInterval)
-      this.interval = setInterval(() => { this.dispatch('update') }, this.state.updateInterval)
-    },
-
-    stopSync (context) {
-      clearInterval(this.interval)
-      this.interval = null
-    },
-
+    startSync,
+    stopSync,
     update,
-
-    updateUser (context) {
-      this.dispatch('fetchUser').then((json) => {
-        this.state.user = json
-      })
-        .catch((jqXhr) => {
-          this.state.failedUpdate(jqXhr)
-          this.state.updating = false
-        })
-    },
+    updateUser,
 
     // ================================ API FETCH CALLS
     fetchModelDetails (context) {

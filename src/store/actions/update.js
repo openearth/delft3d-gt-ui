@@ -1,28 +1,30 @@
-export default function update (context) {
-  if (context.state.updating) {
+import _ from 'lodash'
+
+export default function update (store) {
+  if (store.state.updating) {
     return
   }
-  context.state.updating = true
+  store.state.updating = true
   Promise.all([
-    context.dispatch('fetchModels'),
-    context.dispatch('fetchScenarios'),
-    context.dispatch('fetchModelDetails')
+    store.dispatch('fetchModels'),
+    store.dispatch('fetchScenarios'),
+    store.dispatch('fetchModelDetails')
   ])
     .then((jsons) => {
-      context.state.models = jsons[0] // Array of Models
-      context.state.scenarios = jsons[1] // Array of Scenes
+      store.state.models = jsons[0] // Array of Models
+      store.state.scenarios = jsons[1] // Array of Scenes
 
-      context.state.models = _.map(context.state.models, (m) => {
+      store.state.models = _.map(store.state.models, (m) => {
         let modelDetails = jsons[2] // Dictionary of Model Details
 
         return (m.id === modelDetails.id) ? modelDetails : m
       })
 
-      context.dispatch('updateContainers')
-      context.state.updating = false
+      store.dispatch('updateContainers')
+      store.state.updating = false
     })
     .catch((jqXhr) => {
-      context.state.failedUpdate(jqXhr)
-      context.state.updating = false
+      store.state.failedUpdate(jqXhr)
+      store.state.updating = false
     })
 }
