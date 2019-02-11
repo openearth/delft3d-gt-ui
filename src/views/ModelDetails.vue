@@ -373,7 +373,7 @@
 <script>
 import $ from 'jquery'
 import _ from 'lodash'
-import store from '../store.js'
+import store from '../store'
 import ImageAnimation from '../components/ImageAnimation'
 import ConfirmDialog from '../components/ConfirmDialog'
 // import Viewer3DComponent from '../components/Viewer3DComponent'

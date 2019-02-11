@@ -204,7 +204,7 @@
 </template>
 
 <script>
-import store from '../store.js'
+import store from '../store'
 import $ from 'jquery'
 import _ from 'lodash'
 import moment from 'moment'

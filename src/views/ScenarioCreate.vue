@@ -348,7 +348,7 @@
 <script>
 import $ from 'jquery'
 import _ from 'lodash'
-import store from '../store.js'
+import store from '../store'
 import {
   fetchTemplates
 } from '../templates.js'

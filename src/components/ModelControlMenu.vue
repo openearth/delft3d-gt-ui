@@ -128,7 +128,7 @@
 </template>
 
 <script>
-import store from '../store.js'
+import store from '../store'
 import _ from 'lodash'
 import $ from 'jquery'
 import ConfirmDialog from './ConfirmDialog'

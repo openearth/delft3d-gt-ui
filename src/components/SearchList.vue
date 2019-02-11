@@ -24,7 +24,7 @@
 
 <script>
 import _ from 'lodash'
-import store from '../store.js'
+import store from '../store'
 import ScenarioCard from '../components/ScenarioCard'
 import ModelCard from '../components/ModelCard'
 import {
