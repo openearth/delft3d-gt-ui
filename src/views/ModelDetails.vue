@@ -344,7 +344,7 @@
 
       <confirm-dialog dialog-id="delete" confirm-button-title="Delete">
         <template slot="title">
-          Remove model '{{ getActiveModelData('name') }}'?
+          Remove model '{{ getActiveModelData('name').join().replace(/,/g, '') }}'?
         </template>
         <template slot="body">
           <p>Are you sure you want to remove this model? This action cannot be undone.</p>
@@ -583,64 +583,88 @@ export default {
       return (Object.keys(_.get(this.activeModel, 'data.info.postprocess_output', {})).length > 0)
     },
     publishModel: function (level) {
-      // Get a confirm dialog
+      console.log('publishmodel')
       this.deleteDialog = getDialog(this, 'confirm-dialog', 'publish')
 
-      this.deleteDialog.onConfirm = function () {
-        store.dispatch('publishModel', { modelContainer: this.activeModel, domain: level })
-        this.deleteDialog.hide()
-      }.bind(this)
-
-      // We also show an extra warning in the dialog, if user chooses to remove additional files.
-      this.deleteDialog.showAlert(false)
-
-      // Show the dialog:
-      this.deleteDialog.show()
+      $('#publish-dialog').modal("show")
+      this.deleteDialog.onConfirm = () => {
+          store.dispatch('publishModel', { modelContainer: this.activeModel, domain: level })
+        $('#publish-dialog').modal('hide')
+      }
+      // // Get a confirm dialog
+      // this.deleteDialog = getDialog(this, 'confirm-dialog', 'publish')
+      //
+      // this.deleteDialog.onConfirm = function () {
+      //   store.dispatch('publishModel', { modelContainer: this.activeModel, domain: level })
+      //   this.deleteDialog.hide()
+      // }.bind(this)
+      //
+      // // We also show an extra warning in the dialog, if user chooses to remove additional files.
+      // this.deleteDialog.showAlert(false)
+      //
+      // // Show the dialog:
+      // this.deleteDialog.show()
     },
     removeModel: function () {
       // Get a confirm dialog
       this.deleteDialog = getDialog(this, 'confirm-dialog', 'delete')
-
-      this.deleteDialog.onConfirm = function () {
+      console.log('removemodel')
+      $('#delete-dialog').modal("show")
+      this.deleteDialog.onConfirm = () => {
+        console.log('delete-dialog on confirm')
         store.dispatch('deleteModel', this.activeModel)
-        this.deleteDialog.hide()
-      }.bind(this)
+        $('#delete-dialog').modal('hide')
+      }
 
       // We also show an extra warning in the dialog, if user chooses to remove additional files.
-      this.deleteDialog.showAlert(false)
-
-      // Show the dialog:
-      this.deleteDialog.show()
+      // this.deleteDialog.showAlert(false)
+      //
+      // // Show the dialog:
+      // this.deleteDialog.show()
     },
     resetModel: function () {
-      // Get a confirm dialog
+      console.log('resetmodel')
       this.resetDialog = getDialog(this, 'confirm-dialog', 'reset')
 
-      this.resetDialog.onConfirm = function () {
-        store.dispatch('resetModel'.this.activeModel)
-        this.resetDialog.hide()
-      }.bind(this)
-
-      // We also show an extra warning in the dialog, if user chooses to remove additional files.
-      this.resetDialog.showAlert(false)
-
-      // Show the dialog:
-      this.resetDialog.show()
+      $('#reset-dialog').modal("show")
+      this.resetDialog .onConfirm = () => {
+          store.dispatch('resetModel'.this.activeModel)
+        $('#reset-dialog').modal('hide')
+      }
+      // Get a confirm dialog
+      //
+      // this.resetDialog.onConfirm = function () {
+      //   store.dispatch('resetModel'.this.activeModel)
+      //   this.resetDialog.hide()
+      // }.bind(this)
+      //
+      // // We also show an extra warning in the dialog, if user chooses to remove additional files.
+      // this.resetDialog.showAlert(false)
+      //
+      // // Show the dialog:
+      // this.resetDialog.show()
     },
     redoModel: function (entrypoint) {
-      // Get a confirm dialog
+      console.log('redomodel')
       this.resetDialog = getDialog(this, 'confirm-dialog', 'redo')
 
-      this.resetDialog.onConfirm = function () {
+      $('#redo-dialog').modal("show")
+      this.resetDialog.onConfirm = () => {
         store.dispatch('redoModel', { 'modelContainer': this.activeModel, 'entrypoint': entrypoint })
-        this.resetDialog.hide()
-      }.bind(this)
-
-      // We also show an extra warning in the dialog, if user chooses to remove additional files.
-      this.resetDialog.showAlert(false)
-
-      // Show the dialog:
-      this.resetDialog.show()
+        $('#redo-dialog').modal('hide')
+      }
+      // Get a confirm dialog
+      //
+      // this.resetDialog.onConfirm = function () {
+      //   store.dispatch('redoModel', { 'modelContainer': this.activeModel, 'entrypoint': entrypoint })
+      //   this.resetDialog.hide()
+      // }.bind(this)
+      //
+      // // We also show an extra warning in the dialog, if user chooses to remove additional files.
+      // this.resetDialog.showAlert(false)
+      //
+      // // Show the dialog:
+      // this.resetDialog.show()
     },
     startModel: function () {
       store.dispatch('startModel', this.activeModel)
