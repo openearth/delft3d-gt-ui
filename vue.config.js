@@ -1,15 +1,19 @@
+const argv = require('yargs').argv
+
+const apiServer = argv.apiServer || 'http://dl-ng004.xtr.deltares.nl'
+
 module.exports = {
   devServer: {
     port: 9000,
     proxy: {
       '^/login': {
-        target: 'http://dl-026.xtr.deltares.nl/login/?next=/'
+        target: `${apiServer}/login/?next=/`
       },
       '^/logout': {
-        target: 'http://dl-026.xtr.deltares.nl/login/?next=/'
+        target: `${apiServer}/login/?next=/`
       },
       '^/api/v1/*': {
-        target: 'http://dl-026.xtr.deltares.nl'
+        target: `${apiServer}`
       }
     }
   }
