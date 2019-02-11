@@ -17,7 +17,7 @@
               <div class="form-group ">
                 <label for="select-template">Select a template</label>
                 <select class="combobox form-control" v-model="template" id="select-template" :onchange="selectTemplate(template)">
-                  <option v-for="template in availableTemplates" :value="template" :key="template">
+                  <option v-for="(template, index) in availableTemplates" :value="template" :key="index">
                     {{ template.name }}
                   </option>
                   <option value="" disabled>
@@ -33,7 +33,7 @@
           <div v-if="template && dataLoaded">
             <div>
               <form novalidate>
-                <div v-for="section in scenarioConfig.sections" :key="section">
+                <div v-for="(section, index) in scenarioConfig.sections" :key="index">
                   <div class="panel panel-default">
 
                     <div class="panel-heading">
@@ -74,7 +74,7 @@
                         </div>
                       </template>
                       <!-- =====  DUMMY FEATURES END  ===== -->
-                      <div class="form-group" v-for="variable in section.variables" :key="variable">
+                      <div class="form-group" v-for="(variable, index) in section.variables" :key="index">
                         <label class="control-label" :for="variable.id">
                           {{ variable.name }}
                         </label>
@@ -85,7 +85,7 @@
                         </span>
 
                         <span v-if="variable.type === 'select'">
-                          {<span v-for="(i, option) in variable.options" :key="i">{{ option.text}}<span v-if="i < variable.options.length - 1">, </span></span>}
+                          {<span v-for="(i, option) in variable.options" :key="option">{{ option.text}}<span v-if="i < variable.options.length - 1">, </span></span>}
                         </span>
                         <div class="input-group">
                           <!-- numeric, text, semver or factor are inputs-->
@@ -352,6 +352,9 @@ import store from '../store.js'
 import {
   fetchTemplates
 } from '../templates.js'
+import {
+  bus
+} from '@/event-bus.js'
 
 import MapComponent from '../components/MapComponent'
 
@@ -740,7 +743,7 @@ export default {
       store.dispatch('createScenario', postdata)
         .then(function () {
           // This is not practical, but the only way in vue? (using $parent)
-          this.$parent.$emit('show-alert', {
+          bus.$emit('show-alert', {
             message: 'Scenario submitted',
             showTime: 5000,
             type: 'info'
@@ -749,15 +752,15 @@ export default {
             name: 'home',
             params: {}
           })
-        }.bind(this))
+        })
         .catch(function () {
           // This is not practical, but the only way in vue? (using $parent)
-          this.$parent.$emit('show-alert', {
+          bus.$emit('show-alert', {
             message: 'Scenario could not be submitted',
             showTime: 5000,
             type: 'warning'
           })
-        }.bind(this))
+        })
     },
 
     // We have to prepare the scenario config

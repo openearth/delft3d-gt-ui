@@ -1,16 +1,15 @@
-<template id="template-image-animation">
+<template>
+  <div id="template-image-animation">
 
   <div class="image-animation">
 
     <div class="row">
       <div class="col-sm-12" >
-        <ul class="nav nav-tabs nav-justified">
-          <!-- <li role="presentation" :class="{'active': currentAnimationKey === 'delta_fringe_images'}" @click.stop="switchAnimation('delta_fringe_images')"><a href="#">Delta fringe</a></li>
-          <li role="presentation" :class="{'active': currentAnimationKey === 'channel_network_images'}" @click.stop="switchAnimation('channel_network_images')"><a href="#">Channel network</a></li>
-          <li role="presentation" :class="{'active': currentAnimationKey === 'sediment_fraction_images'}" @click.stop="switchAnimation('sediment_fraction_images')"><a href="#">Sediment fraction</a></li>
-          <li role="presentation" :class="{'active': currentAnimationKey === 'subenvironment_images'}" @click.stop="switchAnimation('subenvironment_images')"><a href="#">Sub-environment</a></li> -->
-          <li role="presentation" :class="{'active': currentAnimationKey === 'map_waterlevel_images'}" @click.stop="switchAnimation('map_waterlevel_images')"><a href="#">Waterlevel map</a></li>
-          <li role="presentation" :class="{'active': currentAnimationKey === 'waterlevel_id_images'}" @click.stop="switchAnimation('waterlevel_id_images')"><a href="#">Waterlevel timeseries </a></li>
+        <ul class="nav nav-tabs">
+          <li role="presentation" class="nav-item" :class="{'active': currentAnimationKey === 'delta_fringe_images'}" @click.stop="switchAnimation('delta_fringe_images')"><a href="#">Delta fringe</a></li>
+          <li role="presentation" class="nav-item" :class="{'active': currentAnimationKey === 'channel_network_images'}" @click.stop="switchAnimation('channel_network_images')"><a href="#">Channel network</a></li>
+          <li role="presentation" class="nav-item" :class="{'active': currentAnimationKey === 'sediment_fraction_images'}" @click.stop="switchAnimation('sediment_fraction_images')"><a href="#">Sediment fraction</a></li>
+          <li role="presentation" class="nav-item" :class="{'active': currentAnimationKey === 'subenvironment_images'}" @click.stop="switchAnimation('subenvironment_images')"><a href="#">Sub-environment</a></li>
         </ul>
       </div>
     </div>
@@ -34,20 +33,19 @@
                 </span>
               </button>
 
-              <button type="button" class="btn btn-primary" v-on:click="previousImageFrame()">
+              <button type="button" class="btn btn-primary" v-on:click="previousImageFrame('channel_network_images')">
                 <span class="glyphicon glyphicon-backward">
                 </span>
               </button>
-              <button type="button" class="btn btn-primary" v-if="isAnimating" v-on:click="stopImageFrame()">
+              <button type="button" class="btn btn-primary" v-if="isAnimating" v-on:click="stopImageFrame('channel_network_images')">
                 <span class="glyphicon glyphicon-stop">
                 </span>
               </button>
-              <button class="btn btn-primary" v-if="isAnimating == false" v-on:click="playImageFrame()">
+              <button class="btn btn-primary" v-if="isAnimating == false" v-on:click="playImageFrame('channel_network_images')">
                 <span class="glyphicon glyphicon-play">
                 </span>
               </button>
-
-              <button type="button" class="btn btn-primary" v-on:click="nextImageFrame()">
+              <button type="button" class="btn btn-primary" v-on:click="nextImageFrame('channel_network_images')">
                 <span class="glyphicon glyphicon-forward">
                 </span>
               </button>
@@ -69,7 +67,7 @@
         </div>
 
         <div>
-          <!-- <div v-if="currentAnimationKey === 'channel_network_images'">
+          <div v-if="currentAnimationKey === 'channel_network_images'">
             <h3>Channel network</h3>
             <p>
               These graphs display the properties, the architecture and the evolution of the channel network. Fluvial deposits are targets for hydrocarbon and groundwater exploration as they are typically permeable and continuous, and consequently a potential reservoir or aquifer.
@@ -90,11 +88,20 @@
               A good characterization of the plan-view morphology of the delta allows better predictions on grain size distribution and heterogeneity in the delta geo-body. The delta fringe is calculated based on a cutoff value of water depth and on local slope.
             </p>
           </div>
+
+          <div v-if="currentAnimationKey === 'sediment_fraction_images'">
+            <h3>Sediment fraction</h3>
+
+            <p>
+              In this cross-shore section the sand fraction of the accumulated sediments and the stratigraphic build-up of the delta are displayed. These are direct outputs from Delft3D. Thanks to these image it is possible to describe the grain size trends (proximal to distal in this case) and the geometry of sediment bodies within the delta, such as shoreface sand wedges and clay drapes. These are are important factors controlling the size and the heterogeneity of a reservoir.
+            </p>
+          </div>
+
           <div v-if="currentAnimationKey === 'subenvironment_images'">
             <h3>Sub-environment</h3>
 
             <p class="text-center">
-              <img class="description-image" src="images/ui/sub_environment_definition.png" alt="Subenvironment definition" />
+              <img class="description-image" src="../assets/images/ui/sub_environment_definition.png" alt="Subenvironment definition" />
               <dl class="dl">
                 <dt>Delta top</dt><dd>Deposits above delta brink point</dd>
                 <dt>Delta front</dt><dd>Deposits below delta brink point and above wave base</dd>
@@ -102,28 +109,14 @@
                 <dt>Background</dt><dd>Deposition smaller than 5mm</dd>
               </dl>
             </p>
-          </div> -->
-
-          <div v-if="currentAnimationKey === 'map_waterlevel_images'">
-            <!-- <h3>Water levels</h3>
-
-            <p>
-              Look water levels!
-            </p> -->
           </div>
-          <div v-if="currentAnimationKey === 'waterlevel_id_images'">
-            <!-- <h3>Water levels</h3>
 
-            <p>
-              Look water levels!
-            </p> -->
-          </div>
         </div>
       </div>
     </div>
 
   </div>
-
+</div>
 </template>
 
 <script>

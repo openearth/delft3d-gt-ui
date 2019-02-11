@@ -37,7 +37,7 @@ export default new Vuex.Store({
     // ================================ SYNCHRONISATION
 
     startSync (context) {
-      var x = 0
+      // var x = 0
       // var intervalID = setInterval(() => {
       //   this.dispatch('update')
       //   // Your logic here
@@ -46,8 +46,8 @@ export default new Vuex.Store({
       //     window.clearInterval(intervalID)
       //   }
       // }, )
-      console.log('startSync, checking updateInterval', this.state.updateInterval )
-      this.interval = setInterval(() => {this.dispatch('update')}, this.state.updateInterval)
+      console.log('startSync, checking updateInterval', this.state.updateInterval)
+      this.interval = setInterval(() => { this.dispatch('update') }, this.state.updateInterval)
     },
 
     stopSync (context) {
@@ -106,7 +106,6 @@ export default new Vuex.Store({
           resolve({ 'id': -1 })
         })
       }
-      
       return new Promise((resolve, reject) => {
         this.state.reqModel = $.ajax({ url: 'api/v1/scenes/' + activeModelContainerId + '/', data: this.state.params, traditional: true, dataType: 'json' })
           .done(function (json) {

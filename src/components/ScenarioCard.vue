@@ -100,6 +100,9 @@ import {
   getDialog
 } from '../templates.js'
 import router from '../router.js'
+import {
+  bus
+} from '@/event-bus.js'
 
 export default {
   store,
@@ -138,9 +141,9 @@ export default {
       },
       set: function (val) {
         if (val) {
-          this.$broadcast('select-all')
+          bus.$emit('select-all')
         } else {
-          this.$broadcast('unselect-all')
+          bus.$emit('unselect-all')
         }
       }
     },

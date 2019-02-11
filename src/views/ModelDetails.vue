@@ -5,7 +5,7 @@
       <div class="panel panel-default">
 
         <div class="panel-heading">
-          <h2 class="panel-title">{{ getActiveModelData('name') }}</h2>
+          <h2 class="panel-title">{{ getActiveModelData('name').join('') }}</h2>
         </div>
 
         <div class="panel-body">
@@ -14,7 +14,7 @@
             <dt>Owner of run</dt><dd>
               <span v-if="getActiveModelData('date_created') === ''">-</span>
               <span v-else>
-                <a :href="'mailto:' + getActiveModelData(owner.email)">{{ getActiveModelData(owner.first_name) }} {{ getActiveModelData('owner.last_name') }}</a>
+                <a :href="'mailto:' + getActiveModelData('owner.email').join().replace(/,/g, '')">{{ getActiveModelData('owner.first_name').join().replace(/,/g, '') }} {{ getActiveModelData('owner.last_name').join().replace(/,/g, '') }}</a>
               </span>
             </dd>
 
@@ -34,7 +34,7 @@
               </template>
               <template v-else>
                 <span v-if="outdated === false">No updates available</span>
-                <span v-if="outdated === true">Updates available ({{ getActiveModelData('outdated_changelog') }})</span>
+                <span v-if="outdated === true">Updates available ({{ getActiveModelData('outdated_changelog').join('') }})</span>
               </template>
             </dd>
           </dl>
@@ -48,7 +48,7 @@
                 <div class="progress-bar"
                   :class="[
                     isRunning ? 'progress-bar-striped active' : '',
-                    'progress-bar-' + activeModel.statusLevel()
+                    'progress-bar-' + activeModel.statusLevel
                   ]"
                   role="progressbar"
                   :aria-valuenow="getActiveModelData('progress')"
@@ -62,14 +62,14 @@
                 </div>
               </div>
             </dd>
-            <dt>Status</dt><dd><span class="label label-status" :class="'label-' + activeModel.statusLevel()">{{ getActiveModelData('state').toUpperCase() }}</span></dd>
+            <dt>Status</dt><dd><span class="label label-status" :class="'label-' + activeModel.statusLevel">{{ getActiveModelData('state').join('').toUpperCase() }}</span></dd>
             <dt>Simulation output:</dt><dd>
               <template v-if="getActiveModelData('date_created') === ''">
                 <a class="btn btn-default btn-xs btn-output" disabled>File Server</a>
                 <a class="btn btn-default btn-xs btn-output" disabled>THREDDS Data Server</a>
               </template>
               <template v-else>
-                <a class="btn btn-default btn-xs" :href="getActiveModelData(fileurl)" target="_blank" title="A link to the file server hosting all output files.">File Server</a>
+                <a class="btn btn-default btn-xs" :href="getActiveModelData('fileurl')" target="_blank" title="A link to the file server hosting all output files.">File Server</a>
                 <a class="btn btn-default btn-xs" :href="'/thredds/catalog/files/'+ getActiveModelData('suid') + '/simulation/catalog.html'" target="_blank" title="A link to the THREDDS server hosting Delft3D NetCDF output, which allows querying via OPeNDAP.">THREDDS Data Server</a>
               </template>
             </dd>
@@ -136,7 +136,7 @@
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" :disabled="(isReadOnly || !isFinished || outdated == false)">
-                <li v-for="entrypoint in getEntrypoints" :key="entrypoint"><a @click="redoModel(entrypoint)" href="#">{{entrypoint}}</a></li>
+                <li v-for="(entrypoint, index) in getEntrypoints" :key="index"><a @click="redoModel(entrypoint)" href="#">{{entrypoint}}</a></li>
               </ul>
             </div>&nbsp;
             <button type="button"
@@ -218,8 +218,8 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(key, param) in getActiveModelData('parameters')" :key="key">
-                  <td>{{ (param.name || key).toUpperCase() }}</td>
+                <tr v-for="(key, param) in getActiveModelData('parameters')" :key="param">
+                  <td>{{ (param.name || key) }}</td>
                   <td>{{param.value}}</td>
                   <td>
                     <!-- we add this as we might have some older models not having the units var yet. -->
@@ -250,7 +250,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(key, param) in getActiveModelPPData()" :key="key">
+                <tr v-for="(key, param) in getActiveModelPPData()" :key="param">
                   <td>{{ param.name.substring(0,1).toUpperCase() }}{{ param.name.substring(1).toLowerCase() }}</td>
                   <td>{{ param.value && param.value.toExponential(2) || "-"}}</td>
                   <td>{{ param.unit || "-"}}</td>
@@ -444,9 +444,12 @@ export default {
       cache: false,
       get: function () {
         var entrypoints = _.get(this.activeModel, 'data.entrypoints', '')
-
-        if (entrypoints.length > 0) {
-          return entrypoints
+        if (entrypoints != null) {
+          if (entrypoints.length > 0) {
+            return entrypoints
+          } else {
+            return false
+          }
         } else {
           return false
         }
@@ -574,7 +577,7 @@ export default {
         }
       }
 
-      window.open('/api/v1/scenes/' + id + '/export/?format=json&' + downloadOptions.join('&'))
+      window.open('api/v1/scenes/' + id + '/export/?format=json&' + downloadOptions.join('&'))
     },
     hasPostProcessData: function () {
       return (Object.keys(_.get(this.activeModel, 'data.info.postprocess_output', {})).length > 0)

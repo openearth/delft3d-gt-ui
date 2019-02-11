@@ -61,10 +61,11 @@ export default {
     bus.$on('models-loaded', (models) => {
       console.log('models loaded', models)
     })
-    bus.$on('activated', (model)  => {
+    bus.$on('activated', (model) => {
       console.log('searchlist, event: activated')
       bus.$emit('deactivate', model)
       this.sharedState.activeModelContainer = model
+      console.log('searchlist, event: activated', this.sharedState.activeModelContainer)
       store.dispatch('update')
     })
   },

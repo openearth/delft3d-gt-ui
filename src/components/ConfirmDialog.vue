@@ -1,22 +1,24 @@
-<template id="template-confirm-dialog">
+<template>
+<div id="template-confirm-dialog">
   <div class="modal modal-dialog model-content default-hidden fade" :id="`${dialogId}-dialog`" tabindex="-1" role="dialog">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title">
-            <slot name="title"></slot>
-          </h4>
-        </div>
-        <div class="modal-body">
-          <slot name="body"></slot>
-          <div class="alert alert-info" role="alert" :id="`${dialogId}-dialog-alert`">
-            <slot name="alert"></slot>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-warning" v-on:click="confirm">{{ confirmButtonTitle }}</button>
-          <button type="button" class="btn btn-primary" v-on:click="cancel">Cancel</button>
-        </div>
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title">
+        <slot name="title"></slot>
+      </h4>
+    </div>
+    <div class="modal-body">
+      <slot name="body"></slot>
+      <div class="alert alert-info" role="alert" :id="`${dialogId}-dialog-alert`">
+        <slot name="alert"></slot>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-warning" v-on:click="confirm">{{ confirmButtonTitle }}</button>
+      <button type="button" class="btn btn-primary" v-on:click="cancel">Cancel</button>
+    </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -83,5 +85,4 @@ export default {
 
 <style lang="scss">
 @import '../assets/variables.scss';
-
 </style>

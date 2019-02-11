@@ -64,9 +64,9 @@
 
       <li role="separator" class="divider"></li>
 
-      <li :class="{ disabled: numSelectedModels === 0 || (option.onlyFinished && !someSelectedModelsAreFinished()) }" v-for="(key, option) in downloadOptions">
+      <li :class="{ disabled: numSelectedModels === 0 || (option.onlyFinished && !someSelectedModelsAreFinished()) }" v-for="(key, option) in downloadOptions" :key="option">
         <div class="dropdown-menu-checkbox" @click.self.stop.prevent="toggle(key)">
-          <input type="checkbox" class="downloadoption"  :value="key" v-model="downloadOptions[key].active" :disabled="numSelectedModels === 0 || (option.onlyFinished && !someSelectedModelsAreFinished())"> {{ option.verbose }}
+          <input type="checkbox" class="downloadoption"  :value="key" v-model="downloadOptions['key']" :disabled="numSelectedModels === 0 || (option.onlyFinished && !someSelectedModelsAreFinished())"> {{ option.verbose }}
         </div>
       </li>
 
@@ -131,6 +131,8 @@
 import store from '../store.js'
 import _ from 'lodash'
 import $ from 'jquery'
+import ConfirmDialog from './ConfirmDialog'
+
 import {
   getDialog
 } from '../templates.js'
@@ -165,6 +167,9 @@ export default {
       sharedState: store.state
     }
   },
+  components: {
+    ConfirmDialog
+  },
 
   computed: {
     anyDownloadsSelected: function () {
@@ -185,20 +190,20 @@ export default {
 
   watch: {
     numSelectedModels: function () {
-      // if (this.numSelectedModels === 0) {
-      //   _.each(this.downloadOptions, function (option) {
-      //     option.active = false
-      //   })
-      // }
-      // if (!this.someSelectedModelsAreFinished) {
-      //   _.each(
-      //     _.filter(this.downloadOptions, function (option) {
-      //       return option.onlyFinished
-      //     }),
-      //     function (option) {
-      //       option.active = false
-      //     })
-      // }
+      if (this.numSelectedModels === 0) {
+        _.each(this.downloadOptions, function (option) {
+          option.active = false
+        })
+      }
+      if (!this.someSelectedModelsAreFinished) {
+        _.each(
+          _.filter(this.downloadOptions, function (option) {
+            return option.onlyFinished
+          }),
+          function (option) {
+            option.active = false
+          })
+      }
     }
   },
 

@@ -101,7 +101,7 @@
 
     <!-- Variables -->
 
-    <div v-for="(section, index) in searchTemplate.sections" v-show="searchTemplate" :key="section">
+    <div v-for="(section, index) in searchTemplate.sections" v-show="searchTemplate" :key="index">
 
       <div class="panel panel-default panel-search">
 
@@ -111,7 +111,7 @@
 
         <div class="panel-body panel-collapse collapse" role="tabpanel" :aria-labelledby="'#template-' + index" :id="'#template-' + index">
 
-          <div v-for="variable in section.variables" :key="variable">
+          <div v-for="(variable, index) in section.variables" :key="index">
 
             <template v-if="variable.name !== 'Name'">
 
@@ -150,9 +150,9 @@
                                 data-container="body"
                                 >
                           <option
-                             v-for="option in variable.options"
+                             v-for="(option, index) in variable.options"
                              :value="option.value"
-                             :key="option"
+                             :key="index"
                              >
                             {{ option.text }}
                           </option>
@@ -209,6 +209,10 @@ import $ from 'jquery'
 import _ from 'lodash'
 import moment from 'moment'
 import { fetchUsers, fetchSearchTemplate } from '../templates.js'
+import {
+  bus
+} from '@/event-bus.js'
+
 export default {
   store,
   template: '#template-search-details',

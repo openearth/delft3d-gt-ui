@@ -18,7 +18,7 @@
 
         <div class="col-sm-5 col-md-4 col-lg-4 bordered">
           <div class="btn-text">Database (search results)</div>
-          <!-- <model-control-menu :items="items" :models="models"></model-control-menu> -->
+          <model-control-menu :items="items" :models="models"></model-control-menu>
         </div>
 
         <div class="col-sm-5 col-md-6 col-lg-6">
@@ -45,7 +45,7 @@
               <button type="button" class="btn btn-default" id="btn-reset-search-form" v-on:click="resetFields">Reset</button>
             </div>
           </div> -->
-          <!-- <search-details></search-details> -->
+          <search-details></search-details>
         </div>
 
         <div class="col-sm-5 col-md-4 col-lg-4 column full-height bordered scrollable">
@@ -76,7 +76,7 @@
 import SearchDetails from '../components/SearchDetails'
 import SearchList from '../components/SearchList'
 import ModelDetails from './ModelDetails'
-// import ModelControlMenu from '../components/ModelControlMenu'
+import ModelControlMenu from '../components/ModelControlMenu'
 import $ from 'jquery'
 import store from '../store.js'
 import {
@@ -98,8 +98,8 @@ export default {
   components: {
     'search-details': SearchDetails,
     'search-list': SearchList,
-    'model-details': ModelDetails
-    // 'model-control-menu': ModelControlMenu
+    'model-details': ModelDetails,
+    'model-control-menu': ModelControlMenu
   },
   mounted () {
     store.dispatch('startSync')
