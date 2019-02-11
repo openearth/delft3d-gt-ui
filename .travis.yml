@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+  - "node"
+
+before_install:
+  - rvm install 2.0.0
+  - rvm use 2.0.0
+  - gem install scss_lint
+
+before_script:
+  - npm install -g bower
+  - bower install
+  - npm install -g gulp
+# including lint:babel is buggy (use strict errors)
+# lint:scss is not part of the test suite
+script: npm run test:unit
