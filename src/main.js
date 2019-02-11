@@ -3,9 +3,12 @@ import App from './App.vue'
 import store from './store'
 import './registerServiceWorker'
 import router from './router'
+
+import $ from 'jquery'
 import 'bootstrap/js/dist/util'
 import 'bootstrap/js/dist/dropdown'
-import $ from 'jquery'
+import 'bootstrap/js/dist/collapse'
+
 Vue.config.productionTip = false
 
 new Vue({

@@ -740,7 +740,7 @@ export default {
       store.dispatch('createScenario', postdata)
         .then(function () {
           // This is not practical, but the only way in vue? (using $parent)
-          this.$parent.$broadcast('show-alert', {
+          this.$parent.$emit('show-alert', {
             message: 'Scenario submitted',
             showTime: 5000,
             type: 'info'
@@ -752,7 +752,7 @@ export default {
         }.bind(this))
         .catch(function () {
           // This is not practical, but the only way in vue? (using $parent)
-          this.$parent.$broadcast('show-alert', {
+          this.$parent.$emit('show-alert', {
             message: 'Scenario could not be submitted',
             showTime: 5000,
             type: 'warning'

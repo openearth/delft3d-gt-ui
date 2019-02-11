@@ -1,14 +1,13 @@
 <template>
 <div id="template-search-list">
   <div class="search-list" data-toggle="items">
-    <p>hoi</p>
-    <scenario-card v-for="scenario in sharedState.scenarioContainers" :key="scenario" :scenario="scenario"></scenario-card>
+    <scenario-card v-for="(scenario, index) in sharedState.scenarioContainers" :key="index" :scenario="scenario"></scenario-card>
 
     <div class="list-divider" v-if="hasCompanyModels()">
       shared with company
     </div>
 
-    <div v-for="model in companyModels" class="panel panel-default" :key="model">
+    <div v-for="(model, index) in companyModels" class="panel panel-default" :key="index">
       <model-card :model="model" :selectable="false"></model-card>
     </div>
 
@@ -16,7 +15,7 @@
       shared with world
     </div>
 
-    <div v-for="model in worldModels" class="panel panel-default" :key="model">
+    <div v-for="(model, index) in worldModels" class="panel panel-default" :key="index">
       <model-card :model="model" :selectable="false"></model-card>
     </div>
   </div>
@@ -28,6 +27,9 @@ import _ from 'lodash'
 import store from '../store.js'
 import ScenarioCard from '../components/ScenarioCard'
 import ModelCard from '../components/ModelCard'
+import {
+  bus
+} from '@/event-bus.js'
 
 export default {
   store,
@@ -56,12 +58,12 @@ export default {
   },
 
   mounted () {
-    console.log('searchlist mounted', store.state, this.sharedState)
-    this.$on('models-loaded', function (models) {
+    bus.$on('models-loaded', (models) => {
       console.log('models loaded', models)
     })
-    this.$on('activated', function (model) {
-      this.$emit('deactivate', model)
+    bus.$on('activated', (model)  => {
+      console.log('searchlist, event: activated')
+      bus.$emit('deactivate', model)
       this.sharedState.activeModelContainer = model
       store.dispatch('update')
     })
@@ -71,7 +73,6 @@ export default {
       this.$nextTick(function () {})
     },
     sharedState: function () {
-      console.log('sharedstate', this.sharedState, this.state)
       this.companyModels = _.filter(this.sharedState.modelContainers, ['data.shared', 'c'])
       this.worldModels = _.filter(this.sharedState.modelContainers, ['data.shared', 'w'])
     }

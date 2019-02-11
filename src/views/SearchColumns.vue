@@ -36,7 +36,7 @@
       <div class="row full-height">
 
         <div class="col-sm-2 column full-height bordered scrollable">
-          <div class="visible-xs-block visible-xs-block-first">
+          <!-- <div class="visible-xs-block visible-xs-block-first">
             <span class="btn-text">Search</span>
             <div class="btn-group pull-right">
               <button class="btn btn-default" @click.stop="expandSearch">
@@ -44,26 +44,26 @@
               </button>
               <button type="button" class="btn btn-default" id="btn-reset-search-form" v-on:click="resetFields">Reset</button>
             </div>
-          </div>
+          </div> -->
           <!-- <search-details></search-details> -->
         </div>
 
         <div class="col-sm-5 col-md-4 col-lg-4 column full-height bordered scrollable">
-          <div class="visible-xs-block">
+          <!-- <div class="visible-xs-block">
             <span class="btn-text">Database</span>
-            <!-- <model-control-menu :items="items" :models="models"></model-control-menu> -->
-          </div>
+            <model-control-menu :items="items" :models="models"></model-control-menu>
+          </div> -->
           <search-list :items="items" :models="models" ref="search-list"></search-list>
         </div>
 
         <div class="col-sm-5 col-md-6 col-lg-6 column full-height scrollable">
-          <div class="visible-xs-block">
+          <!-- <div class="visible-xs-block">
             <span class="btn-text">Model details</span>
             <button class="btn btn-default pull-right" @click.stop="expandDetails">
               <i class="fa" :class="[(collapseDetailsShow)? 'fa-arrow-down' : 'fa-arrow-up']" aria-hidden="true"></i>
             </button>
-          </div>
-          <!-- <model-details></model-details> -->
+          </div> -->
+          <model-details></model-details>
         </div>
 
       </div>
@@ -79,6 +79,9 @@ import ModelDetails from './ModelDetails'
 // import ModelControlMenu from '../components/ModelControlMenu'
 import $ from 'jquery'
 import store from '../store.js'
+import {
+  bus
+} from '@/event-bus.js'
 
 export default {
   store,
@@ -100,12 +103,10 @@ export default {
   },
   mounted () {
     store.dispatch('startSync')
-    console.log('search columns mounted')
-    this.$emit('updateSearch')
+    bus.$emit('updateSearch')
 
     // TODO, consistent naming
-    this.$on('items-found', function (items, models) {
-      console.log('search columns, items-found', items, models)
+    bus.$on('items-found', function (items, models) {
       this.set('items', items)
       this.set('models', models)
     })
@@ -159,7 +160,7 @@ export default {
         })
       })
 
-      this.$emit('clearSearch')
+      bus.$emit('clearSearch')
     }
 
   }

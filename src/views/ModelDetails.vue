@@ -19,7 +19,7 @@
             </dd>
 
             <dt>Share level</dt>
-            <dd><span v-if="getActiveModelData('date_created') === ''">-</span><span v-else>{{ shareLevelText | capitalize }}</span></dd>
+            <dd><span v-if="getActiveModelData('date_created') === ''">-</span><span v-else>{{ shareLevelText.toUpperCase() }}</span></dd>
 
             <dt>Created</dt>
             <dd><span v-if="getActiveModelData('date_created') === ''">-</span><span v-else>{{ dateCreatedText }}</span></dd>
@@ -62,7 +62,7 @@
                 </div>
               </div>
             </dd>
-            <dt>Status</dt><dd><span class="label label-status" :class="'label-' + activeModel.statusLevel()">{{ getActiveModelData('state') | capitalize }}</span></dd>
+            <dt>Status</dt><dd><span class="label label-status" :class="'label-' + activeModel.statusLevel()">{{ getActiveModelData('state').toUpperCase() }}</span></dd>
             <dt>Simulation output:</dt><dd>
               <template v-if="getActiveModelData('date_created') === ''">
                 <a class="btn btn-default btn-xs btn-output" disabled>File Server</a>
@@ -219,7 +219,7 @@
               </thead>
               <tbody>
                 <tr v-for="(key, param) in getActiveModelData('parameters')" :key="key">
-                  <td>{{ (param.name || key) | capitalize }}</td>
+                  <td>{{ (param.name || key).toUpperCase() }}</td>
                   <td>{{param.value}}</td>
                   <td>
                     <!-- we add this as we might have some older models not having the units var yet. -->
@@ -399,7 +399,8 @@ export default {
       },
       viewerActive: false,
       model: 'GTSM',
-      selectedUpdate: ''
+      selectedUpdate: '',
+      owner: ''
     }
   },
   computed: {

@@ -1,6 +1,5 @@
 <template>
 <div id="template-scenario-card">
-  <p> scenario card</p>
   <div class="scenario-card" @click.stop="collapse">
 
     <div class="panel panel-default" v-if="hasModels">
@@ -118,7 +117,6 @@ export default {
   },
   computed: {
     hasModels: function () {
-      console.log('hasmodels', this.scenario)
       return this.scenario.models.length > 0
     },
     someModelsSelected: {

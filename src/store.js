@@ -38,16 +38,16 @@ export default new Vuex.Store({
 
     startSync (context) {
       var x = 0
-      var intervalID = setInterval( () => {
-        this.dispatch('update')
-         // Your logic here
-
-         if (++x === 5) {
-             window.clearInterval(intervalID)
-         }
-      }, 1000)
-      // console.log('startSync, checking updateInterval', this.state.updateInterval )
-      // this.interval = setInterval(() => {this.dispatch('update')}, this.state.updateInterval)
+      // var intervalID = setInterval(() => {
+      //   this.dispatch('update')
+      //   // Your logic here
+      //
+      //   if (++x === 5) {
+      //     window.clearInterval(intervalID)
+      //   }
+      // }, )
+      console.log('startSync, checking updateInterval', this.state.updateInterval )
+      this.interval = setInterval(() => {this.dispatch('update')}, this.state.updateInterval)
     },
 
     stopSync (context) {
@@ -59,7 +59,6 @@ export default new Vuex.Store({
       if (this.state.updating) {
         return
       }
-      console.log('updating', this.dispatch('fetchModels'))
       this.state.updating = true
       Promise.all([
         this.dispatch('fetchModels'),
@@ -67,7 +66,6 @@ export default new Vuex.Store({
         this.dispatch('fetchModelDetails')
       ])
         .then((jsons) => {
-          console.log('komt ie hier ooit?', jsons[0])
           this.state.models = jsons[0] // Array of Models
           this.state.scenarios = jsons[1] // Array of Scenes
 
@@ -79,7 +77,6 @@ export default new Vuex.Store({
 
           this.dispatch('updateContainers')
           this.state.updating = false
-          console.log('update state: ', this.state.models)
         })
         .catch((jqXhr) => {
           this.state.failedUpdate(jqXhr)
@@ -87,7 +84,6 @@ export default new Vuex.Store({
         })
     },
     updateUser (context) {
-      console.log('updateUSer', this.dispatch('fetchUser'))
       this.dispatch('fetchUser').then((json) => {
         this.state.user = json
       })
@@ -110,7 +106,7 @@ export default new Vuex.Store({
           resolve({ 'id': -1 })
         })
       }
-
+      
       return new Promise((resolve, reject) => {
         this.state.reqModel = $.ajax({ url: 'api/v1/scenes/' + activeModelContainerId + '/', data: this.state.params, traditional: true, dataType: 'json' })
           .done(function (json) {
@@ -130,14 +126,14 @@ export default new Vuex.Store({
         this.state.reqModel.abort()
       }
       return new Promise((resolve, reject) => {
-        this.state.reqModel = $.ajax({url: "/api/v1/scenes/", data: this.state.params, traditional: true, dataType: "json"})
-          .done(function(json) {
-            resolve(json);
+        this.state.reqModel = $.ajax({ url: '/api/v1/scenes/', data: this.state.params, traditional: true, dataType: 'json' })
+          .done(function (json) {
+            resolve(json)
           })
-          .fail(function(jqXhr) {
-            reject(jqXhr);
-          });
-      });
+          .fail(function (jqXhr) {
+            reject(jqXhr)
+          })
+      })
     },
     fetchScenarios (context) {
       if (this.state.reqScenario !== undefined) {
@@ -412,7 +408,7 @@ export default new Vuex.Store({
     // ================================ MULTISELECTED MODEL UPDATE METHODS
 
     getSelectedModels (context) {
-      return _.filter(this.state.modelContainers, ["selected", true]);
+      return _.filter(this.state.modelContainers, ['selected', true])
     },
 
     resetSelectedModels (context) {

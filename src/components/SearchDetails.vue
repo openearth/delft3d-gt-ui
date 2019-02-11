@@ -230,7 +230,7 @@ export default {
   },
 
   mounted () {
-    this.$on('clearSearch', () => {
+    bus.$on('clearSearch', () => {
       this.createdAfter = ''
       this.createdBefore = ''
       this.searchText = ''

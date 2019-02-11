@@ -63,6 +63,9 @@
 </template>
 
 <script>
+import {
+  bus
+} from '@/event-bus.js'
 
 export default {
   template: '#template-model-card',
@@ -76,20 +79,20 @@ export default {
   methods: {
     toggleActive: function () {
       this.model.active = true
-      this.$emit('activated', this.model)
+      bus.$emit('activated', this.model)
     }
   },
 
-  mounted() {
-    this.$on('deactivate', () => {
+  mounted () {
+    bus.$on('deactivate', (clickedmodel) => {
       if (this.model !== clickedmodel) {
         this.model.active = false
       }
     })
-    this.$on('select-all', () => {
+    bus.$on('select-all', () => {
       this.model.selected = true
     })
-    this.$on('select-all', () => {
+    bus.$on('select-all', () => {
       this.model.selected = false
     })
   }
