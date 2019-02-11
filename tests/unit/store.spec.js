@@ -1,10 +1,8 @@
-
 import chaiAsPromised from 'chai-as-promised'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
-import { expect } from 'chai'
-import chai from 'chai'
-let store = require('../../src/store.js').store
+import chai, { expect } from 'chai'
+import store, { update } from '../../src/store'
 
 // setup chai
 chai.use(chaiAsPromised)
@@ -13,32 +11,43 @@ let should = chai.should()
 
 // test component
 describe('Store', function () {
-// ***************************************************************************** update()
+  beforeEach(function () {
+    // import component
+    sinon.spy(Promise, 'all')
+    sinon.spy(Promise, 'reject')
+    sinon.spy(Promise, 'resolve')
+  })
+
+  afterEach(function () {
+    // Unwrap spies
+    Promise.all.restore()
+    Promise.reject.restore()
+    Promise.resolve.restore()
+  })
+
+  // ***************************************************************************** update()
 
   describe('.update()', function () {
     it('updates properly', function () {
-      expect(1).to.equal(1)
       // stub and spy
-      sinon.stub(store, 'fetchModels').returns(Promise.resolve())
-      sinon.stub(store, 'fetchScenarios').returns(Promise.resolve())
+      sinon.stub(store, 'dispatch').returns(Promise.resolve())
 
       // set store state to 'updating' and update
       store.state.updating = true
-      store.dispatch('update')
+      update(store)
 
       // make sure no promises have been called
-      Promise.all.should.have.not.been.called
-      store.dispatch('fetchModels').should.have.not.been.called
-      store.dispatch('fetchScenarios').should.have.not.been.called
+      Promise.all.should.not.have.been.called
+      store.dispatch.should.have.not.been.called
 
-      // now set 'updating' state to false and call again
+      // // now set 'updating' state to false and call again
       store.state.updating = false
-      store.dispatch('update')
+      update(store)
 
-      // check that all promises have been called
+      // // check that all promises have been called
       Promise.all.should.have.been.called
-      store.dispatch('fetchModels').should.have.been.called
-      store.dispatch('fetchScenarios').should.have.been.called
+      expect(store.dispatch).to.have.been.calledWith('fetchModels')
+      expect(store.dispatch).to.have.been.calledWith('fetchScenarios')
     })
   })
 })

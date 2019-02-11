@@ -5,6 +5,35 @@ import _ from 'lodash'
 
 Vue.use(Vuex)
 
+export function update (context) {
+  if (context.state.updating) {
+    return
+  }
+  context.state.updating = true
+  Promise.all([
+    context.dispatch('fetchModels'),
+    context.dispatch('fetchScenarios'),
+    context.dispatch('fetchModelDetails')
+  ])
+    .then((jsons) => {
+      context.state.models = jsons[0] // Array of Models
+      context.state.scenarios = jsons[1] // Array of Scenes
+
+      context.state.models = _.map(context.state.models, (m) => {
+        let modelDetails = jsons[2] // Dictionary of Model Details
+
+        return (m.id === modelDetails.id) ? modelDetails : m
+      })
+
+      context.dispatch('updateContainers')
+      context.state.updating = false
+    })
+    .catch((jqXhr) => {
+      context.state.failedUpdate(jqXhr)
+      context.state.updating = false
+    })
+}
+
 export default new Vuex.Store({
   state: {
     activeModelContainer: undefined,
@@ -55,34 +84,8 @@ export default new Vuex.Store({
       this.interval = null
     },
 
-    update (context) {
-      if (this.state.updating) {
-        return
-      }
-      this.state.updating = true
-      Promise.all([
-        this.dispatch('fetchModels'),
-        this.dispatch('fetchScenarios'),
-        this.dispatch('fetchModelDetails')
-      ])
-        .then((jsons) => {
-          this.state.models = jsons[0] // Array of Models
-          this.state.scenarios = jsons[1] // Array of Scenes
+    update,
 
-          this.state.models = _.map(this.state.models, (m) => {
-            let modelDetails = jsons[2] // Dictionary of Model Details
-
-            return (m.id === modelDetails.id) ? modelDetails : m
-          })
-
-          this.dispatch('updateContainers')
-          this.state.updating = false
-        })
-        .catch((jqXhr) => {
-          this.state.failedUpdate(jqXhr)
-          this.state.updating = false
-        })
-    },
     updateUser (context) {
       this.dispatch('fetchUser').then((json) => {
         this.state.user = json
