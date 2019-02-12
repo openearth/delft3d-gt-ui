@@ -3,6 +3,6 @@ module.exports = {
     mocha: true
   },
   rules: {
-    'no-unused-expressions': "none"
+    'no-unused-expressions': 0
   }
 }

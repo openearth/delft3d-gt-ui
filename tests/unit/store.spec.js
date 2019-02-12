@@ -7,7 +7,7 @@ import store, { update } from '../../src/store'
 // setup chai
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
-let should = chai.should()
+// let should = chai.should()
 
 // test component
 describe('Store', function () {

@@ -100,7 +100,7 @@
           <div v-if="currentAnimationKey === 'subenvironment_images'">
             <h3>Sub-environment</h3>
 
-            <p class="text-center">
+            <div class="text-center">
               <img class="description-image" src="../assets/images/ui/sub_environment_definition.png" alt="Subenvironment definition" />
               <dl class="dl">
                 <dt>Delta top</dt><dd>Deposits above delta brink point</dd>
@@ -108,7 +108,7 @@
                 <dt>Prodelta</dt><dd>Deposits below wave base</dd>
                 <dt>Background</dt><dd>Deposition smaller than 5mm</dd>
               </dl>
-            </p>
+            </div>
           </div>
 
         </div>

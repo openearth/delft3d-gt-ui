@@ -107,7 +107,7 @@
                         <template v-if="variable.type === 'select' && !variable.factor">
                           <div class="form-group">
                             <select class="select-picker form-control" multiple :id="variable.id" data-selected-text-format="count > 3" data-actions-box="true" data-container="body">
-                              <option v-for="option in variable.options" :value="option.value">
+                              <option v-for="(option, index) in variable.options" :value="option.value" :key="index">
                                 {{ option.text }}
                               </option>
                             </select>
@@ -209,7 +209,7 @@ import {
 export default {
   store,
   template: '#template-search-details',
-  data: function() {
+  data: function () {
     return {
       activatedPostProc: {},
       createdAfter: '',
@@ -226,7 +226,7 @@ export default {
     }
   },
 
-  mounted() {
+  mounted () {
     bus.$on('clearSearch', () => {
       this.createdAfter = ''
       this.createdBefore = ''
@@ -277,7 +277,7 @@ export default {
     }
 
     // set store failedUpdate handling
-    store.state.failedUpdate = function(jqXhr) {
+    store.state.failedUpdate = function (jqXhr) {
       console.error(jqXhr)
 
       let status = jqXhr.statusText || 'error'
@@ -318,7 +318,7 @@ export default {
 
   computed: {
     modelEngines: {
-      get: function() {
+      get: function () {
         // flatten variables
         var variables = _.flatMap(_.flatMap(this.templates, 'sections'), 'variables')
 
@@ -332,14 +332,14 @@ export default {
       }
     },
     parameters: {
-      get: function() {
+      get: function () {
         var parameters = {}
         var variables = _.flatMap(
           _.flatMap(this.templates, 'sections'),
           'variables'
         )
 
-        variables.forEach(function(variable) {
+        variables.forEach(function (variable) {
           if (_.has(variable, 'validators.min') && _.has(variable, 'validators.max')) {
             // create parameter info for forms
             var obj = {
@@ -355,58 +355,58 @@ export default {
       }
     },
     createdAfterValid: {
-      get: function() {
+      get: function () {
         return this.createdAfter === '' || moment(this.createdAfter, 'YYYY-MM-DD', true).isValid()
       }
     },
     createdBeforeValid: {
-      get: function() {
+      get: function () {
         return this.createdBefore === '' || moment(this.createdBefore, 'YYYY-MM-DD', true).isValid()
       }
     }
   },
 
   watch: {
-    activatedPostProc: function() {
+    activatedPostProc: function () {
       this.search()
     },
-    createdAfter: function() {
+    createdAfter: function () {
       this.search()
     },
-    createdBefore: function() {
+    createdBefore: function () {
       this.search()
     },
-    searchTemplate: function() {
+    searchTemplate: function () {
       this.search()
     },
-    searchText: function() {
+    searchText: function () {
       this.search()
     },
-    selectedDomains: function() {
+    selectedDomains: function () {
       this.search()
     },
-    selectedParameters: function() {
+    selectedParameters: function () {
       this.search()
     },
-    selectedPostProc: function() {
+    selectedPostProc: function () {
       this.search()
     },
-    selectedTemplates: function() {
+    selectedTemplates: function () {
       this.search()
     },
-    selectedUsers: function() {
+    selectedUsers: function () {
       this.search()
     },
-    selectedOutdated: function() {
+    selectedOutdated: function () {
       this.search()
     },
-    users: function() {
+    users: function () {
       this.search()
     }
   },
 
   methods: {
-    initializeForm: function() {
+    initializeForm: function () {
       // once the dom is updated, update the select pickers by hand
       // template data is computed into modelEngine
       var that = this
@@ -432,7 +432,7 @@ export default {
       /* eslint-enable camelcase */
 
       // Add event handler that allows one to use the X next to inputs to clear the input.
-      $('.button-empty-input-field').on('click', function() {
+      $('.button-empty-input-field').on('click', function () {
         var input = $(this).closest('.input-group').find('input')
 
         // Force update selected parameters.
@@ -453,15 +453,15 @@ export default {
       })
 
       // Set event handlers for search collapsibles.
-      $('.panel-search').on('show.bs.collapse', function() {
+      $('.panel-search').on('show.bs.collapse', function () {
         $(this).find('.glyphicon-triangle-right').removeClass('glyphicon-triangle-right').addClass('glyphicon-triangle-bottom')
       })
 
-      $('.panel-search').on('hide.bs.collapse', function() {
+      $('.panel-search').on('hide.bs.collapse', function () {
         $(this).find('.glyphicon-triangle-bottom').removeClass('glyphicon-triangle-bottom').addClass('glyphicon-triangle-right')
       })
     },
-    buildParams: function() {
+    buildParams: function () {
       // for now we just copy everything
 
       /* eslint-disable camelcase */
@@ -524,7 +524,7 @@ export default {
 
       return params
     },
-    search: function() {
+    search: function () {
       var params = this.buildParams()
 
       store.dispatch('updateParams', params)

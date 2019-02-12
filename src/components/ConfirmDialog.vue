@@ -30,7 +30,7 @@ import $ from 'jquery'
 export default {
   // not much in here.
   template: '#template-confirm-dialog',
-  data: function() {
+  data: function () {
     return {
       onConfirm: null,
       onCancel: null
@@ -47,21 +47,21 @@ export default {
     }
   },
   methods: {
-    confirm: function() {
+    confirm: function () {
       if (this.onConfirm) {
         this.onConfirm()
       }
       this.hide()
     },
 
-    cancel: function() {
+    cancel: function () {
       if (this.onCancel) {
         this.onCancel()
       }
       this.hide()
     },
 
-    show: function() {
+    show: function () {
       var el = $('#' + this.dialogId + '-dialog')
 
       // Hide extra alert by default.
@@ -72,7 +72,7 @@ export default {
       }
     },
 
-    hide: function() {
+    hide: function () {
       var el = $('#' + this.dialogId + '-dialog')
 
       if (el.modal !== undefined) {
@@ -80,7 +80,7 @@ export default {
       }
     },
 
-    showAlert: function(isVisible) {
+    showAlert: function (isVisible) {
       $('#' + this.dialogId + '-dialog-alert').toggle(isVisible)
     }
   }

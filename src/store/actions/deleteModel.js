@@ -1,4 +1,5 @@
 import $ from 'jquery'
+import _ from 'lodash'
 
 export default function deleteModel (context, modelContainer) {
   console.log('deletemodel')

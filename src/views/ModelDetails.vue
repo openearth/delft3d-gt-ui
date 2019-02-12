@@ -586,9 +586,9 @@ export default {
       console.log('publishmodel')
       this.deleteDialog = getDialog(this, 'confirm-dialog', 'publish')
 
-      $('#publish-dialog').modal("show")
+      $('#publish-dialog').modal('show')
       this.deleteDialog.onConfirm = () => {
-          store.dispatch('publishModel', { modelContainer: this.activeModel, domain: level })
+        store.dispatch('publishModel', { modelContainer: this.activeModel, domain: level })
         $('#publish-dialog').modal('hide')
       }
       // // Get a confirm dialog
@@ -609,7 +609,7 @@ export default {
       // Get a confirm dialog
       this.deleteDialog = getDialog(this, 'confirm-dialog', 'delete')
       console.log('removemodel')
-      $('#delete-dialog').modal("show")
+      $('#delete-dialog').modal('show')
       this.deleteDialog.onConfirm = () => {
         console.log('delete-dialog on confirm')
         store.dispatch('deleteModel', this.activeModel)
@@ -626,9 +626,9 @@ export default {
       console.log('resetmodel')
       this.resetDialog = getDialog(this, 'confirm-dialog', 'reset')
 
-      $('#reset-dialog').modal("show")
-      this.resetDialog .onConfirm = () => {
-          store.dispatch('resetModel'.this.activeModel)
+      $('#reset-dialog').modal('show')
+      this.resetDialog.onConfirm = () => {
+        store.dispatch('resetModel'.this.activeModel)
         $('#reset-dialog').modal('hide')
       }
       // Get a confirm dialog
@@ -648,7 +648,7 @@ export default {
       console.log('redomodel')
       this.resetDialog = getDialog(this, 'confirm-dialog', 'redo')
 
-      $('#redo-dialog').modal("show")
+      $('#redo-dialog').modal('show')
       this.resetDialog.onConfirm = () => {
         store.dispatch('redoModel', { 'modelContainer': this.activeModel, 'entrypoint': entrypoint })
         $('#redo-dialog').modal('hide')
