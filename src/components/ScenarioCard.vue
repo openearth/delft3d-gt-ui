@@ -19,7 +19,7 @@
                 <i class="fa fa-clone" aria-hidden="true"></i>
               </button>
               <button type="button" class="btn btn-default btn-xs" @click.stop="deleteScenario" title="Delete scenario">
-                <span class="glyphicon glyphicon-trash"></span>
+                <i class="fa fa-trash" aria-hidden="true"></i>
               </button>
             </div>
           </div>

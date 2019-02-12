@@ -5,10 +5,15 @@ import './registerServiceWorker'
 import router from './router'
 
 import $ from 'jquery'
+import 'bootstrap-datepicker/dist/js/bootstrap-datepicker'
+import 'bootstrap-select/dist/js/bootstrap-select'
 import 'bootstrap/js/dist/util'
 import 'bootstrap/js/dist/dropdown'
 import 'bootstrap/js/dist/collapse'
 import 'bootstrap/js/dist/modal'
+
+
+
 
 Vue.config.productionTip = false
 

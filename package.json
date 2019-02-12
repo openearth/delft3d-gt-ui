@@ -12,7 +12,9 @@
   "dependencies": {
     "@types/jquery": "^3.3.29",
     "bootstrap": "^4.2.1",
+    "bootstrap-datepicker": "^1.8.0",
     "bootstrap-sass": "^3.4.0",
+    "bootstrap-select": "^1.13.5",
     "bootstrap-toggle": "^2.2.2",
     "chai-as-promised": "^7.1.1",
     "font-awesome": "^4.7.0",

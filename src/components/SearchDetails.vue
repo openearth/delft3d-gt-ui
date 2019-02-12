@@ -19,28 +19,28 @@
         </div>
       </div>
       <div class="form-group form-group-sm">
-  <select
-     v-model="selectedDomains"
-     id="domain"
-     class="select-picker form-control"
-     title="Choose publication domain..."
-     multiple
-     data-selected-text-format="count > 3"
-     data-actions-box="true">
-    <option
-       data-content="<i class='fa fa-fw fa-user aria-hidden='true'></i> Private">
-      private
-    </option>
-    <option
-       data-content="<i class='fa fa-fw fa-users' aria-hidden='true'></i> Company">
-      company
-    </option>
-    <option
-       data-content="<i class='fa fa-fw fa-globe' aria-hidden='true'></i> Public">
-      public
-    </option>
-  </select>
-</div>
+        <select
+           v-model="selectedDomains"
+           id="domain"
+           class="selectpicker form-control"
+           title="Choose publication domain..."
+           multiple
+           data-selected-text-format="count > 3"
+           data-actions-box="true">
+          <option
+             data-content="<i class='fa fa-fw fa-user aria-hidden='true'></i> Private">
+            private
+          </option>
+          <option
+             data-content="<i class='fa fa-fw fa-users' aria-hidden='true'></i> Company">
+            company
+          </option>
+          <option
+             data-content="<i class='fa fa-fw fa-globe' aria-hidden='true'></i> Public">
+            public
+          </option>
+        </select>
+      </div>
 <div class="panel panel-default panel-search">
     <div class="panel-heading panel-collapse-header" data-toggle="collapse" data-parent="#template-datetimes" href="#template-datetimes" aria-expanded="true" aria-controls="template-collapse">
       Dates &amp; Times
@@ -144,15 +144,13 @@
                       <div class="form-group">
                         <select class="select-picker form-control" multiple
                                 :id="variable.id"
-                                v-model="selectedParameters['variable.id']"
                                 data-selected-text-format="count > 3"
                                 data-actions-box="true"
                                 data-container="body"
                                 >
                           <option
-                             v-for="(option, index) in variable.options"
+                             v-for="option in variable.options"
                              :value="option.value"
-                             :key="index"
                              >
                             {{ option.text }}
                           </option>
@@ -197,7 +195,55 @@
         </div>
       </div>
     </div>
+    <div class="panel panel-default panel-search">
+
+            <div class="panel-heading panel-collapse-header" data-toggle="collapse" data-parent="#template-postprocess" href="#template-postprocess" aria-expanded="true" aria-controls="template-collapse">
+              Post-processing output
+            </div>
+            <div class="panel-body panel-collapse collapse" role="tabpanel" aria-labelledby="template-postprocess" id="template-postprocess">
+
+              <div class="form-group">
+                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaTopD50']"> D50 for delta top (mm)</label>
+                <input type="text" id="DeltaTopD50" v-model="selectedPostProc['DeltaTopD50']" class="ion-range" data-step="0.01" data-min="0" data-max="2" data-type="double"/>
+              </div>
+              <div class="form-group">
+                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaTopsand_fraction']"> Sand fraction for delta top (%)</label>
+                <input type="text" id="DeltaTopsand_fraction" v-model="selectedPostProc['DeltaTopsand_fraction']" class="ion-range" data-step="1" data-min="0" data-max="100" data-type="double"/>
+              </div>
+              <div class="form-group">
+                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaTopsorting']"> Sorting for delta top (-)</label>
+                <input type="text" id="DeltaTopsorting" v-model="selectedPostProc['DeltaTopsorting']" class="ion-range" data-step="0.1" data-min="0" data-max="10" data-type="double"/>
+              </div>
+              <div class="form-group">
+  <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaFrontD50']"> D50 for delta front (mm)</label>
+  <input type="text" id="DeltaFrontD50" v-model="selectedPostProc['DeltaFrontD50']" class="ion-range" data-step="0.01" data-min="0" data-max="2" data-type="double"/>
+</div>
+<div class="form-group">
+  <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaFrontsand_fraction']"> Sand fraction for delta front (%)</label>
+  <input type="text" id="DeltaFrontsand_fraction" v-model="selectedPostProc['DeltaFrontsand_fraction']" class="ion-range" data-step="0.01" data-min="0" data-max="1" data-type="double"/>
+</div>
+<div class="form-group">
+  <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaFrontsorting']"> Sorting for delta front (-)</label>
+  <input type="text" id="DeltaFrontsorting" v-model="selectedPostProc['DeltaFrontsorting']" class="ion-range" data-step="0.1" data-min="0" data-max="10" data-type="double"/>
+</div>
+
+<div class="form-group">
+  <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['ProDeltaD50']"> D50 for prodelta (mm)</label>
+  <input type="text" id="ProDeltaD50" v-model="selectedPostProc['ProDeltaD50']" class="ion-range" data-step="0.01" data-min="0" data-max="2" data-type="double"/>
+</div>
+<div class="form-group">
+  <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['ProDeltasand_fraction']"> Sand fraction for prodelta (%)</label>
+  <input type="text" id="ProDeltasand_fraction" v-model="selectedPostProc['ProDeltasand_fraction']" class="ion-range" data-step="0.01" data-min="0" data-max="1" data-type="double"/>
+</div>
+<div class="form-group">
+  <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['ProDeltasorting']"> Sorting for prodelta (-)</label>
+  <input type="text" id="ProDeltasorting" v-model="selectedPostProc['ProDeltasorting']" class="ion-range" data-step="0.1" data-min="0" data-max="10" data-type="double"/>
+</div>
+
+            </div>
+
   </div>
+</div>
       </form>
     </div>
   </div>
@@ -539,3 +585,108 @@ export default {
 }
 
 </script>
+
+<style lang="scss">
+@import '../assets/variables.scss';
+
+.bootstrap-datetimepicker-widget {
+  height: 255px;
+}
+
+.search-details {
+
+  .panel {
+    margin-bottom: $padding;
+  }
+
+  .panel-body {
+    padding: 0;
+  }
+
+  .panel-collapse {
+    .pull-right {
+      margin: 0;
+    }
+
+    .form-group {
+      margin-bottom: 0;
+      padding: $padding;
+
+    }
+
+    .numeric {
+      padding-bottom: $padding;
+    }
+  }
+
+  // ======================= ION RANGE SLIDER
+
+  .irs {
+    height: 30px;
+    margin-right: 6px;
+    margin-top: 20px;
+  }
+
+  .irs-line,
+  .irs-bar,
+  .irs-bar-edge {
+    top: 24px;
+  }
+
+  .irs-slider {
+    top: 7px;
+    width: 8px;
+  }
+
+  .input-group-addon {
+    border-left: 1px solid $col-bw-2;
+  }
+
+  .irs-from,
+  .irs-to,
+  .irs-single {
+    background-color: $col-bw-2;
+    color: $col-bw-5;
+    padding: 2px 8px 8px; // 8px;
+    top: -14px;
+
+    &::after {
+      border-top-color: $col-bw-2; //The arrow down part.
+    }
+
+  }
+
+  .irs-bar-edge {
+    background: $col-bw-5;
+  }
+
+  .irs-slider,
+  .irs-bar {
+    background: $col-bw-0;
+  }
+
+  .irs-bar {
+    height: 3px; //Height of horizontal bar
+  }
+
+  // Dimensions of the handles
+  .to,
+  .from {
+    background-color: $col-bw-0;
+    border-radius: 10px;
+    height: 20px;
+    top: 16px;
+    width: 20px;
+  }
+
+  // Horizontal background bar.
+  .irs-line {
+    span {
+      background: none;
+      background-color: $col-bw-2;
+      height: 3px;
+    }
+  }
+}
+
+</style>
