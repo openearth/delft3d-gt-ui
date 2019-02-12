@@ -13,10 +13,10 @@
           <!--  -->
           <div class="row" v-if="availableTemplates.length">
             <div class="col-sm-12">
-              <div class="form-group ">
+              <div class="form-group">
                 <label for="select-template">Select a template</label>
                 <select class="combobox form-control" v-model="template"  id="select-template" :onchange="selectTemplate(template)">
-                  <option v-for="template in availableTemplates" :value="template">
+                  <option v-for="template in availableTemplates" :value="template" :disabled="template.name !== 'River dominated delta'" :selected="template.name === 'River dominated delta'">
                     {{ template.name }}
                   </option>
                   <option value="" disabled>
@@ -76,7 +76,7 @@
                                 class="form-control"
                                 id="run-env"
                                 >
-                                <option selected>Deltares, Delft3D Flexible Mesh Version 1.2.0.61839</option>
+                                <option selected>Deltares, FLOW2D3D Version 6.02.07.6118</option>
                                 <option disabled>Deltares, Delft3D Flexible Mesh Suite (disabled: this feature will be added in future versions)</option>
                               </select>
                             </div>
@@ -300,14 +300,13 @@
                         <div class="pull-right">
                           <a class="btn btn-default nav-bar-button" v-link="{ path: '/' }">Cancel</a>
                           <button
-                             type="button"
-                             class="btn btn-primary nav-bar-button default"
-                             id="scenario-submit"
-                             @click.stop="submitScenario"
-                             value=""
-                             :disabled="disableSubmit()"
-                             >
-                            Submit
+                                 type="button"
+                                 class="btn btn-primary nav-bar-button default"
+                                 id="scenario-submit"
+                                 @click.stop="submitScenario"
+                                 value=""
+                                 :class="{ 'disabled': !validForm }" >
+                                Submit
                           </button>
                         </div>
                       </div>
@@ -344,12 +343,7 @@
               </div>
               <!-- template details -->
               <div class="panel-body text-center">
-                <map-component
-                  v-show="template.name==='GTSM world template'"
-                >
-                </map-component>
                 <img
-                  v-if="template.name==='River dominated delta'"
                   src="images/schematic.svg"
                   class="scenariobuilder-schematic"
                 />

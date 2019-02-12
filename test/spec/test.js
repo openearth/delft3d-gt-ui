@@ -96,9 +96,6 @@
 
   var SearchColumns = require("../../app/scripts/components/searchcolumns.js").SearchColumns;
 
-  var MapComponent = require("../../app/scripts/components/mapcomponent.js").MapComponent;
-
-  global.MapComponent = MapComponent;
   // why is this necessary....
   var factorToArray = require("../../app/scripts/components/scenariobuilder.js").factorToArray;
 
@@ -450,13 +447,6 @@
       var aSearchList = new SearchList();
 
       assert.isOk(aSearchList);
-      done();
-    });
-
-    it("Is possible to create a Map component", function(done) {
-      var aMapComponent = new MapComponent();
-
-      assert.isOk(aMapComponent);
       done();
     });
 
@@ -1331,7 +1321,7 @@
         timerAnimation: -1,
 
         // Which imagelist are we currently watching?
-        currentAnimationKey: "map_waterlevel_images",
+        currentAnimationKey: "delta_fringe_images",
 
         isAnimating: false
       };
@@ -1411,7 +1401,7 @@
     it("Should be possible to change to next imageFrame", function(done) {
 
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { files: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
 
       imageAnimation.currentAnimationIndex = 0;
@@ -1429,7 +1419,7 @@
     it("Should be possible to change to next imageFrame - stop at end", function(done) {
 
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { files: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
 
       imageAnimation.currentAnimationIndex = 0;
@@ -1441,7 +1431,7 @@
       }
 
       // Next frame should have brought to the next frame.
-      assert.isTrue(imageAnimation.animationIndex === imageAnimation.model.info.delta_fringe_images.files.length - 1, "Animation frame at end");
+      assert.isTrue(imageAnimation.animationIndex === imageAnimation.model.info.delta_fringe_images.images.length - 1, "Animation frame at end");
 
       done();
     });
@@ -1471,7 +1461,7 @@
     it("Should be possible to change to next imageFrame - no animationkey", function(done) {
 
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { files: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
 
       imageAnimation.currentAnimationIndex = 0;
@@ -1500,7 +1490,7 @@
 
       // We should not have any frames in this animation object, but maybe make sure later on?
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { files: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
 
       imageAnimation.currentAnimationKey = "delta_fringe_images";
@@ -1522,7 +1512,7 @@
     it("Should be possible to check animationFrame property", function(done) {
 
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { location: "location/", files: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { location: "location/", images: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
       imageAnimation.model.fileurl = "fileurl/";
 
@@ -1536,7 +1526,7 @@
     it("Should be possible to check animationFrame property - empty", function(done) {
 
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { location: "location/", files: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { location: "location/", images: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
       imageAnimation.model.fileurl = "fileurl/";
       imageAnimation.currentAnimationKey = "";
@@ -1553,10 +1543,10 @@
 
       // We should not have any frames in this animation object, but maybe make sure later on?
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { files: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
       imageAnimation.currentAnimationKey = "delta_fringe_images";
-      assert.isTrue(imageAnimation.frameCount === imageAnimation.model.info.delta_fringe_images.files.length, "Animation framecount should not be 0");
+      assert.isTrue(imageAnimation.frameCount === imageAnimation.model.info.delta_fringe_images.images.length, "Animation framecount should not be 0");
       done();
     });
 
@@ -1584,7 +1574,7 @@
 
       // index should become 0
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { files: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
       imageAnimation.switchAnimation("delta_fringe_images");
       imageAnimation.currentAnimationIndex = 1; // fake an index.
 
@@ -1604,7 +1594,7 @@
 
       // index should become 0
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { files: ["firstframe.jpg", "middleframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "middleframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
       imageAnimation.switchAnimation("delta_fringe_images");
       imageAnimation.animationIndex = 0;
@@ -1620,7 +1610,7 @@
 
       // index should become 0
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { files: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
       imageAnimation.currentAnimationKey = ""; // No animation key
       imageAnimation.currentAnimationIndex = 1; // fake an index.;
@@ -1636,7 +1626,7 @@
 
       // index should become 0
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { files: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
 
       imageAnimation.switchAnimation("delta_fringe_images");
@@ -1651,7 +1641,7 @@
 
       // index should become 0.. we do not have any images. Maybe test later using an fake array.
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { files: [] } };
+      imageAnimation.model.info = { delta_fringe_images: { images: [] } };
       /*eslint-enable camelcase*/
 
       imageAnimation.animationIndex = -10;
@@ -1666,13 +1656,13 @@
 
       // index should become 0.. we do not have any images. Maybe test later using an fake array.
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { files: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
 
       imageAnimation.switchAnimation("delta_fringe_images");
       imageAnimation.gotoLastFrame();
 
-      assert.isTrue(imageAnimation.animationIndex === imageAnimation.model.info.delta_fringe_images.files.length - 1, "Animation frame at 0");
+      assert.isTrue(imageAnimation.animationIndex === imageAnimation.model.info.delta_fringe_images.images.length - 1, "Animation frame at 0");
       done();
     });
 
@@ -1972,28 +1962,6 @@
   });
 
 
-  // describe("Map component", function() {
-  //   var aMapComponent = new MapComponent();
-  //   var wrapper = mount(MapComponent);
-  //   it("Map should not be null but filled with a mapbox object", function(done) {
-  //     try {
-  //       assert.notEqual(aMapComponent.map, null);
-  //       done();
-  //     } catch (e) {
-  //       done(e);
-  //     }
-  //   });
-  //
-  //   it("if map is zoomed in to > 8, getbbox() is called", function(done) {
-  //     aMapComponent.map.setZoom(9);
-  //     try {
-  //       assert.called(aMapComponent.getbbox());
-  //       done();
-  //     } catch (e) {
-  //       done(e);
-  //     }
-  //   });
-  // });
 
 
   // This test doesn't work, since it gets stuck when loading the main template.

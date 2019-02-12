@@ -26,22 +26,33 @@
 
 .navbar {
   margin-bottom: 0;  // override default bootstrap value
+  background-color: $col-bw-1;
 
-  background-image: -webkit-linear-gradient(left, #103551, #3a5a6f, #66818e, #96a9af, #cad2d3);
-  background-image: -o-linear-gradient(left, #103551, #3a5a6f, #66818e, #96a9af, #cad2d3);
-  background-image: linear-gradient(to right, #103551, #3a5a6f, #66818e, #96a9af, #cad2d3);
-
-  #logoimage {
+  #logoholder {
     float: left;
     position: relative;
     height: 51px;
     width: 51px;
     margin: -15px 15px 15px -15px;
+    background-color: $col-bg-d3d;
+  }
+
+  #logoimage {
+    position: relative;
+    height: 51px;
+    width: 51px;
+    margin: 0;
     z-index: 1;
     -webkit-animation: sping 4s ease-in;
     -moz-animation: spin 4s ease-in;
     animation: spin 4s ease-in;
     min-width: 51px;
+  }
+
+  img {
+    float: left;
+    height: 51px;
+    margin: -15px 15px 15px -15px;
   }
 
   &.navbar-default .active > a,
@@ -53,6 +64,7 @@
   .navbar-brand {
     font-size: 1em;
   }
+
 }
 
 @media (min-width: $screen-xs-sm) {
