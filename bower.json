@@ -49,6 +49,11 @@
         "scss/font-awesome.scss",
         "fonts/**/*"
       ]
+    },
+    "open-sans-fontface": {
+      "main": [
+        "fonts/**/*"
+      ]
     }
   },
   "devDependencies": {
