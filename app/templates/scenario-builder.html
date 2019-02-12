@@ -343,7 +343,12 @@
               </div>
               <!-- template details -->
               <div class="panel-body text-center">
+                <map-component
+                  v-if="template.name==='GTSM world template'"
+                >
+                </map-component>
                 <img
+                  v-if="template.name==='River dominated delta'"
                   src="images/schematic.svg"
                   class="scenariobuilder-schematic"
                 />
