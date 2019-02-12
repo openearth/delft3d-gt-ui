@@ -13,10 +13,10 @@
           <!--  -->
           <div class="row" v-if="availableTemplates.length">
             <div class="col-sm-12">
-              <div class="form-group ">
+              <div class="form-group">
                 <label for="select-template">Select a template</label>
                 <select class="combobox form-control" v-model="template"  id="select-template" :onchange="selectTemplate(template)">
-                  <option v-for="template in availableTemplates" :value="template">
+                  <option v-for="template in availableTemplates" :value="template" :disabled="template.name !== 'River dominated delta'" :selected="template.name === 'River dominated delta'">
                     {{ template.name }}
                   </option>
                   <option value="" disabled>
@@ -58,6 +58,8 @@
                                 id="run-env"
                                 >
                                 <option selected>Amazon</option>
+                                <option disabled>Nerdalize (disabled: this feature will be added in future versions)</option>
+                                <option disabled>H6 cluster (disabled: this feature will be added in future versions)</option>
                                 <option disabled>local (disabled: this feature will be added in future versions)</option>
                               </select>
                             </div>
@@ -101,7 +103,7 @@
 
                           <div class="input-group">
                             <!-- numeric, text, semver or factor are inputs-->
-                            <template v-if="isInput(variable)">
+                            <template v-if="isInput(variable) ">
                               <input
                               :type="variable.type"
                               class="form-control"
@@ -143,12 +145,56 @@
                               v-validate="variable.validators"
                               >{{ variable.value }}</textarea>
                             </template>
+
+                            <!-- date -->
+                            <template
+                              v-if="variable.type === 'date'"
+                              >
+                              <div
+                                class="input-group date"
+                                data-provide="datepicker"
+                                data-date-format="yyyymmdd"
+                                todayHighlight
+                                >
+                                  <input
+                                  class="form-control date"
+                                  v-model="variable.value"
+                                  :field="getId(variable)"
+                                  name="field"
+                                  v-validate="variable.validators"
+                                  />
+                                <div class="input-group-addon">
+                                  <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                              </div>
+
+                            </template>
+                            <!-- bbox array -->
+                            <template
+                              v-if="variable.type === 'bbox-array'"
+                              >
+                              <input
+                              type="text"
+                              :id="variable.id"
+                              class="form-control"
+                              :field="getId(variable)"
+                              v-model="variable.value"
+                              :value="bbox"
+                              v-validate="variable.validations"
+                              readonly
+                              />
+                            </template>
+
                             <!-- if we add this to 1 we need to add it to all, bug in bootstrap -->
-                            <span class="input-group-addon" >
+                            <span class="input-group-addon" v-if="variable.units !='-'" >
                               {{ variable.units || '-' }}
                             </span>
                           </div>
 
+                          <p class="help-block has-error" v-if="!validbbox
+                            && variable.type === 'bbox-array'">
+                            Zoom to a bounding box on the map with less than 10 locations.
+                          </p>
                           <!-- TODO: replace this part by messages -->
                           <div v-if="$validation[getId(variable)]">
                             <p  v-if="$validation[getId(variable)].required"
@@ -270,9 +316,7 @@
               </validator>
 
             </div>
-
           </div>
-
         </div>
 
 
@@ -299,7 +343,15 @@
               </div>
               <!-- template details -->
               <div class="panel-body text-center">
-                <img src="images/schematic.svg" class="scenariobuilder-schematic" />
+                <map-component
+                  v-if="template.name==='GTSM world template'"
+                >
+                </map-component>
+                <img
+                  v-if="template.name==='River dominated delta'"
+                  src="images/schematic.svg"
+                  class="scenariobuilder-schematic"
+                />
               </div>
             </div>
           </div>

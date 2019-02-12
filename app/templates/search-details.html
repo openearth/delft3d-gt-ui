@@ -3,16 +3,13 @@
   <div class="search-details">
     <!-- disable if we don't have a searchTemplate -->
     <div v-if="searchTemplate">
-      <form
-         @change="search"
-         @input="search"
-         >
+      <form @change="search" @input="search">
 
         <div class="panel-group" id="run-accordion" role="tablist" aria-multiselectable="true">
 
           <div class="form-group clear-left">
-            <div class="input-group">
-              <input type="text" class="form-control" id="search" placeholder="Search name..." v-model="searchText">
+            <div class="input-group input-group-sm ">
+              <input type="text" class="form-control" id="search" placeholder="Search name..." v-model="searchText" aria-describedby="inputGroup-sizing-sm">
               <span class="input-group-btn">
                 <button class="btn btn-default button-empty-input-field" type="button">
                   <i class="fa fa-times" aria-hidden="true"></i>
@@ -21,31 +18,21 @@
             </div>
           </div>
 
-          <div class="form-group">
-            <select
-               v-model="selectedDomains"
-               id="domain"
-               class="select-picker form-control"
-               title="Choose publication domain..."
-               multiple
-               data-selected-text-format="count > 3"
-               data-actions-box="true">
-              <option
-                 data-content="<i class='fa fa-fw fa-user aria-hidden='true'></i> Private">
+          <div class="form-group form-group-sm">
+            <select v-model="selectedDomains" id="domain" class="select-picker form-control" title="Choose publication domain..." multiple data-selected-text-format="count > 3" data-actions-box="true">
+              <option data-content="<i class='fa fa-fw fa-user aria-hidden='true'></i> Private">
                 private
               </option>
-              <option
-                 data-content="<i class='fa fa-fw fa-users' aria-hidden='true'></i> Company">
+              <option data-content="<i class='fa fa-fw fa-users' aria-hidden='true'></i> Company">
                 company
               </option>
-              <option
-                 data-content="<i class='fa fa-fw fa-globe' aria-hidden='true'></i> Public">
+              <option data-content="<i class='fa fa-fw fa-globe' aria-hidden='true'></i> Public">
                 public
               </option>
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group form-group-sm">
             <select v-model="selectedUsers" id="user" class="select-picker form-control" title="Choose user..." multiple data-selected-text-format="count > 3" data-live-search="true">
               <option v-for="user in users" :value="user.id">{{user.last_name}}, {{user.first_name}}</option>
             </select>
@@ -57,9 +44,9 @@
             </div>
             <div class="panel-body panel-collapse collapse" role="tabpanel" aria-labelledby="template-datetimes" id="template-datetimes">
               <div class="form-group" :class="{ 'has-error': !createdAfterValid }">
-                <label class="control-label" >Created after</label>
-                <div class="input-group">
-                  <input type="text" class="form-control datepicker" id="created_after" placeholder="yyyy-mm-dd" v-model="createdAfter">
+                <label class="control-label">Created after</label>
+                <div class="input-group date input-group-sm" data-provide="datepicker" data-date-format="yyyy-mm-dd">
+                  <input type="text" class="form-control datepicker" id="created_after" placeholder="yyyy-mm-dd" v-model="createdAfter" todayHighlight>
                   <span class="input-group-btn">
                     <button class="btn btn-default button-empty-input-field" type="button">
                       <i class="fa fa-times" aria-hidden="true"></i>
@@ -68,9 +55,9 @@
                 </div>
               </div>
               <div class="form-group" :class="{ 'has-error': !createdBeforeValid }">
-                <label class="control-label" >Created before</label>
-                <div class="input-group">
-                  <input type="text" class="form-control datepicker" id="created_before" placeholder="yyyy-mm-dd" v-model="createdBefore">
+                <label class="control-label">Created before</label>
+                <div class="input-group date input-group-sm" data-provide="datepicker" data-date-format="yyyy-mm-dd">
+                  <input type="text" class="form-control datepicker" id="created_before" placeholder="yyyy-mm-dd" v-model="createdBefore" todayHighlight>
                   <span class="input-group-btn">
                     <button class="btn btn-default button-empty-input-field" type="button">
                       <i class="fa fa-times" aria-hidden="true"></i>
@@ -87,15 +74,9 @@
             </div>
             <div class="panel-body panel-collapse collapse" role="tabpanel" aria-labelledby="template-versions" id="template-versions">
               <div class="form-group">
-                <select
-                   id="outdated"
-                   title="Choose updates..."
-                   class="select-picker form-control"
-                   data-container="body"
-                   v-model="selectedOutdated"
-                   multiple>
-                   <option data-content="No updates available">false</option>
-                   <option data-content="Updates available">true</option>
+                <select id="outdated" title="Choose updates..." class="select-picker form-control" data-container="body" v-model="selectedOutdated" multiple>
+                  <option data-content="No updates available">false</option>
+                  <option data-content="Updates available">true</option>
                 </select>
               </div>
             </div>
@@ -122,7 +103,7 @@
                     <div class="form-group">
 
                       <!-- Name should be excluded: already included above -->
-                      <label class="control-label" :for="variable.id">{{ variable.name }}: <span v-if="variable.units" >({{ variable.units }})</span></label>
+                      <label class="control-label" :for="variable.id">{{ variable.name }}: <span v-if="variable.units">({{ variable.units }})</span></label>
 
                       <div :class="{ numeric: variable.type === 'numeric' }">
                         <!-- two types of input for now: textarea and other -->
@@ -132,31 +113,13 @@
 
                           <!-- the 0.01 makes the floating point values work -->
                           <template v-if="variable.type === 'numeric'">
-                            <input
-                               type="text"
-                               class="ion-range"
-                               :id="variable.id"
-                               data-step="0.01"
-                               :data-min="variable.validators.min"
-                               :data-max="variable.validators.max"
-                               data-type="double"
-                               v-model="selectedParameters[variable.id]"
-                               />
+                            <input type="text" class="ion-range" :id="variable.id" data-step="0.01" :data-min="variable.validators.min" :data-max="variable.validators.max" data-type="double" v-model="selectedParameters[variable.id]" />
                           </template>
 
                           <template v-if="variable.type === 'select' && !variable.factor">
                             <div class="form-group">
-                              <select class="select-picker form-control" multiple
-                                      :id="variable.id"
-                                      v-model="selectedParameters[variable.id]"
-                                      data-selected-text-format="count > 3"
-                                      data-actions-box="true"
-                                      data-container="body"
-                                      >
-                                <option
-                                   v-for="option in variable.options"
-                                   :value="option.value"
-                                   >
+                              <select class="select-picker form-control" multiple :id="variable.id" v-model="selectedParameters[variable.id]" data-selected-text-format="count > 3" data-actions-box="true" data-container="body">
+                                <option v-for="option in variable.options" :value="option.value">
                                   {{ option.text }}
                                 </option>
                               </select>
@@ -165,13 +128,7 @@
 
                           <template v-if="variable.type !== 'numeric' && variable.type !== 'select'">
                             <div class="input-group">
-                              <input
-                                 :type="variable.type"
-                                 class="form-control"
-                                 :id="variable.id"
-                                 value=""
-                                 v-model="selectedParameters[variable.id]"
-                                 />
+                              <input :type="variable.type" class="form-control" :id="variable.id" value="" v-model="selectedParameters[variable.id]" />
                               <span class="input-group-btn">
                                 <button class="btn btn-default button-empty-input-field" type="button">
                                   <i class="fa fa-times" aria-hidden="true"></i>
@@ -183,14 +140,8 @@
                         </template>
 
                         <!-- text area -->
-                        <template
-                           v-if="variable.type === 'textarea'">
-                          <textarea
-                             class="form-control"
-                             rows="3"
-                             v-model="selectedParameters[variable.id]"
-
-                             ></textarea>
+                        <template v-if="variable.type === 'textarea'">
+                          <textarea class="form-control" rows="3" v-model="selectedParameters[variable.id]"></textarea>
                         </template>
 
                       </div>
@@ -210,43 +161,43 @@
             <div class="panel-body panel-collapse collapse" role="tabpanel" aria-labelledby="template-postprocess" id="template-postprocess">
 
               <div class="form-group">
-                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaTopD50']"> D50 for delta top (mm)</label>
-                <input type="text" id="DeltaTopD50" v-model="selectedPostProc['DeltaTopD50']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="2" data-type="double"/>
+                <label class="control-label"><input type="checkbox" v-model="activatedPostProc['DeltaTopD50']"> D50 for delta top (mm)</label>
+                <input type="text" id="DeltaTopD50" v-model="selectedPostProc['DeltaTopD50']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="2" data-type="double" />
               </div>
               <div class="form-group">
-                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaTopsand_fraction']"> Sand fraction for delta top (%)</label>
-                <input type="text" id="DeltaTopsand_fraction" v-model="selectedPostProc['DeltaTopsand_fraction']" class="ion-range" id="parameter1" data-step="1" data-min="0" data-max="100" data-type="double"/>
+                <label class="control-label"><input type="checkbox" v-model="activatedPostProc['DeltaTopsand_fraction']"> Sand fraction for delta top (%)</label>
+                <input type="text" id="DeltaTopsand_fraction" v-model="selectedPostProc['DeltaTopsand_fraction']" class="ion-range" id="parameter1" data-step="1" data-min="0" data-max="100" data-type="double" />
               </div>
               <div class="form-group">
-                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaTopsorting']"> Sorting for delta top (-)</label>
-                <input type="text" id="DeltaTopsorting" v-model="selectedPostProc['DeltaTopsorting']" class="ion-range" id="parameter1" data-step="0.1" data-min="0" data-max="10" data-type="double"/>
-              </div>
-
-
-              <div class="form-group">
-                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaFrontD50']"> D50 for delta front (mm)</label>
-                <input type="text" id="DeltaFrontD50" v-model="selectedPostProc['DeltaFrontD50']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="2" data-type="double"/>
-              </div>
-              <div class="form-group">
-                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaFrontsand_fraction']"> Sand fraction for delta front (%)</label>
-                <input type="text" id="DeltaFrontsand_fraction" v-model="selectedPostProc['DeltaFrontsand_fraction']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="1" data-type="double"/>
-              </div>
-              <div class="form-group">
-                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaFrontsorting']"> Sorting for delta front (-)</label>
-                <input type="text" id="DeltaFrontsorting" v-model="selectedPostProc['DeltaFrontsorting']" class="ion-range" id="parameter1" data-step="0.1" data-min="0" data-max="10" data-type="double"/>
+                <label class="control-label"><input type="checkbox" v-model="activatedPostProc['DeltaTopsorting']"> Sorting for delta top (-)</label>
+                <input type="text" id="DeltaTopsorting" v-model="selectedPostProc['DeltaTopsorting']" class="ion-range" id="parameter1" data-step="0.1" data-min="0" data-max="10" data-type="double" />
               </div>
 
+
               <div class="form-group">
-                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['ProDeltaD50']"> D50 for prodelta (mm)</label>
-                <input type="text" id="ProDeltaD50" v-model="selectedPostProc['ProDeltaD50']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="2" data-type="double"/>
+                <label class="control-label"><input type="checkbox" v-model="activatedPostProc['DeltaFrontD50']"> D50 for delta front (mm)</label>
+                <input type="text" id="DeltaFrontD50" v-model="selectedPostProc['DeltaFrontD50']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="2" data-type="double" />
               </div>
               <div class="form-group">
-                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['ProDeltasand_fraction']"> Sand fraction for prodelta (%)</label>
-                <input type="text" id="ProDeltasand_fraction" v-model="selectedPostProc['ProDeltasand_fraction']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="1" data-type="double"/>
+                <label class="control-label"><input type="checkbox" v-model="activatedPostProc['DeltaFrontsand_fraction']"> Sand fraction for delta front (%)</label>
+                <input type="text" id="DeltaFrontsand_fraction" v-model="selectedPostProc['DeltaFrontsand_fraction']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="1" data-type="double" />
               </div>
               <div class="form-group">
-                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['ProDeltasorting']"> Sorting for prodelta (-)</label>
-                <input type="text" id="ProDeltasorting" v-model="selectedPostProc['ProDeltasorting']" class="ion-range" id="parameter1" data-step="0.1" data-min="0" data-max="10" data-type="double"/>
+                <label class="control-label"><input type="checkbox" v-model="activatedPostProc['DeltaFrontsorting']"> Sorting for delta front (-)</label>
+                <input type="text" id="DeltaFrontsorting" v-model="selectedPostProc['DeltaFrontsorting']" class="ion-range" id="parameter1" data-step="0.1" data-min="0" data-max="10" data-type="double" />
+              </div>
+
+              <div class="form-group">
+                <label class="control-label"><input type="checkbox" v-model="activatedPostProc['ProDeltaD50']"> D50 for prodelta (mm)</label>
+                <input type="text" id="ProDeltaD50" v-model="selectedPostProc['ProDeltaD50']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="2" data-type="double" />
+              </div>
+              <div class="form-group">
+                <label class="control-label"><input type="checkbox" v-model="activatedPostProc['ProDeltasand_fraction']"> Sand fraction for prodelta (%)</label>
+                <input type="text" id="ProDeltasand_fraction" v-model="selectedPostProc['ProDeltasand_fraction']" class="ion-range" id="parameter1" data-step="0.01" data-min="0" data-max="1" data-type="double" />
+              </div>
+              <div class="form-group">
+                <label class="control-label"><input type="checkbox" v-model="activatedPostProc['ProDeltasorting']"> Sorting for prodelta (-)</label>
+                <input type="text" id="ProDeltasorting" v-model="selectedPostProc['ProDeltasorting']" class="ion-range" id="parameter1" data-step="0.1" data-min="0" data-max="10" data-type="double" />
               </div>
 
             </div>
@@ -254,7 +205,6 @@
           </div>
 
         </div>
-
       </form>
 
     </div>

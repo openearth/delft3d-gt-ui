@@ -1,0 +1,18 @@
+<template id="template-map-component">
+  <div id="map">
+  </div>
+  <div id="map-buttons">
+    <button class="btn" v-on:click="initialBbox()">
+      <span class="btn-label"><i class="fa fa-fw fa-refresh" aria-hidden="true"></i></span>
+        Reset map settings
+    </button>
+    <button class="btn" v-if="!fixate" v-on:click="fixate = true">
+      <span class="btn-label"><i class="fa fa-fw fa-lock" aria-hidden="true" ></i></span>
+        Lock bounding box
+    </button>
+    <button class="btn" v-if="fixate" v-on:click="fixate = false">
+      <span class="btn-label"><i class="fa fa-fw fa-unlock-alt" aria-hidden="true" ></i></span>
+        Unlock bounding box
+    </button>
+  </div>
+</template>

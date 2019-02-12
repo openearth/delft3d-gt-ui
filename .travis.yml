@@ -3,8 +3,9 @@ node_js:
   - "node"
 
 before_install:
-  - rvm install 2.0.0
-  - rvm use 2.0.0
+  - rvm install 2.1
+  - rvm use 2.1
+  - gem install rb-inotify -v 0.9.10
   - gem install scss_lint
 
 before_script:

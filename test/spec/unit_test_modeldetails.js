@@ -125,11 +125,28 @@
         store.state.activeModelContainer = {"data": {}};
         modelDetails.isRunning.should.equal(false);
 
-        store.state.activeModelContainer = {"data": {"state": "Running"}};
-        modelDetails.isRunning.should.equal(false);  // it checks whether the string is exactly as below
+        store.state.activeModelContainer = {"data": {"state": "Finished"}};
+        modelDetails.isRunning.should.equal(false);
 
         store.state.activeModelContainer = {"data": {"state": "Running simulation"}};
         modelDetails.isRunning.should.equal(true);
+
+        store.state.activeModelContainer = undefined;
+      });
+    });
+
+    // ***************************************************************************** getEntrypoints
+
+    describe(".getEntrypoints", function() {
+      it("", function() {
+        store.state.activeModelContainer = undefined;
+        modelDetails.getEntrypoints.should.equal(false);
+
+        store.state.activeModelContainer = {"notdata": {}};
+        modelDetails.getEntrypoints.should.equal(false);
+        //
+        store.state.activeModelContainer = {"data": {"entrypoints": ["gtsm-main"]}};
+        modelDetails.getEntrypoints.should.eql(["gtsm-main"]);
 
         store.state.activeModelContainer = undefined;
       });

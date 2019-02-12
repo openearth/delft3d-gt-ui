@@ -20,6 +20,12 @@
     margin-right: $padding;
   }
 
+  .btn[disabled] {
+    background-color: grey;
+    border-color: black;
+  }
+
+
   .row {
     padding: $padding 0;
   }

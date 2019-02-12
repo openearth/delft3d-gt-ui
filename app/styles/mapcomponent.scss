@@ -1,0 +1,22 @@
+@import 'variables';
+
+#map {
+  width: 100%;
+  height: 50vh;
+  left: 0;
+}
+
+.mapboxgl-canvas-container.mapboxgl-touch-zoom-rotate.mapboxgl-touch-drag-pan, .mapboxgl-canvas-container.mapboxgl-touch-zoom-rotate.mapboxgl-touch-drag-pan .mapboxgl-canvas {
+  position: absolute;
+}
+
+.btn-group-vertical {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  right: 10px;
+}
+
+#map-buttons {
+  padding-top: $padding
+}

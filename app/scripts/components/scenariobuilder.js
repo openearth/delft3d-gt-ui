@@ -55,7 +55,6 @@ var exports = (function() {
         maxRuns: 20
       };
     },
-
     route: {
       activate: function (transition) {
         // We force the template to be reloaded when this page is openend
@@ -164,12 +163,34 @@ var exports = (function() {
           }
           return true;
         }
+      },
+      // get the bounding box from the map from the store
+      bbox: {
+        get () {
+          return store.state.bbox;
+        },
+        set (bbox) {
+          store.setbbox(bbox);
+        }
+      },
+      // state for when a valid bounding box is selected
+      validbbox: {
+        get () {
+          return store.state.validbbox;
+        },
+        set (validbbox) {
+          store.setbboxvalidation(validbbox);
+        }
       }
     },
     methods: {
       // check if variable should generate an input element
       isInput: function(variable) {
         return _.includes(["numeric", "text", "semver"], variable.type) || variable.factor;
+      },
+      // Check is submit button should be disabled
+      disableSubmit: function() {
+        return (!(this.validForm && this.validbbox));
       },
       // Moved so that we can test it better.
       fetchTemplateList: function() {
@@ -302,6 +323,9 @@ var exports = (function() {
               } else {
                 // just set it (first item)
                 variable.value = _.get(parameters[variable.id].values, 0);
+                if (variable.id === "bbox") {
+                  store.setbbox(variable.value);
+                }
               }
 
             }
@@ -353,6 +377,9 @@ var exports = (function() {
                 return result;
               });
 
+              if (variable.type === "bbox-array") {
+                valuearray = [valuearray];
+              }
               parameters[variable.id] = {
                 values: valuearray,
                 // we need these in the table

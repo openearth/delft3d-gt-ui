@@ -19,6 +19,7 @@
 @import 'searchdetails';
 @import 'searchlist';
 @import 'viewer3d';
+@import 'mapcomponent';
 
 // ===================== app-wide styling
 
@@ -55,7 +56,7 @@ dt {
 }
 
 .info-secondary {
-  color: $col-bw-4;
+  color: $col-bw-7;
 }
 
 .label-default {
@@ -125,6 +126,9 @@ dt {
   padding: 5px;
 }
 
+.row {
+  padding-bottom: 15px;
+}
 // ============ responsiveness
 
 @media (min-width: $screen-xs-sm) {
@@ -136,6 +140,15 @@ dt {
 
   .full-height {
     height: 100%;
+  }
+
+  .modal-dialog {
+    left: 0;
+  }
+
+  .modal-open {
+    padding-right: 0px !important;
+    margin: 0 !important;
   }
 
   .login-body {

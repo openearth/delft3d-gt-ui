@@ -73,18 +73,17 @@
 
   .irs-slider,
   .irs-bar {
-    background: $col-bw-4;
+    background: $col-bw-0;
   }
 
   .irs-bar {
-    height: 4px; //Height of horizontal bar
+    height: 3px; //Height of horizontal bar
   }
 
   // Dimensions of the handles
   .to,
   .from {
     background-color: $col-bw-0;
-    border: 1px solid $col-bw-5;
     border-radius: 10px;
     height: 20px;
     top: 16px;
@@ -96,7 +95,7 @@
     span {
       background: none;
       background-color: $col-bw-2;
-      height: 4px;
+      height: 3px;
     }
   }
 }

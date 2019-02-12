@@ -24,7 +24,9 @@ var exports = (function() {
         first_name: "Anonymous",
         last_name: "User"
         /*eslint-enable camelcase*/
-      }
+      },
+      bbox: [],
+      validbbox: false
     },
 
     // ================================ SYNCHRONISATION
@@ -281,14 +283,15 @@ var exports = (function() {
           });
       });
     },
+    redoModel: function (modelContainer, entrypoint) {
+      var body = {"entrypoint": entrypoint};
 
-    redoModel: function (modelContainer) {
       return new Promise((resolve, reject) => {
         if (modelContainer === undefined || modelContainer.id === undefined) {
           return reject("No model id to redo");
         }
         modelContainer.data.state = "Queued";
-        $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/redo/", method: "PUT", traditional: true, dataType: "json"})
+        $.ajax({url: "/api/v1/scenes/" + modelContainer.id + "/redo/", method: "PUT", traditional: true, dataType: "json", data: body})
           .done(function(data) {
             resolve(data);
           })
@@ -481,8 +484,14 @@ var exports = (function() {
 
     updateParams: function (params) {
       this.state.params = params;
-    }
+    },
 
+    setbbox: function (bbox) {
+      this.state.bbox = bbox;
+    },
+    setbboxvalidation: function (val) {
+      this.state.validbbox = val;
+    }
   };
 
   // get this baby up and running:
