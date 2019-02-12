@@ -12,7 +12,9 @@
   "dependencies": {
     "@types/jquery": "^3.3.29",
     "bootstrap": "^4.2.1",
+    "bootstrap-combobox": "^1.0.2",
     "bootstrap-datepicker": "^1.8.0",
+    "bootstrap-datetimepicker": "0.0.7",
     "bootstrap-sass": "^3.4.0",
     "bootstrap-select": "^1.13.5",
     "bootstrap-toggle": "^2.2.2",

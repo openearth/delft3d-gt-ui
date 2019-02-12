@@ -1,252 +1,196 @@
 <template>
-  <div class="search-details">
-    <!-- disable if we don't have a searchTemplate -->
-    <div v-if="searchTemplate">
-      <form
-         @change="search"
-         @input="search"
-         >
-         <div class="panel-group" id="run-accordion" role="tablist" aria-multiselectable="true">
+<div class="search-details">
+  <!-- disable if we don't have a searchTemplate -->
+  <div v-if="searchTemplate">
+    <form @change="search" @input="search">
+      <div class="panel-group" id="run-accordion" role="tablist" aria-multiselectable="true">
 
-      <div class="form-group clear-left">
-        <div class="input-group input-group-sm ">
-          <input type="text" class="form-control" id="search" placeholder="Search name..." v-model="searchText" aria-describedby="inputGroup-sizing-sm">
-          <span class="input-group-btn">
-            <button class="btn btn-default button-empty-input-field" type="button">
-              <i class="fa fa-times" aria-hidden="true"></i>
-            </button>
-          </span>
-        </div>
-      </div>
-      <div class="form-group form-group-sm">
-        <select
-           v-model="selectedDomains"
-           id="domain"
-           class="selectpicker form-control"
-           title="Choose publication domain..."
-           multiple
-           data-selected-text-format="count > 3"
-           data-actions-box="true">
-          <option
-             data-content="<i class='fa fa-fw fa-user aria-hidden='true'></i> Private">
-            private
-          </option>
-          <option
-             data-content="<i class='fa fa-fw fa-users' aria-hidden='true'></i> Company">
-            company
-          </option>
-          <option
-             data-content="<i class='fa fa-fw fa-globe' aria-hidden='true'></i> Public">
-            public
-          </option>
-        </select>
-      </div>
-<div class="panel panel-default panel-search">
-    <div class="panel-heading panel-collapse-header" data-toggle="collapse" data-parent="#template-datetimes" href="#template-datetimes" aria-expanded="true" aria-controls="template-collapse">
-      Dates &amp; Times
-    </div>
-    <div class="panel-body panel-collapse collapse" role="tabpanel" aria-labelledby="template-datetimes" id="template-datetimes">
-      <div class="form-group" :class="{ 'has-error': !createdAfterValid }">
-        <label class="control-label" >Created after</label>
-        <div
-          class="input-group date input-group-sm"
-          data-provide="datepicker"
-          data-date-format="yyyy-mm-dd"
-          >
-          <input type="text" class="form-control datepicker" id="created_after" placeholder="yyyy-mm-dd" v-model="createdAfter" todayHighlight>
-          <span class="input-group-btn">
-            <button class="btn btn-default button-empty-input-field" type="button">
-              <i class="fa fa-times" aria-hidden="true"></i>
-            </button>
-          </span>
-        </div>
-      </div>
-      <div class="form-group" :class="{ 'has-error': !createdBeforeValid }">
-        <label class="control-label" >Created before</label>
-        <div
-          class="input-group date input-group-sm"
-          data-provide="datepicker"
-          data-date-format="yyyy-mm-dd"
-          >
-          <input type="text" class="form-control datepicker" id="created_before" placeholder="yyyy-mm-dd" v-model="createdBefore" todayHighlight>
-          <span class="input-group-btn">
-            <button class="btn btn-default button-empty-input-field" type="button">
-              <i class="fa fa-times" aria-hidden="true"></i>
-            </button>
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="panel panel-default panel-search">
-  <div class="panel-heading panel-collapse-header" data-toggle="collapse" data-parent="#template-versions" href="#template-versions" aria-expanded="true" aria-controls="template-collapse">
-    Updates available
-  </div>
-  <div class="panel-body panel-collapse collapse" role="tabpanel" aria-labelledby="template-versions" id="template-versions">
-    <div class="form-group">
-      <select
-         id="outdated"
-         title="Choose updates..."
-         class="select-picker form-control"
-         data-container="body"
-         v-model="selectedOutdated"
-         multiple>
-         <option data-content="No updates available">false</option>
-         <option data-content="Updates available">true</option>
-      </select>
-    </div>
-  </div>
-</div>
-<!-- Dynamically generated HTML using incoming template from API -->
-
-    <!-- Variables -->
-
-    <div v-for="(section, index) in searchTemplate.sections" v-show="searchTemplate" :key="index">
-
-      <div class="panel panel-default panel-search">
-
-        <div class="panel-heading panel-collapse-header" data-toggle="collapse" :data-parent="'#template-' + index" :href="'#template-' + index" aria-expanded="true" aria-controls="template-collapse">
-          {{section.name}}
-        </div>
-
-        <div class="panel-body panel-collapse collapse" role="tabpanel" :aria-labelledby="'#template-' + index" :id="'#template-' + index">
-
-          <div v-for="(variable, index) in section.variables" :key="index">
-
-            <template v-if="variable.name !== 'Name'">
-
-              <div class="form-group">
-
-                <!-- Name should be excluded: already included above -->
-                <label class="control-label" :for="variable.id">{{ variable.name }}: <span v-if="variable.units" >({{ variable.units }})</span></label>
-
-                <div :class="{ numeric: variable.type === 'numeric' }">
-                  <!-- two types of input for now: textarea and other -->
-
-                  <!-- other first -->
-                  <template v-if="variable.type !== 'textarea'">
-
-                    <!-- the 0.01 makes the floating point values work -->
-                    <template v-if="variable.type === 'numeric'">
-                      <input
-                         type="text"
-                         class="ion-range"
-                         :id="variable.id"
-                         data-step="0.01"
-                         :data-min="variable.validators.min"
-                         :data-max="variable.validators.max"
-                         data-type="double"
-                         v-model="selectedParameters['variable.id']"
-                         />
-                    </template>
-
-                    <template v-if="variable.type === 'select' && !variable.factor">
-                      <div class="form-group">
-                        <select class="select-picker form-control" multiple
-                                :id="variable.id"
-                                data-selected-text-format="count > 3"
-                                data-actions-box="true"
-                                data-container="body"
-                                >
-                          <option
-                             v-for="option in variable.options"
-                             :value="option.value"
-                             >
-                            {{ option.text }}
-                          </option>
-                        </select>
-                      </div>
-                    </template>
-
-                    <template v-if="variable.type !== 'numeric' && variable.type !== 'select'">
-                      <div class="input-group">
-                        <input
-                           :type="variable.type"
-                           class="form-control"
-                           :id="variable.id"
-                           value=""
-                           v-model="selectedParameters['variable.id']"
-                           />
-                        <span class="input-group-btn">
-                          <button class="btn btn-default button-empty-input-field" type="button">
-                            <i class="fa fa-times" aria-hidden="true"></i>
-                          </button>
-                        </span>
-                      </div>
-                    </template>
-
-                  </template>
-
-                  <!-- text area -->
-                  <template
-                     v-if="variable.type === 'textarea'">
-                    <textarea
-                       class="form-control"
-                       rows="3"
-                       v-model="selectedParameters['variable.id']"
-
-                       ></textarea>
-                  </template>
-
-                </div>
-              </div>
-            </template>
+        <div class="form-group clear-left">
+          <div class="input-group input-group-sm ">
+            <input type="text" class="form-control" id="search" placeholder="Search name..." v-model="searchText" aria-describedby="inputGroup-sizing-sm">
+            <span class="input-group-btn">
+              <button class="btn btn-default button-empty-input-field" type="button">
+                <i class="fa fa-times" aria-hidden="true"></i>
+              </button>
+            </span>
           </div>
         </div>
+        <div class="form-group">
+          <select v-model="selectedDomains" id="domain" class="select-picker form-control" title="Choose publication domain..." multiple data-selected-text-format="count > 3" data-actions-box="true">
+            <option data-content="<i class='fa fa-fw fa-user aria-hidden='true'></i> Private">
+              private
+            </option>
+            <option data-content="<i class='fa fa-fw fa-users' aria-hidden='true'></i> Company">
+              company
+            </option>
+            <option data-content="<i class='fa fa-fw fa-globe' aria-hidden='true'></i> Public">
+              public
+            </option>
+          </select>
+        </div>
+        <div class="panel panel-default panel-search">
+          <div class="panel-heading panel-collapse-header" data-toggle="collapse" data-parent="#template-datetimes" href="#template-datetimes" aria-expanded="true" aria-controls="template-collapse">
+            Dates &amp; Times
+          </div>
+          <div class="panel-body panel-collapse collapse" role="tabpanel" aria-labelledby="template-datetimes" id="template-datetimes">
+            <div class="form-group" :class="{ 'has-error': !createdAfterValid }">
+              <label class="control-label">Created after</label>
+              <div class="input-group date input-group-sm" data-provide="datepicker" data-date-format="yyyy-mm-dd">
+                <input type="text" class="form-control datepicker" id="created_after" placeholder="yyyy-mm-dd" v-model="createdAfter" todayHighlight>
+                <span class="input-group-btn">
+                  <button class="btn btn-default button-empty-input-field" type="button">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                  </button>
+                </span>
+              </div>
+            </div>
+            <div class="form-group" :class="{ 'has-error': !createdBeforeValid }">
+              <label class="control-label">Created before</label>
+              <div class="input-group date input-group-sm" data-provide="datepicker" data-date-format="yyyy-mm-dd">
+                <input type="text" class="form-control datepicker" id="created_before" placeholder="yyyy-mm-dd" v-model="createdBefore" todayHighlight>
+                <span class="input-group-btn">
+                  <button class="btn btn-default button-empty-input-field" type="button">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                  </button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel panel-default panel-search">
+          <div class="panel-heading panel-collapse-header" data-toggle="collapse" data-parent="#template-versions" href="#template-versions" aria-expanded="true" aria-controls="template-collapse">
+            Updates available
+          </div>
+          <div class="panel-body panel-collapse collapse" role="tabpanel" aria-labelledby="template-versions" id="template-versions">
+            <div class="form-group">
+              <select id="outdated" title="Choose updates..." class="select-picker form-control" data-container="body" v-model="selectedOutdated" multiple>
+                <option data-content="No updates available">false</option>
+                <option data-content="Updates available">true</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <!-- Dynamically generated HTML using incoming template from API -->
+
+        <!-- Variables -->
+
+        <div v-for="(section, index) in searchTemplate.sections" v-show="searchTemplate" :key="index">
+
+          <div class="panel panel-default panel-search">
+
+            <div class="panel-heading panel-collapse-header" data-toggle="collapse" :data-parent="'#template-' + index" :href="'#template-' + index" aria-expanded="true" aria-controls="template-collapse">
+              {{section.name}}
+            </div>
+
+            <div class="panel-body panel-collapse collapse" role="tabpanel" :aria-labelledby="'#template-' + index" :id="'#template-' + index">
+
+              <div v-for="(variable, index) in section.variables" :key="index">
+
+                <template v-if="variable.name !== 'Name'">
+
+                  <div class="form-group">
+
+                    <!-- Name should be excluded: already included above -->
+                    <label class="control-label" :for="variable.id">{{ variable.name }}: <span v-if="variable.units">({{ variable.units }})</span></label>
+
+                    <div :class="{ numeric: variable.type === 'numeric' }">
+                      <!-- two types of input for now: textarea and other -->
+
+                      <!-- other first -->
+                      <template v-if="variable.type !== 'textarea'">
+
+                        <!-- the 0.01 makes the floating point values work -->
+                        <template v-if="variable.type === 'numeric'">
+                          <input type="text" class="ion-range" :id="variable.id" data-step="0.01" :data-min="variable.validators.min" :data-max="variable.validators.max" data-type="double" v-model="selectedParameters['variable.id']" />
+                        </template>
+
+                        <template v-if="variable.type === 'select' && !variable.factor">
+                          <div class="form-group">
+                            <select class="select-picker form-control" multiple :id="variable.id" data-selected-text-format="count > 3" data-actions-box="true" data-container="body">
+                              <option v-for="option in variable.options" :value="option.value">
+                                {{ option.text }}
+                              </option>
+                            </select>
+                          </div>
+                        </template>
+
+                        <template v-if="variable.type !== 'numeric' && variable.type !== 'select'">
+                          <div class="input-group">
+                            <input :type="variable.type" class="form-control" :id="variable.id" value="" v-model="selectedParameters['variable.id']" />
+                            <span class="input-group-btn">
+                              <button class="btn btn-default button-empty-input-field" type="button">
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                              </button>
+                            </span>
+                          </div>
+                        </template>
+
+                      </template>
+
+                      <!-- text area -->
+                      <template v-if="variable.type === 'textarea'">
+                        <textarea class="form-control" rows="3" v-model="selectedParameters['variable.id']"></textarea>
+                      </template>
+
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel panel-default panel-search">
+
+          <div class="panel-heading panel-collapse-header" data-toggle="collapse" data-parent="#template-postprocess" href="#template-postprocess" aria-expanded="true" aria-controls="template-collapse">
+            Post-processing output
+          </div>
+          <div class="panel-body panel-collapse collapse" role="tabpanel" aria-labelledby="template-postprocess" id="template-postprocess">
+
+            <div class="form-group">
+              <label class="control-label"><input type="checkbox" v-model="activatedPostProc['DeltaTopD50']"> D50 for delta top (mm)</label>
+              <input type="text" id="DeltaTopD50" v-model="selectedPostProc['DeltaTopD50']" class="ion-range" data-step="0.01" data-min="0" data-max="2" data-type="double" />
+            </div>
+            <div class="form-group">
+              <label class="control-label"><input type="checkbox" v-model="activatedPostProc['DeltaTopsand_fraction']"> Sand fraction for delta top (%)</label>
+              <input type="text" id="DeltaTopsand_fraction" v-model="selectedPostProc['DeltaTopsand_fraction']" class="ion-range" data-step="1" data-min="0" data-max="100" data-type="double" />
+            </div>
+            <div class="form-group">
+              <label class="control-label"><input type="checkbox" v-model="activatedPostProc['DeltaTopsorting']"> Sorting for delta top (-)</label>
+              <input type="text" id="DeltaTopsorting" v-model="selectedPostProc['DeltaTopsorting']" class="ion-range" data-step="0.1" data-min="0" data-max="10" data-type="double" />
+            </div>
+            <div class="form-group">
+              <label class="control-label"><input type="checkbox" v-model="activatedPostProc['DeltaFrontD50']"> D50 for delta front (mm)</label>
+              <input type="text" id="DeltaFrontD50" v-model="selectedPostProc['DeltaFrontD50']" class="ion-range" data-step="0.01" data-min="0" data-max="2" data-type="double" />
+            </div>
+            <div class="form-group">
+              <label class="control-label"><input type="checkbox" v-model="activatedPostProc['DeltaFrontsand_fraction']"> Sand fraction for delta front (%)</label>
+              <input type="text" id="DeltaFrontsand_fraction" v-model="selectedPostProc['DeltaFrontsand_fraction']" class="ion-range" data-step="0.01" data-min="0" data-max="1" data-type="double" />
+            </div>
+            <div class="form-group">
+              <label class="control-label"><input type="checkbox" v-model="activatedPostProc['DeltaFrontsorting']"> Sorting for delta front (-)</label>
+              <input type="text" id="DeltaFrontsorting" v-model="selectedPostProc['DeltaFrontsorting']" class="ion-range" data-step="0.1" data-min="0" data-max="10" data-type="double" />
+            </div>
+
+            <div class="form-group">
+              <label class="control-label"><input type="checkbox" v-model="activatedPostProc['ProDeltaD50']"> D50 for prodelta (mm)</label>
+              <input type="text" id="ProDeltaD50" v-model="selectedPostProc['ProDeltaD50']" class="ion-range" data-step="0.01" data-min="0" data-max="2" data-type="double" />
+            </div>
+            <div class="form-group">
+              <label class="control-label"><input type="checkbox" v-model="activatedPostProc['ProDeltasand_fraction']"> Sand fraction for prodelta (%)</label>
+              <input type="text" id="ProDeltasand_fraction" v-model="selectedPostProc['ProDeltasand_fraction']" class="ion-range" data-step="0.01" data-min="0" data-max="1" data-type="double" />
+            </div>
+            <div class="form-group">
+              <label class="control-label"><input type="checkbox" v-model="activatedPostProc['ProDeltasorting']"> Sorting for prodelta (-)</label>
+              <input type="text" id="ProDeltasorting" v-model="selectedPostProc['ProDeltasorting']" class="ion-range" data-step="0.1" data-min="0" data-max="10" data-type="double" />
+            </div>
+
+          </div>
+
+        </div>
       </div>
-    </div>
-    <div class="panel panel-default panel-search">
-
-            <div class="panel-heading panel-collapse-header" data-toggle="collapse" data-parent="#template-postprocess" href="#template-postprocess" aria-expanded="true" aria-controls="template-collapse">
-              Post-processing output
-            </div>
-            <div class="panel-body panel-collapse collapse" role="tabpanel" aria-labelledby="template-postprocess" id="template-postprocess">
-
-              <div class="form-group">
-                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaTopD50']"> D50 for delta top (mm)</label>
-                <input type="text" id="DeltaTopD50" v-model="selectedPostProc['DeltaTopD50']" class="ion-range" data-step="0.01" data-min="0" data-max="2" data-type="double"/>
-              </div>
-              <div class="form-group">
-                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaTopsand_fraction']"> Sand fraction for delta top (%)</label>
-                <input type="text" id="DeltaTopsand_fraction" v-model="selectedPostProc['DeltaTopsand_fraction']" class="ion-range" data-step="1" data-min="0" data-max="100" data-type="double"/>
-              </div>
-              <div class="form-group">
-                <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaTopsorting']"> Sorting for delta top (-)</label>
-                <input type="text" id="DeltaTopsorting" v-model="selectedPostProc['DeltaTopsorting']" class="ion-range" data-step="0.1" data-min="0" data-max="10" data-type="double"/>
-              </div>
-              <div class="form-group">
-  <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaFrontD50']"> D50 for delta front (mm)</label>
-  <input type="text" id="DeltaFrontD50" v-model="selectedPostProc['DeltaFrontD50']" class="ion-range" data-step="0.01" data-min="0" data-max="2" data-type="double"/>
-</div>
-<div class="form-group">
-  <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaFrontsand_fraction']"> Sand fraction for delta front (%)</label>
-  <input type="text" id="DeltaFrontsand_fraction" v-model="selectedPostProc['DeltaFrontsand_fraction']" class="ion-range" data-step="0.01" data-min="0" data-max="1" data-type="double"/>
-</div>
-<div class="form-group">
-  <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['DeltaFrontsorting']"> Sorting for delta front (-)</label>
-  <input type="text" id="DeltaFrontsorting" v-model="selectedPostProc['DeltaFrontsorting']" class="ion-range" data-step="0.1" data-min="0" data-max="10" data-type="double"/>
-</div>
-
-<div class="form-group">
-  <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['ProDeltaD50']"> D50 for prodelta (mm)</label>
-  <input type="text" id="ProDeltaD50" v-model="selectedPostProc['ProDeltaD50']" class="ion-range" data-step="0.01" data-min="0" data-max="2" data-type="double"/>
-</div>
-<div class="form-group">
-  <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['ProDeltasand_fraction']"> Sand fraction for prodelta (%)</label>
-  <input type="text" id="ProDeltasand_fraction" v-model="selectedPostProc['ProDeltasand_fraction']" class="ion-range" data-step="0.01" data-min="0" data-max="1" data-type="double"/>
-</div>
-<div class="form-group">
-  <label class="control-label" ><input type="checkbox" v-model="activatedPostProc['ProDeltasorting']"> Sorting for prodelta (-)</label>
-  <input type="text" id="ProDeltasorting" v-model="selectedPostProc['ProDeltasorting']" class="ion-range" data-step="0.1" data-min="0" data-max="10" data-type="double"/>
-</div>
-
-            </div>
-
+    </form>
   </div>
 </div>
-      </form>
-    </div>
-  </div>
 </template>
 
 <script>
@@ -254,7 +198,10 @@ import store from '../store'
 import $ from 'jquery'
 import _ from 'lodash'
 import moment from 'moment'
-import { fetchUsers, fetchSearchTemplate } from '../templates.js'
+import {
+  fetchUsers,
+  fetchSearchTemplate
+} from '../templates.js'
 import {
   bus
 } from '@/event-bus.js'
@@ -262,7 +209,7 @@ import {
 export default {
   store,
   template: '#template-search-details',
-  data: function () {
+  data: function() {
     return {
       activatedPostProc: {},
       createdAfter: '',
@@ -279,7 +226,7 @@ export default {
     }
   },
 
-  mounted () {
+  mounted() {
     bus.$on('clearSearch', () => {
       this.createdAfter = ''
       this.createdBefore = ''
@@ -330,14 +277,16 @@ export default {
     }
 
     // set store failedUpdate handling
-    store.state.failedUpdate = function (jqXhr) {
+    store.state.failedUpdate = function(jqXhr) {
       console.error(jqXhr)
 
       let status = jqXhr.statusText || 'error'
       let response = jqXhr.responseText || jqXhr.responseJson || 'An error occurred.'
 
       this.$root.$broadcast('show-alert', {
-        message: status + ': ' + response, showTime: 3000, type: 'danger'
+        message: status + ': ' + response,
+        showTime: 3000,
+        type: 'danger'
       })
     }.bind(this)
 
@@ -369,7 +318,7 @@ export default {
 
   computed: {
     modelEngines: {
-      get: function () {
+      get: function() {
         // flatten variables
         var variables = _.flatMap(_.flatMap(this.templates, 'sections'), 'variables')
 
@@ -383,14 +332,14 @@ export default {
       }
     },
     parameters: {
-      get: function () {
+      get: function() {
         var parameters = {}
         var variables = _.flatMap(
           _.flatMap(this.templates, 'sections'),
           'variables'
         )
 
-        variables.forEach(function (variable) {
+        variables.forEach(function(variable) {
           if (_.has(variable, 'validators.min') && _.has(variable, 'validators.max')) {
             // create parameter info for forms
             var obj = {
@@ -406,58 +355,58 @@ export default {
       }
     },
     createdAfterValid: {
-      get: function () {
+      get: function() {
         return this.createdAfter === '' || moment(this.createdAfter, 'YYYY-MM-DD', true).isValid()
       }
     },
     createdBeforeValid: {
-      get: function () {
+      get: function() {
         return this.createdBefore === '' || moment(this.createdBefore, 'YYYY-MM-DD', true).isValid()
       }
     }
   },
 
   watch: {
-    activatedPostProc: function () {
+    activatedPostProc: function() {
       this.search()
     },
-    createdAfter: function () {
+    createdAfter: function() {
       this.search()
     },
-    createdBefore: function () {
+    createdBefore: function() {
       this.search()
     },
-    searchTemplate: function () {
+    searchTemplate: function() {
       this.search()
     },
-    searchText: function () {
+    searchText: function() {
       this.search()
     },
-    selectedDomains: function () {
+    selectedDomains: function() {
       this.search()
     },
-    selectedParameters: function () {
+    selectedParameters: function() {
       this.search()
     },
-    selectedPostProc: function () {
+    selectedPostProc: function() {
       this.search()
     },
-    selectedTemplates: function () {
+    selectedTemplates: function() {
       this.search()
     },
-    selectedUsers: function () {
+    selectedUsers: function() {
       this.search()
     },
-    selectedOutdated: function () {
+    selectedOutdated: function() {
       this.search()
     },
-    users: function () {
+    users: function() {
       this.search()
     }
   },
 
   methods: {
-    initializeForm: function () {
+    initializeForm: function() {
       // once the dom is updated, update the select pickers by hand
       // template data is computed into modelEngine
       var that = this
@@ -483,7 +432,7 @@ export default {
       /* eslint-enable camelcase */
 
       // Add event handler that allows one to use the X next to inputs to clear the input.
-      $('.button-empty-input-field').on('click', function () {
+      $('.button-empty-input-field').on('click', function() {
         var input = $(this).closest('.input-group').find('input')
 
         // Force update selected parameters.
@@ -504,15 +453,15 @@ export default {
       })
 
       // Set event handlers for search collapsibles.
-      $('.panel-search').on('show.bs.collapse', function () {
+      $('.panel-search').on('show.bs.collapse', function() {
         $(this).find('.glyphicon-triangle-right').removeClass('glyphicon-triangle-right').addClass('glyphicon-triangle-bottom')
       })
 
-      $('.panel-search').on('hide.bs.collapse', function () {
+      $('.panel-search').on('hide.bs.collapse', function() {
         $(this).find('.glyphicon-triangle-bottom').removeClass('glyphicon-triangle-bottom').addClass('glyphicon-triangle-right')
       })
     },
-    buildParams: function () {
+    buildParams: function() {
       // for now we just copy everything
 
       /* eslint-disable camelcase */
@@ -575,7 +524,7 @@ export default {
 
       return params
     },
-    search: function () {
+    search: function() {
       var params = this.buildParams()
 
       store.dispatch('updateParams', params)
@@ -583,110 +532,108 @@ export default {
     }
   }
 }
-
 </script>
 
 <style lang="scss">
 @import '../assets/variables.scss';
 
 .bootstrap-datetimepicker-widget {
-  height: 255px;
+    height: 255px;
 }
 
 .search-details {
 
-  .panel {
-    margin-bottom: $padding;
-  }
-
-  .panel-body {
-    padding: 0;
-  }
-
-  .panel-collapse {
-    .pull-right {
-      margin: 0;
+    .panel {
+        margin-bottom: $padding;
     }
 
-    .form-group {
-      margin-bottom: 0;
-      padding: $padding;
+    .panel-body {
+        padding: 0;
+    }
+
+    .panel-collapse {
+        .pull-right {
+            margin: 0;
+        }
+
+        .form-group {
+            margin-bottom: 0;
+            padding: $padding;
+
+        }
+
+        .numeric {
+            padding-bottom: $padding;
+        }
+    }
+
+    // ======================= ION RANGE SLIDER
+
+    .irs {
+        height: 30px;
+        margin-right: 6px;
+        margin-top: 20px;
+    }
+
+    .irs-bar,
+    .irs-bar-edge,
+    .irs-line {
+        top: 24px;
+    }
+
+    .irs-slider {
+        top: 7px;
+        width: 8px;
+    }
+
+    .input-group-addon {
+        border-left: 1px solid $col-bw-2;
+    }
+
+    .irs-from,
+    .irs-single,
+    .irs-to {
+        background-color: $col-bw-2;
+        color: $col-bw-5;
+        padding: 2px 8px 8px; // 8px;
+        top: -14px;
+
+        &::after {
+            border-top-color: $col-bw-2; //The arrow down part.
+        }
 
     }
 
-    .numeric {
-      padding-bottom: $padding;
-    }
-  }
-
-  // ======================= ION RANGE SLIDER
-
-  .irs {
-    height: 30px;
-    margin-right: 6px;
-    margin-top: 20px;
-  }
-
-  .irs-line,
-  .irs-bar,
-  .irs-bar-edge {
-    top: 24px;
-  }
-
-  .irs-slider {
-    top: 7px;
-    width: 8px;
-  }
-
-  .input-group-addon {
-    border-left: 1px solid $col-bw-2;
-  }
-
-  .irs-from,
-  .irs-to,
-  .irs-single {
-    background-color: $col-bw-2;
-    color: $col-bw-5;
-    padding: 2px 8px 8px; // 8px;
-    top: -14px;
-
-    &::after {
-      border-top-color: $col-bw-2; //The arrow down part.
+    .irs-bar-edge {
+        background: $col-bw-5;
     }
 
-  }
-
-  .irs-bar-edge {
-    background: $col-bw-5;
-  }
-
-  .irs-slider,
-  .irs-bar {
-    background: $col-bw-0;
-  }
-
-  .irs-bar {
-    height: 3px; //Height of horizontal bar
-  }
-
-  // Dimensions of the handles
-  .to,
-  .from {
-    background-color: $col-bw-0;
-    border-radius: 10px;
-    height: 20px;
-    top: 16px;
-    width: 20px;
-  }
-
-  // Horizontal background bar.
-  .irs-line {
-    span {
-      background: none;
-      background-color: $col-bw-2;
-      height: 3px;
+    .irs-bar,
+    .irs-slider {
+        background: $col-bw-0;
     }
-  }
+
+    .irs-bar {
+        height: 3px; //Height of horizontal bar
+    }
+
+    // Dimensions of the handles
+    .from,
+    .to {
+        background-color: $col-bw-0;
+        border-radius: 10px;
+        height: 20px;
+        top: 16px;
+        width: 20px;
+    }
+
+    // Horizontal background bar.
+    .irs-line {
+        span {
+            background: none;
+            background-color: $col-bw-2;
+            height: 3px;
+        }
+    }
 }
-
 </style>
