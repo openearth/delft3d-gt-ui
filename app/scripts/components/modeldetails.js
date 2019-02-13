@@ -67,11 +67,12 @@ var exports = (function () {
         get: function () {
           var entrypoints = _.get(this.activeModel, "data.entrypoints", "");
 
-          if(entrypoints.length > 0) {
-            return entrypoints;
-          } else {
-            return false;
+          if (entrypoints !== null){
+            if(entrypoints.length > 0) {
+              return entrypoints;
+            }
           }
+          return false;
         }
       },
       isIdle: {

@@ -45,6 +45,7 @@ var exports = (function () {
         get: function() {
 
           // More than 0, then we have frames...
+          console.log(this.frameCount > 0)
           return this.frameCount > 0;
 
         }
@@ -72,12 +73,10 @@ var exports = (function () {
         get: function() {
 
           var animationKey = this.currentAnimationKey;
-
-          if (animationKey.length > 0) {
+          if (animationKey.length > 0 &&  this.model.info != undefined) {
             var imgs = this.model.info[animationKey];
-
             if (imgs !== undefined) {
-              return this.model.fileurl + imgs.location + imgs.images[this.animationIndex];
+              return this.model.fileurl + imgs.location + imgs["files"][this.animationIndex];
             }
           }
 
@@ -92,13 +91,11 @@ var exports = (function () {
         get: function() {
 
           var animationKey = this.currentAnimationKey;
-          var imgs = _.get(this.model.info, animationKey);
-
-          if (_.has(imgs, "images")) {
-            return imgs.images.length;
+          if (this.model.info != undefined && this.model.info[animationKey]["files"]) {
+            var imgs = this.model.info[animationKey];
+            return imgs["files"].length
           }
-
-          return 0;
+          return 0
         }
       }
 
@@ -203,7 +200,7 @@ var exports = (function () {
 
         if (imgs !== undefined) {
           // Probably wrap.
-          if (this.currentAnimationIndex >= imgs.images.length) {
+          if (this.currentAnimationIndex >= imgs.files.length) {
             // 2016-06-08 we do not wrap anymore. We just go to the last frame and stop.
             //this.currentAnimationIndex = 0;
             this.gotoLastFrame();
