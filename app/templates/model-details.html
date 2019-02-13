@@ -130,10 +130,10 @@
             </button>&nbsp;
             <div class="btn-group">
               <button class="btn dropdown-toggle"
-                :class="[(isReadOnly || !isFinished || outdated == false) ? 'disabled' : 'btn-warning']"
+                :class="[(!isFinished || outdated == false) ? 'disabled' : 'btn-warning']"
                 data-toggle="dropdown"
                 href="#"
-                :disabled="(isReadOnly || !isFinished || outdated == false)"
+                :disabled="(!isFinished || outdated == false)"
                 :data-original-title="(outdated == false) ? 'no updates available' : getActiveModelData('outdated_workflow')"
                 >
                 <span class="btn-label"><i class="fa fa-fw fa-level-up" aria-hidden="true"></i></span>
