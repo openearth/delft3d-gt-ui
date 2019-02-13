@@ -30,6 +30,7 @@ import ModelCard from '../components/ModelCard'
 import {
   bus
 } from '@/event-bus.js'
+import { mapState } from 'vuex'
 
 export default {
   store,
@@ -37,8 +38,7 @@ export default {
   data: function () {
     return {
       companyModels: [],
-      worldModels: [],
-      sharedState: store.state
+      worldModels: []
     }
   },
   components: {
@@ -79,6 +79,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      sharedState: state => state
+    }),
     // Get the current selected modelid from the routing URL
     selectedModel: {
       cache: false,

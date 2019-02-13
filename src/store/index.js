@@ -7,6 +7,7 @@ import startSync from './actions/startSync'
 import stopSync from './actions/stopSync'
 import update from './actions/update'
 import updateUser from './actions/updateUser'
+import fetchUser from './actions/fetchUser'
 
 Vue.use(Vuex)
 
@@ -44,6 +45,7 @@ export default new Vuex.Store({
     stopSync,
     update,
     updateUser,
+    fetchUser,
 
     // ================================ API FETCH CALLS
     fetchModelDetails (context) {
@@ -95,20 +97,6 @@ export default new Vuex.Store({
           .done(function (json) {
             console.log('Succes fetchScenarios')
             resolve(json)
-          })
-          .fail(function (jqXhr) {
-            reject(jqXhr)
-          })
-      })
-    },
-    fetchUser (context) {
-      if (this.state.reqUser !== undefined) {
-        this.state.reqUser.abort()
-      }
-      return new Promise((resolve, reject) => {
-        this.state.reqUser = $.ajax({ url: 'api/v1/users/me/', data: this.state.params, traditional: true, dataType: 'json' })
-          .done(function (json) {
-            resolve(json[0])
           })
           .fail(function (jqXhr) {
             reject(jqXhr)

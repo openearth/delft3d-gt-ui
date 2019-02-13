@@ -48,13 +48,13 @@
                 <div class="progress-bar"
                   :class="[
                     isRunning ? 'progress-bar-striped active' : '',
-                    'progress-bar-' + activeModel.statusLevel
+                    'bg-' + activeModel.statusLevel
                   ]"
                   role="progressbar"
                   :aria-valuenow="getActiveModelData('progress')"
                   aria-valuemin="0"
                   aria-valuemax="100"
-                  :style="{width: getActiveModelData('progress') + '%'}"
+                  :style="'width: ' + getActiveModelData('progress') + '%'"
                   title="Progress"
                 >
                   <span class="sr-only">{{ getActiveModelData('progress') }}% Complete</span>
@@ -378,6 +378,7 @@ import ImageAnimation from '../components/ImageAnimation'
 import ConfirmDialog from '../components/ConfirmDialog'
 // import Viewer3DComponent from '../components/Viewer3DComponent'
 import { getDialog } from '../templates.js'
+import { mapState } from 'vuex'
 
 export default {
   store,
@@ -390,7 +391,6 @@ export default {
   },
   data: function () {
     return {
-      sharedState: store.state,
       selectedDownloads: {
         'export_d3dinput': false,
         'export_images': false,
@@ -404,6 +404,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      sharedState: state => state
+    }),
     activeModel: {
       cached: false,
       get: function () {
@@ -537,6 +540,10 @@ export default {
       $(e.target).closest('.panel').children('.collapse').collapse('toggle')
     },
     getActiveModelData: function (str) {
+      console.log('activemodel', this.activeModel, str, _.orderBy(_.get(this.activeModel, 'data.' + str, ''), 'key'))
+      if(str === "progress") {
+        return this.activeModel.data[str]
+      }
       return _.orderBy(_.get(this.activeModel, 'data.' + str, ''), 'key')
     },
     getActiveModelPPData: function () {
@@ -599,11 +606,11 @@ export default {
       //   this.deleteDialog.hide()
       // }.bind(this)
       //
-      // // We also show an extra warning in the dialog, if user chooses to remove additional files.
-      // this.deleteDialog.showAlert(false)
+      // We also show an extra warning in the dialog, if user chooses to remove additional files.
+      this.deleteDialog.showAlert(false)
       //
-      // // Show the dialog:
-      // this.deleteDialog.show()
+      // Show the dialog:
+      this.deleteDialog.show()
     },
     removeModel: function () {
       // Get a confirm dialog
@@ -638,11 +645,11 @@ export default {
       //   this.resetDialog.hide()
       // }.bind(this)
       //
-      // // We also show an extra warning in the dialog, if user chooses to remove additional files.
-      // this.resetDialog.showAlert(false)
+      // We also show an extra warning in the dialog, if user chooses to remove additional files.
+      this.resetDialog.showAlert(false)
       //
-      // // Show the dialog:
-      // this.resetDialog.show()
+      // Show the dialog:
+      this.resetDialog.show()
     },
     redoModel: function (entrypoint) {
       console.log('redomodel')
@@ -660,11 +667,11 @@ export default {
       //   this.resetDialog.hide()
       // }.bind(this)
       //
-      // // We also show an extra warning in the dialog, if user chooses to remove additional files.
-      // this.resetDialog.showAlert(false)
+      // We also show an extra warning in the dialog, if user chooses to remove additional files.
+      this.resetDialog.showAlert(false)
       //
-      // // Show the dialog:
-      // this.resetDialog.show()
+      // Show the dialog:
+      this.resetDialog.show()
     },
     startModel: function () {
       store.dispatch('startModel', this.activeModel)

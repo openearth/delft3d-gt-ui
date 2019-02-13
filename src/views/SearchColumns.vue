@@ -103,6 +103,7 @@ export default {
   },
   mounted () {
     store.dispatch('startSync')
+    store.dispatch('updateUser')
     bus.$emit('updateSearch')
 
     // TODO, consistent naming

@@ -27,13 +27,13 @@
           <div class="col-xs-11 col-sm-2 text-center no-padding">
             <div class="progress">
               <div v-for="(status, index) in modelStatuses" class="progress-bar" :key="index" :style="{ width: status.width + '%'}" :class="[
-                         (status.state == 'Finished') ? 'progress-bar-success' : '',
-                         (status.state == 'Idle: waiting for user input') ? 'progress-bar-warning' : '',
-                         (status.state == 'Running simulation') ? 'progress-bar-striped active' : '',
+                         (status.state == 'Finished') ? 'bg-success' : '',
+                         (status.state == 'Idle: waiting for user input') ? 'bg-warning' : '',
+                         (status.state == 'Running simulation') ? 'bg-striped active' : '',
                          (
                          status.state != 'Finished' &&
                          status.state != 'Idle: waiting for user input'
-                         ) ? 'progress-bar-info' : '',
+                         ) ? 'bg-info' : '',
                          ]"
                 role="progressbar"></div>
             </div>

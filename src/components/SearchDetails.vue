@@ -82,7 +82,7 @@
               {{section.name}}
             </div>
 
-            <div class="panel-body panel-collapse collapse" role="tabpanel" :aria-labelledby="'#template-' + index" :id="'#template-' + index">
+            <div class="panel-body panel-collapse collapse" role="tabpanel" :aria-labelledby="'template-' + index" :id="'template-' + index">
 
               <div v-for="(variable, index) in section.variables" :key="index">
 
@@ -198,8 +198,8 @@ import store from '../store'
 import $ from 'jquery'
 import _ from 'lodash'
 import moment from 'moment'
+
 import {
-  fetchUsers,
   fetchSearchTemplate
 } from '../templates.js'
 import {
@@ -291,7 +291,7 @@ export default {
     }.bind(this)
 
     // get search templates
-    Promise.all([fetchUsers(), fetchSearchTemplate()])
+    Promise.all([store.dispatch('fetchUser'), fetchSearchTemplate()])
       .then((jsons) => {
         var users = jsons[0]
         var template = jsons[1]
@@ -535,6 +535,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import '~ion-rangeslider/css/ion.rangeSlider.css';
 @import '../assets/variables.scss';
 
 .bootstrap-datetimepicker-widget {

@@ -6,6 +6,10 @@
 // it's better to include the main package
 @import "~bootstrap/dist/css/bootstrap.min.css";
 @import "~bootstrap/scss/bootstrap.scss";
+@import "~bootstrap-select/dist/css/bootstrap-select.css";
+@import "~bootstrap-datepicker/dist/css/bootstrap-datepicker.css";
+@import "~ion-rangeslider/css/ion.rangeSlider.min.css";
+
 $fa-font-path:"../node_modules/font-awesome/fonts";
 @import "../node_modules/font-awesome/scss/font-awesome";
 .icon-user {
