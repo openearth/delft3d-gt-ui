@@ -4,7 +4,6 @@ node_js:
 - node
 
 before_install:
-- apt-get install zip
 - rvm install 2.1
 - rvm use 2.1
 - gem install rb-inotify -v 0.9.10
