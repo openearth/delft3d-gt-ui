@@ -30,8 +30,6 @@
     }
   }
 
-  // ======================= ION RANGE SLIDER
-
   .irs {
     height: 30px;
     margin-right: 6px;
@@ -53,6 +51,9 @@
     border-left: 1px solid $col-bw-2;
   }
 
+  .irs--round, .irs-handle  {
+    border: $col-bw-2;
+  }
   .irs-from,
   .irs-to,
   .irs-single {
@@ -68,12 +69,12 @@
   }
 
   .irs-bar-edge {
-    background: $col-bw-5;
+    background-color: $col-bw-5;
   }
 
   .irs-slider,
   .irs-bar {
-    background: $col-bw-0;
+    background-color: $col-bw-2;
   }
 
   .irs-bar {
@@ -88,6 +89,10 @@
     height: 20px;
     top: 16px;
     width: 20px;
+  }
+
+  .irs--round .irs-from:before, .irs--round .irs-to:before, .irs--round .irs-single:before{
+    border-top-color: $col-bw-2;
   }
 
   // Horizontal background bar.

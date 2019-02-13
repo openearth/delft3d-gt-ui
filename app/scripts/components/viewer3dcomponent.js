@@ -208,6 +208,7 @@ var exports = (function () {
             _.each(["x", "y", "z"], (d) => {
 
               $(".ion-range.slice-" + d + "-w").ionRangeSlider({
+                skin: "round", 
                 "drag_interval": true,
                 "onChange": (data) => {
                   _.set(this, ["slices", d, "from"], data.from);

@@ -183,6 +183,7 @@ var exports = (function () {
         /*eslint-disable camelcase*/
         if ($(".ion-range").ionRangeSlider !== undefined) {
           $(".ion-range").ionRangeSlider({
+            skin: 'round',
             force_edges: true,
             onFinish: () => {
               // args: data, not used
