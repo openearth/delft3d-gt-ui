@@ -160,6 +160,7 @@ var exports = (function () {
         return _.get(this.activeModel, "data." + str, "");
       },
       getActiveModelPPData: function () {
+        console.log(this.sharedState)
         let rv = {
           "DeltaTopD50": {"name": "D50 for Delta Top", "unit": "mm", "value": undefined},
           "DeltaTopsand_fraction": {"name": "Sand Fraction for Delta Top", "unit": "%", "value": undefined},
@@ -171,7 +172,7 @@ var exports = (function () {
           "ProDeltasand_fraction": {"name": "Sand Fraction for Prodelta", "unit": "%", "value": undefined},
           "ProDeltasorting": {"name": "Sorting for Prodelta", "unit": "-", "value": undefined}
         };
-        let ppJson = _.get(this.activeModel, "data.info.postprocess_output");
+        let ppJson = _.get(this.activeModel, "data.info.postprocess_output.files.output");
 
         _.each(_.keys(rv), (key) => {
 
