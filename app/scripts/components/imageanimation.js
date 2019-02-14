@@ -70,8 +70,8 @@ var exports = (function () {
       animationFrame: {
         cache: false,
         get: function() {
-
           var animationKey = this.currentAnimationKey;
+
           if (animationKey === undefined) {
             return "";
           }
@@ -97,7 +97,7 @@ var exports = (function () {
 
           if (this.model.info !== undefined && this.model.info[animationKey]) {
             var imgs = this.model.info[animationKey];
-            
+
             if (imgs.files) {
               return imgs.files.length;
             }
