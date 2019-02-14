@@ -752,7 +752,7 @@
         .query({"search": "", "created_after": "", "created_before": ""})
         .reply(200, function() {
           replyCount++;
-          return "[{'id':897,'name':'New Delta Plain Scenario: Run 1','state':'INACTIVE','progress':0,'owner':{'id':500,'username':'foo','first_name':'Foo','last_name':'User','email':'foo@bar.com','groups':[42,500]},'shared':'p','suid':'cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e','scenario':[357],'fileurl':'/files/cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e/','info':{'channel_network_images':{'images':[],'location':'process/'},'logfile':{'location':'simulation/','file':''},'delta_fringe_images':{'images':[],'location':'process/'},'procruns':0,'sediment_fraction_images':{'images':[],'location':'process/'}},'parameters':{'engine':{'name':'Model Engine','value':'Delft3D Curvilinear'},'simstoptime':{'units':'days','name':'Stop time','value':60},'clayvolcomposition':{'units':'%','name':'Clay volumetric composition','value':1},'sandvolcomposition':{'units':'%','name':'Sand volumetric composition','value':1},'version':{'name':'Version','value':'v0.1'},'riverdischarge':{'units':'m³/s','name':'River discharge','value':1000},'riverwidth':{'units':'m','name':'River width','value':555},'dt':{'units':'min','name':'Timestep','value':1},'tidalamplitude':{'units':'m','name':'Tidal amplitude','value':1},'outputinterval':{'units':'days','name':'Output timestep','value':1,'description':'Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.'},'basinslope':{'units':'deg','name':'Basin slope','value':0.0143}},'task_id':'afbc3296-1679-450a-8c5e-5b6431c5cf20','workingdir':'/data/container/files/cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e/'}]";
+          return "[{'id':897,'name':'New Delta Plain Scenario: Run 1','state':'INACTIVE','progress':0,'owner':{'id':500,'username':'foo','first_name':'Foo','last_name':'User','email':'foo@bar.com','groups':[42,500]},'shared':'p','suid':'cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e','scenario':[357],'fileurl':'/files/cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e/','info':{'channel_network_images':{'files':[],'location':'process/'},'logfile':{'location':'simulation/','file':''},'delta_fringe_images':{'files':[],'location':'process/'},'procruns':0,'sediment_fraction_images':{'files':[],'location':'process/'}},'parameters':{'engine':{'name':'Model Engine','value':'Delft3D Curvilinear'},'simstoptime':{'units':'days','name':'Stop time','value':60},'clayvolcomposition':{'units':'%','name':'Clay volumetric composition','value':1},'sandvolcomposition':{'units':'%','name':'Sand volumetric composition','value':1},'version':{'name':'Version','value':'v0.1'},'riverdischarge':{'units':'m³/s','name':'River discharge','value':1000},'riverwidth':{'units':'m','name':'River width','value':555},'dt':{'units':'min','name':'Timestep','value':1},'tidalamplitude':{'units':'m','name':'Tidal amplitude','value':1},'outputinterval':{'units':'days','name':'Output timestep','value':1,'description':'Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.'},'basinslope':{'units':'deg','name':'Basin slope','value':0.0143}},'task_id':'afbc3296-1679-450a-8c5e-5b6431c5cf20','workingdir':'/data/container/files/cfa3b8a6-87b8-4f3a-b0f8-da7c6dc3468e/'}]";
         });
 
       searchDetails.search();
@@ -1401,7 +1401,7 @@
     it("Should be possible to change to next imageFrame", function(done) {
 
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { files: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
 
       imageAnimation.currentAnimationIndex = 0;
@@ -1419,7 +1419,7 @@
     it("Should be possible to change to next imageFrame - stop at end", function(done) {
 
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { files: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
 
       imageAnimation.currentAnimationIndex = 0;
@@ -1431,7 +1431,7 @@
       }
 
       // Next frame should have brought to the next frame.
-      assert.isTrue(imageAnimation.animationIndex === imageAnimation.model.info.delta_fringe_images.images.length - 1, "Animation frame at end");
+      assert.isTrue(imageAnimation.animationIndex === imageAnimation.model.info.delta_fringe_images.files.length - 1, "Animation frame at end");
 
       done();
     });
@@ -1461,7 +1461,7 @@
     it("Should be possible to change to next imageFrame - no animationkey", function(done) {
 
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { files: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
 
       imageAnimation.currentAnimationIndex = 0;
@@ -1490,7 +1490,7 @@
 
       // We should not have any frames in this animation object, but maybe make sure later on?
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { files: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
 
       imageAnimation.currentAnimationKey = "delta_fringe_images";
@@ -1512,7 +1512,7 @@
     it("Should be possible to check animationFrame property", function(done) {
 
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { location: "location/", images: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { location: "location/", files: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
       imageAnimation.model.fileurl = "fileurl/";
 
@@ -1526,7 +1526,7 @@
     it("Should be possible to check animationFrame property - empty", function(done) {
 
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { location: "location/", images: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { location: "location/", files: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
       imageAnimation.model.fileurl = "fileurl/";
       imageAnimation.currentAnimationKey = "";
@@ -1543,10 +1543,10 @@
 
       // We should not have any frames in this animation object, but maybe make sure later on?
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { files: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
       imageAnimation.currentAnimationKey = "delta_fringe_images";
-      assert.isTrue(imageAnimation.frameCount === imageAnimation.model.info.delta_fringe_images.images.length, "Animation framecount should not be 0");
+      assert.isTrue(imageAnimation.frameCount === imageAnimation.model.info.delta_fringe_images.files.length, "Animation framecount should not be 0");
       done();
     });
 
@@ -1574,7 +1574,7 @@
 
       // index should become 0
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { files: ["firstframe.jpg", "lastframe.jpg"] } };
       imageAnimation.switchAnimation("delta_fringe_images");
       imageAnimation.currentAnimationIndex = 1; // fake an index.
 
@@ -1594,7 +1594,7 @@
 
       // index should become 0
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "middleframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { files: ["firstframe.jpg", "middleframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
       imageAnimation.switchAnimation("delta_fringe_images");
       imageAnimation.animationIndex = 0;
@@ -1610,7 +1610,7 @@
 
       // index should become 0
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { files: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
       imageAnimation.currentAnimationKey = ""; // No animation key
       imageAnimation.currentAnimationIndex = 1; // fake an index.;
@@ -1626,7 +1626,7 @@
 
       // index should become 0
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { files: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
 
       imageAnimation.switchAnimation("delta_fringe_images");
@@ -1641,7 +1641,7 @@
 
       // index should become 0.. we do not have any images. Maybe test later using an fake array.
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { images: [] } };
+      imageAnimation.model.info = { delta_fringe_images: { files: [] } };
       /*eslint-enable camelcase*/
 
       imageAnimation.animationIndex = -10;
@@ -1656,13 +1656,13 @@
 
       // index should become 0.. we do not have any images. Maybe test later using an fake array.
       /*eslint-disable camelcase*/
-      imageAnimation.model.info = { delta_fringe_images: { images: ["firstframe.jpg", "lastframe.jpg"] } };
+      imageAnimation.model.info = { delta_fringe_images: { files: ["firstframe.jpg", "lastframe.jpg"] } };
       /*eslint-enable camelcase*/
 
       imageAnimation.switchAnimation("delta_fringe_images");
       imageAnimation.gotoLastFrame();
 
-      assert.isTrue(imageAnimation.animationIndex === imageAnimation.model.info.delta_fringe_images.images.length - 1, "Animation frame at 0");
+      assert.isTrue(imageAnimation.animationIndex === imageAnimation.model.info.delta_fringe_images.files.length - 1, "Animation frame at 0");
       done();
     });
 

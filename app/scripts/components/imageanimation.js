@@ -45,7 +45,6 @@ var exports = (function () {
         get: function() {
 
           // More than 0, then we have frames...
-          console.log(this.frameCount > 0)
           return this.frameCount > 0;
 
         }
@@ -73,10 +72,14 @@ var exports = (function () {
         get: function() {
 
           var animationKey = this.currentAnimationKey;
-          if (animationKey.length > 0 &&  this.model.info != undefined) {
+          if (animationKey === undefined) {
+            return "";
+          }
+          if (animationKey.length > 0 && this.model.info !== undefined) {
             var imgs = this.model.info[animationKey];
+
             if (imgs !== undefined) {
-              return this.model.fileurl + imgs.location + imgs["files"][this.animationIndex];
+              return this.model.fileurl + imgs.location + imgs.files[this.animationIndex];
             }
           }
 
@@ -91,11 +94,15 @@ var exports = (function () {
         get: function() {
 
           var animationKey = this.currentAnimationKey;
-          if (this.model.info != undefined && this.model.info[animationKey]["files"]) {
+
+          if (this.model.info !== undefined && this.model.info[animationKey]) {
             var imgs = this.model.info[animationKey];
-            return imgs["files"].length
+            
+            if (imgs.files) {
+              return imgs.files.length;
+            }
           }
-          return 0
+          return 0;
         }
       }
 
@@ -174,7 +181,7 @@ var exports = (function () {
         var imgs = this.model.info[this.currentAnimationKey];
 
         if (imgs !== undefined) {
-          this.currentAnimationIndex = imgs.images.length - 1;
+          this.currentAnimationIndex = imgs.files.length - 1;
         }
 
         // Clamp to make sure it does not go below 0

@@ -67,8 +67,8 @@ var exports = (function () {
         get: function () {
           var entrypoints = _.get(this.activeModel, "data.entrypoints", "");
 
-          if (entrypoints !== null){
-            if(entrypoints.length > 0) {
+          if (entrypoints !== null) {
+            if (entrypoints.length > 0) {
               return entrypoints;
             }
           }
@@ -160,7 +160,6 @@ var exports = (function () {
         return _.get(this.activeModel, "data." + str, "");
       },
       getActiveModelPPData: function () {
-        console.log(this.sharedState)
         let rv = {
           "DeltaTopD50": {"name": "D50 for Delta Top", "unit": "mm", "value": undefined},
           "DeltaTopsand_fraction": {"name": "Sand Fraction for Delta Top", "unit": "%", "value": undefined},
