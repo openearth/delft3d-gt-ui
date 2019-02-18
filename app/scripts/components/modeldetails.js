@@ -67,11 +67,12 @@ var exports = (function () {
         get: function () {
           var entrypoints = _.get(this.activeModel, "data.entrypoints", "");
 
-          if(entrypoints.length > 0) {
-            return entrypoints;
-          } else {
-            return false;
+          if (entrypoints !== null) {
+            if (entrypoints.length > 0) {
+              return entrypoints;
+            }
           }
+          return false;
         }
       },
       isIdle: {
@@ -170,7 +171,7 @@ var exports = (function () {
           "ProDeltasand_fraction": {"name": "Sand Fraction for Prodelta", "unit": "%", "value": undefined},
           "ProDeltasorting": {"name": "Sorting for Prodelta", "unit": "-", "value": undefined}
         };
-        let ppJson = _.get(this.activeModel, "data.info.postprocess_output");
+        let ppJson = _.get(this.activeModel, "data.info.postprocess_output.files.output");
 
         _.each(_.keys(rv), (key) => {
 

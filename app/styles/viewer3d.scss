@@ -121,6 +121,10 @@
     width: 7px;
   }
 
+  .irs--round .irs-from:before, .irs--round .irs-to:before, .irs--round .irs-single:before{
+    border-top-color: $col-bw-2;
+  }
+
   // Horizontal background bar.
   .irs-line {
     span {

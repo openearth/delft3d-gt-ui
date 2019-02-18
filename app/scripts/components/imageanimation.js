@@ -70,14 +70,16 @@ var exports = (function () {
       animationFrame: {
         cache: false,
         get: function() {
-
           var animationKey = this.currentAnimationKey;
 
-          if (animationKey.length > 0) {
+          if (animationKey === undefined) {
+            return "";
+          }
+          if (animationKey.length > 0 && this.model.info !== undefined) {
             var imgs = this.model.info[animationKey];
 
             if (imgs !== undefined) {
-              return this.model.fileurl + imgs.location + imgs.images[this.animationIndex];
+              return this.model.fileurl + imgs.location + imgs.files[this.animationIndex];
             }
           }
 
@@ -92,12 +94,14 @@ var exports = (function () {
         get: function() {
 
           var animationKey = this.currentAnimationKey;
-          var imgs = _.get(this.model.info, animationKey);
 
-          if (_.has(imgs, "images")) {
-            return imgs.images.length;
+          if (this.model.info !== undefined && this.model.info[animationKey]) {
+            var imgs = this.model.info[animationKey];
+
+            if (imgs.files) {
+              return imgs.files.length;
+            }
           }
-
           return 0;
         }
       }
@@ -177,7 +181,7 @@ var exports = (function () {
         var imgs = this.model.info[this.currentAnimationKey];
 
         if (imgs !== undefined) {
-          this.currentAnimationIndex = imgs.images.length - 1;
+          this.currentAnimationIndex = imgs.files.length - 1;
         }
 
         // Clamp to make sure it does not go below 0
@@ -203,7 +207,7 @@ var exports = (function () {
 
         if (imgs !== undefined) {
           // Probably wrap.
-          if (this.currentAnimationIndex >= imgs.images.length) {
+          if (this.currentAnimationIndex >= imgs.files.length) {
             // 2016-06-08 we do not wrap anymore. We just go to the last frame and stop.
             //this.currentAnimationIndex = 0;
             this.gotoLastFrame();
