@@ -99,7 +99,10 @@
                             :disabled="variable.disabled"
                             :field="getId(variable)"
                             v-validate="variable.validators"
+                            :class="{'input': true, 'is-danger': errors.has(variable.name) }"
+                            :name="variable.name"
                             />
+                            <span v-show="errors.has(variable.name)"  class="help is-danger">{{ errors.first(variable.name) }}</span>
                           </template>
                           <!-- select if not form -->
                           <template v-if="variable.type === 'select' && !variable.factor">
@@ -110,15 +113,17 @@
                               :field="getId(variable)"
                               v-validate="variable.validators"
                               multiple="multiple"
+                              :name="variable.name"
                               >
                               <option
                                 v-for="(i, option) in variable.options"
                                 :value="option.value"
-                                :key="i"
+                                :key="option"
                                 >
                                 {{ option.text }}
                               </option>
                             </select>
+                            <span v-show="errors.has(variable.name)"  class="help is-danger">{{ errors.first(variable.name) }}</span>
                           </template>
                           <!-- text area -->
                           <template
@@ -131,7 +136,9 @@
                             :field="getId(variable)"
                             v-validate="variable.validators"
                             v-model="variable.value"
+                            :name="variable.name"
                             ></textarea>
+                            <span v-show="errors.has(variable.name)"  class="help is-danger">{{ errors.first(variable.name) }}</span>
                           </template>
 
                           <!-- date -->
@@ -150,10 +157,12 @@
                                 :field="getId(variable)"
                                 name="field"
                                 v-validate="variable.validators"
+                                :name="variable.name"
                                 />
                               <div class="input-group-addon">
                                 <span class="glyphicon glyphicon-th"></span>
                               </div>
+                              <span v-show="errors.has(variable.name)"  class="help is-danger">{{ errors.first(variable.name) }}</span>
                             </div>
 
                           </template>
@@ -166,11 +175,13 @@
                             :id="variable.id"
                             class="form-control"
                             :field="getId(variable)"
-                            v-model="variable.value"
+                            v-model="bbox"
                             v-validate="variable.validations"
+                            :name="variable.name"
                             readonly
                             />
-                          </template>
+                            <span v-show="errors.has(variable.name)"  class="help is-danger">{{ errors.first(variable.name) }}</span>
+                        </template>
 
                           <!-- if we add this to 1 we need to add it to all, bug in bootstrap -->
                           <span class="input-group-addon" v-if="variable.units !='-'" >
@@ -276,6 +287,7 @@
                         id="total-runs"
                         v-model="totalRuns"
                         v-validate:totalRuns="{required: true, min: 1, max: maxRuns}"
+                        name="total-runs"
                         />
 
                       Number of runs: <strong>{{totalRuns}}</strong>
@@ -312,7 +324,7 @@
               <!-- template details -->
               <div class="panel-body">
                 <dl class="dl-horizontal">
-                  <div v-for="(key, val) in template.meta" :key="key">
+                  <div v-for="(key, val) in template.meta" :key="val">
                     <dt>{{ key }}</dt>
                     <dd>{{ val }}</dd>
                   </div>
@@ -418,6 +430,7 @@ export default {
     this.template = null
     this.fetchTemplateList()
     console.log('route: sceaneriocreate, data')
+
     // if we have a template in the request, select that one
     if (_.has(this, '$route.query.template')) {
       // This cannot go into the fetchTemplates, template will always be empty!
@@ -586,6 +599,7 @@ export default {
 
       // First set data, then the template. Order is important!
       this.scenarioConfig = this.prepareScenarioConfig(template)
+      console.log('scenarioConfig', this.scenarioConfig)
 
       this.updateWithQueryParameters()
 
@@ -640,10 +654,12 @@ export default {
     // When selecting another template, the validator cannot deal
     // with variable with the same name.
     getId: function (variable) {
+      console.log('getid', variable, variable.name, variable.default, variable.validators)
       return this.scenarioConfig.id + ',' + variable.id
     },
 
     updateWithQueryParameters: function () {
+      console.log('updateWithQueryParameters')
       if (_.has(this, '$route.query.parameters')) {
         // get parameters from query
         var parameters = JSON.parse(this.$route.query.parameters)
@@ -660,6 +676,14 @@ export default {
         variables,
         function (variable) {
           // does this template variable have a corresponding variable in the request parameters
+          if(variable.validators.max) {
+            variable.validators['max_value'] = variable.validators.max
+            delete variable.validators['max']
+          }
+          if(variable.validators.min) {
+            variable.validators['min_value'] = variable.validators.min
+            delete variable.validators['min']
+          }
           if (_.has(parameters, variable.id)) {
             if (variable.factor) {
               // join by columns for tag input
@@ -674,6 +698,7 @@ export default {
           }
         }
       )
+      console.log('after', variables)
 
       // This is a bit ugly, but if we have a name, add (copy) to it and then use it.
       if (_.has(this, '$route.query.name') && _.has(this.scenarioConfig, 'name')) {

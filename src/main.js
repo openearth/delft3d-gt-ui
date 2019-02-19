@@ -11,8 +11,12 @@ import 'bootstrap/js/dist/collapse'
 import 'bootstrap/js/dist/modal'
 import 'bootstrap-datepicker/dist/js/bootstrap-datepicker'
 import 'bootstrap-select/dist/js/bootstrap-select'
+import VeeValidate from 'vee-validate'
 
 Vue.config.productionTip = false
+Vue.use(VeeValidate, {
+  classes: true
+})
 
 new Vue({
   store,

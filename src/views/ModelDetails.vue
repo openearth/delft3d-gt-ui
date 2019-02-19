@@ -541,7 +541,7 @@ export default {
     },
     getActiveModelData: function (str) {
       console.log('activemodel', this.activeModel, str, _.orderBy(_.get(this.activeModel, 'data.' + str, ''), 'key'))
-      if(str === "progress") {
+      if(str === 'progress') {
         return this.activeModel.data[str]
       }
       return _.orderBy(_.get(this.activeModel, 'data.' + str, ''), 'key')

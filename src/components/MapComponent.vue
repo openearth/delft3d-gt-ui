@@ -168,7 +168,7 @@ export default {
         'type': 'circle',
         'source': {
           'type': 'geojson',
-          'data': './images/worldpoints.json'
+          'data': './worldpoints.json'
         },
         'paint': {
           'circle-opacity': 0.5,
@@ -246,6 +246,7 @@ export default {
 
 <style lang="scss">
 @import '../assets/variables.scss';
+@import '~mapbox-gl/dist/mapbox-gl.css';
 
 #map {
   width: 100%;
