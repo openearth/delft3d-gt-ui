@@ -83,7 +83,7 @@ var exports = (function () {
         "handler": function () {
           let suid = _.get(this.activeModel, "data.suid");
           let sedimentClass = _.get(this.activeModel, "data.parameters.composition.value");
-          let maxTimeStepIndex = _.get(this.activeModel, "data.info.delta_fringe_images.images", []).length - 1;  // obtain max TimeStep index based on number of Delta Fringe images
+          let maxTimeStepIndex = _.get(this.activeModel, "data.info.delta_fringe_images.files", []).length - 1;  // obtain max TimeStep index based on number of Delta Fringe images
 
           if (suid !== this.curSuid && maxTimeStepIndex !== -1 && sedimentClass !== undefined) {
             this.curSuid = suid;
@@ -235,7 +235,6 @@ var exports = (function () {
         if (!this.activated || _.isUndefined(this.viewer3d)) {
           return;
         }
-
         try {
           if (this.curSuid !== undefined && this.curSedimentClass !== undefined) {
             this.viewer3d.dataSet.load({
