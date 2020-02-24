@@ -35,7 +35,7 @@ import { mapState } from 'vuex'
 export default {
   store,
   template: '#template-search-list',
-  data: function () {
+  data () {
     return {
       companyModels: [],
       worldModels: []
@@ -70,10 +70,10 @@ export default {
     })
   },
   watch: {
-    items: function () {
-      this.$nextTick(function () {})
+    items () {
+      this.$nextTick(() => {})
     },
-    sharedState: function () {
+    sharedState () {
       this.companyModels = _.filter(this.sharedState.modelContainers, ['data.shared', 'c'])
       this.worldModels = _.filter(this.sharedState.modelContainers, ['data.shared', 'w'])
     }
@@ -85,7 +85,7 @@ export default {
     // Get the current selected modelid from the routing URL
     selectedModel: {
       cache: false,
-      get: function () {
+      get () {
         var models = _.filter(this.selectedItems, ['type', 'model'])
         var firstModel = _.first(models)
 
@@ -94,7 +94,7 @@ export default {
     },
     selectedItems: {
       cache: false,
-      get: function () {
+      get () {
         // we have models in scenarios
         var models = _.flatMap(this.items, 'models')
         // combine them with scenarios and orphans
@@ -107,21 +107,21 @@ export default {
     }
   },
   methods: {
-    toggleActive: function (item) {
+    toggleActive (item) {
       if (item.type === 'scenario') {
-        _.each(item.models, function (model) {
+        _.each(item.models, (model) => {
           model.active = !item.active
         })
       }
       item.active = !item.active
     },
-    hasCompanyModels: function () {
+    hasCompanyModels () {
       return this.companyModels.length > 0
     },
-    hasWorldModels: function () {
+    hasWorldModels () {
       return this.worldModels.length > 0
     },
-    action: function (thing) {
+    action (thing) {
       thing.active = !thing.active
     }
   }
@@ -139,7 +139,6 @@ export default {
 
     .progress {
         height: 10px;
-        margin-top: 5px;
     }
 
     .list-divider {

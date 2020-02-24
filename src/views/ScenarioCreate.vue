@@ -1,14 +1,9 @@
 <template>
 <div id="template-scenario-builder">
-
   <div class="scenario-builder full-height">
-
     <!-- User has to select a template first -->
-
     <div class="container-fluid full-height scrollable" id="below-tool-bar">
-
       <div class="row">
-
         <!-- 2 column layout, 1st column scenario properties -->
         <div class="col-sm-5">
           <!--  -->
@@ -140,7 +135,6 @@
                             ></textarea>
                             <span v-show="errors.has(variable.name)"  class="help is-danger">{{ errors.first(variable.name) }}</span>
                           </template>
-
                           <!-- date -->
                           <template
                             v-if="variable.type === 'date'"
@@ -155,7 +149,6 @@
                                 class="form-control date"
                                 v-model="variable.value"
                                 :field="getId(variable)"
-                                name="field"
                                 v-validate="variable.validators"
                                 :name="variable.name"
                                 />
@@ -164,7 +157,6 @@
                               </div>
                               <span v-show="errors.has(variable.name)"  class="help is-danger">{{ errors.first(variable.name) }}</span>
                             </div>
-
                           </template>
                           <!-- bbox array -->
                           <template
@@ -676,11 +668,11 @@ export default {
         variables,
         function (variable) {
           // does this template variable have a corresponding variable in the request parameters
-          if(variable.validators.max) {
+          if (variable.validators.max) {
             variable.validators['max_value'] = variable.validators.max
             delete variable.validators['max']
           }
-          if(variable.validators.min) {
+          if (variable.validators.min) {
             variable.validators['min_value'] = variable.validators.min
             delete variable.validators['min']
           }

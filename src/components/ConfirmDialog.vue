@@ -4,10 +4,10 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title">
             <slot name="title"></slot>
           </h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
         <div class="modal-body">
           <slot name="body"></slot>
@@ -16,8 +16,8 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-warning" v-on:click="confirm">{{ confirmButtonTitle }}</button>
-          <button type="button" class="btn btn-primary" v-on:click="cancel">Cancel</button>
+          <button type="button" class="btn btn-warning" v-on:click.stop="confirm">{{ confirmButtonTitle }}</button>
+          <button type="button" class="btn btn-primary" v-on:click.stop="hide">Cancel</button>
         </div>
       </div>
     </div>
@@ -30,12 +30,6 @@ import $ from 'jquery'
 export default {
   // not much in here.
   template: '#template-confirm-dialog',
-  data: function () {
-    return {
-      onConfirm: null,
-      onCancel: null
-    }
-  },
   props: {
     'dialogId': {
       type: String,
@@ -44,44 +38,51 @@ export default {
     'confirmButtonTitle': {
       type: String,
       required: true
+    },
+    'modal': {
+      type: Boolean
     }
   },
+  watch: {
+    modal (val) {
+      if (val) {
+        this.show()
+      } else {
+        this.hide()
+      }
+    }
+  },
+
   methods: {
-    confirm: function () {
-      if (this.onConfirm) {
-        this.onConfirm()
-      }
+    confirm () {
+      this.$emit('confirm')
       this.hide()
     },
-
-    cancel: function () {
-      if (this.onCancel) {
-        this.onCancel()
-      }
+    cancel () {
+      this.$emit('cancel')
       this.hide()
     },
-
-    show: function () {
-      var el = $('#' + this.dialogId + '-dialog')
+    show () {
+      var el = $(`#${this.dialogId}-dialog`)
 
       // Hide extra alert by default.
-      $('#' + this.dialogId + '-dialog-alert').hide()
+      $(`#${this.dialogId}-dialog-alert`).hide()
 
       if (el.modal !== undefined) {
         el.modal({})
       }
     },
 
-    hide: function () {
-      var el = $('#' + this.dialogId + '-dialog')
+    hide () {
+      var el = $(`#${this.dialogId}-dialog`)
 
       if (el.modal !== undefined) {
         el.modal('hide')
       }
     },
 
-    showAlert: function (isVisible) {
-      $('#' + this.dialogId + '-dialog-alert').toggle(isVisible)
+    showAlert (isVisible) {
+      $(`#${this.dialogId}-dialog-alert`).toggle(isVisible)
     }
   }
 }

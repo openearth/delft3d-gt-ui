@@ -389,7 +389,7 @@ export default {
     'confirm-dialog': ConfirmDialog
     // 'viewer-3d': Viewer3DComponent
   },
-  data: function () {
+  data () {
     return {
       selectedDownloads: {
         'export_d3dinput': false,
@@ -409,7 +409,7 @@ export default {
     }),
     activeModel: {
       cached: false,
-      get: function () {
+      get () {
         var model = this.sharedState.activeModelContainer
 
         // model details are conditionally rendered: activating jQuery tooltips when there is a model
@@ -419,33 +419,33 @@ export default {
     },
     anyDownloadsSelected: {
       cache: false,
-      get: function () {
-        return _.values(this.selectedDownloads).some(function (el) {
+      get () {
+        return _.values(this.selectedDownloads).some((el) => {
           return el
         })
       }
     },
     dateCreatedText: {
       cached: false,
-      get: function () {
+      get () {
         var d = new Date(_.get(this.activeModel, 'data.date_created', ''))
 
         if (isNaN(d.getTime())) { // something went wront here
           return '' // elegant fail
         }
 
-        return d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear()
+        return `${d.getDate()}/${(d.getMonth() + 1)}/${d.getFullYear()}`
       }
     },
     isReadOnly: {
       cache: false,
-      get: function () {
+      get () {
         return _.get(this.activeModel, 'data.shared', 'p') !== 'p'
       }
     },
     getEntrypoints: {
       cache: false,
-      get: function () {
+      get () {
         var entrypoints = _.get(this.activeModel, 'data.entrypoints', '')
         if (entrypoints != null) {
           if (entrypoints.length > 0) {
@@ -460,31 +460,31 @@ export default {
     },
     isIdle: {
       cache: false,
-      get: function () {
+      get () {
         return _.get(this.activeModel, 'data.state', '') === 'Idle: waiting for user input'
       }
     },
     isRunning: {
       cache: false,
-      get: function () {
+      get () {
         return _.get(this.activeModel, 'data.state', '').includes('Running')
       }
     },
     isFinished: {
       cache: false,
-      get: function () {
+      get () {
         return _.get(this.activeModel, 'data.state', '') === 'Finished'
       }
     },
     isQueued: {
       cache: false,
-      get: function () {
+      get () {
         return _.get(this.activeModel, 'data.state', '') === 'Queued'
       }
     },
     shareLevelText: {
       cache: false,
-      get: function () {
+      get () {
         var niceStrings = {
           '': '-',
           'p': 'private',
@@ -498,15 +498,15 @@ export default {
     },
     outdated: {
       cache: false,
-      get: function () {
+      get () {
         return _.get(this.activeModel, 'data.outdated', false)
       }
     },
     reposUrl: {
       cache: false,
-      get: function () {
+      get () {
         if (_.has(this.activeModel, 'data.versions.preprocess')) {
-          return this.activeModel.data.versions.preprocess.REPOS_URL + '?p=' + this.activeModel.data.versions.preprocess.SVN_REV
+          return `${this.activeModel.data.versions.preprocess.REPOS_URL}?p=${this.activeModel.data.versions.preprocess.SVN_REV}`
         }
         return ''
       }
@@ -515,7 +515,7 @@ export default {
   watch: {
     isFinished: {
       deep: false,
-      handler: function () {
+      handler () {
         if (!this.isFinished) {
           /* eslint-disable camelcase */
           this.selectedDownloads.export_thirdparty = false
@@ -525,7 +525,7 @@ export default {
     },
     isIdle: {
       deep: false,
-      handler: function (newIsIdleValue) {
+      handler (newIsIdleValue) {
         if (newIsIdleValue) {
           $('#simulation-controls-collapse').collapse('show')
         }
@@ -533,20 +533,20 @@ export default {
     }
   },
   methods: {
-    collapseToggle: function (viewerFlag, e) {
+    collapseToggle (viewerFlag, e) {
       if (viewerFlag) {
         this.viewerActive = !this.viewerActive
       }
       $(e.target).closest('.panel').children('.collapse').collapse('toggle')
     },
-    getActiveModelData: function (str) {
+    getActiveModelData (str) {
       console.log('activemodel', this.activeModel, str, _.orderBy(_.get(this.activeModel, 'data.' + str, ''), 'key'))
-      if(str === 'progress') {
+      if (str === 'progress') {
         return this.activeModel.data[str]
       }
       return _.orderBy(_.get(this.activeModel, 'data.' + str, ''), 'key')
     },
-    getActiveModelPPData: function () {
+    getActiveModelPPData () {
       let rv = {
         'DeltaTopD50': { 'name': 'D50 for Delta Top', 'unit': 'mm', 'value': undefined },
         'DeltaTopsand_fraction': { 'name': 'Sand Fraction for Delta Top', 'unit': '%', 'value': undefined },
@@ -570,7 +570,7 @@ export default {
 
       return rv
     },
-    downloadFiles: function () {
+    downloadFiles () {
       if (!this.anyDownloadsSelected) {
         return
       }
@@ -580,16 +580,16 @@ export default {
 
       for (var option in this.selectedDownloads) {
         if (this.selectedDownloads[option] === true) {
-          downloadOptions.push('options=' + option)
+          downloadOptions.push(`options=${option}`)
         }
       }
 
-      window.open('api/v1/scenes/' + id + '/export/?format=json&' + downloadOptions.join('&'))
+      window.open(`api/v1/scenes/${id}/export/?format=json&${downloadOptions.join('&')}`)
     },
-    hasPostProcessData: function () {
+    hasPostProcessData () {
       return (Object.keys(_.get(this.activeModel, 'data.info.postprocess_output', {})).length > 0)
     },
-    publishModel: function (level) {
+    publishModel (level) {
       console.log('publishmodel')
       this.deleteDialog = getDialog(this, 'confirm-dialog', 'publish')
 
@@ -612,7 +612,7 @@ export default {
       // Show the dialog:
       this.deleteDialog.show()
     },
-    removeModel: function () {
+    removeModel () {
       // Get a confirm dialog
       this.deleteDialog = getDialog(this, 'confirm-dialog', 'delete')
       console.log('removemodel')
@@ -629,7 +629,7 @@ export default {
       // // Show the dialog:
       // this.deleteDialog.show()
     },
-    resetModel: function () {
+    resetModel () {
       console.log('resetmodel')
       this.resetDialog = getDialog(this, 'confirm-dialog', 'reset')
 
@@ -651,7 +651,7 @@ export default {
       // Show the dialog:
       this.resetDialog.show()
     },
-    redoModel: function (entrypoint) {
+    redoModel (entrypoint) {
       console.log('redomodel')
       this.resetDialog = getDialog(this, 'confirm-dialog', 'redo')
 
@@ -673,21 +673,21 @@ export default {
       // Show the dialog:
       this.resetDialog.show()
     },
-    startModel: function () {
+    startModel () {
       store.dispatch('startModel', this.activeModel)
     },
-    stopModel: function () {
+    stopModel () {
       store.dispatch('stopModel', this.activeModel)
     },
-    toggle: function (id, doFlag) {
+    toggle (id, doFlag) {
       if (doFlag) {
         this.selectedDownloads[id] = !this.selectedDownloads[id]
       }
     },
-    doNothing: function () {
+    doNothing () {
       return false
     },
-    activateTooltips: function () {
+    activateTooltips () {
       if ($("[data-toggle='tooltip']").tooltip) {
         $("[data-toggle='tooltip']").tooltip()
       }

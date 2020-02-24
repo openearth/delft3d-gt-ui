@@ -1,6 +1,5 @@
 <template>
   <div id="template-model-card">
-
   <div class="model-card" :class="{'activated': model.active}" @click.stop="toggleActive">
 
     <template v-if="model.data">

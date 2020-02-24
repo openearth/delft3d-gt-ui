@@ -172,13 +172,14 @@ export default {
   },
 
   computed: {
-    anyDownloadsSelected: function () {
-      return _.values(this.downloadOptions).some(function (el) {
+    anyDownloadsSelected () {
+      return _.values(this.downloadOptions).some((el) => {
         return el.active
       })
     },
-    numSelectedModels: function () {
+    numSelectedModels () {
       if (store.dispatch('getSelectedModels') !== undefined) {
+        console.log('numselected', store.dispatch('getSelectedModels').length)
         return store.dispatch('getSelectedModels').length
       } else {
         return -1
@@ -189,18 +190,18 @@ export default {
   /* eslint-disable camelcase */
 
   watch: {
-    numSelectedModels: function () {
+    numSelectedModels () {
       if (this.numSelectedModels === 0) {
-        _.each(this.downloadOptions, function (option) {
+        _.each(this.downloadOptions, (option) => {
           option.active = false
         })
       }
       if (!this.someSelectedModelsAreFinished) {
         _.each(
-          _.filter(this.downloadOptions, function (option) {
+          _.filter(this.downloadOptions, (option) => {
             return option.onlyFinished
           }),
-          function (option) {
+          (option) => {
             option.active = false
           })
       }
@@ -210,7 +211,7 @@ export default {
   /* eslint-enable camelcase */
 
   methods: {
-    expandScenarios: function () {
+    expandScenarios () {
       if (this.collapseShow) {
         $('.scenario-card .collapse').collapse('show')
       } else {
@@ -219,7 +220,7 @@ export default {
       this.collapseShow = !this.collapseShow
     },
 
-    resetSelectedModels: function () {
+    resetSelectedModels () {
       if (this.someSelectedModelsArePublished()) {
         return
       }
@@ -237,7 +238,7 @@ export default {
       // Show the dialog:
       this.deleteDialog.show()
     },
-    redoSelectedModels: function () {
+    redoSelectedModels () {
       if (this.someSelectedModelsArePublished()) {
         return
       }
@@ -255,37 +256,37 @@ export default {
       // Show the dialog:
       this.redoDialog.show()
     },
-    someSelectedModelsAreFinished: function () {
-      return _.values(store.dispatch('getSelectedModels')).some(function (model) {
+    someSelectedModelsAreFinished () {
+      return _.values(store.dispatch('getSelectedModels')).some((model) => {
         return model.data.state === 'Finished'
       })
     },
-    someSelectedModelsArePublished: function () {
-      return _.values(store.dispatch('getSelectedModels')).some(function (model) {
+    someSelectedModelsArePublished () {
+      return _.values(store.dispatch('getSelectedModels')).some((model) => {
         return model.data.shared !== 'p'
       })
     },
-    someSelectedModelsAreAlreadyPublished: function (domain) {
+    someSelectedModelsAreAlreadyPublished (domain) {
       if (domain === 'world') {
-        return _.values(store.dispatch('getSelectedModels')).some(function (model) {
+        return _.values(store.dispatch('getSelectedModels')).some((model) => {
           return model.data.shared === 'w'
         })
       }
       if (domain === 'company') {
-        return _.values(store.dispatch('getSelectedModels')).some(function (model) {
+        return _.values(store.dispatch('getSelectedModels')).some((model) => {
           return model.data.shared === 'c' || model.data.shared === 'w'
         })
       }
       return false
     },
-    startSelectedModels: function () {
+    startSelectedModels () {
       if (this.someSelectedModelsArePublished()) {
         return
       }
       store.dispatch('startSelectedModels')
     },
 
-    stopSelectedModels: function () {
+    stopSelectedModels () {
       if (this.someSelectedModelsArePublished()) {
         return
       }
@@ -304,7 +305,7 @@ export default {
       this.deleteDialog.show()
     },
 
-    deleteSelectedModels: function () {
+    deleteSelectedModels () {
       if (this.someSelectedModelsArePublished()) {
         return
       }
@@ -323,7 +324,7 @@ export default {
       this.deleteDialog.show()
     },
 
-    shareSelectedModels: function (domain) {
+    shareSelectedModels (domain) {
       if (!this.someSelectedModelsAreFinished || this.someSelectedModelsAreAlreadyPublished(domain)) {
         return
       }
@@ -342,14 +343,14 @@ export default {
       this.shareDialog.show()
     },
 
-    downloadSelectedModels: function () {
+    downloadSelectedModels () {
       if (this.numSelectedModels === 0 || !this.anyDownloadsSelected) {
         return // nothing to do
       }
       store.dispatch('downloadSelectedModels', this.downloadOptions)
     },
 
-    toggle: function (id) {
+    toggle (id) {
       if (this.downloadOptions[id].onlyFinished && !this.someSelectedModelsAreFinished) {
         return
       }
@@ -363,6 +364,10 @@ export default {
 
 <style lang="scss">
 @import '../assets/variables.scss';
+
+#template-model-control-menu {
+  float: right;
+}
 
 .model-control-menu {
   a {

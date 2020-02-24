@@ -14,11 +14,14 @@
           <router-link class="nav-link" :to="{name: 'home'}" title="Create scenario">Database</router-link>
         </li>
         <li :class="{'active': $route.name === 'scenarios-create'}" class="nav-item">
-          <router-link class="nav-link" :to="{name: 'scenarios-create'}" title="Create scenario">Scenario builder
+          <router-link class="nav-link" :to="{name: 'scenarios-create'}" title="Create scenario">
+            Scenario builder
           </router-link>
         </li>
         <li>
-          <a class="nav-link" href="docs/User_Manual_Delft3D-Geological_Tool.pdf" title="Download Manual" target="_blank">Manual</a>
+          <a class="nav-link" href="docs/User_Manual_Delft3D-Geological_Tool.pdf" title="Download Manual" target="_blank">
+            Manual
+          </a>
         </li>
       </ul>
       <user-details></user-details>
