@@ -3,11 +3,9 @@
     <div v-if="(activeModel !== undefined)">
       <!-- model window for deletation -->
       <div class="panel panel-default">
-
         <div class="panel-heading">
           <h2 class="panel-title">{{ getActiveModelData('name').join('') }}</h2>
         </div>
-
         <div class="panel-body">
 
           <dl class="dl-horizontal" :class="{ 'loading': getActiveModelData('date_created') === '' }">

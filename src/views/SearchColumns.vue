@@ -2,10 +2,8 @@
 
   <div class="search-columns full-height">
     <!-- ======================== TOOLBAR ======================== -->
-
     <div class="container-fluid hidden-xs">
       <div class="row action-bar">
-
         <div class="col-sm-2 bordered">
           <div class="btn-text hidden-sm hidden-md">Search</div>
           <div class="btn-group pull-right">
@@ -15,12 +13,10 @@
             <button type="button" class="btn btn-default" id="btn-reset-search-form" v-on:click="resetFields">Reset</button>
           </div>
         </div>
-
         <div class="col-sm-5 col-md-4 col-lg-4 bordered">
           <div class="btn-text">Database (search results)</div>
           <model-control-menu :items="items" :models="models"></model-control-menu>
         </div>
-
         <div class="col-sm-5 col-md-6 col-lg-6">
           <div class="btn-text">Model details</div>
           <button class="btn btn-default pull-right" @click.stop="expandDetails">
@@ -29,7 +25,6 @@
         </div>
       </div>
     </div>
-
     <!-- ======================== COLUMNS ======================== -->
 
     <div class="container-fluid full-height">

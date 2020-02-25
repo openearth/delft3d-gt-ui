@@ -128,13 +128,13 @@ export default {
   props: {
     model: {
       type: Object,
-      default: function () {
+      default () {
         return { }
       }
     }
   },
 
-  data: function () {
+  data () {
     return {
       // Current animation frame:
       currentAnimationIndex: 0,
@@ -151,13 +151,13 @@ export default {
 
     isAnimating: {
       cache: false,
-      get: function () {
+      get () {
         return this.timerAnimation > 0
       }
     },
     hasFrames: {
       cache: false,
-      get: function () {
+      get () {
         // More than 0, then we have frames...
         return this.frameCount > 0
       }
@@ -165,7 +165,7 @@ export default {
 
     animationIndex: {
       cache: false,
-      get: function () {
+      get () {
         var idx = 0
 
         // if we have frames this can be used
@@ -182,7 +182,7 @@ export default {
 
     animationFrame: {
       cache: false,
-      get: function () {
+      get () {
         var animationKey = this.currentAnimationKey
 
         if (animationKey.length > 0) {
@@ -200,7 +200,7 @@ export default {
     // Return amount of frames for current selected key.
     frameCount: {
       cache: false,
-      get: function () {
+      get () {
         var animationKey = this.currentAnimationKey
         var imgs = _.get(this.model.info, animationKey)
 
@@ -217,13 +217,13 @@ export default {
   methods: {
 
     // Switch to the images:
-    switchAnimation: function (type) {
+    switchAnimation (type) {
       this.currentAnimationKey = type
       this.currentAnimationIndex = 0
     },
 
     // For animations:
-    previousImageFrame: function () {
+    previousImageFrame () {
       // Check if an animation key has been set. If not, we bail out.
       if (this.currentAnimationKey.length === 0) {
         return
@@ -243,7 +243,7 @@ export default {
       }
     },
 
-    stopImageFrame: function () {
+    stopImageFrame () {
       // Check if an animation key has been set. If not, we bail out.
       if (this.currentAnimationKey.length === 0) {
         return false
@@ -257,7 +257,7 @@ export default {
         this.timerAnimation = -1
       }
     },
-    playImageFrame: function () {
+    playImageFrame () {
       // Check if an animation key has been set. If not, we bail out.
       if (this.currentAnimationKey.length === 0) {
         return
@@ -268,12 +268,12 @@ export default {
       this.timerAnimation = setInterval(this.nextImageFrame, 200)
     },
 
-    gotoFirstFrame: function () {
+    gotoFirstFrame () {
       this.stopImageFrame()
       this.currentAnimationIndex = 0
     },
 
-    gotoLastFrame: function () {
+    gotoLastFrame () {
       this.stopImageFrame()
 
       var imgs = this.model.info[this.currentAnimationKey]
@@ -288,7 +288,7 @@ export default {
       }
     },
 
-    nextImageFrame: function () {
+    nextImageFrame () {
       // Check if an animation key has been set. If not, we bail out.
       if (this.currentAnimationKey.length === 0) {
         return

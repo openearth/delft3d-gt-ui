@@ -15,7 +15,7 @@ export default function deleteModel (context, modelContainer) {
     })
 
     // update backend
-    $.ajax({ url: 'api/v1/scenes/' + modelContainer.id + '/', method: 'DELETE', traditional: true, dataType: 'json' })
+    $.ajax({ url: `api/v1/scenes/${modelContainer.id}/`, method: 'DELETE', traditional: true, dataType: 'json' })
       .done(function (data) {
         resolve(data)
       })

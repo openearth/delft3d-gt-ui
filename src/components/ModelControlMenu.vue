@@ -139,7 +139,7 @@ import {
 export default {
   template: '#template-model-control-menu',
 
-  data: function () {
+  data () {
     return {
       collapseShow: true,
       downloadOptions: {
