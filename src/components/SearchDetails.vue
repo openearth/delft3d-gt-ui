@@ -305,7 +305,7 @@ import store from '../store'
 import $ from 'jquery'
 import _ from 'lodash'
 import moment from 'moment'
-import Slider from  'bootstrap-slider/dist/bootstrap-slider'
+import Slider from 'bootstrap-slider/dist/bootstrap-slider'
 
 import {
   fetchSearchTemplate
@@ -538,8 +538,6 @@ export default {
 
       const slider = $('.bootstrap-slider').slider()
       console.log(slider)
-
-
 
       // slider.forEach(slide => {
       //   slide.on('slideStop', this.search)

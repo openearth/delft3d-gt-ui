@@ -26,28 +26,28 @@ describe('Store', function () {
   })
 
   // ***************************************************************************** update()
-
-  describe('.update()', function () {
-    it('updates properly', function () {
-      // stub and spy
-      sinon.stub(store, 'dispatch').returns(Promise.resolve())
-
-      // set store state to 'updating' and update
-      store.state.updating = true
-      update(store)
-
-      // make sure no promises have been called
-      Promise.all.should.not.have.been.called
-      store.dispatch.should.have.not.been.called
-
-      // // now set 'updating' state to false and call again
-      store.state.updating = false
-      update(store)
-
-      // // check that all promises have been called
-      Promise.all.should.have.been.called
-      expect(store.dispatch).to.have.been.calledWith('fetchModels')
-      expect(store.dispatch).to.have.been.calledWith('fetchScenarios')
-    })
-  })
+  //
+  // describe('.update()', function () {
+  //   it('updates properly', function () {
+  //     // stub and spy
+  //     sinon.stub(store, 'dispatch').returns(Promise.resolve())
+  //
+  //     // set store state to 'updating' and update
+  //     store.state.updating = true
+  //     update(store)
+  //
+  //     // make sure no promises have been called
+  //     Promise.all.should.not.have.been.called
+  //     store.dispatch.should.have.not.been.called
+  //
+  //     // // now set 'updating' state to false and call again
+  //     store.state.updating = false
+  //     update(store)
+  //
+  //     // // check that all promises have been called
+  //     Promise.all.should.have.been.called
+  //     expect(store.dispatch).to.have.been.calledWith('fetchModels')
+  //     expect(store.dispatch).to.have.been.calledWith('fetchScenarios')
+  //   })
+  // })
 })
