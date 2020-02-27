@@ -216,15 +216,10 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(key, param) in getActiveModelData('parameters')" :key="param">
-                <td>{{ (param.name || key) }}</td>
-                <td>{{param.value}}</td>
-                <td>
-                  <!-- we add this as we might have some older models not having the units var yet. -->
-                  <span v-if="param.units !== undefined">
-                    {{param.units}}
-                  </span>
-                </td>
+              <tr v-for="(param, key) in orderByKey(getActiveModelData('parameters'))" :key="key">
+                <td>{{ param.name || capitalizeFirst(key)}}</td>
+                <td>{{ param.value }}</td>
+                <td>{{param.units || "-"}}</td>
               </tr>
             </tbody>
 
@@ -248,21 +243,19 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(key, param) in getActiveModelPPData()" :key="param">
+              <tr v-for="(param, key) in getActiveModelPPData()" :key="key">
                 <td>{{ param.name }}{{ param.name }}</td>
                 <td>{{ param.value && param.value.toExponential(2) || "-"}}</td>
                 <td>{{ param.unit || "-"}}</td>
               </tr>
             </tbody>
           </table>
-
           <div v-else>No post processing output available yet.</div>
-
         </div>
       </div>
     </div>
 
-    <div v-if="model !== 'GTSM'" class="panel panel-default">
+    <div class="card">
       <div class="card-header" data-toggle="collapse" data-target="#download-collapse">
         Download files
       </div>
@@ -272,37 +265,27 @@
             Please check what you would like to download. Your download will be a ZIP file which contains the requested files.
           </p>
 
-          <div class="form-group input-group" @click.stop.prevent="toggle('export_d3dinput', true)">
-            <span class="input-group-addon">
-              <!-- @click.stop="doNothing" captures an event and avoids bubbling it down, so we don't get 2 toggles -->
-              <input type="checkbox" class="downloadoption" value="export_d3dinput" v-model="selectedDownloads.export_d3dinput" @click.stop="doNothing">
-            </span>
-            <span class="form-control no-fixed-height">Delft3D: input files</span>
-          </div>
-          <div class="form-group input-group" @click.stop.prevent="toggle('export_images', true)">
-            <span class="input-group-addon">
-              <!-- @click.stop="doNothing" captures an event and avoids bubbling it down, so we don't get 2 toggles -->
-              <input type="checkbox" class="downloadoption" value="export_images" v-model="selectedDownloads.export_images" @click.stop="doNothing">
-            </span>
-            <span class="form-control no-fixed-height">Media: generated output images</span>
-          </div>
+          <div class="mx-3">
+            <div class="form-group input-group" @click.stop.prevent="toggle('export_d3dinput', true)">
+              <input class="form-check-input" type="checkbox" id="export_d3dinput" value="export_d3dinput" v-model="selectedDownloads.export_d3dinput">
+              <label class="from-check-label" for="export_d3dinput">Delft3D: input files</label>
+            </div>
+            <div class="form-group input-group" @click.stop.prevent="toggle('export_images', true)">
+              <input class="form-check-input" type="checkbox" id="export_images" value="export_images" v-model="selectedDownloads.export_images">
+              <label class="from-check-label" for="export_images">Media: generated output images</label>
+            </div>
 
-          <div class="form-group input-group" @click.stop.prevent="toggle('export_movie', true)">
-            <span class="input-group-addon">
-              <!-- @click.stop="doNothing" captures an event and avoids bubbling it down, so we don't get 2 toggles -->
-              <input type="checkbox" class="downloadoption" value="export_movie" v-model="selectedDownloads.export_movie" @click.stop="doNothing">
-            </span>
-            <span class="form-control no-fixed-height">Media: generated output movies</span>
-          </div>
+            <div class="form-group input-group" @click.stop.prevent="toggle('export_movie', true)">
+              <input class="form-check-input" type="checkbox" id="export_movie" value="export_movie" v-model="selectedDownloads.export_movie">
+              <label class="from-check-label" for="export_movies">Media: generated output movies</label>
+            </div>
 
           <div class="form-group input-group" :class="{ 'inputdisabled': !isFinished }" @click.stop.prevent="toggle('export_thirdparty', isFinished);">
-            <span class="input-group-addon">
-              <!-- @click.stop="doNothing" captures an event and avoids bubbling it down, so we don't get 2 toggles -->
-              <input type="checkbox" class="downloadoption" value="export_thirdparty" v-model="selectedDownloads.export_thirdparty" :disabled="!isFinished" @click.stop="doNothing">
-            </span>
-            <span class="form-control no-fixed-height" :class="{'hidden': !isFinished}">Export: files for RMS / Petrel</span>
-            <span class="form-control no-fixed-height not-allowed" :class="{'hidden': isFinished}">Export: files for RMS / Petrel (will be enabled when the run is 'Finished')</span>
+            <input class="form-check-input" type="checkbox" id="export_thirdparty" value="export_thirdparty" v-model="selectedDownloads.export_thirdparty">
+            <label v-if="!isFinished" class="from-check-label" for="export_thirdparty">Export: files for RMS / Petrel (will be enabled when the run is 'Finished')</label>
+            <label v-else class="from-check-label" for="export_thirdparty">Export: files for RMS / Petrel</label>
           </div>
+        </div>
 
           <button class="btn btn-outline-secondary" type="button" id="download-submit" v-on:click="downloadFiles()" :disabled="!anyDownloadsSelected">
             Download
@@ -359,7 +342,6 @@ export default {
         'export_thirdparty': false
       },
       viewerActive: false,
-      model: 'GTSM',
       selectedUpdate: '',
       owner: '',
       updateModelBy: {}
@@ -485,114 +467,124 @@ export default {
   },
   methods: {
     capitalizeFirst(text) {
-      console.log(text)
-      if (text) {
+      if (typeof text === "string") {
         // Capitalize the first letter in a string
         return `${text.charAt(0).toUpperCase()}${text.slice(1)}`
       }
     },
-    getActiveModelData(key) {
-      const data = _.get(this.activeModel, `data.${key}`)
-      return data
-    },
-    getActiveModelPPData() {
-      let rv = {
-        'DeltaTopD50': {
-          'name': 'D50 for Delta Top',
-          'unit': 'mm',
-          'value': undefined
-        },
-        'DeltaTopsand_fraction': {
-          'name': 'Sand Fraction for Delta Top',
-          'unit': '%',
-          'value': undefined
-        },
-        'DeltaTopsorting': {
-          'name': 'Sorting for Delta Top',
-          'unit': '-',
-          'value': undefined
-        },
-        'DeltaFrontD50': {
-          'name': 'D50 for Delta Front',
-          'unit': 'mm',
-          'value': undefined
-        },
-        'DeltaFrontsand_fraction': {
-          'name': 'Sand Fraction for Delta Front',
-          'unit': '%',
-          'value': undefined
-        },
-        'DeltaFrontsorting': {
-          'name': 'Sorting for Delta Front',
-          'unit': '-',
-          'value': undefined
-        },
-        'ProDeltaD50': {
-          'name': 'D50 for Prodelta',
-          'unit': 'mm',
-          'value': undefined
-        },
-        'ProDeltasand_fraction': {
-          'name': 'Sand Fraction for Prodelta',
-          'unit': '%',
-          'value': undefined
-        },
-        'ProDeltasorting': {
-          'name': 'Sorting for Prodelta',
-          'unit': '-',
-          'value': undefined
-        }
+    orderByKey(obj) {
+      if (typeof obj === 'object') {
+        var ordered = {}
+        const objKeys = Object.keys(obj)
+        const sortedKeys = objKeys.sort()
+        sortedKeys.forEach((key) => {
+          ordered[key] = obj[key]
+        })
+        return ordered
       }
-      let ppJson = _.get(this.activeModel, 'data.info.postprocess_output')
-
-      _.each(_.keys(rv), (key) => {
-        if (_.endsWith(key, '_fraction')) {
-          rv[key].value = parseFloat(ppJson[key]) * 100 // fractions are in percentages
-        } else {
-          rv[key].value = ppJson[key]
-        }
-      })
-
-      return rv
-    },
-    downloadFiles() {
-      if (!this.anyDownloadsSelected) {
-        return
+  },
+  getActiveModelData(key) {
+    const data = _.get(this.activeModel, `data.${key}`)
+    return data
+  },
+  getActiveModelPPData() {
+    // TODO: This needs to come from the backend/database not hardcoded in FE
+    let rv = {
+      'DeltaTopD50': {
+        'name': 'D50 for Delta Top',
+        'unit': 'mm',
+        'value': undefined
+      },
+      'DeltaTopsand_fraction': {
+        'name': 'Sand Fraction for Delta Top',
+        'unit': '%',
+        'value': undefined
+      },
+      'DeltaTopsorting': {
+        'name': 'Sorting for Delta Top',
+        'unit': '-',
+        'value': undefined
+      },
+      'DeltaFrontD50': {
+        'name': 'D50 for Delta Front',
+        'unit': 'mm',
+        'value': undefined
+      },
+      'DeltaFrontsand_fraction': {
+        'name': 'Sand Fraction for Delta Front',
+        'unit': '%',
+        'value': undefined
+      },
+      'DeltaFrontsorting': {
+        'name': 'Sorting for Delta Front',
+        'unit': '-',
+        'value': undefined
+      },
+      'ProDeltaD50': {
+        'name': 'D50 for Prodelta',
+        'unit': 'mm',
+        'value': undefined
+      },
+      'ProDeltasand_fraction': {
+        'name': 'Sand Fraction for Prodelta',
+        'unit': '%',
+        'value': undefined
+      },
+      'ProDeltasorting': {
+        'name': 'Sorting for Prodelta',
+        'unit': '-',
+        'value': undefined
       }
-
-      var id = this.activeModel.id
-      var downloadOptions = []
-
-      for (var option in this.selectedDownloads) {
-        if (this.selectedDownloads[option] === true) {
-          downloadOptions.push(`options=${option}`)
-        }
-      }
-
-      window.open(`api/v1/scenes/${id}/export/?format=json&${downloadOptions.join('&')}`)
-    },
-    hasPostProcessData() {
-      return (Object.keys(_.get(this.activeModel, 'data.info.postprocess_output', {})).length > 0)
-    },
-    confirm() {
-      store.dispatch(`${this.updateModelBy.name}Model`, this.updateModelBy)
-      this.updateModelBy = {}
-    },
-    startModel() {
-      store.dispatch('startModel', this.activeModel)
-    },
-    stopModel() {
-      store.dispatch('stopModel', this.activeModel)
-    },
-    toggle(id, doFlag) {
-      if (doFlag) {
-        this.selectedDownloads[id] = !this.selectedDownloads[id]
-      }
-    },
-    doNothing() {
-      return false
     }
+    let ppJson = _.get(this.activeModel, 'data.info.postprocess_output.files.output')
+    _.each(_.keys(rv), (key) => {
+      if (_.endsWith(key, '_fraction')) {
+        rv[key].value = parseFloat(ppJson[key]) * 100 // fractions are in percentages
+      } else {
+        rv[key].value = ppJson[key]
+      }
+    })
+
+    return rv
+  },
+  downloadFiles() {
+    if (!this.anyDownloadsSelected) {
+      return
+    }
+
+    var id = this.activeModel.id
+    var downloadOptions = []
+
+    for (var option in this.selectedDownloads) {
+      if (this.selectedDownloads[option] === true) {
+        downloadOptions.push(`options=${option}`)
+      }
+    }
+
+    window.open(`api/v1/scenes/${id}/export/?format=json&${downloadOptions.join('&')}`)
+  },
+  hasPostProcessData() {
+    return (Object.keys(_.get(this.activeModel, 'data.info.postprocess_output', {})).length > 0)
+  },
+  confirm() {
+    store.dispatch(`${this.updateModelBy.name}Model`, this.updateModelBy)
+    this.updateModelBy = {}
+  },
+  startModel() {
+    store.dispatch('startModel', this.activeModel)
+  },
+  stopModel() {
+    store.dispatch('stopModel', this.activeModel)
+  },
+  toggle(id, doFlag) {
+    if (doFlag) {
+      this.selectedDownloads[id] = !this.selectedDownloads[id]
+    }
+  },
+  doNothing() {
+    return false
   }
+}
 }
 </script>
 

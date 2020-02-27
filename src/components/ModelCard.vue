@@ -65,6 +65,7 @@ export default {
   methods: {
     toggleActive() {
       this.model.active = true
+      console.log('hier dan?')
       bus.$emit('activated', this.model)
     }
   },
