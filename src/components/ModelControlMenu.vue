@@ -78,7 +78,7 @@
 
     </ul>
 
-    <confirm-dialog dialog-id="delete-runs" confirm-button-title="Delete">
+    <!-- <confirm-dialog dialog-id="delete-runs" confirm-button-title="Delete">
       <template slot="title">
         Remove model(s)?
       </template>
@@ -121,7 +121,7 @@
       <template slot="body">
         <p>Are you sure you want to stop <span v-if="numSelectedModels > 1">these models</span><span v-if="numSelectedModels == 1">this model</span>? This action cannot be undone.</p>
       </template>
-    </confirm-dialog>
+    </confirm-dialog> -->
 
   </div>
 </div>

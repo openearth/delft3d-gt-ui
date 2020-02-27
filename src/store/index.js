@@ -3,12 +3,6 @@ import Vuex from 'vuex'
 import $ from 'jquery'
 import _ from 'lodash'
 
-import startSync from './actions/startSync'
-import stopSync from './actions/stopSync'
-import update from './actions/update'
-import updateUser from './actions/updateUser'
-import fetchUser from './actions/fetchUser'
-
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -41,11 +35,80 @@ export default new Vuex.Store({
   actions: {
 
     // ================================ SYNCHRONISATION
-    startSync,
-    stopSync,
-    update,
-    updateUser,
-    fetchUser,
+    fetchUser (context) {
+      if (context.state.reqUser !== undefined) {
+        context.state.reqUser.abort()
+      }
+      return new Promise((resolve, reject) => {
+        context.state.user = $.ajax({ url: 'api/v1/users/me/', data: context.state.params, traditional: true, dataType: 'json' })
+          .done(function (json) {
+            console.log('fetchuser worked', json)
+            resolve(json[0])
+          })
+          .fail(function (jqXhr) {
+            reject(jqXhr)
+          })
+      })
+    },
+
+    startSync (store) {
+      // var x = 0
+      // var intervalID = setInterval(() => {
+      //   store.dispatch('update')
+      //   // Your logic here
+      //
+      //   if (++x === 5) {
+      //     window.clearInterval(intervalID)
+      //   }
+      // }, )
+      console.log('startSync, checking updateInterval', store.state.updateInterval)
+      store.interval = setInterval(() => { store.dispatch('update') }, store.state.updateInterval)
+    },
+
+    stopSync (store) {
+      clearInterval(store.interval)
+      store.interval = null
+    },
+    update (context) {
+     if (context.state.updating) {
+       return
+     }
+     context.state.updating = true
+     Promise.all([
+       context.dispatch('fetchModels'),
+       context.dispatch('fetchScenarios'),
+       context.dispatch('fetchModelDetails')
+     ])
+       .then((jsons) => {
+         context.state.models = jsons[0] // Array of Models
+         context.state.scenarios = jsons[1] // Array of Scenes
+
+         context.state.models = _.map(context.state.models, (m) => {
+           let modelDetails = jsons[2] // Dictionary of Model Details
+           return (m.id === modelDetails.id) ? modelDetails : m
+         })
+
+         context.dispatch('updateContainers')
+         context.state.updating = false
+       })
+       .catch((jqXhr) => {
+         context.state.failedUpdate(jqXhr)
+         context.state.updating = false
+       })
+   },
+   updateUser (store) {
+     store.dispatch('fetchUser').then((json) => {
+       console.log('updateuser', json)
+       store.state.user = json
+     })
+       .catch((jqXhr) => {
+         store.state.failedUpdate(jqXhr)
+         store.state.updating = false
+       })
+   },
+
+
+
 
     // ================================ API FETCH CALLS
     fetchModelDetails (context) {
@@ -179,7 +242,8 @@ export default new Vuex.Store({
 
     // ================================ API MODELS UPDATE CALLS
 
-    deleteModel (context, modelContainer) {
+    deleteModel (context, payload) {
+      const { modelContainer } = payload
       return new Promise((resolve, reject) => {
         // snappyness: remove modelContainer from store
         if (this.state.activeModelContainer === modelContainer) {
@@ -202,6 +266,7 @@ export default new Vuex.Store({
       })
     },
     publishModel (context, payload) {
+
       return new Promise((resolve, reject) => {
         if (payload.modelContainer === undefined || payload.modelContainer.id === undefined) {
           return reject(new Error('No model id to publish'))
@@ -219,7 +284,8 @@ export default new Vuex.Store({
           })
       })
     },
-    resetModel (context, modelContainer) {
+    resetModel (context, payload) {
+      const { modelContainer } = payload
       return new Promise((resolve, reject) => {
         if (modelContainer === undefined || modelContainer.id === undefined) {
           return reject(new Error('No model id to reset'))

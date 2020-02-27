@@ -54,17 +54,17 @@ function fetchVersions () {
   })
 }
 
-function getDialog (element, component, dialogId) {
-  console.log('getdialog', element, component, dialogId)
-  for (var i = 0; i < element.$children.length; i++) {
-    // Check if name matches:
-    if (element.$children[i].dialogId === dialogId) {
-      return element.$children[i]
-    }
-  }
-
-  return null
-}
+// function getDialog (element, component, dialogId) {
+//   console.log('getdialog', element, component, dialogId)
+//   for (var i = 0; i < element.$children.length; i++) {
+//     // Check if name matches:
+//     if (element.$children[i].dialogId === dialogId) {
+//       return element.$children[i]
+//     }
+//   }
+//
+//   return null
+// }
 
 export {
   fetchUsers,

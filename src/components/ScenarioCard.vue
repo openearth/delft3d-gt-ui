@@ -1,18 +1,13 @@
 <template>
 <div id="template-scenario-card">
   <div class="scenario-card" @click.stop="collapse">
-
     <div class="panel panel-default" v-if="hasModels">
-
       <div class="panel-heading panel-heading-scenario">
-
         <div class="row">
-
           <div class="col-xs-8 col-sm-5">
             <i class="fa fa-folder-o" aria-hidden="true" title="scenario"></i>
             &nbsp;{{scenario.data.name}}
           </div>
-
           <div class="col-xs-4 col-sm-4 text-right m-auto">
             <div class="btn-group">
               <button type="button" class="btn btn-default btn-xs" @click.stop="clone" title="Clone scenario">
@@ -23,10 +18,13 @@
               </button>
             </div>
           </div>
-
           <div class="col-xs-11 col-sm-2 text-center no-padding m-auto">
             <div class="progress">
-              <div v-for="(status, index) in modelStatuses" class="progress-bar" :key="index" :style="{ width: status.width + '%'}" :class="[
+              <div v-for="(status, index) in modelStatuses"
+                class="progress-bar"
+                :key="index"
+                :style="{ width: status.width + '%'}"
+                :class="[
                          (status.state == 'Finished') ? 'bg-success' : '',
                          (status.state == 'Idle: waiting for user input') ? 'bg-warning' : '',
                          (status.state == 'Running simulation') ? 'bg-striped active' : '',
@@ -60,7 +58,7 @@
           </div>
         </div>
       </div>
-      <confirm-dialog
+      <!-- <confirm-dialog
         @confirm="deleteScenario"
         @cancel="showDeleteDialog = false"
         :dialog-id="`delete-scenario-${scenario.id}`"
@@ -71,7 +69,7 @@
         <template slot="body">
           <p>Are you sure you want to remove this scenario and all associated models?</p>
         </template>
-      </confirm-dialog>
+      </confirm-dialog> -->
     </div>
   </div>
 </div>

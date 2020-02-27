@@ -1,15 +1,34 @@
 <template>
   <div id="template-image-animation">
-
   <div class="image-animation">
 
     <div class="row">
       <div class="col-sm-12" >
         <ul class="nav nav-tabs">
-          <li role="presentation" class="nav-item" :class="{'active': currentAnimationKey === 'delta_fringe_images'}" @click.stop="switchAnimation('delta_fringe_images')"><a href="#">Delta fringe</a></li>
-          <li role="presentation" class="nav-item" :class="{'active': currentAnimationKey === 'channel_network_images'}" @click.stop="switchAnimation('channel_network_images')"><a href="#">Channel network</a></li>
-          <li role="presentation" class="nav-item" :class="{'active': currentAnimationKey === 'sediment_fraction_images'}" @click.stop="switchAnimation('sediment_fraction_images')"><a href="#">Sediment fraction</a></li>
-          <li role="presentation" class="nav-item" :class="{'active': currentAnimationKey === 'subenvironment_images'}" @click.stop="switchAnimation('subenvironment_images')"><a href="#">Sub-environment</a></li>
+          <li role="presentation"
+            class="nav-item"
+            :class="{'active': currentAnimationKey === 'delta_fringe_images'}"
+            @click="switchAnimation('delta_fringe_images')">
+            <a class="nav-link active" href="#">Delta fringe</a>
+          </li>
+          <li role="presentation"
+            class="nav-item"
+            :class="{'active': currentAnimationKey === 'channel_network_images'}"
+            @click="switchAnimation('channel_network_images')">
+            <a class="nav-link" href="#">Channel network</a>
+          </li>
+          <li role="presentation"
+            class="nav-item"
+            :class="{'active': currentAnimationKey === 'sediment_fraction_images'}"
+            @click="switchAnimation('sediment_fraction_images')">
+            <a class="nav-link" href="#">Sediment fraction</a>
+          </li>
+          <li role="presentation"
+            class="nav-item"
+            :class="{'active': currentAnimationKey === 'subenvironment_images'}"
+            @click="switchAnimation('subenvironment_images')">
+            <a class="nav-link" href="#">Sub-environment</a>
+          </li>
         </ul>
       </div>
     </div>
@@ -29,29 +48,28 @@
             <div class="btn-group">
 
               <button type="button" class="btn btn-primary" v-on:click="gotoFirstFrame()">
-                <span class="glyphicon glyphicon-fast-backward">
+                <span class="fa fa-fast-backward">
                 </span>
               </button>
 
               <button type="button" class="btn btn-primary" v-on:click="previousImageFrame('channel_network_images')">
-                <span class="glyphicon glyphicon-backward">
+                <span class="fa fa-backward">
                 </span>
               </button>
               <button type="button" class="btn btn-primary" v-if="isAnimating" v-on:click="stopImageFrame('channel_network_images')">
-                <span class="glyphicon glyphicon-stop">
+                <span class="fa fa-stop">
                 </span>
               </button>
               <button class="btn btn-primary" v-if="isAnimating == false" v-on:click="playImageFrame('channel_network_images')">
-                <span class="glyphicon glyphicon-play">
+                <span class="fa fa-play">
                 </span>
               </button>
               <button type="button" class="btn btn-primary" v-on:click="nextImageFrame('channel_network_images')">
-                <span class="glyphicon glyphicon-forward">
+                <span class="fa fa-forward">
                 </span>
               </button>
-
               <button type="button" class="btn btn-primary" v-on:click="gotoLastFrame()">
-                <span class="glyphicon glyphicon-fast-forward">
+                <span class="fa fa-fast-forward">
                 </span>
               </button>
             </div>

@@ -91,8 +91,7 @@
                       <template v-if="variable.type !== 'textarea'">
                         <!-- the 0.01 makes the floating point values work -->
                         <template v-if="variable.type === 'numeric'">
-                          <input type="text" class="bootstrap-slider" :id="variable.id" data-slider-step="0.01" :data-slider-min="variable.validators.min" :data-slider-max="variable.validators.max" v-model="selectedParameters['variable.id']" />
-                        </template>
+<input type="text" class="ion-range" :id="variable.id" data-step="0.01" :data-min="variable.validators.min" :data-max="variable.validators.max" data-type="double" v-model="selectedParameters['variable.id']" />                        </template>
 
                         <template v-if="variable.type === 'select' && !variable.factor">
                           <div class="form-group">
@@ -138,159 +137,63 @@
                 <input type="checkbox" v-model="activatedPostProc['DeltaTopD50']">
                 D50 for delta top (mm)
               </label>
-              <input type="text"
-                id="DeltaTopD50"
-                v-model="selectedPostProc['DeltaTopD50']"
-                class="bootstrap-slider"
-                data-slider-step="0.01"
-                data-slider-min="0"
-                data-slider-max="2"
-                data-slider-value="[0, 2]"
-                data-slider-ticks-labels='["0", "2"]'
-                data-slider-ticks="[0, 2]"
-                data-slider-tooltip="always"
-                />
+<input type="text" id="DeltaTopD50" v-model="selectedPostProc['DeltaTopD50']" class="ion-range" data-step="0.01" data-min="0" data-max="2" data-type="double" />
             </div>
             <div class="form-group">
               <label class="control-label">
                 <input type="checkbox" v-model="activatedPostProc['DeltaTopsand_fraction']">
                 Sand fraction for delta top (%)
               </label>
-              <input type="text"
-                id="DeltaTopsand_fraction"
-                v-model="selectedPostProc['DeltaTopsand_fraction']"
-                data-provide="slider"
-                class="bootstrap-slider"
-                data-slider-step="1"
-                data-slider-min="0"
-                data-slider-max="100"
-                data-slider-value="[0, 100]"
-                data-slider-ticks-labels='["0", "100"]'
-                data-slider-ticks="[0, 100]"
-                data-slider-tooltip="always"
-                />
+<input type="text" id="DeltaTopsand_fraction" v-model="selectedPostProc['DeltaTopsand_fraction']" class="ion-range" data-step="1" data-min="0" data-max="100" data-type="double" />
             </div>
             <div class="form-group">
               <label class="control-label">
                 <input type="checkbox" v-model="activatedPostProc['DeltaTopsorting']">
                   Sorting for delta top (-)
                 </label>
-              <input type="text"
-                id="DeltaTopsorting"
-                v-model="selectedPostProc['DeltaTopsorting']"
-                class="bootstrap-slider"
-                data-slider-step="0.1"
-                data-slider-min="0"
-                data-slider-max="10"
-                data-slider-value="[0, 10]"
-                data-slider-ticks-labels='["0", "10"]'
-                data-slider-ticks="[0, 10]"
-                data-slider-tooltip="always"
-                />
+              <input type="text" id="DeltaTopsorting" v-model="selectedPostProc['DeltaTopsorting']" class="ion-range" data-step="0.1" data-min="0" data-max="10" data-type="double" />
             </div>
             <div class="form-group">
               <label class="control-label">
                 <input type="checkbox" v-model="activatedPostProc['DeltaFrontD50']">
                 D50 for delta front (mm)
               </label>
-              <input type="text"
-                id="DeltaFrontD50"
-                v-model="selectedPostProc['DeltaFrontD50']"
-                class="bootstrap-slider"
-                data-slider-step="0.01"
-                data-slider-min="0"
-                data-slider-max="2"
-                data-slider-value="[0, 2]"
-                data-slider-ticks-labels='["0", "2"]'
-                data-slider-ticks="[0, 2]"
-                data-slider-tooltip="always"
-                @slide-stop="search" />
+             <input type="text" id="DeltaFrontD50" v-model="selectedPostProc['DeltaFrontD50']" class="ion-range" data-step="0.01" data-min="0" data-max="2" data-type="double" />
             </div>
             <div class="form-group">
               <label class="control-label">
                 <input type="checkbox" v-model="activatedPostProc['DeltaFrontsand_fraction']">
                 Sand fraction for delta front (%)
               </label>
-              <input type="text"
-                id="DeltaFrontsand_fraction"
-                v-model="selectedPostProc['DeltaFrontsand_fraction']"
-                class="bootstrap-slider"
-                data-slider-step="0.01"
-                data-slider-min="0"
-                data-slider-max="1"
-                data-slider-value="[0, 1]"
-                data-slider-ticks-labels='["0", "1"]'
-                data-slider-ticks="[0, 1]"
-                data-slider-tooltip="always" />
+              <input type="text" id="DeltaFrontsand_fraction" v-model="selectedPostProc['DeltaFrontsand_fraction']" class="ion-range" data-step="0.01" data-min="0" data-max="1" data-type="double" />
             </div>
             <div class="form-group">
               <label class="control-label">
                 <input type="checkbox" v-model="activatedPostProc['DeltaFrontsorting']">
                 Sorting for delta front (-)
               </label>
-              <input type="text"
-                id="DeltaFrontsorting"
-                v-model="selectedPostProc['DeltaFrontsorting']"
-                class="bootstrap-slider"
-                data-slider-step="0.1"
-                data-slider-min="0"
-                data-slider-max="10"
-                data-slider-value="[0, 10]"
-                data-slider-ticks-labels='["0", "10"]'
-                data-slider-ticks="[0, 10]"
-                data-slider-tooltip="always" />
+              <input type="text" id="DeltaFrontsorting" v-model="selectedPostProc['DeltaFrontsorting']" class="ion-range" data-step="0.1" data-min="0" data-max="10" data-type="double" />
             </div>
             <div class="form-group">
               <label class="control-label">
                 <input type="checkbox" v-model="activatedPostProc['ProDeltaD50']">
                 D50 for prodelta (mm)
               </label>
-              <input type="text"
-                id="ProDeltaD50"
-                v-model="selectedPostProc['ProDeltaD50']"
-                class="bootstrap-slider"
-                data-slider-step="0.01"
-                data-slider-min="0"
-                data-slider-max="2"
-                data-slider-value="[0, 2]"
-                data-slider-ticks-labels='["0", "2"]'
-                data-slider-ticks="[0, 2]"
-                data-slider-tooltip="always"  />
+              <input type="text" id="ProDeltaD50" v-model="selectedPostProc['ProDeltaD50']" class="ion-range" data-step="0.01" data-min="0" data-max="2" data-type="double" />
             </div>
             <div class="form-group">
               <label class="control-label">
                 <input type="checkbox" v-model="activatedPostProc['ProDeltasand_fraction']">
                 Sand fraction for prodelta (%)
               </label>
-              <input type="text"
-                id="ProDeltasand_fraction"
-                v-model="selectedPostProc['ProDeltasand_fraction']"
-                class="bootstrap-slider"
-                data-slider-step="0.01"
-                data-slider-min="0"
-                data-slider-max="1"
-                data-slider-value="[0, 1]"
-                data-slider-ticks-labels='["0", "1"]'
-                data-slider-ticks="[0, 1]"
-                data-slider-tooltip="always"
-                 />
+              <input type="text" id="ProDeltasand_fraction" v-model="selectedPostProc['ProDeltasand_fraction']" class="ion-range" data-step="0.01" data-min="0" data-max="1" data-type="double" />
             </div>
             <div class="form-group">
               <label class="control-label">
                 <input type="checkbox" v-model="activatedPostProc['ProDeltasorting']">
                 Sorting for prodelta (-)
               </label>
-              <input type="text"
-                id="ProDeltasorting"
-                v-model="selectedPostProc['ProDeltasorting']"
-                class="bootstrap-slider"
-                data-slider-step="0.1"
-                data-slider-min="0"
-                data-slider-max="10"
-                data-slider-value="[0, 10]"
-                data-slider-ticks-labels='["0", "10"]'
-                data-slider-ticks="[0, 10]"
-                data-slider-tooltip="always" />
+              <input type="text" id="ProDeltasorting" v-model="selectedPostProc['ProDeltasorting']" class="ion-range" data-step="0.1" data-min="0" data-max="10" data-type="double" />
             </div>
           </div>
         </div>
@@ -305,7 +208,6 @@ import store from '../store'
 import $ from 'jquery'
 import _ from 'lodash'
 import moment from 'moment'
-import Slider from 'bootstrap-slider/dist/bootstrap-slider'
 
 import {
   fetchSearchTemplate
@@ -344,16 +246,6 @@ export default {
       this.selectedTemplates = []
       this.selectedUsers = []
       this.selectedOutdated = []
-
-      this.postProc = [ {
-        activated: false,
-        min: 0,
-        max: 2,
-        value: [0, 2],
-        labels: '["0", "2"]'
-      }
-
-      ]
       this.activatedPostProc = {
         'ProDeltaD50': false,
         'DeltaFrontD50': false,
@@ -536,8 +428,17 @@ export default {
       // Domain selection boxes - enable all.
       $(".domain-selection-box input[type='checkbox']").prop('checked', 'checked')
 
-      const slider = $('.bootstrap-slider').slider()
-      console.log(slider)
+      /* eslint-disable camelcase */
+      if ($('.ion-range').ionRangeSlider !== undefined) {
+        $('.ion-range').ionRangeSlider({
+          force_edges: true,
+          onFinish: () => {
+            // args: data, not used
+            this.search()
+          }
+        })
+      }
+      /* eslint-enable camelcase */
 
       // slider.forEach(slide => {
       //   slide.on('slideStop', this.search)
@@ -648,7 +549,6 @@ export default {
 </script>
 
 <style>
-@import '~bootstrap-slider/dist/css/bootstrap-slider.css';
 @import '../assets/variables.scss';
 
 .slider {

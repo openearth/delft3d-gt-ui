@@ -2,7 +2,7 @@
     <div id="viewer-3d" class="panel-body viewer-3d">
         <div class="btn-group btn-group-justified" v-if="!started || !isFinished">
             <div class="btn-group" role="group">
-                <button type="button" class="btn btn-labeled btn-default btn-spaced-right" :class="{'disabled': !isFinished }" @click="start3dviewer">
+                <button type="button" class="btn btn-outline-secondary btn-spaced-right" :class="{'disabled': !isFinished }" @click="start3dviewer">
                   <span class="btn-label"><i class="fa fa-fw fa-play" aria-hidden="true"></i></span> Start 3D Viewer <span v-if="!isFinished">(please wait for simulation to finish)</span>
                 </button>
             </div>
@@ -49,47 +49,50 @@
         <div class="text-center" v-if="started && isFinished">
 
             <div class="control-buttons">
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('reset')">Reset</button>
-                    <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('fit')">Fit</button>
+                <div class="btn-group mb-2" role="group">
+                    <button type="button" class="btn btn-outline-secondary btn-spaced-right" @click="camera('reset')">Reset</button>
+                    <button type="button" class="btn btn-outline-secondary btn-spaced-right" @click="camera('fit')">Fit</button>
                 </div>
 
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('left')">South</button>
-                    <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('back')">West</button>
-                    <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('right')">North</button>
-                    <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('front')">East</button>
+                <div class="btn-group mx-2 mb-2" role="group">
+                    <button type="button" class="btn btn-outline-secondary btn-spaced-right" @click="camera('left')">South</button>
+                    <button type="button" class="btn btn-outline-secondary btn-spaced-right" @click="camera('back')">West</button>
+                    <button type="button" class="btn btn-outline-secondary btn-spaced-right" @click="camera('right')">North</button>
+                    <button type="button" class="btn btn-outline-secondary btn-spaced-right" @click="camera('front')">East</button>
                 </div>
 
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('top')">Top</button>
-                    <button type="button" class="btn btn-labeled btn-default btn-spaced-right" @click="camera('bottom')">Bottom</button>
+                <div class="btn-group mb-2" role="group">
+                    <button type="button" class="btn btn-outline-secondary btn-spaced-right" @click="camera('top')">Top</button>
+                    <button type="button" class="btn btn-outline-secondary btn-spaced-right" @click="camera('bottom')">Bottom</button>
                 </div>
 
                 <div class="btn-group">
                     <button type="button" class="btn btn-primary" @click="goStart">
-                        <span class="glyphicon glyphicon-fast-backward"></span>
+                        <span class="fa fa-fast-backward"></span>
                     </button>
                     <button type="button" class="btn btn-primary" @click="goPrev">
-                        <span class="glyphicon glyphicon-backward"></span>
+                        <span class="fa fa-backward"></span>
                     </button>
                     <button type="button" class="btn btn-primary">
                         {{ curTimeStep + 1 }}
                     </button>
                     <button type="button" class="btn btn-primary" @click="goNext">
-                        <span class="glyphicon glyphicon-forward"></span>
+                        <span class="fa fa-forward"></span>
                     </button>
                     <button type="button" class="btn btn-primary" @click="goEnd">
-                        <span class="glyphicon glyphicon-fast-forward"></span>
+                        <span class="fa fa-fast-forward"></span>
                     </button>
                 </div>
             </div>
 
-            <ul class="nav nav-tabs nav-justified">
-                <div v-for="(name, index) in ['slices', 'colors']" :key="index">
-                    <li role="presentation" :class="{'active': tab === name}" @click.stop="setTab(name)"><a href="#">{{ name }}</a></li>
-                </div>
-            </ul>
+            <div class="col-sm-12" >
+              <ul class="nav nav-tabs nav-fill">
+                  <div v-for="(name, index) in ['slices', 'colors']" :key="index">
+                      <li role="presentation" class="nav-item" :class="{'active': tab === name}" @click.stop="setTab(name)">
+                      <a class="nav-link" href="#">{{ name }}</a></li>
+                  </div>
+              </ul>
+            </div>
 
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane" :class="{'active': tab === 'slices'}">
@@ -125,12 +128,12 @@
                                 <input class="form-control text-center" type="text" name="gradient-position" v-model="point.position" lazy>
                             </div>
                             <div class="col-sm-1">
-                                <button type="button" class="btn btn-default" @click="removePoint($index)" v-if="$index < gradient.length - 1">x</button>
+                                <button type="button" class="btn" @click="removePoint($index)" v-if="$index < gradient.length - 1">x</button>
                             </div>
                         </div>
                         <div class=form-group>
                             <div class="col-sm-offset-3 col-sm-6">
-                                <button type="button" class="btn btn-default btn-block" @click="addPoint()">add color</button>
+                                <button type="button" class="btn btn-block" @click="addPoint()">add color</button>
                             </div>
                         </div>
                     </div>
@@ -145,6 +148,7 @@
 import _ from 'lodash'
 import $ from 'jquery'
 import store from '../store'
+import ionRangeSlider from 'ion-rangeslider'
 
 export default {
   store,
