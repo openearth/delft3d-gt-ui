@@ -123,10 +123,10 @@
             </button>&nbsp;
             <div class="btn-group">
               <button class="btn dropdown-toggle"
-                :class="[(isReadOnly || !isFinished || outdated == false) ? 'disabled' : 'btn-warning']"
+                :class="[(!isFinished || outdated == false) ? 'disabled' : 'btn-warning']"
                 data-toggle="dropdown"
                 href="#"
-                :disabled="(isReadOnly || !isFinished || outdated == false)"
+                :disabled="(!isFinished || outdated == false)"
                 :data-original-title="(outdated == false) ? 'no updates available' : getActiveModelData('outdated_workflow')"
                 >
                 <span class="btn-label"><i class="fa fa-fw fa-level-up" aria-hidden="true"></i></span>
@@ -181,7 +181,7 @@
         </div>
       </div>
 
-      <div v-if="model !== 'GTSM'" class="panel panel-default hidden-xs hidden-sm">
+      <div  class="panel panel-default hidden-xs hidden-sm">
         <div class="panel-heading" @click.stop="collapseToggle(true, $event)">
           3D Viewer
         </div>
@@ -233,7 +233,7 @@
         </div>
       </div>
 
-      <div v-if="model !== 'GTSM'" class="panel panel-default">
+      <div class="panel panel-default">
         <div class="panel-heading" @click.stop="collapseToggle(false, $event)">
           Post processing output
         </div>
@@ -262,7 +262,7 @@
         </div>
       </div>
 
-      <div v-if="model !== 'GTSM'" class="panel panel-default">
+      <div class="panel panel-default">
         <div class="panel-heading" @click.stop="collapseToggle(false, $event)">
           Download files
         </div>
