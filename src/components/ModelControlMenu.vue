@@ -2,7 +2,7 @@
   <div id="template-model-control-menu">
 
   <div class="model-control-menu btn-group pull-right dropdown">
-    <button class="btn btn-default" @click.stop="expandScenarios">
+    <button class="btn btn-default" @click.stop="$emit('expand-scenarios')">
       <i class="fa" :class="[(collapseShow)? 'fa-arrow-down' : 'fa-arrow-up']" aria-hidden="true"></i>
     </button>
 
@@ -19,31 +19,31 @@
     <ul class="dropdown-menu">
 
       <li :class="{ disabled: numSelectedModels === 0 || someSelectedModelsArePublished() }">
-        <a @click.stop="startSelectedModels">
+        <a @click.stop="updateModelsBy = {name: 'start'}">
           <i class="fa fa-fw fa-play" aria-hidden="true"></i> Start model<span v-if="numSelectedModels > 1">s</span>
         </a>
       </li>
 
       <li :class="{ disabled: numSelectedModels === 0 || someSelectedModelsArePublished() }">
-        <a @click.stop="stopSelectedModels">
+        <a @click.stop="updateModelsBy = {name: 'stop'}">
           <i class="fa fa-fw fa-stop" aria-hidden="true"></i> Stop model<span v-if="numSelectedModels > 1">s</span>
         </a>
       </li>
 
       <li :class="{ disabled: numSelectedModels === 0 || someSelectedModelsArePublished() }">
-        <a @click.stop="resetSelectedModels">
+        <a @click.stop="updateModelsBy = {name: 'reset'}">
           <i class="fa fa-fw fa-fast-backward" aria-hidden="true"></i> Reset model<span v-if="numSelectedModels > 1">s</span>
         </a>
       </li>
 
       <li :class="{ disabled: numSelectedModels === 0 || someSelectedModelsArePublished() }">
-        <a @click.stop="redoSelectedModels">
+        <a @click.stop="updateModelsBy = {name: 'redo'}">
           <i class="fa fa-fw fa-level-up" aria-hidden="true"></i> Update model<span v-if="numSelectedModels > 1">s</span>
         </a>
       </li>
 
       <li :class="{ disabled: numSelectedModels === 0 || someSelectedModelsArePublished() }">
-        <a @click.stop="deleteSelectedModels">
+        <a @click.stop="updateModelsBy = {name: 'delete'}">
           <i class="fa fa-fw fa-times" aria-hidden="true"></i> Delete model<span v-if="numSelectedModels > 1">s</span>
         </a>
       </li>
@@ -51,20 +51,20 @@
       <li role="separator" class="divider"></li>
 
       <li :class="{ disabled: numSelectedModels === 0  || !someSelectedModelsAreFinished() || someSelectedModelsAreAlreadyPublished('company') }">
-        <a @click.stop="shareSelectedModels('company')">
+        <a @click.stop="updateModelsBy = {name: 'share', domain: 'company'}">
           <i class="fa fa-fw fa-group" aria-hidden="true"></i> Share model<span v-if="numSelectedModels > 1">s</span> with Company
         </a>
       </li>
 
       <li :class="{ disabled: numSelectedModels === 0  || !someSelectedModelsAreFinished()  || someSelectedModelsAreAlreadyPublished('world') }">
-        <a @click.stop="shareSelectedModels('world')">
+        <a @click.stop="updateModelsBy = {name: 'share', domain: 'world'}">
           <i class="fa fa-fw fa-globe" aria-hidden="true"></i> Share model<span v-if="numSelectedModels > 1">s</span> with World
         </a>
       </li>
 
       <li role="separator" class="divider"></li>
 
-      <li :class="{ disabled: numSelectedModels === 0 || (option.onlyFinished && !someSelectedModelsAreFinished()) }" v-for="(key, option) in downloadOptions" :key="option">
+      <li :class="{ disabled: numSelectedModels === 0 || (option.onlyFinished && !someSelectedModelsAreFinished()) }" v-for="(option, key) in downloadOptions" :key="key">
         <div class="dropdown-menu-checkbox" @click.self.stop.prevent="toggle(key)">
           <input type="checkbox" class="downloadoption"  :value="key" v-model="downloadOptions['key']" :disabled="numSelectedModels === 0 || (option.onlyFinished && !someSelectedModelsAreFinished())"> {{ option.verbose }}
         </div>
@@ -78,51 +78,15 @@
 
     </ul>
 
-    <!-- <confirm-dialog dialog-id="delete-runs" confirm-button-title="Delete">
-      <template slot="title">
-        Remove model(s)?
-      </template>
-      <template slot="body">
-        <p>Are you sure you want to delete <span v-if="numSelectedModels > 1">these models</span><span v-if="numSelectedModels == 1">this model</span>? This action cannot be undone.</p>
-      </template>
-    </confirm-dialog>
-
-    <confirm-dialog dialog-id="share-runs" confirm-button-title="Share">
-      <template slot="title">
-        Share model(s)?
-      </template>
-      <template slot="body">
-        <p>Are you sure you want to share <span v-if="numSelectedModels > 1">these models</span><span v-if="numSelectedModels == 1">this model</span>? This action cannot be undone.</p>
-      </template>
-    </confirm-dialog>
-
-    <confirm-dialog dialog-id="reset-runs" confirm-button-title="Reset">
-      <template slot="title">
-        Reset model(s)?
-      </template>
-      <template slot="body">
-        <p>Are you sure you want to reset <span v-if="numSelectedModels > 1">these models</span><span v-if="numSelectedModels == 1">this model</span>? This action cannot be undone.</p>
-      </template>
-    </confirm-dialog>
-
-    <confirm-dialog dialog-id="redo-runs" confirm-button-title="Update">
-      <template slot="title">
-        Update model(s)?
-      </template>
-      <template slot="body">
-        <p>Are you sure you want to update <span v-if="numSelectedModels > 1">these models</span><span v-if="numSelectedModels == 1">this model</span>? This action cannot be undone.</p>
-      </template>
-    </confirm-dialog>
-
-    <confirm-dialog dialog-id="stop-runs" confirm-button-title="Stop">
-      <template slot="title">
-        Stop model(s)?
-      </template>
-      <template slot="body">
-        <p>Are you sure you want to stop <span v-if="numSelectedModels > 1">these models</span><span v-if="numSelectedModels == 1">this model</span>? This action cannot be undone.</p>
-      </template>
-    </confirm-dialog> -->
-
+        <!-- Confirm dialog for control checks -->
+        <confirm-dialog v-if="updateModelsBy.name" :confirm-button-title="capitalizeFirst(updateModelsBy.name)" :dialogId="`confirm-${updateModelsBy.name}`" @confirm="confirm">
+          <template slot="title">
+            {{capitalizeFirst(updateModelsBy.name)}} models?
+          </template>
+          <template slot="body">
+            <p>Are you sure you want to {{updateModelsBy.name}} this model? This action cannot be undone.</p>
+          </template>
+        </confirm-dialog>
   </div>
 </div>
 </template>
@@ -138,10 +102,16 @@ import {
 } from '../templates.js'
 export default {
   template: '#template-model-control-menu',
+  props: {
+    collapseShow: {
+      type: Boolean
+    }
+  },
 
   data () {
     return {
-      collapseShow: true,
+      showDialog: false,
+      updateModelsBy: {},
       downloadOptions: {
         'export_d3dinput': {
           'active': false,
@@ -178,12 +148,8 @@ export default {
       })
     },
     numSelectedModels () {
-      if (store.dispatch('getSelectedModels') !== undefined) {
-        console.log('numselected', store.dispatch('getSelectedModels').length)
-        return store.dispatch('getSelectedModels').length
-      } else {
-        return -1
-      }
+      const selected = store.getters.getSelectedModels
+      return selected.length
     }
   },
 
@@ -211,137 +177,146 @@ export default {
   /* eslint-enable camelcase */
 
   methods: {
-    expandScenarios () {
-      if (this.collapseShow) {
-        $('.scenario-card .collapse').collapse('show')
+    capitalizeFirst (text) {
+      if (typeof text === 'string') {
+        // Capitalize the first letter in a string
+        return `${text.charAt(0).toUpperCase()}${text.slice(1)}`
+      }
+    },
+    confirm () {
+      if (this.someSelectedModelsArePublished()) {
+        return
+      }
+      console.log(this.updateModelsBy)
+      if (this.updateModelsBy.domain) {
+        store.dispatch(`${this.updateModelsBy.name}SelectedModels`, this.updateModelsBy.domain)
       } else {
-        $('.scenario-card .collapse').collapse('hide')
+        store.dispatch(`${this.updateModelsBy.name}SelectedModels`)
       }
-      this.collapseShow = !this.collapseShow
+      this.updateModelsBy = {}
     },
-
-    resetSelectedModels () {
-      if (this.someSelectedModelsArePublished()) {
-        return
-      }
-
-      // Get a confirm dialog
-      this.deleteDialog = getDialog(this, 'confirm-dialog', 'reset-runs')
-
-      this.deleteDialog.onConfirm = () => {
-        store.dispatch('resetSelectedModels')
-
-        this.deleteDialog.hide()
-      }
-      this.deleteDialog.showAlert(false)
-
-      // Show the dialog:
-      this.deleteDialog.show()
-    },
-    redoSelectedModels () {
-      if (this.someSelectedModelsArePublished()) {
-        return
-      }
-
-      // Get a confirm dialog
-      this.redoDialog = getDialog(this, 'confirm-dialog', 'redo-runs')
-
-      this.redoDialog.onConfirm = () => {
-        store.dispatch('redoSelectedModels')
-
-        this.redoDialog.hide()
-      }
-      this.redoDialog.showAlert(false)
-
-      // Show the dialog:
-      this.redoDialog.show()
-    },
+    //
+    // resetSelectedModels () {
+    //   if (this.someSelectedModelsArePublished()) {
+    //     return
+    //   }
+    //
+    //   // Get a confirm dialog
+    //   this.deleteDialog = getDialog(this, 'confirm-dialog', 'reset-runs')
+    //
+    //   this.deleteDialog.onConfirm = () => {
+    //     store.dispatch('resetSelectedModels')
+    //
+    //     this.deleteDialog.hide()
+    //   }
+    //   this.deleteDialog.showAlert(false)
+    //
+    //   // Show the dialog:
+    //   this.deleteDialog.show()
+    // },
+    // redoSelectedModels () {
+    //   if (this.someSelectedModelsArePublished()) {
+    //     return
+    //   }
+    //
+    //   // Get a confirm dialog
+    //   this.redoDialog = getDialog(this, 'confirm-dialog', 'redo-runs')
+    //
+    //   this.redoDialog.onConfirm = () => {
+    //     store.dispatch('redoSelectedModels')
+    //
+    //     this.redoDialog.hide()
+    //   }
+    //   this.redoDialog.showAlert(false)
+    //
+    //   // Show the dialog:
+    //   this.redoDialog.show()
+    // },
     someSelectedModelsAreFinished () {
-      return _.values(store.dispatch('getSelectedModels')).some((model) => {
+      return _.values(store.getters.getSelectedModels).some((model) => {
         return model.data.state === 'Finished'
       })
     },
     someSelectedModelsArePublished () {
-      return _.values(store.dispatch('getSelectedModels')).some((model) => {
+      return _.values(store.getters.getSelectedModels).some((model) => {
         return model.data.shared !== 'p'
       })
     },
     someSelectedModelsAreAlreadyPublished (domain) {
       if (domain === 'world') {
-        return _.values(store.dispatch('getSelectedModels')).some((model) => {
+        return _.values(store.getters.getSelectedModels).some((model) => {
           return model.data.shared === 'w'
         })
       }
       if (domain === 'company') {
-        return _.values(store.dispatch('getSelectedModels')).some((model) => {
+        return _.values(store.getters.getSelectedModels).some((model) => {
           return model.data.shared === 'c' || model.data.shared === 'w'
         })
       }
       return false
     },
-    startSelectedModels () {
-      if (this.someSelectedModelsArePublished()) {
-        return
-      }
-      store.dispatch('startSelectedModels')
-    },
+    // startSelectedModels () {
+    //   if (this.someSelectedModelsArePublished()) {
+    //     return
+    //   }
+    //   store.dispatch('startSelectedModels')
+    // },
+    //
+    // stopSelectedModels () {
+    //   if (this.someSelectedModelsArePublished()) {
+    //     return
+    //   }
+    //
+    //   // Get a confirm dialog
+    //   this.deleteDialog = getDialog(this, 'confirm-dialog', 'stop-runs')
+    //
+    //   this.deleteDialog.onConfirm = () => {
+    //     store.dispatch('stopSelectedModels')
+    //
+    //     this.deleteDialog.hide()
+    //   }
+    //   this.deleteDialog.showAlert(false)
+    //
+    //   // Show the dialog:
+    //   this.deleteDialog.show()
+    // },
 
-    stopSelectedModels () {
-      if (this.someSelectedModelsArePublished()) {
-        return
-      }
-
-      // Get a confirm dialog
-      this.deleteDialog = getDialog(this, 'confirm-dialog', 'stop-runs')
-
-      this.deleteDialog.onConfirm = () => {
-        store.dispatch('stopSelectedModels')
-
-        this.deleteDialog.hide()
-      }
-      this.deleteDialog.showAlert(false)
-
-      // Show the dialog:
-      this.deleteDialog.show()
-    },
-
-    deleteSelectedModels () {
-      if (this.someSelectedModelsArePublished()) {
-        return
-      }
-
-      // Get a confirm dialog
-      this.deleteDialog = getDialog(this, 'confirm-dialog', 'delete-runs')
-
-      this.deleteDialog.onConfirm = () => {
-        store.dispatch('deleteSelectedModels')
-
-        this.deleteDialog.hide()
-      }
-      this.deleteDialog.showAlert(false)
-
-      // Show the dialog:
-      this.deleteDialog.show()
-    },
-
-    shareSelectedModels (domain) {
-      if (!this.someSelectedModelsAreFinished || this.someSelectedModelsAreAlreadyPublished(domain)) {
-        return
-      }
-
-      // Get a confirm dialog
-      this.shareDialog = getDialog(this, 'confirm-dialog', 'share-runs')
-
-      this.shareDialog.onConfirm = () => {
-        store.dispatch('shareSelectedModels', domain)
-
-        this.shareDialog.hide()
-      }
-      this.shareDialog.showAlert(false)
-
-      // Show the dialog:
-      this.shareDialog.show()
-    },
+    // deleteSelectedModels () {
+    //   if (this.someSelectedModelsArePublished()) {
+    //     return
+    //   }
+    //
+    //   // Get a confirm dialog
+    //   this.deleteDialog = getDialog(this, 'confirm-dialog', 'delete-runs')
+    //
+    //   this.deleteDialog.onConfirm = () => {
+    //     store.dispatch('deleteSelectedModels')
+    //     this.deleteDialog.hide()
+    //   }
+    //   this.deleteDialog.showAlert(false)
+    //
+    //   // Show the dialog:
+    //   this.deleteDialog.show()
+    // },
+    //
+    // shareSelectedModels (domain) {
+    //   if (!this.someSelectedModelsAreFinished || this.someSelectedModelsAreAlreadyPublished(domain)) {
+    //     return
+    //   }
+    //
+    //   // Get a confirm dialog
+    //   this.shareDialog = getDialog(this, 'confirm-dialog', 'share-runs')
+    //
+    //   this.shareDialog.onConfirm = () => {
+    //     store.dispatch('shareSelectedModels', domain)
+    //
+    //     this.shareDialog.hide()
+    //   }
+    //   this.shareDialog.showAlert(false)
+    //
+    //   // Show the dialog:
+    //   this.shareDialog.show()
+    // },
 
     downloadSelectedModels () {
       if (this.numSelectedModels === 0 || !this.anyDownloadsSelected) {
