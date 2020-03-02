@@ -1,22 +1,26 @@
 <template>
 <div id="template-search-list">
   <div class="search-list" data-toggle="items">
-    <scenario-card v-for="(scenario, index) in sharedState.scenarioContainers" :key="index" :scenario="scenario"></scenario-card>
+    <div  v-for="(scenario, index) in sharedState.scenarioContainers" :key="index">
+      <scenario-card :scenario="scenario" :multipleModels="true"></scenario-card>
+    </div>
     <div class="list-divider" v-if="notEmpty(companyModels)">
-      shared with company
+      Shared with company
     </div>
     <model-card
       v-for="(model, index) in companyModels"
-      :key="index"
+      class="mb-3"
+      :key="`company-${index}`"
       :model="model"
       :selectable="false">
     </model-card>
     <div class="list-divider" v-if="notEmpty(worldModels)">
-      shared with world
+      Shared with world
     </div>
     <model-card
       v-for="(model, index) in worldModels"
-      :key="index"
+      class="mb-3"
+      :key="`world-${index}`"
       :model="model"
       :selectable="false">
     </model-card>
@@ -55,10 +59,8 @@ export default {
 
   mounted () {
     bus.$on('activated', (model) => {
-      console.log('searchlist, event: activated')
       bus.$emit('deactivate', model)
       this.sharedState.activeModelContainer = model
-      console.log('searchlist, event: activated', this.sharedState.activeModelContainer)
       store.dispatch('update')
     })
   },
@@ -79,6 +81,7 @@ export default {
       // Get all models that are shared with the world
       return _.filter(this.sharedState.modelContainers, ['data.shared', 'w'])
     },
+    // TODO: check why this code was here
     // // Get the current selected modelid from the routing URL
     // selectedModel: {
     //   cache: false,
