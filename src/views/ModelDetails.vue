@@ -43,7 +43,7 @@
               <div class="progress-bar" :class="[
                          (activeModel.statusLevel == 'Finished') ? 'bg-success' : '',
                          (activeModel.statusLevel == 'Idle: waiting for user input') ? 'bg-warning' : '',
-                         (activeModel.statusLevel == 'Running simulation') ? 'bg-striped active' : '',
+                         (activeModel.statusLevel == 'Running workflow') ? 'bg-info progress-bar-striped progress-bar-animated' : '',
                          (
                          activeModel.statusLevel != 'Finished' &&
                          activeModel.statusLevel != 'Idle: waiting for user input'
@@ -104,9 +104,7 @@
       <div class="card-header" data-toggle="collapse" data-target="#simulation-controls-collapse">
         Simulation controls
       </div>
-
-      <div id="simulation-controls-collapse" class="collapse">
-
+      <div id="simulation-controls-collapse" class="collapse card-body">
         <div class="card-body">
           <p :class="{ 'hidden': isReadOnly }">
             You can select an action to perform on this simulation:
@@ -266,24 +264,24 @@
           </p>
 
           <div class="mx-3">
-            <div class="form-group input-group" @click.stop.prevent="toggle('export_d3dinput', true)">
-              <input class="form-check-input" type="checkbox" id="export_d3dinput" value="export_d3dinput" v-model="selectedDownloads.export_d3dinput">
-              <label class="from-check-label" for="export_d3dinput">Delft3D: input files</label>
+            <div class="form-group input-group">
+              <input class="form-check-input" type="checkbox" id="export_d3dinput" v-model="selectedDownloads.export_d3dinput">
+              <label class="form-check-label" for="export_d3dinput">Delft3D: input files</label>
             </div>
-            <div class="form-group input-group" @click.stop.prevent="toggle('export_images', true)">
-              <input class="form-check-input" type="checkbox" id="export_images" value="export_images" v-model="selectedDownloads.export_images">
-              <label class="from-check-label" for="export_images">Media: generated output images</label>
-            </div>
-
-            <div class="form-group input-group" @click.stop.prevent="toggle('export_movie', true)">
-              <input class="form-check-input" type="checkbox" id="export_movie" value="export_movie" v-model="selectedDownloads.export_movie">
-              <label class="from-check-label" for="export_movies">Media: generated output movies</label>
+            <div class="form-group input-group">
+              <input class="form-check-input" type="checkbox" id="export_images" v-model="selectedDownloads.export_images">
+              <label class="form-check-label" for="export_images">Media: generated output images</label>
             </div>
 
-          <div class="form-group input-group" :class="{ 'inputdisabled': !isFinished }" @click.stop.prevent="toggle('export_thirdparty', isFinished);">
-            <input class="form-check-input" type="checkbox" id="export_thirdparty" value="export_thirdparty" v-model="selectedDownloads.export_thirdparty">
-            <label v-if="!isFinished" class="from-check-label" for="export_thirdparty">Export: files for RMS / Petrel (will be enabled when the run is 'Finished')</label>
-            <label v-else class="from-check-label" for="export_thirdparty">Export: files for RMS / Petrel</label>
+            <div class="form-group input-group">
+              <input class="form-check-input" type="checkbox" id="export_movie" v-model="selectedDownloads.export_movie">
+              <label class="form-check-label" for="export_movies">Media: generated output movies</label>
+            </div>
+
+          <div class="form-group input-group" :class="{ 'inputdisabled': !isFinished }">
+            <input class="form-check-input" type="checkbox" id="export_thirdparty" v-model="selectedDownloads.export_thirdparty">
+            <label v-if="!isFinished" class="form-check-label" for="export_thirdparty">Export: files for RMS / Petrel (will be enabled when the run is 'Finished')</label>
+            <label v-else class="form-check-label" for="export_thirdparty">Export: files for RMS / Petrel</label>
           </div>
         </div>
 
@@ -333,7 +331,7 @@ export default {
     'confirm-dialog': ConfirmDialog,
     'viewer-3d': Viewer3DComponent
   },
-  data() {
+  data () {
     return {
       selectedDownloads: {
         'export_d3dinput': false,
@@ -353,14 +351,14 @@ export default {
     }),
     activeModel: {
       cached: false,
-      get() {
+      get () {
         var model = this.sharedState.activeModelContainer
         return model
       }
     },
     anyDownloadsSelected: {
       cache: false,
-      get() {
+      get () {
         return _.values(this.selectedDownloads).some((el) => {
           return el
         })
@@ -368,7 +366,7 @@ export default {
     },
     dateCreatedText: {
       cached: false,
-      get() {
+      get () {
         var d = new Date(_.get(this.activeModel, 'data.date_created', ''))
 
         if (isNaN(d.getTime())) { // something went wront here
@@ -380,13 +378,13 @@ export default {
     },
     isReadOnly: {
       cache: false,
-      get() {
+      get () {
         return _.get(this.activeModel, 'data.shared', 'p') !== 'p'
       }
     },
     getEntrypoints: {
       cache: false,
-      get() {
+      get () {
         var entrypoints = _.get(this.activeModel, 'data.entrypoints', '')
         if (entrypoints != null) {
           if (entrypoints.length > 0) {
@@ -401,31 +399,31 @@ export default {
     },
     isIdle: {
       cache: false,
-      get() {
+      get () {
         return _.get(this.activeModel, 'data.state', '') === 'Idle: waiting for user input'
       }
     },
     isRunning: {
       cache: false,
-      get() {
+      get () {
         return _.get(this.activeModel, 'data.state', '').includes('Running')
       }
     },
     isFinished: {
       cache: false,
-      get() {
+      get () {
         return _.get(this.activeModel, 'data.state', '') === 'Finished'
       }
     },
     isQueued: {
       cache: false,
-      get() {
+      get () {
         return _.get(this.activeModel, 'data.state', '') === 'Queued'
       }
     },
     shareLevelText: {
       cache: false,
-      get() {
+      get () {
         var niceStrings = {
           '': '-',
           'p': 'private',
@@ -439,13 +437,13 @@ export default {
     },
     outdated: {
       cache: false,
-      get() {
+      get () {
         return _.get(this.activeModel, 'data.outdated', false)
       }
     },
     reposUrl: {
       cache: false,
-      get() {
+      get () {
         if (_.has(this.activeModel, 'data.versions.preprocess')) {
           return `${this.activeModel.data.versions.preprocess.REPOS_URL}?p=${this.activeModel.data.versions.preprocess.SVN_REV}`
         }
@@ -456,7 +454,7 @@ export default {
   watch: {
     isFinished: {
       deep: false,
-      handler() {
+      handler () {
         if (!this.isFinished) {
           /* eslint-disable camelcase */
           this.selectedDownloads.export_thirdparty = false
@@ -466,13 +464,14 @@ export default {
     }
   },
   methods: {
-    capitalizeFirst(text) {
-      if (typeof text === "string") {
+    capitalizeFirst (text) {
+      if (typeof text === 'string') {
         // Capitalize the first letter in a string
         return `${text.charAt(0).toUpperCase()}${text.slice(1)}`
       }
     },
-    orderByKey(obj) {
+    orderByKey (obj) {
+      // Function to order a object alphabetically
       if (typeof obj === 'object') {
         var ordered = {}
         const objKeys = Object.keys(obj)
@@ -482,109 +481,104 @@ export default {
         })
         return ordered
       }
-  },
-  getActiveModelData(key) {
-    const data = _.get(this.activeModel, `data.${key}`)
-    return data
-  },
-  getActiveModelPPData() {
+    },
+    getActiveModelData (key) {
+      const data = _.get(this.activeModel, `data.${key}`)
+      return data
+    },
+    getActiveModelPPData () {
     // TODO: This needs to come from the backend/database not hardcoded in FE
-    let rv = {
-      'DeltaTopD50': {
-        'name': 'D50 for Delta Top',
-        'unit': 'mm',
-        'value': undefined
-      },
-      'DeltaTopsand_fraction': {
-        'name': 'Sand Fraction for Delta Top',
-        'unit': '%',
-        'value': undefined
-      },
-      'DeltaTopsorting': {
-        'name': 'Sorting for Delta Top',
-        'unit': '-',
-        'value': undefined
-      },
-      'DeltaFrontD50': {
-        'name': 'D50 for Delta Front',
-        'unit': 'mm',
-        'value': undefined
-      },
-      'DeltaFrontsand_fraction': {
-        'name': 'Sand Fraction for Delta Front',
-        'unit': '%',
-        'value': undefined
-      },
-      'DeltaFrontsorting': {
-        'name': 'Sorting for Delta Front',
-        'unit': '-',
-        'value': undefined
-      },
-      'ProDeltaD50': {
-        'name': 'D50 for Prodelta',
-        'unit': 'mm',
-        'value': undefined
-      },
-      'ProDeltasand_fraction': {
-        'name': 'Sand Fraction for Prodelta',
-        'unit': '%',
-        'value': undefined
-      },
-      'ProDeltasorting': {
-        'name': 'Sorting for Prodelta',
-        'unit': '-',
-        'value': undefined
+      let rv = {
+        'DeltaTopD50': {
+          'name': 'D50 for Delta Top',
+          'unit': 'mm',
+          'value': undefined
+        },
+        'DeltaTopsand_fraction': {
+          'name': 'Sand Fraction for Delta Top',
+          'unit': '%',
+          'value': undefined
+        },
+        'DeltaTopsorting': {
+          'name': 'Sorting for Delta Top',
+          'unit': '-',
+          'value': undefined
+        },
+        'DeltaFrontD50': {
+          'name': 'D50 for Delta Front',
+          'unit': 'mm',
+          'value': undefined
+        },
+        'DeltaFrontsand_fraction': {
+          'name': 'Sand Fraction for Delta Front',
+          'unit': '%',
+          'value': undefined
+        },
+        'DeltaFrontsorting': {
+          'name': 'Sorting for Delta Front',
+          'unit': '-',
+          'value': undefined
+        },
+        'ProDeltaD50': {
+          'name': 'D50 for Prodelta',
+          'unit': 'mm',
+          'value': undefined
+        },
+        'ProDeltasand_fraction': {
+          'name': 'Sand Fraction for Prodelta',
+          'unit': '%',
+          'value': undefined
+        },
+        'ProDeltasorting': {
+          'name': 'Sorting for Prodelta',
+          'unit': '-',
+          'value': undefined
+        }
       }
-    }
-    let ppJson = _.get(this.activeModel, 'data.info.postprocess_output.files.output')
-    _.each(_.keys(rv), (key) => {
-      if (_.endsWith(key, '_fraction')) {
-        rv[key].value = parseFloat(ppJson[key]) * 100 // fractions are in percentages
-      } else {
-        rv[key].value = ppJson[key]
+      let ppJson = _.get(this.activeModel, 'data.info.postprocess_output.files.output')
+      _.each(_.keys(rv), (key) => {
+        if (_.endsWith(key, '_fraction')) {
+          rv[key].value = parseFloat(_.get(ppJson, key)) * 100 // fractions are in percentages
+        } else {
+          rv[key].value = _.get(ppJson, key)
+        }
+      })
+
+      return rv
+    },
+    downloadFiles () {
+      if (!this.anyDownloadsSelected) {
+        return
       }
-    })
 
-    return rv
-  },
-  downloadFiles() {
-    if (!this.anyDownloadsSelected) {
-      return
-    }
+      var id = this.activeModel.id
+      var downloadOptions = []
 
-    var id = this.activeModel.id
-    var downloadOptions = []
-
-    for (var option in this.selectedDownloads) {
-      if (this.selectedDownloads[option] === true) {
-        downloadOptions.push(`options=${option}`)
+      for (var option in this.selectedDownloads) {
+        if (this.selectedDownloads[option] === true) {
+          downloadOptions.push(`options=${option}`)
+        }
       }
-    }
 
-    window.open(`api/v1/scenes/${id}/export/?format=json&${downloadOptions.join('&')}`)
-  },
-  hasPostProcessData() {
-    return (Object.keys(_.get(this.activeModel, 'data.info.postprocess_output', {})).length > 0)
-  },
-  confirm() {
-    store.dispatch(`${this.updateModelBy.name}Model`, this.updateModelBy)
-    this.updateModelBy = {}
-  },
-  startModel() {
-    store.dispatch('startModel', this.activeModel)
-  },
-  stopModel() {
-    store.dispatch('stopModel', this.activeModel)
-  },
-  toggle(id, doFlag) {
-    if (doFlag) {
-      this.selectedDownloads[id] = !this.selectedDownloads[id]
+      window.open(`api/v1/scenes/${id}/export/?format=json&${downloadOptions.join('&')}`)
+    },
+    hasPostProcessData () {
+      return (Object.keys(_.get(this.activeModel, 'data.info.postprocess_output', {})).length > 0)
+    },
+    confirm () {
+      store.dispatch(`${this.updateModelBy.name}Model`, this.updateModelBy)
+      this.updateModelBy = {}
+    },
+    startModel () {
+      store.dispatch('startModel', this.activeModel)
+    },
+    stopModel () {
+      store.dispatch('stopModel', this.activeModel)
+    },
+    doNothing () {
+      return false
     }
-  },
-  doNothing() {
-    return false
   }
-}
 }
 </script>
 
