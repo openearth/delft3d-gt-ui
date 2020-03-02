@@ -1,5 +1,5 @@
 <template>
-<div class="model-card card mb-2" :class="{'activated': model.active}" @click.stop="toggleActive">
+<div class="model-card card" :class="{'activated': model.active}" @click.stop="toggleActive">
   <div class="card-body" :class="{ 'card-active': model.active }" v-if="model.data">
     <div class="row">
       <div class="col-xs-8 col-md-6">
@@ -59,14 +59,22 @@ export default {
   props: {
     model: {
       required: true
+    },
+    selectAll: {
+      type: Boolean
     }
   },
 
   methods: {
     toggleActive() {
       this.model.active = true
-      console.log('hier dan?')
       bus.$emit('activated', this.model)
+    }
+  },
+
+  watch: {
+    selectAll (val) {
+      this.model.selected = val
     }
   },
 
@@ -75,12 +83,6 @@ export default {
       if (this.model !== clickedmodel) {
         this.model.active = false
       }
-    })
-    bus.$on('select-all', () => {
-      this.model.selected = true
-    })
-    bus.$on('select-all', () => {
-      this.model.selected = false
     })
   }
 
@@ -101,5 +103,18 @@ export default {
     .label {
         float: right;
     }
+
+    // Normally use mb-2 bootstrap css, but needed to remove this from last child
+    :not(:last-child.card-body) {
+      margin-bottom: 0.5rem;
+    }
+    :last-child.card-body {
+      margin-bottom: 0;
+      border-bottom: 1px solid #E2E8EB;
+    }
+}
+
+.badge-info {
+  float: right
 }
 </style>
