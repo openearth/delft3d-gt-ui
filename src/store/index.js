@@ -8,7 +8,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     activeModelContainer: undefined,
-    failedUpdate: function () { }, // If promise of updates failed, this callback will be called.
+    failedUpdate: () => { }, // If promise of updates failed, this callback will be called.
     modelContainers: [],
     models: [],
     params: [],
@@ -177,7 +177,6 @@ export default new Vuex.Store({
     updateModelContainers (context) {
       _.each(this.state.models, (model) => {
         var container = _.find(this.state.modelContainers, ['id', model.id])
-
         if (container === undefined) {
           // create new container
           container = {
@@ -185,7 +184,7 @@ export default new Vuex.Store({
             active: false,
             selected: false,
             data: model,
-            statusLevel: this.statusLevel
+            statusLevel: model.state
           }
           this.state.modelContainers.push(container)
         } else {
@@ -412,39 +411,35 @@ export default new Vuex.Store({
     },
     // ================================ MULTISELECTED MODEL UPDATE METHODS
 
-    getSelectedModels (context) {
-      return _.filter(this.state.modelContainers, ['selected', true])
-    },
+        resetSelectedModels (state) {
+          return Promise.all(
+            _.map(state.getSelectedModels, state.resetModel)
+          );
+        },
 
-    resetSelectedModels (context) {
-      return Promise.all(
-        _.map(this.dispatch('getSelectedModels'), this.resetModel.bind(this))
-      )
-    },
+        startSelectedModels (state) {
+          return Promise.all(
+            _.map(state.getSelectedModels, state.startModel)
+          );
+        },
 
-    startSelectedModels (context) {
-      return Promise.all(
-        _.map(this.dispatch('getSelectedModels'), this.dispatch('startModel').bind(this))
-      )
-    },
+        stopSelectedModels (state) {
+          return Promise.all(
+            _.map(state.getSelectedModels, state.sdtopModel)
+          );
+        },
 
-    stopSelectedModels (context) {
-      return Promise.all(
-        _.map(this.dispatch('getSelectedModels'), this.dispatch('stopModel').bind(this))
-      )
-    },
+        redoSelectedModels (state) {
+          return Promise.all(
+            _.map(state.getSelectedModels, state.redoModel)
+          );
+        },
 
-    redoSelectedModels (context) {
-      return Promise.all(
-        _.map(this.dispatch('getSelectedModels'), this.dispatch('redoModel').bind(this))
-      )
-    },
-
-    deleteSelectedModels (context) {
-      return Promise.all(
-        _.map(this.dispatch('getSelectedModels'), this.dispatch('deleteModel').bind(this))
-      )
-    },
+        deleteSelectedModels (state) {
+          return Promise.all(
+            _.map(state.getSelectedModels, state.deleteModel)
+          );
+        },
 
     shareSelectedModels (context, domain) {
       return new Promise((resolve, reject) => {
@@ -509,6 +504,11 @@ export default new Vuex.Store({
       this.state.validbbox = val
     }
 
+  },
+  getters: {
+    getSelectedModels (state, context) {
+      return _.filter(state.modelContainers, ['selected', true])
+    },
   }
 
 })
