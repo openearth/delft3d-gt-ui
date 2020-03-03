@@ -1,0 +1,176 @@
+// ===================== variables
+@import './variables.scss';
+
+// ===================== imports
+
+// it's better to include the main package
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "~bootstrap/scss/bootstrap.scss";
+@import "~bootstrap-select/dist/css/bootstrap-select.css";
+@import "~bootstrap-datepicker/dist/css/bootstrap-datepicker.css";
+@import "~ion-rangeslider/css/ion.rangeSlider.min.css";
+
+$fa-font-path:"../node_modules/font-awesome/fonts";
+@import "../node_modules/font-awesome/scss/font-awesome";
+.icon-user {
+  @extend .fa;
+  @extend .fa-user;
+}// @import "~bootstrap-sass/assets/stylesheets/bootstrap";
+// @import "~font-awesome/scss/font-awesome.scss";
+
+//
+// @import 'alert';
+// @import 'imageanimation';
+// @import 'modelcard';
+// @import 'modelcontrolmenu';
+// @import 'modeldetails';
+// @import 'navbar';
+// @import 'scenariobuilder';
+// @import 'scenariocard';
+// @import 'searchcolumns';
+// @import 'searchdetails';
+// @import 'searchlist';
+// @import 'viewer3d';
+
+// ===================== app-wide styling
+
+
+body {
+  background-color: $col-bg-main;
+}
+
+div {
+  &[data-toggle='collapse'] {
+    cursor: pointer;
+  }
+}
+
+// OpenSans and default font-weight of bootstrap is quite ugly. Therefore we change the weight from "bold" to semibold, see variables.scss.
+label,
+dt {
+  font-weight: $font-weight-semibold;
+}
+
+.btn-text {
+  border: 1px solid transparent;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.428571429;
+  margin-bottom: 0;
+  padding: 6px 0;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.hidden {
+  display: none;
+}
+
+.info-secondary {
+  color: $col-bw-7;
+}
+
+.label-default {
+  background-color: $col-bw-2;
+  color: $col-bw-5;
+}
+
+.no-padding {
+  padding: 0;
+}
+
+.panel {
+  margin-bottom: $padding;
+}
+
+.panel-default {
+  .panel-heading {
+    background-color: $col-bw-1;
+    border-bottom: 0;
+    padding: $padding;
+  }
+}
+
+.login-body {
+  img {
+    height: 20px;
+  }
+
+  &::after {
+    background: url('/static/images/delta.jpg') no-repeat center center fixed;
+    background-size: cover;
+    bottom: 0;
+    content: '';
+    left: 0;
+    opacity: .5;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: -1;
+  }
+
+  .panel {
+    border-color: $col-bw-4;
+    box-shadow: 0 8px 6px -6px $col-bw-5;
+    margin: $padding;
+  }
+}
+
+// .bs-actionsbox {
+//   .btn-group {
+//     button {
+//       @include text-overflow;
+//     }
+//   }
+// }
+
+.label,
+.btn {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.label {
+  padding: 5px;
+}
+
+.row {
+  padding-bottom: 15px;
+}
+// ============ responsiveness
+
+@media (min-width: $screen-xs-sm) {
+  html,
+  body {
+    height: 100%;
+    overflow-y: hidden;
+  }
+
+  .full-height {
+    height: 100%;
+  }
+
+  .modal-dialog {
+    left: 0;
+  }
+
+  .modal-open {
+    padding-right: 0px !important;
+    margin: 0 !important;
+  }
+
+  .login-body {
+    .panel {
+      left: 50%;
+      margin-left: -250px;
+      margin-top: -130px;
+      position: absolute;
+      top: 38.1%;  // applies golden ratio
+      width: 500px;
+    }
+  }
+}
