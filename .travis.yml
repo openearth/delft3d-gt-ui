@@ -1,6 +1,7 @@
 language: node_js
+
 node_js:
-  - "node"
+- node
 
 # including lint:babel is buggy (use strict errors)
 # lint:scss is not part of the test suite
