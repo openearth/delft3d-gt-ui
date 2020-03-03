@@ -1,16 +1,17 @@
 
 $icon-font-path: '../fonts/';
 $font-family-sans-serif: 'Open Sans', sans-serif;
-$col-bw-0: #009AEB; 
-$col-bw-1: #E2E8EB; 
-$col-bw-2: #D0E2EB; 
-$col-bw-3: $col-bw-1; 
-$col-bw-4: #009AEB; 
-$col-bw-5: #333;  
-$col-bw-6: #fff;  
-$col-bw-7: #333;  
+$col-bw-0: #fff;
+$col-bw-1: #f5f5f5;
+$col-bw-2: #e7e7e7;
+$col-bw-3: #ddd;
+$col-bw-4: #bbb;
+$col-bw-5: #777;
+$col-bw-6: #555;
+$col-bw-7: #000;
 
-$col-bg-main: #fff;  
+$col-bg-main: #fff;
+$col-bg-d3d: #038CC0;
 
 $font-weight-semibold: 600;
 
@@ -19,7 +20,7 @@ $padding: 15px;
 $border: 1px solid $col-bw-1;
 
 
-$brand-primary: $col-bw-4; 
+$brand-primary: $col-bw-4;
 $screen-xs-sm: 768px;
 $screen-md: 992px;
 $screen-lg: 1200px;
