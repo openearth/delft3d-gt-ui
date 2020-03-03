@@ -71,9 +71,6 @@ import store from '../store'
 import ModelCard from './ModelCard'
 import ConfirmDialog from './ConfirmDialog'
 import router from '../router.js'
-import {
-  bus
-} from '@/event-bus.js'
 
 export default {
   store,

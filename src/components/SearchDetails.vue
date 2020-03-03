@@ -218,7 +218,7 @@ import {
 export default {
   store,
   template: '#template-search-details',
-  data() {
+  data () {
     return {
       activatedPostProc: {},
       searchTemplate: null,
@@ -235,7 +235,7 @@ export default {
     }
   },
 
-  mounted() {
+  mounted () {
     bus.$on('clearSearch', () => {
       this.createdAfter = ''
       this.createdBefore = ''
@@ -326,7 +326,7 @@ export default {
 
   computed: {
     modelEngines: {
-      get() {
+      get () {
         // flatten variables
         var variables = _.flatMap(_.flatMap(this.templates, 'sections'), 'variables')
 
@@ -340,7 +340,7 @@ export default {
       }
     },
     parameters: {
-      get() {
+      get () {
         var parameters = {}
         var variables = _.flatMap(
           _.flatMap(this.templates, 'sections'),
@@ -363,68 +363,68 @@ export default {
       }
     },
     createdAfterValid: {
-      get() {
+      get () {
         return this.createdAfter === '' || moment(this.createdAfter, 'YYYY-MM-DD', true).isValid()
       }
     },
     createdBeforeValid: {
-      get() {
+      get () {
         return this.createdBefore === '' || moment(this.createdBefore, 'YYYY-MM-DD', true).isValid()
       }
     }
   },
 
   watch: {
-    activatedPostProc() {
+    activatedPostProc () {
       this.search()
     },
-    createdAfter() {
+    createdAfter () {
       this.search()
     },
-    createdBefore() {
+    createdBefore () {
       this.search()
     },
-    searchTemplate() {
+    searchTemplate () {
       this.search()
     },
-    searchText() {
+    searchText () {
       this.search()
     },
-    selectedDomains() {
+    selectedDomains () {
       this.search()
     },
-    selectedParameters() {
+    selectedParameters () {
       this.search()
     },
-    selectedPostProc() {
+    selectedPostProc () {
       this.search()
     },
-    selectedTemplates() {
+    selectedTemplates () {
       this.search()
     },
-    selectedUsers() {
+    selectedUsers () {
       this.search()
     },
-    selectedOutdated() {
+    selectedOutdated () {
       this.search()
     },
-    users() {
+    users () {
       this.search()
     }
   },
 
   methods: {
-    addCreatedAfterListener() {
+    addCreatedAfterListener () {
       this.$refs.created_after.onchange = (e) => {
         this.createdAfter = e.target.value
       }
     },
-    addCreatedBeforeListener() {
+    addCreatedBeforeListener () {
       this.$refs.created_before.onchange = (e) => {
         this.createdBefore = e.target.value
       }
     },
-    initializeForm() {
+    initializeForm () {
       // once the dom is updated, update the select pickers by hand
       // template data is computed into modelEngine
       var that = this
@@ -475,7 +475,7 @@ export default {
         that.search()
       })
     },
-    buildParams() {
+    buildParams () {
       // for now we just copy everything
 
       /* eslint-disable camelcase */
@@ -538,7 +538,7 @@ export default {
 
       return params
     },
-    search() {
+    search () {
       var params = this.buildParams()
       store.dispatch('updateParams', params)
       store.dispatch('update')

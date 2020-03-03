@@ -41,7 +41,7 @@ export default {
       type: Boolean
     }
   },
-  mounted() {
+  mounted () {
     this.show()
   },
 

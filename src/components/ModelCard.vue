@@ -66,7 +66,7 @@ export default {
   },
 
   methods: {
-    toggleActive() {
+    toggleActive () {
       this.model.active = true
       bus.$emit('activated', this.model)
     }
@@ -78,7 +78,7 @@ export default {
     }
   },
 
-  mounted() {
+  mounted () {
     bus.$on('deactivate', (clickedmodel) => {
       if (this.model !== clickedmodel) {
         this.model.active = false

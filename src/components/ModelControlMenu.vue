@@ -94,12 +94,8 @@
 <script>
 import store from '../store'
 import _ from 'lodash'
-import $ from 'jquery'
 import ConfirmDialog from './ConfirmDialog'
 
-import {
-  getDialog
-} from '../templates.js'
 export default {
   template: '#template-model-control-menu',
   props: {

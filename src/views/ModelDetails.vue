@@ -313,7 +313,6 @@
 </template>
 
 <script>
-import $ from 'jquery'
 import _ from 'lodash'
 import store from '../store'
 import ImageAnimation from '../components/ImageAnimation'

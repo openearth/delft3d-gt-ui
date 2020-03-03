@@ -73,14 +73,14 @@ export default {
     ...mapState({
       sharedState: state => state
     }),
-    companyModels() {
+    companyModels () {
       // Get all models that are shared with the company
       return _.filter(this.sharedState.modelContainers, ['data.shared', 'c'])
     },
-    worldModels() {
+    worldModels () {
       // Get all models that are shared with the world
       return _.filter(this.sharedState.modelContainers, ['data.shared', 'w'])
-    },
+    }
     // TODO: check why this code was here
     // // Get the current selected modelid from the routing URL
     // selectedModel: {
@@ -106,7 +106,7 @@ export default {
     // }
   },
   methods: {
-    notEmpty(arr) {
+    notEmpty (arr) {
       return arr.length > 0
     }
   }

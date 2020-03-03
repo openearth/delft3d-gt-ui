@@ -70,45 +70,42 @@ export default new Vuex.Store({
       store.interval = null
     },
     update (context) {
-     if (context.state.updating) {
-       return
-     }
-     context.state.updating = true
-     Promise.all([
-       context.dispatch('fetchModels'),
-       context.dispatch('fetchScenarios'),
-       context.dispatch('fetchModelDetails')
-     ])
-       .then((jsons) => {
-         context.state.models = jsons[0] // Array of Models
-         context.state.scenarios = jsons[1] // Array of Scenes
+      if (context.state.updating) {
+        return
+      }
+      context.state.updating = true
+      Promise.all([
+        context.dispatch('fetchModels'),
+        context.dispatch('fetchScenarios'),
+        context.dispatch('fetchModelDetails')
+      ])
+        .then((jsons) => {
+          context.state.models = jsons[0] // Array of Models
+          context.state.scenarios = jsons[1] // Array of Scenes
 
-         context.state.models = _.map(context.state.models, (m) => {
-           let modelDetails = jsons[2] // Dictionary of Model Details
-           return (m.id === modelDetails.id) ? modelDetails : m
-         })
+          context.state.models = _.map(context.state.models, (m) => {
+            let modelDetails = jsons[2] // Dictionary of Model Details
+            return (m.id === modelDetails.id) ? modelDetails : m
+          })
 
-         context.dispatch('updateContainers')
-         context.state.updating = false
-       })
-       .catch((jqXhr) => {
-         context.state.failedUpdate(jqXhr)
-         context.state.updating = false
-       })
-   },
-   updateUser (store) {
-     store.dispatch('fetchUser').then((json) => {
-       console.log('updateuser', json)
-       store.state.user = json
-     })
-       .catch((jqXhr) => {
-         store.state.failedUpdate(jqXhr)
-         store.state.updating = false
-       })
-   },
-
-
-
+          context.dispatch('updateContainers')
+          context.state.updating = false
+        })
+        .catch((jqXhr) => {
+          context.state.failedUpdate(jqXhr)
+          context.state.updating = false
+        })
+    },
+    updateUser (store) {
+      store.dispatch('fetchUser').then((json) => {
+        console.log('updateuser', json)
+        store.state.user = json
+      })
+        .catch((jqXhr) => {
+          store.state.failedUpdate(jqXhr)
+          store.state.updating = false
+        })
+    },
 
     // ================================ API FETCH CALLS
     fetchModelDetails (context) {
@@ -265,7 +262,6 @@ export default new Vuex.Store({
       })
     },
     publishModel (context, payload) {
-
       return new Promise((resolve, reject) => {
         if (payload.modelContainer === undefined || payload.modelContainer.id === undefined) {
           return reject(new Error('No model id to publish'))
@@ -411,35 +407,35 @@ export default new Vuex.Store({
     },
     // ================================ MULTISELECTED MODEL UPDATE METHODS
 
-        resetSelectedModels (state) {
-          return Promise.all(
-            _.map(state.getSelectedModels, state.resetModel)
-          );
-        },
+    resetSelectedModels (state) {
+      return Promise.all(
+        _.map(state.getSelectedModels, state.resetModel)
+      )
+    },
 
-        startSelectedModels (state) {
-          return Promise.all(
-            _.map(state.getSelectedModels, state.startModel)
-          );
-        },
+    startSelectedModels (state) {
+      return Promise.all(
+        _.map(state.getSelectedModels, state.startModel)
+      )
+    },
 
-        stopSelectedModels (state) {
-          return Promise.all(
-            _.map(state.getSelectedModels, state.sdtopModel)
-          );
-        },
+    stopSelectedModels (state) {
+      return Promise.all(
+        _.map(state.getSelectedModels, state.sdtopModel)
+      )
+    },
 
-        redoSelectedModels (state) {
-          return Promise.all(
-            _.map(state.getSelectedModels, state.redoModel)
-          );
-        },
+    redoSelectedModels (state) {
+      return Promise.all(
+        _.map(state.getSelectedModels, state.redoModel)
+      )
+    },
 
-        deleteSelectedModels (state) {
-          return Promise.all(
-            _.map(state.getSelectedModels, state.deleteModel)
-          );
-        },
+    deleteSelectedModels (state) {
+      return Promise.all(
+        _.map(state.getSelectedModels, state.deleteModel)
+      )
+    },
 
     shareSelectedModels (context, domain) {
       return new Promise((resolve, reject) => {
@@ -508,7 +504,7 @@ export default new Vuex.Store({
   getters: {
     getSelectedModels (state, context) {
       return _.filter(state.modelContainers, ['selected', true])
-    },
+    }
   }
 
 })

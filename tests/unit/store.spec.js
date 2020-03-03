@@ -1,8 +1,8 @@
 import chaiAsPromised from 'chai-as-promised'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
-import chai, { expect } from 'chai'
-import store, { update } from '../../src/store'
+import chai from 'chai'
+// import store, { update } from '../../src/store'
 
 // setup chai
 chai.use(chaiAsPromised)

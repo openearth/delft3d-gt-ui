@@ -87,7 +87,7 @@
 
     <div class="col-sm-12">
       <ul class="nav nav-tabs nav-fill">
-        <div v-for="(name, index) in ['slices', 'colors']" :key="name">
+        <div v-for="name in ['slices', 'colors']" :key="name">
           <li role="presentation" class="nav-item" :class="{'active': tab === name}" @click.stop="setTab(name)">
             <a class="nav-link" href="#">{{ name }}</a></li>
         </div>
@@ -146,7 +146,6 @@
 import _ from 'lodash'
 import $ from 'jquery'
 import store from '../store'
-import ionRangeSlider from 'ion-rangeslider'
 export default {
   store,
   template: '#template-viewer-threedee',
@@ -164,7 +163,7 @@ export default {
       }
     }
   },
-  data: function() {
+  data: function () {
     return {
       'canvasStyle': {
         'height': '10px'
@@ -186,25 +185,25 @@ export default {
         'segments': 10
       },
       'gradient': [{
-          'color': '542437',
-          'position': 1.0
-        },
-        {
-          'color': 'd95b43',
-          'position': 0.5
-        },
-        {
-          'color': 'ecd078',
-          'position': 0.2
-        },
-        {
-          'color': 'c02942',
-          'position': 0.1
-        },
-        {
-          'color': '53777a',
-          'position': 0.0
-        }
+        'color': '542437',
+        'position': 1.0
+      },
+      {
+        'color': 'd95b43',
+        'position': 0.5
+      },
+      {
+        'color': 'ecd078',
+        'position': 0.2
+      },
+      {
+        'color': 'c02942',
+        'position': 0.1
+      },
+      {
+        'color': '53777a',
+        'position': 0.0
+      }
       ],
       'gradientStyle': {
         'background': '#fff',
@@ -238,24 +237,24 @@ export default {
   computed: {
     activeModel: {
       cached: false,
-      get: function() {
+      get: function () {
         return this.sharedState.activeModelContainer
       }
     },
     isFinished: {
       cache: false,
-      get: function() {
+      get: function () {
         return _.get(this.activeModel, 'data.state', '') === 'Finished'
       }
     }
   },
   watch: {
-    activated: function() {
+    activated: function () {
       this.loadData()
     },
     activeModel: {
       'deep': true,
-      'handler': function() {
+      'handler': function () {
         let suid = _.get(this.activeModel, 'data.suid')
         let sedimentClass = _.get(this.activeModel, 'data.parameters.composition.value')
         let maxTimeStepIndex = _.get(this.activeModel, 'data.info.delta_fringe_images.images', []).length - 1 // obtain max TimeStep index based on number of Delta Fringe images
@@ -273,25 +272,25 @@ export default {
     },
     dataSetVariables: {
       'deep': true,
-      'handler': function() {
+      'handler': function () {
         this.loadData()
       }
     },
     curTimeStep: {
       'deep': false,
-      'handler': function() {
+      'handler': function () {
         this.loadTime()
       }
     },
     dimensions: {
       'deep': true,
-      'handler': function() {
+      'handler': function () {
         this.resetSliders()
       }
     },
     gradient: {
       'deep': true,
-      'handler': function() {
+      'handler': function () {
         let newGrad = _.reverse(_.sortBy(_.clone(this.gradient), 'position'))
 
         // cap position values
@@ -308,12 +307,12 @@ export default {
     },
     slices: {
       'deep': true,
-      'handler': function() {
+      'handler': function () {
         this.loadSliders()
       }
     }
   },
-  ready: function() {
+  ready: function () {
     // get reference element from model-details
     let width = document.getElementById('col-glcanvas-container-reference').scrollWidth
 
@@ -324,11 +323,11 @@ export default {
     this.svgStyle.height = this.height + 'px'
   },
   methods: {
-    addPoint: function() {
+    addPoint: function () {
       this.gradient.push(_.clone(_.last(this.gradient)))
       this.initPickAColor()
     },
-    camera: function(side) {
+    camera: function (side) {
       if (_.isUndefined(this.viewer3d)) {
         return
       }
@@ -364,25 +363,25 @@ export default {
         this.viewer3d.camera.stepUp()
       }
     },
-    goEnd: function() {
+    goEnd: function () {
       this.curTimeStep = this.curFrameLength
     },
-    goNext: function() {
+    goNext: function () {
       this.curTimeStep = Math.min(this.curTimeStep + 1, this.curFrameLength)
     },
-    goPrev: function() {
+    goPrev: function () {
       this.curTimeStep = Math.max(this.curTimeStep - 1, 0)
     },
-    goStart: function() {
+    goStart: function () {
       this.curTimeStep = 0
     },
-    initIonSliders: function() {
+    initIonSliders: function () {
       this.$nextTick(() => {
         /* eslint-disable camelcase */
         if ($('.ion-range').ionRangeSlider !== undefined) {
           _.each(['x', 'y', 'z'], (d) => {
             $('.ion-range.slice-' + d + '-w').ionRangeSlider({
-              skin: "round",
+              skin: 'round',
               'drag_interval': true,
               'onChange': (data) => {
                 _.set(this, ['slices', d, 'from'], data.from)
@@ -394,7 +393,7 @@ export default {
         /* eslint-enable camelcase */
       })
     },
-    initPickAColor: function() {
+    initPickAColor: function () {
       this.$nextTick(() => {
         $('.pick-a-color').each((i, e) => {
           if ($(e).parent('.pick-a-color-markup').length === 0) {
@@ -405,7 +404,7 @@ export default {
         })
       })
     },
-    loadData: function() {
+    loadData: function () {
       if (!this.activated || _.isUndefined(this.viewer3d)) {
         return
       }
@@ -428,7 +427,7 @@ export default {
         console.error(err)
       }
     },
-    loadGradient: function() {
+    loadGradient: function () {
       if (_.isUndefined(this.viewer3d)) {
         return
       }
@@ -439,7 +438,7 @@ export default {
       let positions = _.reverse(_.map(this.gradient, 'position'))
 
       // check if all colors are according to color format
-      let colorsOk = _.every(colors, function(c) {
+      let colorsOk = _.every(colors, function (c) {
         return /^#[0-9a-fA-F]{6}$/.test(c)
       })
 
@@ -467,7 +466,7 @@ export default {
       )
       this.refreshData()
     },
-    loadSliders: function() {
+    loadSliders: function () {
       if (_.isUndefined(this.viewer3d)) {
         return
       }
@@ -483,7 +482,7 @@ export default {
 
       this.refreshData()
     },
-    loadTime: function() {
+    loadTime: function () {
       if (_.isUndefined(this.viewer3d)) {
         return
       }
@@ -492,17 +491,17 @@ export default {
 
       this.refreshData()
     },
-    refreshData: _.debounce(function() {
+    refreshData: _.debounce(function () {
       if (_.isUndefined(this.viewer3d)) {
         return
       }
 
       this.viewer3d.volume.refreshData()
     }, 500),
-    removePoint: function(index) {
+    removePoint: function (index) {
       this.gradient.splice(index, 1)
     },
-    resetSliders: function() {
+    resetSliders: function () {
       _.each(['x', 'y', 'z'], (d) => {
         let val = _.get(this.dimensions, d)
 
@@ -526,7 +525,7 @@ export default {
         }
       })
     },
-    resetViewer: function() {
+    resetViewer: function () {
       if (_.isUndefined(this.viewer3d)) {
         return
       }
@@ -553,7 +552,7 @@ export default {
 
       this.loadData()
     },
-    startOrLoad3dViewer: function() {
+    startOrLoad3dViewer: function () {
       if (this.curSuid !== undefined) {
         if (!this.started) {
           this.start3dviewer()
