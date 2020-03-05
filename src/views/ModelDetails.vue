@@ -40,15 +40,7 @@
           <dt class="col-sm-3 text-right">Progress</dt>
           <dd class="col-sm-9">
             <div class="progress progress-incell">
-              <div class="progress-bar" :class="[
-                         (activeModel.statusLevel == 'Finished') ? 'bg-success' : '',
-                         (activeModel.statusLevel == 'Idle: waiting for user input') ? 'bg-warning' : '',
-                         (activeModel.statusLevel == 'Running workflow') ? 'bg-info progress-bar-striped progress-bar-animated' : '',
-                         (
-                         activeModel.statusLevel != 'Finished' &&
-                         activeModel.statusLevel != 'Idle: waiting for user input'
-                         ) ? 'bg-info' : '',
-                         ]"
+              <div class="progress-bar" :class="`bg-${activeModel.statusLevel}`"
                 role="progressbar" :aria-valuenow="getActiveModelData('progress')" aria-valuemin="0" aria-valuemax="100" :style="'width: ' + getActiveModelData('progress') + '%'" title="Progress">
                 <span class="sr-only">{{ getActiveModelData('progress')  }}% Complete</span>
                 <span class="progress-type">{{ getActiveModelData('progress') }}%</span>
@@ -57,15 +49,7 @@
           </dd>
           <dt class="col-sm-3 text-right">Status</dt>
           <dd class="col-sm-9">
-            <span class="badge" :class="[
-                                       (activeModel.statusLevel == 'Finished') ? 'badge-success' : '',
-                                       (activeModel.statusLevel == 'Idle: waiting for user input') ? 'badge-warning' : '',
-                                       (activeModel.statusLevel == 'Running simulation') ? 'badge-striped active' : '',
-                                       (
-                                       activeModel.statusLevel != 'Finished' &&
-                                       activeModel.statusLevel != 'Idle: waiting for user input'
-                                       ) ? 'badge-info' : '',
-                                       ]">
+            <span class="badge" :class="`badge-${activeModel.statusLevel}`">
               {{ getActiveModelData('state') }}
             </span></dd>
           <dt class="col-sm-3 text-right">

@@ -1,10 +1,10 @@
 <template id="template-user-details">
   <div class="dropdown">
-    <a href="#" class="dropdown-toggle my-auto" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <a href="#" class="dropdown-toggle my-auto dropdown-menu-item" id="dropdown-menu-item" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <span class="fa fa-user" aria-hidden="true"></span>
         {{ sharedState.first_name }}{{ sharedState.last_name }}
     </a>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+  <div class="dropdown-menu" aria-labelledby="dropdown-menu-item">
     <a href="/logout/" title="Log out" class="dropdown-item">
       Logout <span class="fa fa-sign-out" aria-hidden="true"></span></a>
   </div>
@@ -28,14 +28,13 @@ export default {
 <style lang="scss">
 @import '../assets/variables.scss';
 
-#dropdownMenuButton {
+.dropdown-menu-item {
   padding-left: 130px;
 }
 
 .dropdown-item {
   width: 160px;
 }
-
 
 .navbar {
     margin-bottom: 0;
