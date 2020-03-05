@@ -81,29 +81,6 @@ export default {
       // Get all models that are shared with the world
       return _.filter(this.sharedState.modelContainers, ['data.shared', 'w'])
     }
-    // TODO: check why this code was here
-    // // Get the current selected modelid from the routing URL
-    // selectedModel: {
-    //   cache: false,
-    //   get () {
-    //     var models = _.filter(this.selectedItems, ['type', 'model'])
-    //     var firstModel = _.first(models)
-    //     return firstModel
-    //   }
-    // },
-    // selectedItems: {
-    //   cache: false,
-    //   get () {
-    //     // we have models in scenarios
-    //     var models = _.flatMap(this.items, 'models')
-    //     // combine them with scenarios and orphans
-    //     var allItems = _.concat(models, this.items)
-    //     // we only want the active ones
-    //     var activeItems = _.filter(allItems, ['active', true])
-    //
-    //     return activeItems
-    //   }
-    // }
   },
   methods: {
     notEmpty (arr) {
@@ -126,13 +103,5 @@ export default {
         padding-bottom: $padding;
     }
 
-    .red {
-        color: $brand-primary;
-    }
-
-    .thing {
-        cursor: pointer;
-        margin: $padding 0;
-    }
 }
 </style>

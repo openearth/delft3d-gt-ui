@@ -42,7 +42,6 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         context.state.user = $.ajax({ url: 'api/v1/users/me/', data: context.state.params, traditional: true, dataType: 'json' })
           .done(function (json) {
-            console.log('fetchuser worked', json)
             resolve(json[0])
           })
           .fail(function (jqXhr) {
@@ -165,13 +164,24 @@ export default new Vuex.Store({
       _.each(this.state.models, (model) => {
         var container = _.find(this.state.modelContainers, ['id', model.id])
         if (container === undefined) {
+
+          let statusLevel = 'info'
+
+          if (model.state === 'Finished') {
+            statusLevel = 'success'
+          } else if (model.state === 'Idle: waiting for user input') {
+            statusLevel = 'warning'
+          } else if (model.state === 'Running simulation') {
+            statusLevel = 'striped active'
+          }
           // create new container
           container = {
             id: model.id,
             active: false,
             selected: false,
             data: model,
-            statusLevel: model.state
+            state: model.state,
+            statusLevel: statusLevel
           }
           this.state.modelContainers.push(container)
         } else {
@@ -382,18 +392,6 @@ export default new Vuex.Store({
             console.log('Error reateScenario', jqXhr.statusText)
           })
       })
-    },
-
-    // ================================ OTHER SUPPORT METHODS
-
-    statusLevel (context) {
-      if (this.data.state === 'Finished') {
-        return 'success'
-      }
-      if (this.data.state === 'Idle: waiting for user input') {
-        return 'warning'
-      }
-      return 'info'
     },
     // ================================ MULTISELECTED MODEL UPDATE METHODS
 

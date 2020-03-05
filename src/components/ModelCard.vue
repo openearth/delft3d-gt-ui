@@ -8,14 +8,14 @@
         <span v-if="model.data.shared == 'w'"><i class="fa fa-fw fa-globe" aria-hidden="true"></i></span>
         &nbsp;{{model.data.name}}
       </div>
-      <div class="col-xs-4 col-md-3 my-auto">
-        <span class="badge" :class="modelStatus(model.statusLevel)">
+      <div class="col-xs-4 col-md-3 my-auto badge-cont">
+        <span class="badge model-badge" :class="`badge-${model.statusLevel}`">
           {{model.data.state.toUpperCase() }}
         </span>
       </div>
       <div class="col-xs-11 col-md-2 m-auto p-0">
         <div class="progress">
-          <div :data-percentage="`${model.data.progress}%`" :style="{ width: `${model.data.progress}%`}" class="progress-bar" :class="modelStatus(model.statusLevel)"
+          <div :data-percentage="`${model.data.progress}%`" :style="{ width: `${model.data.progress}%`}" class="progress-bar" :class="`bg-${model.statusLevel}`"
             role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
       </div>
@@ -53,17 +53,6 @@ export default {
     toggleActive () {
       this.model.active = true
       bus.$emit('activated', this.model)
-    },
-    modelStatus (level) {
-      if (level === 'Finished') {
-        return 'badge-succes'
-      } else if (level === 'Idle: waiting for user input') {
-        return 'badge-warning'
-      } else if (level === 'Running simulation') {
-        return 'badge-striped active'
-      } else if (level !== 'Idle: waiting for user input' && level !== 'Finished') {
-        return 'badge-info'
-      }
     }
   },
 
@@ -109,7 +98,14 @@ export default {
     }
 }
 
-.badge-info {
-  float: right
+.badge-cont {
+  overflow: hidden;
+}
+
+.model-badge {
+  float: right;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
 }
 </style>
