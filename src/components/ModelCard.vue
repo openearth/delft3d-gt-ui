@@ -9,29 +9,13 @@
         &nbsp;{{model.data.name}}
       </div>
       <div class="col-xs-4 col-md-3 my-auto">
-        <span class="badge" :class="[
-                                     (model.statusLevel == 'Finished') ? 'badge-success' : '',
-                                     (model.statusLevel == 'Idle: waiting for user input') ? 'badge-warning' : '',
-                                     (model.statusLevel == 'Running simulation') ? 'badge-striped active' : '',
-                                     (
-                                     model.statusLevel != 'Finished' &&
-                                     model.statusLevel != 'Idle: waiting for user input'
-                                     ) ? 'badge-info' : '',
-                                     ]">
+        <span class="badge" :class="modelStatus(model.statusLevel)">
           {{model.data.state.toUpperCase() }}
         </span>
       </div>
       <div class="col-xs-11 col-md-2 m-auto p-0">
         <div class="progress">
-          <div :data-percentage="`${model.data.progress}%`" :style="{ width: `${model.data.progress}%`}" class="progress-bar" :class="[
-                         (model.data.state == 'Finished') ? 'bg-success' : '',
-                         (model.data.state == 'Idle: waiting for user input') ? 'bg-warning' : '',
-                         (model.data.state == 'Running simulation') ? 'bg-striped active' : '',
-                         (
-                         model.data.state != 'Finished' &&
-                         model.data.state != 'Idle: waiting for user input'
-                         ) ? 'bg-info' : '',
-                         ]"
+          <div :data-percentage="`${model.data.progress}%`" :style="{ width: `${model.data.progress}%`}" class="progress-bar" :class="modelStatus(model.statusLevel)"
             role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
       </div>
@@ -52,6 +36,7 @@
 import {
   bus
 } from '@/event-bus.js'
+import store from '../store'
 
 export default {
   template: '#template-model-card',
@@ -64,11 +49,21 @@ export default {
       type: Boolean
     }
   },
-
   methods: {
     toggleActive () {
       this.model.active = true
       bus.$emit('activated', this.model)
+    },
+    modelStatus (level) {
+      if (level === 'Finished') {
+        return 'badge-succes'
+      } else if (level === 'Idle: waiting for user input') {
+        return 'badge-warning'
+      } else if (level === 'Running simulation') {
+        return 'badge-striped active'
+      } else if (level !== 'Idle: waiting for user input' && level !== 'Finished') {
+        return 'badge-info'
+      }
     }
   },
 
