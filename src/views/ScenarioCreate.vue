@@ -6,10 +6,9 @@
       <div class="row">
         <!-- 2 column layout, 1st column scenario properties -->
         <div class="col-sm-5">
-          <!--  -->
           <div class="row" v-if="availableTemplates.length">
             <div class="col-sm-12">
-              <div class="form-group ">
+              <div class="form-group">
                 <label for="select-template">Select a template</label>
                 <select class="combobox form-control" v-model="template" id="select-template" :onchange="selectTemplate(template)">
                   <option v-for="(template, index) in availableTemplates" :value="template" :key="index">
@@ -29,13 +28,9 @@
             <div>
               <form novalidate>
                 <div v-for="(section, index) in scenarioConfig.sections" :key="index">
-                  <div class="panel panel-default">
-
-                    <div class="panel-heading">
-                      <h3 class="panel-title">{{section.name}}</h3>
-                    </div>
-
-                    <div class="panel-body">
+                  <div class="card mb-3">
+                    <h3 class="card-header">{{section.name}}</h3>
+                    <div class="card-body">
 
                       <!-- ===== DUMMY FEATURES START ===== -->
                       <template v-if="section.name === 'Simulation settings'">
@@ -44,7 +39,7 @@
                             Run environment
                           </label>
                           <!-- TODO: get rid of this space -->
-                          <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="Specifies where the simulations are hosted."></span>
+                          <span class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="Specifies where the simulations are hosted."></span>
                           <div class="input-group">
                             <select class="form-control" id="run-env">
                               <option selected>Amazon</option>
@@ -59,7 +54,7 @@
                             Delft3D Version
                           </label>
                           <!-- TODO: get rid of this space -->
-                          <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="Specifies the Delft3D version used for simulation."></span>
+                          <span class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="Specifies the Delft3D version used for simulation."></span>
                           <div class="input-group">
                             <select class="form-control" id="run-env">
                               <option selected>Deltares, Delft3D Flexible Mesh Version 1.2.0.61839</option>
@@ -73,214 +68,95 @@
                         <label class="control-label" :for="variable.id">
                           {{ variable.name }}
                         </label>
-                        <span v-if="variable.description" class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" :title="variable.description"></span>
-
+                        <span v-if="variable.description" class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" :title="variable.description"></span>
                         <span v-if="variable.validators.min !== undefined">
                           [{{ variable.validators.min }} - {{ variable.validators.max }}]
                         </span>
-
                         <span v-if="variable.type === 'select'">
                           {<span v-for="(i, option) in variable.options" :key="option">{{ option.text}}<span v-if="i < variable.options.length - 1">, </span></span>}
                         </span>
+
                         <div class="input-group">
-                          <!-- numeric, text, semver or factor are inputs-->
-                          <template v-if="isInput(variable) ">
-                            <input
-                            :type="variable.type"
-                            class="form-control"
-                            :id="variable.id"
-                            :data-role="variable.factor ? 'tagsinput' : ''"
-                            v-model="variable.value"
-                            :disabled="variable.disabled"
-                            :field="getId(variable)"
-                            v-validate="variable.validators"
-                            :class="{'input': true, 'is-danger': errors.has(variable.name) }"
-                            :name="variable.name"
-                            />
-                            <span v-show="errors.has(variable.name)"  class="help is-danger">{{ errors.first(variable.name) }}</span>
-                          </template>
-                          <!-- select if not form -->
-                          <template v-if="variable.type === 'select' && !variable.factor">
-                            <select
-                              class="form-control select-picker"
-                              :id="variable.id"
-                              v-model="variable.value"
-                              :field="getId(variable)"
-                              v-validate="variable.validators"
-                              multiple="multiple"
-                              :name="variable.name"
-                              >
-                              <option
-                                v-for="(i, option) in variable.options"
-                                :value="option.value"
-                                :key="option"
-                                >
-                                {{ option.text }}
-                              </option>
-                            </select>
-                            <span v-show="errors.has(variable.name)"  class="help is-danger">{{ errors.first(variable.name) }}</span>
-                          </template>
-                          <!-- text area -->
-                          <template
-                            v-if="variable.type === 'textarea'"
-                            >
-                            <textarea
-                            class="form-control"
-                            rows="3"
-                            :disabled="variable.disabled"
-                            :field="getId(variable)"
-                            v-validate="variable.validators"
-                            v-model="variable.value"
-                            :name="variable.name"
-                            ></textarea>
-                            <span v-show="errors.has(variable.name)"  class="help is-danger">{{ errors.first(variable.name) }}</span>
-                          </template>
-                          <!-- date -->
-                          <template
-                            v-if="variable.type === 'date'"
-                            >
-                            <div
-                              class="input-group date"
-                              data-provide="datepicker"
-                              data-date-format="yyyymmdd"
-                              todayHighlight
-                              >
-                                <input
-                                class="form-control date"
-                                v-model="variable.value"
-                                :field="getId(variable)"
-                                v-validate="variable.validators"
-                                :name="variable.name"
-                                />
-                              <div class="input-group-addon">
-                                <span class="glyphicon glyphicon-th"></span>
+                              <!-- numeric, text, semver or factor are inputs-->
+                              <input v-if="isInput(variable) " :type="variable.type" class="form-control" :id="variable.id" :data-role="variable.factor ? 'tagsinput' : ''" v-model="variable.value" :disabled="variable.disabled" :field="getId(variable)"
+                                v-validate="variable.validators" :class="{'input': true, 'is-invalid': errors.has(variable.name) }" :name="variable.name" :aria-describedby="`${variable.id}-help`" />
+                              <!-- select if not form -->
+                              <select v-if="variable.type === 'select' && !variable.factor" class="form-control select-picker" :id="variable.id" v-model="variable.value" :field="getId(variable)" v-validate="variable.validators" multiple="multiple"
+                                :name="variable.name">
+                                <option v-for="(i, option) in variable.options" :value="option.value" :key="option">
+                                  {{ option.text }}
+                                </option>
+                              </select>
+                              <!-- text area -->
+                              <textarea v-if="variable.type === 'textarea'" class="form-control" rows="3" :disabled="variable.disabled" :field="getId(variable)" v-validate="variable.validators" v-model="variable.value" :name="variable.name"></textarea>
+                              <!-- date -->
+                              <div v-if="variable.type === 'date'" class="input-group date" data-provide="datepicker" data-date-format="yyyymmdd" todayHighlight>
+                                <input class="form-control date" v-model="variable.value" :field="getId(variable)" v-validate="variable.validators" :name="variable.name" />
+                                <div class="input-group-append append-item">
+                                  <span class="glyphicon glyphicon-th"></span>
+                                </div>
                               </div>
-                              <span v-show="errors.has(variable.name)"  class="help is-danger">{{ errors.first(variable.name) }}</span>
-                            </div>
-                          </template>
-                          <!-- bbox array -->
-                          <template
-                            v-if="variable.type === 'bbox-array'"
-                            >
-                            <input
-                            type="text"
-                            :id="variable.id"
-                            class="form-control"
-                            :field="getId(variable)"
-                            v-model="bbox"
-                            v-validate="variable.validations"
-                            :name="variable.name"
-                            readonly
-                            />
-                            <span v-show="errors.has(variable.name)"  class="help is-danger">{{ errors.first(variable.name) }}</span>
-                        </template>
+                              <!-- bbox array -->
+                              <input v-if="variable.type === 'bbox-array'" type="text" :id="variable.id" class="form-control" :field="getId(variable)" v-model="bbox" v-validate="variable.validations" :name="variable.name" readonly />
+                              <div class="input-group-append">
+                                <span class="input-group-text append-item">
+                                  {{ variable.units || '-' }}
+                                </span>
+                              </div>
+                              <div class="col-sm-12 p-0">
 
-                          <!-- if we add this to 1 we need to add it to all, bug in bootstrap -->
-                          <span class="input-group-addon" v-if="variable.units !='-'" >
-                            {{ variable.units || '-' }}
-                          </span>
+                            <small v-show="errors.has(variable.name)" class="form-text error-message">{{ errors.first(variable.name) }}</small>
+                          </div>
                         </div>
-                        <!-- <p class="help-block has-error" v-if="!validbbox
-                          && variable.type === 'bbox-array'">
-                          Zoom to a bounding box on the map with less than 10 locations.
-                        </p>
-                        <div v-if="$validation[getId(variable)]">
-                          <p  v-if="$validation[getId(variable)].required"
-                            class="help-block has-error">
-                            This field cannot be left empty.
-                          </p>
-                          <div v-if="$validation[getId(variable)]">
-                            <p  v-if="$validation[getId(variable)].required"
-                              class="help-block has-error">
-                              This field cannot be left empty.
-                            </p>
-                            <template  v-if="$validation[getId(variable)].min
-                              && !$validation[getId(variable)].required
-                              && variable.type === 'numeric'">
-                              <div
-                                v-for="input in variable.value.split(',')" :key="input">
-                                <p v-if="!isNaN(input) && input < variable.validators.min"
-                                  class="help-block has-error">
-                                  Entered value "{{ input }}" is less than the minimum value "{{ variable.validators.min }}".
-                                </p>
-                              </div>
-                            </template>
-                            <template  v-if="$validation[getId(variable)].max
-                              && !$validation[getId(variable)].required
-                              && variable.type === 'numeric'">
-                              <div
-                                v-for="input in variable.value.split(',')" :key="input">
-                                <p v-if="!isNaN(input) && input > variable.validators.max"
-                                  class="help-block has-error">
-                                  Entered value "{{ input }}" is greater than the maximum value "{{ variable.validators.max }}".
-                                </p>
-                              </div>
-                            </template>
-                            <template  v-if="$validation[getId(variable)]
-                              && !$validation[getId(variable)].valid
-                              && variable.type === 'numeric'">
-                              <div
-                                v-for="input in variable.value.split(',')" :key="input">
-                                <p v-if="isNaN(input)"
-                                  class="help-block has-error">
-                                  "{{ input }}" is not a number.
-                                </p>
-                              </div>
-                            </template>
-                          </div> -->
-                          <!-- ===== DUMMY FEATURES START ===== -->
-                          <div class="form-file-upload" v-if="variable.name === 'Tidal amplitude'">
-                            <p class="help-block">Import tidal components <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="Uploading of tidal components is disabled. This feature will be added in future versions."></span>: <input type="file" id="exampleInputFile" class="" disabled></p>
-                          </div>
-                          <div class="form-file-upload" v-if="variable.name === 'River discharge'">
-                            <p class="help-block">Import time series <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="Uploading of time series is disabled. This feature will be added in future versions."></span>: <input type="file" id="exampleInputFile" class="" disabled></p>
-                          </div>
-                          <div class="form-file-upload" v-if="variable.name === 'Sediment classes'">
-                            <p class="help-block">Import spacially varying field <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="Uploading of a spacially varying field is disabled. This feature will be added in future versions."></span>: <input type="file" id="exampleInputFile" class="" disabled></p>
-                          </div>
-                          <!-- =====  DUMMY FEATURES END  ===== -->
+                        <!-- ===== DUMMY FEATURES START ===== -->
+                        <div class="form-file-upload" v-if="variable.name === 'Tidal amplitude'">
+                          <p class="help-block">Import tidal components <span class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="Uploading of tidal components is disabled. This feature will be added in future versions."></span>:
+                            <input type="file" id="exampleInputFile" class="" disabled></p>
+                        </div>
+                        <div class="form-file-upload" v-if="variable.name === 'River discharge'">
+                          <p class="help-block">Import time series <span class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="Uploading of time series is disabled. This feature will be added in future versions."></span>:
+                            <input type="file" id="exampleInputFile" class="" disabled></p>
+                        </div>
+                        <div class="form-file-upload" v-if="variable.name === 'Sediment classes'">
+                          <p class="help-block">Import spacially varying field <span class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="Uploading of a spacially varying field is disabled. This feature will be added in future versions."></span>:
+                            <input type="file" id="exampleInputFile" class="" disabled></p>
+                        </div>
+                        <!-- =====  DUMMY FEATURES END  ===== -->
 
-                          <div class="multiplytable text-center" v-if="variable.id === 'baselevel'">
-                            <div class="btn btn-default btn-xs" @click.stop="collapseToggle">
-                              Toggle absolute value table for {{ variable.name }}
-                            </div>
-                            <div class="table-container collapse">
-                              <table class="table table-condensed">
-                                <thead>
-                                  <tr>
-                                    <th class="active" nowrap>Basin slope</th>
-                                    <th v-for="val in split(variable.value)" :key="val">
-                                      {{ val }} {{ variable.units }}
-                                    </th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <tr v-for="basinslope in split(getVar('basinslope').value)" :key="basinslope">
-                                    <td class="active" nowrap>{{ basinslope }} {{ getVar('basinslope').units }}</td>
-                                    <td v-for="percentage in split(variable.value)" nowrap :key="percentage">
-                                      {{ calcAbsBaseLevelChange(basinslope, percentage) }} m
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </div>
+                        <div class="multiplytable text-center" v-if="variable.id === 'baselevel'">
+                          <div class="btn btn-default btn-xs" @click.stop="collapseToggle">
+                            Toggle absolute value table for {{ variable.name }}
                           </div>
+                          <div class="table-container collapse">
+                            <table class="table table-condensed">
+                              <thead>
+                                <tr>
+                                  <th class="active" nowrap>Basin slope</th>
+                                  <th v-for="val in split(variable.value)" :key="val">
+                                    {{ val }} {{ variable.units }}
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr v-for="basinslope in split(getVar('basinslope').value)" :key="basinslope">
+                                  <td class="active" nowrap>{{ basinslope }} {{ getVar('basinslope').units }}</td>
+                                  <td v-for="percentage in split(variable.value)" nowrap :key="percentage">
+                                    {{ calcAbsBaseLevelChange(basinslope, percentage) }} m
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
 
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class="panel panel-default">
-                  <div class="panel-body">
+                <div class="card">
+                  <div class="card-body">
                     <div class="form-group">
-                      <input
-                        type="hidden"
-                        class="form-control"
-                        id="total-runs"
-                        v-model="totalRuns"
-                        v-validate:totalRuns="{required: true, min: 1, max: maxRuns}"
-                        name="total-runs"
-                        />
+                      <input type="hidden" class="form-control" id="total-runs" v-model="totalRuns" v-validate:totalRuns="{required: true, min: 1, max: maxRuns}" name="total-runs" />
 
                       Number of runs: <strong>{{totalRuns}}</strong>
                       <p class="help-block has-error">
@@ -288,15 +164,9 @@
                       </p>
 
                       <div class="pull-right">
-                        <router-link class="btn btn-default nav-bar-button nav-link"  :to="{name: 'home'}"> Cancel </router-link>
+                        <router-link class="btn btn-default nav-bar-button nav-link" :to="{name: 'home'}"> Cancel </router-link>
                         <!-- <a class="btn btn-default nav-bar-button nav-link" ="{ path: '/' }">Cancel</a> -->
-                        <button
-                           type="button"
-                           class="btn btn-primary nav-bar-button default"
-                           id="scenario-submit"
-                           @click.stop="submitScenario"
-                           value=""
-                           >
+                        <button type="button" class="btn btn-primary nav-bar-button default" id="scenario-submit" @click.stop="submitScenario" value="">
                           Submit
                         </button>
                       </div>
@@ -309,12 +179,10 @@
         </div>
         <div class="col-sm-7">
           <div v-if="template">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title">Details for {{ template.name }}</h3>
-              </div>
+            <div class="card mb-3">
+              <h3 class="card-header">Details for {{ template.name }}</h3>
               <!-- template details -->
-              <div class="panel-body">
+              <div class="card-body">
                 <dl class="dl-horizontal">
                   <div v-for="(key, val) in template.meta" :key="val">
                     <dt>{{ key }}</dt>
@@ -323,21 +191,13 @@
                 </dl>
               </div>
             </div>
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title">Schematic</h3>
-              </div>
+            <div class="card mb-3">
+              <h3 class="card-header">Schematic</h3>
               <!-- template details -->
-              <div class="panel-body text-center">
-                <map-component
-                  v-show="template.name==='GTSM world template'"
-                >
+              <div class="card-body text-center">
+                <map-component v-show="template.name==='GTSM world template'">
                 </map-component>
-                <img
-                  v-if="template.name==='River dominated delta'"
-                  src="../assets/images/schematic.svg"
-                  class="scenariobuilder-schematic"
-                />
+                <img v-if="template.name==='River dominated delta'" src="../assets/images/schematic.svg" class="scenariobuilder-schematic" />
               </div>
             </div>
           </div>
@@ -363,7 +223,7 @@ import {
 import MapComponent from '../components/MapComponent'
 
 // a separate function that we can test.
-function factorToArray (variable) {
+function factorToArray(variable) {
   if (!_.get(variable, 'factor')) {
     // if variable is not a factor return the value
     return variable.value
@@ -388,7 +248,7 @@ function factorToArray (variable) {
 export default {
   store,
   template: '#template-scenario-builder',
-  data: function () {
+  data: function() {
     return {
       availableTemplates: [],
 
@@ -413,7 +273,7 @@ export default {
   components: {
     MapComponent
   },
-  mounted () {
+  mounted() {
     // We force the template to be reloaded when this page is openend
     // Otherwise old values will stay in the form, and the validator is not reactivated.
     // The data function changes the function if needed.
@@ -436,7 +296,7 @@ export default {
   },
 
   validators: { // `numeric` and `url` custom validator is local registration
-    max: function (val, rule) {
+    max: function(val, rule) {
       // create a value object and split up the value
       var vals = factorToArray({
         factor: true,
@@ -444,13 +304,13 @@ export default {
         type: 'numeric'
       })
       // check if any value is > rule
-      var valid = _.every(vals, function (x) {
+      var valid = _.every(vals, function(x) {
         return x <= rule
       })
 
       return valid
     },
-    min: function (val, rule) {
+    min: function(val, rule) {
       var vals = factorToArray({
         factor: true,
         value: val,
@@ -458,7 +318,7 @@ export default {
       })
 
       // check if any value is > rule
-      var valid = _.every(vals, function (x) {
+      var valid = _.every(vals, function(x) {
         return x >= rule
       })
 
@@ -468,13 +328,13 @@ export default {
   computed: {
     totalRuns: {
       cache: false,
-      get: function () {
+      get: function() {
         var totalRuns = 1
 
         // lookup all variables
         var variables = _.flatMap(
           this.scenarioConfig.sections,
-          function (section) {
+          function(section) {
             return section.variables
           }
         )
@@ -498,7 +358,7 @@ export default {
           })
 
         // reduce product
-        totalRuns = _.reduce(runs, function (prod, n) {
+        totalRuns = _.reduce(runs, function(prod, n) {
           return prod * n
         }, 1)
         return totalRuns
@@ -507,7 +367,7 @@ export default {
 
     validForm: {
       cache: false,
-      get: function () {
+      get: function() {
         if (this.$validation) {
           return this.$validation.valid
         }
@@ -516,30 +376,30 @@ export default {
     },
     // get the bounding box from the map from the store
     bbox: {
-      get () {
+      get() {
         return store.state.bbox
       },
-      set (bbox) {
+      set(bbox) {
         store.dispatch('setbbox', bbox)
       }
     },
     // state for when a valid bounding box is selected
     validbbox: {
-      get () {
+      get() {
         return store.state.validbbox
       },
-      set (validbbox) {
+      set(validbbox) {
         store.dispatch('setbboxvalidation', validbbox)
       }
     }
   },
   methods: {
     // check if variable should generate an input element
-    isInput: function (variable) {
+    isInput: function(variable) {
       return _.includes(['numeric', 'text', 'semver'], variable.type) || variable.factor
     },
     // Check is submit button should be disabled
-    disableSubmit: function () {
+    disableSubmit: function() {
       if (this.template.name === 'GTSM world template') {
         console.log('disablesubmit GTSM world template', (!(this.validForm && this.validbbox)))
         return (!(this.validForm && this.validbbox))
@@ -549,7 +409,7 @@ export default {
       }
     },
     // Moved so that we can test it better.
-    fetchTemplateList: function () {
+    fetchTemplateList: function() {
       fetchTemplates()
         .then((templates) => {
           this.availableTemplates = _.sortBy(templates, ['name'])
@@ -571,13 +431,13 @@ export default {
           this.dataLoaded = true
 
           // Initialize the tooltips: We do this after the DOM update.
-          this.$nextTick(function () {
+          this.$nextTick(function() {
             this.updateAfterTick()
           })
         })
     },
 
-    selectTemplate: function (template) {
+    selectTemplate: function(template) {
       if (template === null) {
         return
       }
@@ -599,12 +459,12 @@ export default {
       this.template = template
 
       // Initialize the tooltips: We do this after the DOM update.
-      this.$nextTick(function () {
+      this.$nextTick(function() {
         this.updateAfterTick()
       })
     },
 
-    updateAfterTick: function () {
+    updateAfterTick: function() {
       // initiate the multi-select input fields
       var pickers = $('.select-picker')
 
@@ -620,7 +480,7 @@ export default {
         })
 
         // register event for closing tooltips when clicking anywhere else
-        $('html').click(function (evt) {
+        $('html').click(function(evt) {
           // clicking the tooltip element also triggers a click event on accompanying input or select elements, hence the additional tagName check
           if (evt.target.getAttribute('data-toggle') === null && evt.target.tagName !== 'INPUT' && evt.target.tagName !== 'SELECT') {
             $("[data-toggle='tooltip']").tooltip('hide')
@@ -645,12 +505,12 @@ export default {
     // Return a unique id for the variable that is validated.
     // When selecting another template, the validator cannot deal
     // with variable with the same name.
-    getId: function (variable) {
+    getId: function(variable) {
       console.log('getid', variable, variable.name, variable.default, variable.validators)
       return this.scenarioConfig.id + ',' + variable.id
     },
 
-    updateWithQueryParameters: function () {
+    updateWithQueryParameters: function() {
       console.log('updateWithQueryParameters')
       if (_.has(this, '$route.query.parameters')) {
         // get parameters from query
@@ -666,7 +526,7 @@ export default {
       // loop over all variables in the filled in template
       _.each(
         variables,
-        function (variable) {
+        function(variable) {
           // does this template variable have a corresponding variable in the request parameters
           if (variable.validators.max) {
             variable.validators['max_value'] = variable.validators.max
@@ -710,7 +570,7 @@ export default {
       }
     },
 
-    submitScenario: function () {
+    submitScenario: function() {
       if (!this.validForm) {
         return
       }
@@ -720,12 +580,12 @@ export default {
       var name = ''
 
       // map each variable in each section to parameters
-      _.forEach(this.scenarioConfig.sections, function (section) {
-        _.forEach(section.variables, function (variable) {
+      _.forEach(this.scenarioConfig.sections, function(section) {
+        _.forEach(section.variables, function(variable) {
           if (variable.id === 'name') {
             name = variable.value
           } else {
-            var valuearray = _.map(('' + variable.value).split(','), function (d) {
+            var valuearray = _.map(('' + variable.value).split(','), function(d) {
               // try and parse
               var parsed = parseFloat(d)
 
@@ -758,7 +618,7 @@ export default {
       console.log('submitScenario', JSON.stringify(parameters))
 
       store.dispatch('createScenario', postdata)
-        .then(function () {
+        .then(function() {
           // This is not practical, but the only way in vue? (using $parent)
           bus.$emit('show-alert', {
             message: 'Scenario submitted',
@@ -770,7 +630,7 @@ export default {
             params: {}
           })
         })
-        .catch(function () {
+        .catch(function() {
           // This is not practical, but the only way in vue? (using $parent)
           bus.$emit('show-alert', {
             message: 'Scenario could not be submitted',
@@ -781,7 +641,7 @@ export default {
     },
 
     // We have to prepare the scenario config
-    prepareScenarioConfig: function (data) {
+    prepareScenarioConfig: function(data) {
       // create a deep copy so we don't change the template
       var scenario = _.cloneDeep(data)
 
@@ -789,9 +649,9 @@ export default {
       var sections = scenario.sections
 
       // flatten variables
-      _.forEach(sections, function (section) {
+      _.forEach(sections, function(section) {
         // Loop through all category vars
-        _.forEach(section.variables, function (variable) {
+        _.forEach(section.variables, function(variable) {
           // Set Default value
           variable.value = _.get(variable, 'default')
           // Set factor to false
@@ -806,15 +666,15 @@ export default {
 
     // multiplytable methods
 
-    collapseToggle: function (e) {
+    collapseToggle: function(e) {
       $(e.target).parent('.multiplytable').children('.collapse').collapse('toggle')
     },
 
-    split: function (string) {
+    split: function(string) {
       return _.split(string, ',')
     },
 
-    getVar: function (id) {
+    getVar: function(id) {
       return _.first(
         _.filter(
           _.flattenDeep(
@@ -825,7 +685,7 @@ export default {
       )
     },
 
-    calcAbsBaseLevelChange: function (basinslope, percentage) {
+    calcAbsBaseLevelChange: function(basinslope, percentage) {
       // This method computes the absolute values of base level change (m), based on:
       // - the basin slope angle (rad)
       // - the relative base level change (%).
@@ -845,6 +705,7 @@ export default {
 
 <style lang="scss">
 @import '../assets/variables.scss';
+
 .scenario-builder {
     padding-top: 51px;
     position: static;
@@ -926,6 +787,13 @@ export default {
 
     .form-file-upload {
         margin-top: $padding;
+    }
+    .append-item {
+      border-radius: 0.25rem;
+    }
+
+    .error-message {
+      color: #dc3545;
     }
 
 }

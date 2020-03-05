@@ -18,6 +18,7 @@
     "bootstrap-multiselect": "^0.9.15",
     "bootstrap-sass": "^3.4.1",
     "bootstrap-select": "^1.13.12",
+    "bootstrap-tagsinput": "^0.7.1",
     "bootstrap-toggle": "^2.2.2",
     "bulma": "^0.7.4",
     "chai-as-promised": "^7.1.1",
