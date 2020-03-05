@@ -1,15 +1,18 @@
 <template>
   <div id="template-image-animation">
-
   <div class="image-animation">
 
     <div class="row">
       <div class="col-sm-12" >
-        <ul class="nav nav-tabs">
-          <li role="presentation" class="nav-item" :class="{'active': currentAnimationKey === 'delta_fringe_images'}" @click.stop="switchAnimation('delta_fringe_images')"><a href="#">Delta fringe</a></li>
-          <li role="presentation" class="nav-item" :class="{'active': currentAnimationKey === 'channel_network_images'}" @click.stop="switchAnimation('channel_network_images')"><a href="#">Channel network</a></li>
-          <li role="presentation" class="nav-item" :class="{'active': currentAnimationKey === 'sediment_fraction_images'}" @click.stop="switchAnimation('sediment_fraction_images')"><a href="#">Sediment fraction</a></li>
-          <li role="presentation" class="nav-item" :class="{'active': currentAnimationKey === 'subenvironment_images'}" @click.stop="switchAnimation('subenvironment_images')"><a href="#">Sub-environment</a></li>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li
+            v-for="image in images"
+            :key="image.key"
+            class="nav-item"
+            :class="{'active': currentAnimationKey === image.key}"
+            @click="switchAnimation(image.key)">
+            <a class="nav-link" :id="`${image.key}-tab`" data-toggle="tab" href="#" role="tab" :aria-controls="`${image.key}`" :aria-selected="currentAnimationKey === image.key">{{image.name}}</a>
+          </li>
         </ul>
       </div>
     </div>
@@ -29,29 +32,28 @@
             <div class="btn-group">
 
               <button type="button" class="btn btn-primary" v-on:click="gotoFirstFrame()">
-                <span class="glyphicon glyphicon-fast-backward">
+                <span class="fa fa-fast-backward">
                 </span>
               </button>
 
               <button type="button" class="btn btn-primary" v-on:click="previousImageFrame('channel_network_images')">
-                <span class="glyphicon glyphicon-backward">
+                <span class="fa fa-backward">
                 </span>
               </button>
               <button type="button" class="btn btn-primary" v-if="isAnimating" v-on:click="stopImageFrame('channel_network_images')">
-                <span class="glyphicon glyphicon-stop">
+                <span class="fa fa-stop">
                 </span>
               </button>
               <button class="btn btn-primary" v-if="isAnimating == false" v-on:click="playImageFrame('channel_network_images')">
-                <span class="glyphicon glyphicon-play">
+                <span class="fa fa-play">
                 </span>
               </button>
               <button type="button" class="btn btn-primary" v-on:click="nextImageFrame('channel_network_images')">
-                <span class="glyphicon glyphicon-forward">
+                <span class="fa fa-forward">
                 </span>
               </button>
-
               <button type="button" class="btn btn-primary" v-on:click="gotoLastFrame()">
-                <span class="glyphicon glyphicon-fast-forward">
+                <span class="fa fa-fast-forward">
                 </span>
               </button>
             </div>
@@ -136,14 +138,23 @@ export default {
 
   data () {
     return {
-      // Current animation frame:
       currentAnimationIndex: 0,
-
-      // timer id for animation.
       timerAnimation: -1,
-
-      // Which imagelist are we currently watching?
-      currentAnimationKey: 'map_waterlevel_images'
+      currentAnimationKey: 'map_waterlevel_images',
+      // TODO:This information, together with the description should come from backend
+      images: [{
+        key: 'delta_fringe_images',
+        name: 'Delta fringe'
+      }, {
+        key: 'channel_network_images',
+        name: 'Channel network'
+      }, {
+        key: 'sediment_fraction_images',
+        name: 'Sediment fraction'
+      }, {
+        key: 'subenvironment_images',
+        name: 'Sub-environment'
+      }]
     }
   },
 

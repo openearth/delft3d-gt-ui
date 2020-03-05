@@ -11,7 +11,6 @@ import 'bootstrap/js/dist/collapse'
 import 'bootstrap/js/dist/modal'
 import 'bootstrap-datepicker/dist/js/bootstrap-datepicker'
 import 'bootstrap-select/dist/js/bootstrap-select'
-import 'bootstrap-slider/dist/bootstrap-slider'
 
 import VeeValidate from 'vee-validate'
 
