@@ -4,30 +4,14 @@
 
     <div class="row">
       <div class="col-sm-12" >
-        <ul class="nav nav-tabs">
-          <li role="presentation"
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li
+            v-for="image in images"
+            :key="image.key"
             class="nav-item"
-            :class="{'active': currentAnimationKey === 'delta_fringe_images'}"
-            @click="switchAnimation('delta_fringe_images')">
-            <a class="nav-link active" href="#">Delta fringe</a>
-          </li>
-          <li role="presentation"
-            class="nav-item"
-            :class="{'active': currentAnimationKey === 'channel_network_images'}"
-            @click="switchAnimation('channel_network_images')">
-            <a class="nav-link" href="#">Channel network</a>
-          </li>
-          <li role="presentation"
-            class="nav-item"
-            :class="{'active': currentAnimationKey === 'sediment_fraction_images'}"
-            @click="switchAnimation('sediment_fraction_images')">
-            <a class="nav-link" href="#">Sediment fraction</a>
-          </li>
-          <li role="presentation"
-            class="nav-item"
-            :class="{'active': currentAnimationKey === 'subenvironment_images'}"
-            @click="switchAnimation('subenvironment_images')">
-            <a class="nav-link" href="#">Sub-environment</a>
+            :class="{'active': currentAnimationKey === image.key}"
+            @click="switchAnimation(image.key)">
+            <a class="nav-link" :id="`${image.key}-tab`" data-toggle="tab" href="#" role="tab" :aria-controls="`${image.key}`" :aria-selected="currentAnimationKey === image.key">{{image.name}}</a>
           </li>
         </ul>
       </div>
@@ -154,14 +138,23 @@ export default {
 
   data () {
     return {
-      // Current animation frame:
       currentAnimationIndex: 0,
-
-      // timer id for animation.
       timerAnimation: -1,
-
-      // Which imagelist are we currently watching?
-      currentAnimationKey: 'map_waterlevel_images'
+      currentAnimationKey: 'map_waterlevel_images',
+      // TODO:This information, together with the description should come from backend
+      images: [{
+        key: 'delta_fringe_images',
+        name: 'Delta fringe'
+      }, {
+        key: 'channel_network_images',
+        name: 'Channel network'
+      }, {
+        key: 'sediment_fraction_images',
+        name: 'Sediment fraction'
+      }, {
+        key: 'subenvironment_images',
+        name: 'Sub-environment'
+      }]
     }
   },
 

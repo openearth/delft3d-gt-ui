@@ -75,7 +75,6 @@ import router from '../router.js'
 export default {
   store,
   router,
-  template: '#scenario-card',
   props: {
     scenario: {
       type: Object,
