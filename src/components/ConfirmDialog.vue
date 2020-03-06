@@ -15,7 +15,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-warning" @click="confirm">{{ confirmButtonTitle }}</button>
-          <button type="button" class="btn btn-primary" @click="hide">Cancel</button>
+          <button type="button" class="btn btn-primary" @click="cancel">Cancel</button>
         </div>
       </div>
     </div>
@@ -42,12 +42,17 @@ export default {
     }
   },
   mounted () {
+    console.log('mounted')
     this.show()
   },
 
   methods: {
     confirm () {
       this.$emit('confirm')
+      this.hide()
+    },
+    cancel () {
+      this.$emit('cancel')
       this.hide()
     },
     show () {
