@@ -244,9 +244,6 @@ import {
 import MapComponent from '../components/MapComponent'
 import { extend, validate } from 'vee-validate'
 import { required } from 'vee-validate/dist/rules'
-import selectpicker from 'bootstrap-select'
-
-
 
 extend('required', {
   ...required,
@@ -360,7 +357,7 @@ export default {
     this.fetchTemplateList()
 
     // if we have a template in the request, select that one
-    if (_.has(this, '$route.query.template')) {
+    if (_.get(this, '$route.query.template')) {
       // This cannot go into the fetchTemplates, template will always be empty!
       var templateId = parseInt(this.$route.query.template)
       var template = _.first(_.filter(this.availableTemplates, ['id', templateId]))
@@ -370,37 +367,6 @@ export default {
       }
     }
   },
-
-  // validators: { // `numeric` and `url` custom validator is local registration
-  //   max_value (val, rule) {
-  //     // create a value object and split up the value
-  //     var vals = factorToArray({
-  //       factor: true,
-  //       value: val,
-  //       type: 'numeric'
-  //     })
-  //     // check if any value is > rule
-  //     var valid = _.every(vals, (x) => {
-  //       return x <= rule
-  //     })
-  //
-  //     return valid
-  //   },
-  //   min_value (val, rule) {
-  //     var vals = factorToArray({
-  //       factor: true,
-  //       value: val,
-  //       type: 'numeric'
-  //     })
-  //
-  //     // check if any value is > rule
-  //     var valid = _.every(vals, (x) => {
-  //       return x >= rule
-  //     })
-  //
-  //     return valid
-  //   }
-  // },
   computed: {
 
     totalRuns: {
@@ -505,7 +471,7 @@ export default {
           var template = _.get(this.availableTemplates, 0)
 
           // if we have a template in the request, select that one
-          if (_.has(this, '$route.query.template')) {
+          if (_.get(this, '$route.query.template')) {
             var templateId = parseInt(this.$route.query.template)
 
             template = _.first(_.filter(this.availableTemplates, ['id', templateId]))
@@ -583,7 +549,7 @@ export default {
     },
 
     updateWithQueryParameters () {
-      if (_.has(this, '$route.query.parameters')) {
+      if (_.get(this, '$route.query.parameters')) {
         // get parameters from query
         var parameters = JSON.parse(this.$route.query.parameters)
       }
@@ -593,21 +559,11 @@ export default {
 
       // let's create a flat list of variables
       var variables = _.flatMap(this.scenarioConfig.sections, 'variables')
-
       // loop over all variables in the filled in template
       _.each(
         variables,
         (variable) => {
-          // does this template variable have a corresponding variable in the request parameters
-            // if (variable.validators.max) {
-            //   variable.validators['max_value'] = variable.validators.max
-            //   delete variable.validators['max']
-            // }
-            // if (variable.validators.min) {
-            //   variable.validators['min_value'] = variable.validators.min
-            //   delete variable.validators['min']
-            // }
-          if (_.has(parameters, variable.id)) {
+          if (_.get(parameters, variable.id)) {
             if (variable.factor) {
               // join by columns for tag input
               variable.value = _.join(parameters[variable.id].values, ',')
@@ -622,12 +578,12 @@ export default {
         }
       )
       // This is a bit ugly, but if we have a name, add (copy) to it and then use it.
-      if (_.has(this, '$route.query.name') && _.has(this.scenarioConfig, 'name')) {
+      if (_.get(this, '$route.query.name') && _.get(this.scenarioConfig, 'name')) {
         // we also have a name
         var name = this.$route.query.name
 
         // reuse it and create (copy) (copy) (over) (roger)
-        this.scenarioConfig.name = name + ' (copy)'
+        this.scenarioConfig.name = `${name}(copy)`
 
         // the name variable is special, because it's duplicated
         var nameVariable = _.first(_.filter(variables, ['id', 'name']))
