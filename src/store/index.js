@@ -397,37 +397,38 @@ export default new Vuex.Store({
 
     resetSelectedModels (state) {
       return Promise.all(
-        _.map(state.getSelectedModels, state.resetModel)
+        this.getters.getSelectedModels.map(model => this.dispatch('resetModel', {modelContainer: model}))
       )
     },
 
     startSelectedModels (state) {
       return Promise.all(
-        _.map(state.getSelectedModels, state.startModel)
+        this.getters.getSelectedModels.map(model => this.dispatch('startModel', model))
       )
     },
 
     stopSelectedModels (state) {
       return Promise.all(
-        _.map(state.getSelectedModels, state.sdtopModel)
+        this.getters.getSelectedModels.map(model => this.dispatch('stopModel', model))
       )
     },
 
     redoSelectedModels (state) {
       return Promise.all(
-        _.map(state.getSelectedModels, state.redoModel)
+        this.getters.getSelectedModels.map(model => this.dispatch('redoModel', {modelContainer: model}))
       )
     },
 
     deleteSelectedModels (state) {
+      console.log(this.getters.getSelectedModels, this, this.getters)
       return Promise.all(
-        _.map(state.getSelectedModels, state.deleteModel)
+        this.getters.getSelectedModels.map(model => this.dispatch('deleteModel', {modelContainer: model}))
       )
     },
 
     shareSelectedModels (context, domain) {
       return new Promise((resolve, reject) => {
-        if (this.getSelectedModels().length === 0) {
+        if (this.getters.getSelectedModels.length === 0) {
           return reject(new Error('No models to test'))
         }
         if (domain !== 'company' && domain !== 'world') {
@@ -450,7 +451,7 @@ export default new Vuex.Store({
 
     downloadSelectedModels (context, selectedDownloads) {
       return new Promise((resolve, reject) => {
-        if (this.dispatch('getSelectedModels').length === 0) {
+        if (this.getters.getSelectedModels.length === 0) {
           return reject(new Error('No models to export'))
         }
 

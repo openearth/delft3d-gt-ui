@@ -15,7 +15,7 @@
           </div>
         </div>
         <div class="form-group">
-          <select v-model="selectedDomains" id="domain" class="select-picker form-control" title="Choose publication domain..." multiple data-selected-text-format="count > 3" data-actions-box="true">
+          <select v-model="selectedDomains" id="domain" class="selectpicker form-control" title="Choose publication domain..." multiple data-selected-text-format="count > 3" data-actions-box="true">
             <option data-content="<i class='fa fa-fw fa-user aria-hidden='true'></i> Private">
               private
             </option>
@@ -291,7 +291,7 @@ export default {
       let status = jqXhr.statusText || 'error'
       let response = jqXhr.responseText || jqXhr.responseJson || 'An error occurred.'
 
-      this.$root.$broadcast('show-alert', {
+      this.$emit('show-alert', {
         message: status + ': ' + response,
         showTime: 3000,
         type: 'danger'
@@ -428,7 +428,7 @@ export default {
       // once the dom is updated, update the select pickers by hand
       // template data is computed into modelEngine
       var that = this
-      var pickers = $('.select-picker')
+      var pickers = $('.selectpicker')
 
       if (pickers.selectpicker !== undefined) {
         pickers.selectpicker('refresh')

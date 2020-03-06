@@ -52,7 +52,7 @@
           </div>
         </div>
         <!-- Confirm dialog for control checks -->
-        <confirm-dialog v-if="showDeleteDialog" confirm-button-title="Delete" :dialog-id="`delete-scenario-${scenario.id}`" @confirm="deleteScenario">
+        <confirm-dialog v-if="showDeleteDialog" confirm-button-title="Delete" :dialog-id="`delete-scenario-${scenario.id}`" @confirm="deleteScenario" @cancel="showDeleteDialog = false">
           <template slot="title">
             Delete scenario
           </template>
