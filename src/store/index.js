@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import $ from 'jquery'
+
 import _ from 'lodash'
 
 Vue.use(Vuex)

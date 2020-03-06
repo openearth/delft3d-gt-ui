@@ -6,7 +6,7 @@
       <div class="row">
         <!-- 2 column layout, 1st column scenario properties -->
         <div class="col-sm-5">
-          <div class="row" v-if="availableTemplates.length">
+          <div class="row" v-show="availableTemplates.length">
             <div class="col-sm-12">
               <div class="form-group">
                 <label for="select-template">Select a template</label>
@@ -24,7 +24,7 @@
 
           <!-- if user selected something, show GUI -->
           <!-- There is also an option for an async components if one needs to load data at component instantiation. TODO: convert component. -->
-          <div v-if="template && dataLoaded">
+          <div v-show="template && dataLoaded">
             <div>
               <form novalidate>
                 <div v-for="(section, index) in scenarioConfig.sections" :key="index">
@@ -35,13 +35,12 @@
                       <!-- ===== DUMMY FEATURES START ===== -->
                       <template v-if="section.name === 'Simulation settings'">
                         <div class="form-group">
-                          <label class="control-label" for="run-env">
+                          <label class="control-label pr-1" for="run-env-1">
                             Run environment
                           </label>
-                          <!-- TODO: get rid of this space -->
                           <span class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="Specifies where the simulations are hosted."></span>
                           <div class="input-group">
-                            <select class="form-control" id="run-env">
+                            <select class="form-control" id="run-env-1">
                               <option selected>Amazon</option>
                               <option disabled>Nerdalize (disabled: this feature will be added in future versions)</option>
                               <option disabled>H6 cluster (disabled: this feature will be added in future versions)</option>
@@ -50,13 +49,12 @@
                           </div>
                         </div>
                         <div class="form-group">
-                          <label class="control-label" for="run-env">
+                          <label class="control-label pr-1" for="run-env-2">
                             Delft3D Version
                           </label>
-                          <!-- TODO: get rid of this space -->
                           <span class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="Specifies the Delft3D version used for simulation."></span>
                           <div class="input-group">
-                            <select class="form-control" id="run-env">
+                            <select class="form-control" id="run-env-2">
                               <option selected>Deltares, Delft3D Flexible Mesh Version 1.2.0.61839</option>
                               <option disabled>Deltares, Delft3D Flexible Mesh Suite (disabled: this feature will be added in future versions)</option>
                             </select>
@@ -65,30 +63,56 @@
                       </template>
                       <!-- =====  DUMMY FEATURES END  ===== -->
                       <div class="form-group" v-for="(variable, index) in section.variables" :key="index">
-                        <label class="control-label" :for="variable.id">
+                        <label class="control-label pr-1" :for="variable.id">
                           {{ variable.name }}
                         </label>
-                        <span v-if="variable.description" class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" :title="variable.description"></span>
                         <span v-if="variable.validators.min !== undefined">
                           [{{ variable.validators.min }} - {{ variable.validators.max }}]
                         </span>
+                        <span v-if="variable.description" class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" :title="variable.description"></span>
+
                         <span v-if="variable.type === 'select'">
-                          {<span v-for="(i, option) in variable.options" :key="option">{{ option.text}}<span v-if="i < variable.options.length - 1">, </span></span>}
+                          [{{variable.options.map(opt => opt.text).join(', ')}}]
                         </span>
 
-                        <div class="input-group">
+                          <ValidationProvider ref="validator" :rules="`noEmptyArray|${validatorsToString(variable.validators)}`" :name="variable.value.toString()" v-slot="{ errors }">
+                            <div class="input-group">
+
+                        <!-- tagsinput -->
+                            <input
+                                v-if="isInput(variable) && variable.factor"
+                                :type="variable.type"
+                                class="input-field-tags form-group form-control"
+                                data-role="tagsinput"
+                                :id="variable.id"
+                                v-model="variable.value"
+                                :disabled="variable.disabled"
+                                :field="getId(variable)"
+                                :class="{'is-invalid': errors.length > 0}"
+                                :name="variable.name"
+                                :aria-describedby="`${variable.id}-help`"
+                                />
                               <!-- numeric, text, semver or factor are inputs-->
-                              <input v-if="isInput(variable) " :type="variable.type" class="form-control" :id="variable.id" :data-role="variable.factor ? 'tagsinput' : ''" v-model="variable.value" :disabled="variable.disabled" :field="getId(variable)"
-                                v-validate="variable.validators" :class="{'input': true, 'is-invalid': errors.has(variable.name) }" :name="variable.name" :aria-describedby="`${variable.id}-help`" />
+                              <input v-if="isInput(variable) && !variable.factor"
+                                :type="variable.type"
+                                class="form-control"
+                                :id="variable.id"
+                                v-model="variable.value"
+                                :disabled="variable.disabled"
+                                :field="getId(variable)"
+                                :class="{'input': true, 'is-invalid': errors.length > 0 }"
+                                :name="variable.name"
+                                :aria-describedby="`${variable.id}-help`"
+                                />
                               <!-- select if not form -->
-                              <select v-if="variable.type === 'select' && !variable.factor" class="form-control select-picker" :id="variable.id" v-model="variable.value" :field="getId(variable)" v-validate="variable.validators" multiple="multiple"
+                               <select v-if="variable.type === 'select' && !variable.factor" multiple="multiple"  class="form-control selectpicker" :id="variable.id" :value="variable.value" :field="getId(variable)"
                                 :name="variable.name">
-                                <option v-for="(i, option) in variable.options" :value="option.value" :key="option">
+                                <option v-for="(option, i) in variable.options" :value="option.value" :key="i">
                                   {{ option.text }}
                                 </option>
                               </select>
                               <!-- text area -->
-                              <textarea v-if="variable.type === 'textarea'" class="form-control" rows="3" :disabled="variable.disabled" :field="getId(variable)" v-validate="variable.validators" v-model="variable.value" :name="variable.name"></textarea>
+                              <textarea v-if="variable.type === 'textarea'" class="form-control" rows="3" :disabled="variable.disabled" :field="getId(variable)" v-model="variable.value" :name="variable.name"></textarea>
                               <!-- date -->
                               <div v-if="variable.type === 'date'" class="input-group date" data-provide="datepicker" data-date-format="yyyymmdd" todayHighlight>
                                 <input class="form-control date" v-model="variable.value" :field="getId(variable)" v-validate="variable.validators" :name="variable.name" />
@@ -97,7 +121,7 @@
                                 </div>
                               </div>
                               <!-- bbox array -->
-                              <input v-if="variable.type === 'bbox-array'" type="text" :id="variable.id" class="form-control" :field="getId(variable)" v-model="bbox" v-validate="variable.validations" :name="variable.name" readonly />
+                              <input v-if="variable.type === 'bbox-array'" type="text" :id="variable.id" class="form-control" :field="getId(variable)" v-model="bbox" :name="variable.name" readonly />
                               <div class="input-group-append">
                                 <span class="input-group-text append-item">
                                   {{ variable.units || '-' }}
@@ -105,42 +129,47 @@
                               </div>
                               <div class="col-sm-12 p-0">
 
-                            <small v-show="errors.has(variable.name)" class="form-text error-message">{{ errors.first(variable.name) }}</small>
+                            <small v-show="errors.length > 0" class="form-text error-message">{{ errors[0] }}</small>
                           </div>
                         </div>
+
+                        </ValidationProvider>
                         <!-- ===== DUMMY FEATURES START ===== -->
-                        <div class="form-file-upload" v-if="variable.name === 'Tidal amplitude'">
-                          <p class="help-block">Import tidal components <span class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="Uploading of tidal components is disabled. This feature will be added in future versions."></span>:
-                            <input type="file" id="exampleInputFile" class="" disabled></p>
+                        <div class="form-file-upload pt-2" v-if="variable.name === 'Tidal amplitude'">
+                          <p class="help-block">
+                            Import tidal components
+                            <span class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="Uploading of tidal components is disabled. This feature will be added in future versions.">
+                            </span>:
+                            <input type="file" id="tidalInputFile" class="" disabled></p>
                         </div>
-                        <div class="form-file-upload" v-if="variable.name === 'River discharge'">
+                        <div class="form-file-upload pt-2" v-if="variable.name === 'River discharge'">
                           <p class="help-block">Import time series <span class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="Uploading of time series is disabled. This feature will be added in future versions."></span>:
-                            <input type="file" id="exampleInputFile" class="" disabled></p>
+                            <input type="file" id="timeseriesInputFile" class="" disabled></p>
                         </div>
-                        <div class="form-file-upload" v-if="variable.name === 'Sediment classes'">
+                        <div class="form-file-upload pt-2" v-if="variable.name === 'Sediment classes'">
                           <p class="help-block">Import spacially varying field <span class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="Uploading of a spacially varying field is disabled. This feature will be added in future versions."></span>:
-                            <input type="file" id="exampleInputFile" class="" disabled></p>
+                            <input type="file" id="varyingInputFile" class="" disabled></p>
                         </div>
                         <!-- =====  DUMMY FEATURES END  ===== -->
 
-                        <div class="multiplytable text-center" v-if="variable.id === 'baselevel'">
-                          <div class="btn btn-default btn-xs" @click.stop="collapseToggle">
+                        <div class="text-center" v-if="variable.id === 'baselevel'">
+                          <div type="button" class="btn btn-outline-secondary btn-sm mt-2" data-toggle="collapse" data-target=".table-container">
                             Toggle absolute value table for {{ variable.name }}
                           </div>
-                          <div class="table-container collapse">
+                          <div class="table-container collapse mt-2 text-left">
                             <table class="table table-condensed">
                               <thead>
                                 <tr>
                                   <th class="active" nowrap>Basin slope</th>
-                                  <th v-for="val in split(variable.value)" :key="val">
+                                  <th v-for="val in splitString(variable.value)" :key="val">
                                     {{ val }} {{ variable.units }}
                                   </th>
                                 </tr>
                               </thead>
                               <tbody>
-                                <tr v-for="basinslope in split(getVar('basinslope').value)" :key="basinslope">
+                                <tr v-for="basinslope in splitString(getVar('basinslope').value)" :key="basinslope">
                                   <td class="active" nowrap>{{ basinslope }} {{ getVar('basinslope').units }}</td>
-                                  <td v-for="percentage in split(variable.value)" nowrap :key="percentage">
+                                  <td v-for="percentage in splitString(variable.value)" nowrap :key="percentage">
                                     {{ calcAbsBaseLevelChange(basinslope, percentage) }} m
                                   </td>
                                 </tr>
@@ -148,7 +177,6 @@
                             </table>
                           </div>
                         </div>
-
                       </div>
                     </div>
                   </div>
@@ -156,17 +184,15 @@
                 <div class="card">
                   <div class="card-body">
                     <div class="form-group">
-                      <input type="hidden" class="form-control" id="total-runs" v-model="totalRuns" v-validate:totalRuns="{required: true, min: 1, max: maxRuns}" name="total-runs" />
-
                       Number of runs: <strong>{{totalRuns}}</strong>
-                      <p class="help-block has-error">
+                      <small class="form-text">
                         You must have at least one run, but you cannot submit more than {{maxRuns}} runs in one scenario.
-                      </p>
+                      </small>
 
                       <div class="pull-right">
-                        <router-link class="btn btn-default nav-bar-button nav-link" :to="{name: 'home'}"> Cancel </router-link>
+                        <router-link class="btn btn-outline-secondary nav-bar-button nav-link" :to="{name: 'home'}"> Cancel </router-link>
                         <!-- <a class="btn btn-default nav-bar-button nav-link" ="{ path: '/' }">Cancel</a> -->
-                        <button type="button" class="btn btn-primary nav-bar-button default" id="scenario-submit" @click.stop="submitScenario" value="">
+                        <button type="button" class="btn btn-primary nav-bar-button default" id="scenario-submit" :disabled="noErrors()" @click="submitScenario" value="">
                           Submit
                         </button>
                       </div>
@@ -210,20 +236,72 @@
 </template>
 
 <script>
-import $ from 'jquery'
 import _ from 'lodash'
 import store from '../store'
 import {
-  fetchTemplates
-} from '../templates.js'
-import {
   bus
 } from '@/event-bus.js'
-
 import MapComponent from '../components/MapComponent'
+import { extend, validate } from 'vee-validate'
+import { required } from 'vee-validate/dist/rules'
+import selectpicker from 'bootstrap-select'
+
+
+
+extend('required', {
+  ...required,
+  message: 'This field is required'
+});
+
+extend('noEmptyArray', {
+  validate(value) {
+    if (typeof value === "object") {
+      return value.length > 0
+    } else {
+      return true
+    }
+  },
+  message: 'Field is required.'
+})
+extend('min', {
+  validate(value, args) {
+    if(typeof value === 'number') {
+      return parseFloat(value) >= parseFloat(args.min_value)
+    }
+    let allVars = value
+    if (typeof value === "string") {
+      allVars = value.split(',')
+    }
+    const allBools = allVars.map(obj => {
+      return parseFloat(obj) >= parseFloat(args.min_value)
+    })
+    return !allBools.includes(false)
+  },
+  params: ['min_value'],
+  message: `Entered value is too low.`
+})
+
+extend('max', {
+  validate(value, args) {
+    if(typeof value === 'number') {
+      return parseFloat(value) <= parseFloat(args.max_value)
+    }
+    let allVars = value
+    if (typeof value === "string") {
+      allVars = value.split(',')
+    }
+    const allBools = allVars.map(obj => {
+      return parseFloat(obj) <= parseFloat(args.max_value)
+    })
+    return !allBools.includes(false)
+
+  },
+  params: ['max_value'],
+  message: `Entered value is too high.`
+})
 
 // a separate function that we can test.
-function factorToArray(variable) {
+const factorToArray = (variable) => {
   if (!_.get(variable, 'factor')) {
     // if variable is not a factor return the value
     return variable.value
@@ -246,12 +324,11 @@ function factorToArray(variable) {
 }
 
 export default {
+  name: "scenario-builder",
   store,
-  template: '#template-scenario-builder',
-  data: function() {
+  data () {
     return {
       availableTemplates: [],
-
       // The scenario as configured by the user at the moment.
       scenarioConfig: {},
 
@@ -281,7 +358,6 @@ export default {
     this.currentSelectedId = null
     this.template = null
     this.fetchTemplateList()
-    console.log('route: sceaneriocreate, data')
 
     // if we have a template in the request, select that one
     if (_.has(this, '$route.query.template')) {
@@ -295,46 +371,47 @@ export default {
     }
   },
 
-  validators: { // `numeric` and `url` custom validator is local registration
-    max: function(val, rule) {
-      // create a value object and split up the value
-      var vals = factorToArray({
-        factor: true,
-        value: val,
-        type: 'numeric'
-      })
-      // check if any value is > rule
-      var valid = _.every(vals, function(x) {
-        return x <= rule
-      })
-
-      return valid
-    },
-    min: function(val, rule) {
-      var vals = factorToArray({
-        factor: true,
-        value: val,
-        type: 'numeric'
-      })
-
-      // check if any value is > rule
-      var valid = _.every(vals, function(x) {
-        return x >= rule
-      })
-
-      return valid
-    }
-  },
+  // validators: { // `numeric` and `url` custom validator is local registration
+  //   max_value (val, rule) {
+  //     // create a value object and split up the value
+  //     var vals = factorToArray({
+  //       factor: true,
+  //       value: val,
+  //       type: 'numeric'
+  //     })
+  //     // check if any value is > rule
+  //     var valid = _.every(vals, (x) => {
+  //       return x <= rule
+  //     })
+  //
+  //     return valid
+  //   },
+  //   min_value (val, rule) {
+  //     var vals = factorToArray({
+  //       factor: true,
+  //       value: val,
+  //       type: 'numeric'
+  //     })
+  //
+  //     // check if any value is > rule
+  //     var valid = _.every(vals, (x) => {
+  //       return x >= rule
+  //     })
+  //
+  //     return valid
+  //   }
+  // },
   computed: {
+
     totalRuns: {
       cache: false,
-      get: function() {
+      get() {
         var totalRuns = 1
 
         // lookup all variables
         var variables = _.flatMap(
           this.scenarioConfig.sections,
-          function(section) {
+          (section) => {
             return section.variables
           }
         )
@@ -358,20 +435,10 @@ export default {
           })
 
         // reduce product
-        totalRuns = _.reduce(runs, function(prod, n) {
+        totalRuns = _.reduce(runs, (prod, n) => {
           return prod * n
         }, 1)
         return totalRuns
-      }
-    },
-
-    validForm: {
-      cache: false,
-      get: function() {
-        if (this.$validation) {
-          return this.$validation.valid
-        }
-        return true
       }
     },
     // get the bounding box from the map from the store
@@ -394,23 +461,43 @@ export default {
     }
   },
   methods: {
-    // check if variable should generate an input element
-    isInput: function(variable) {
-      return _.includes(['numeric', 'text', 'semver'], variable.type) || variable.factor
-    },
-    // Check is submit button should be disabled
-    disableSubmit: function() {
-      if (this.template.name === 'GTSM world template') {
-        console.log('disablesubmit GTSM world template', (!(this.validForm && this.validbbox)))
-        return (!(this.validForm && this.validbbox))
+    noErrors() {
+      if (this.$refs.validator) {
+        const allVars = this.$refs.validator.map(val => {
+          return val.errors.length === 0
+        })
+        return allVars.includes(false)
       } else {
-        console.log('disablesubmit GTSM world template', this.validForm)
-        return (this.validForm)
+        return false
       }
     },
+    validatorsToString (obj) {
+      const entries = Object.entries(obj)
+      const valString = ''
+
+      const entMap = entries.map((ent) => {
+        return `${ent[0]}:${ent[1]}`
+      })
+      return entMap.join('|')
+    },
+    updateTagLabel () {
+      $('span.tag.label.label-info').each((i, el) => {
+        $(el).addClass('badge badge-info')
+      })
+    },
+
+    fetchTemplates() {
+      const url = '/api/v1/templates/'
+      return fetch(url)
+        .then(res => res.json())
+    },
+    // check if variable should generate an input element
+    isInput (variable) {
+      return _.includes(['numeric', 'text', 'semver'], variable.type) || variable.factor
+    },
     // Moved so that we can test it better.
-    fetchTemplateList: function() {
-      fetchTemplates()
+    fetchTemplateList() {
+      this.fetchTemplates()
         .then((templates) => {
           this.availableTemplates = _.sortBy(templates, ['name'])
 
@@ -431,13 +518,13 @@ export default {
           this.dataLoaded = true
 
           // Initialize the tooltips: We do this after the DOM update.
-          this.$nextTick(function() {
+          this.$nextTick(() => {
             this.updateAfterTick()
           })
         })
     },
 
-    selectTemplate: function(template) {
+    selectTemplate(template) {
       if (template === null) {
         return
       }
@@ -451,67 +538,51 @@ export default {
 
       // First set data, then the template. Order is important!
       this.scenarioConfig = this.prepareScenarioConfig(template)
-      console.log('scenarioConfig', this.scenarioConfig)
-
       this.updateWithQueryParameters()
 
       // set the selected template
       this.template = template
 
       // Initialize the tooltips: We do this after the DOM update.
-      this.$nextTick(function() {
+      this.$nextTick(() => {
         this.updateAfterTick()
       })
     },
 
-    updateAfterTick: function() {
+    updateAfterTick() {
       // initiate the multi-select input fields
-      var pickers = $('.select-picker')
-
+      var pickers = $('.selectpicker')
       if (pickers.selectpicker !== undefined) {
         pickers.selectpicker('refresh')
       }
+        $('.input-field-tags').each((i, el) => {
+          $(el).tagsinput()
+          $(el).change(this.updateTagLabel)
+          $(el).change((val) => {
+            this.scenarioConfig.sections.forEach(sec => {
+              const variable = sec.variables.find(vari => vari.name === val.target.name)
+              if( ! variable ) {
+                return
+              }
+              variable.value = $(el).tagsinput('items')
+            })
 
-      if ($("[data-toggle='tooltip']").tooltip !== undefined) {
-        $("[data-toggle='tooltip']").tooltip({
-          html: true,
-          // do not user hover: we use clickable links in the tooltip
-          trigger: 'click'
+            this.$refs.validator.forEach(val => val.validate())
+          })
         })
+        this.updateTagLabel()
 
-        // register event for closing tooltips when clicking anywhere else
-        $('html').click(function(evt) {
-          // clicking the tooltip element also triggers a click event on accompanying input or select elements, hence the additional tagName check
-          if (evt.target.getAttribute('data-toggle') === null && evt.target.tagName !== 'INPUT' && evt.target.tagName !== 'SELECT') {
-            $("[data-toggle='tooltip']").tooltip('hide')
-          }
-        })
-      }
 
-      $('input[data-role=tagsinput], select[multiple][data-role=tagsinput]').each((i, el) => {
-        // lookup corresponding variable
-        // var variables = _.flatMap(this.scenarioConfig.sections, "variables");
-        // var variable = _.head(_.filter(variables, ["id", el.id]));
-
-        // if (variable.type === "select") {
-
-        $(el).tagsinput()
-        // } else {
-        // $(el).tagsinput();
-        // }
-      })
     },
 
     // Return a unique id for the variable that is validated.
     // When selecting another template, the validator cannot deal
     // with variable with the same name.
-    getId: function(variable) {
-      console.log('getid', variable, variable.name, variable.default, variable.validators)
-      return this.scenarioConfig.id + ',' + variable.id
+    getId (variable) {
+      return `${this.scenarioConfig.id},${variable.id}`
     },
 
-    updateWithQueryParameters: function() {
-      console.log('updateWithQueryParameters')
+    updateWithQueryParameters () {
       if (_.has(this, '$route.query.parameters')) {
         // get parameters from query
         var parameters = JSON.parse(this.$route.query.parameters)
@@ -526,16 +597,16 @@ export default {
       // loop over all variables in the filled in template
       _.each(
         variables,
-        function(variable) {
+        (variable) => {
           // does this template variable have a corresponding variable in the request parameters
-          if (variable.validators.max) {
-            variable.validators['max_value'] = variable.validators.max
-            delete variable.validators['max']
-          }
-          if (variable.validators.min) {
-            variable.validators['min_value'] = variable.validators.min
-            delete variable.validators['min']
-          }
+            // if (variable.validators.max) {
+            //   variable.validators['max_value'] = variable.validators.max
+            //   delete variable.validators['max']
+            // }
+            // if (variable.validators.min) {
+            //   variable.validators['min_value'] = variable.validators.min
+            //   delete variable.validators['min']
+            // }
           if (_.has(parameters, variable.id)) {
             if (variable.factor) {
               // join by columns for tag input
@@ -550,8 +621,6 @@ export default {
           }
         }
       )
-      console.log('after', variables)
-
       // This is a bit ugly, but if we have a name, add (copy) to it and then use it.
       if (_.has(this, '$route.query.name') && _.has(this.scenarioConfig, 'name')) {
         // we also have a name
@@ -570,22 +639,21 @@ export default {
       }
     },
 
-    submitScenario: function() {
-      if (!this.validForm) {
+    submitScenario() {
+      if (this.noErrors() ) {
         return
       }
-
       var parameters = {}
 
       var name = ''
 
       // map each variable in each section to parameters
-      _.forEach(this.scenarioConfig.sections, function(section) {
-        _.forEach(section.variables, function(variable) {
+      _.forEach(this.scenarioConfig.sections, (section) => {
+        _.forEach(section.variables, (variable) => {
           if (variable.id === 'name') {
             name = variable.value
           } else {
-            var valuearray = _.map(('' + variable.value).split(','), function(d) {
+            var valuearray = _.map(('' + variable.value).split(','), (d) => {
               // try and parse
               var parsed = parseFloat(d)
 
@@ -598,6 +666,7 @@ export default {
             if (variable.type === 'bbox-array') {
               valuearray = [valuearray]
             }
+
             parameters[variable.id] = {
               values: valuearray,
               // we need these in the table
@@ -609,28 +678,26 @@ export default {
           }
         })
       })
-
       var postdata = {
         'name': name,
         'template': this.currentSelectedId,
         'parameters': JSON.stringify(parameters)
       }
-      console.log('submitScenario', JSON.stringify(parameters))
 
       store.dispatch('createScenario', postdata)
-        .then(function() {
+        .then(() => {
           // This is not practical, but the only way in vue? (using $parent)
           bus.$emit('show-alert', {
             message: 'Scenario submitted',
             showTime: 5000,
             type: 'info'
           })
-          this.$router.go({
+          this.$router.push({
             name: 'home',
             params: {}
           })
         })
-        .catch(function() {
+        .catch(() => {
           // This is not practical, but the only way in vue? (using $parent)
           bus.$emit('show-alert', {
             message: 'Scenario could not be submitted',
@@ -641,7 +708,7 @@ export default {
     },
 
     // We have to prepare the scenario config
-    prepareScenarioConfig: function(data) {
+    prepareScenarioConfig(data) {
       // create a deep copy so we don't change the template
       var scenario = _.cloneDeep(data)
 
@@ -649,9 +716,9 @@ export default {
       var sections = scenario.sections
 
       // flatten variables
-      _.forEach(sections, function(section) {
+      _.forEach(sections, (section) => {
         // Loop through all category vars
-        _.forEach(section.variables, function(variable) {
+        _.forEach(section.variables, (variable) => {
           // Set Default value
           variable.value = _.get(variable, 'default')
           // Set factor to false
@@ -664,17 +731,11 @@ export default {
       return scenario
     },
 
-    // multiplytable methods
-
-    collapseToggle: function(e) {
-      $(e.target).parent('.multiplytable').children('.collapse').collapse('toggle')
-    },
-
-    split: function(string) {
+    splitString(string) {
       return _.split(string, ',')
     },
 
-    getVar: function(id) {
+    getVar(id) {
       return _.first(
         _.filter(
           _.flattenDeep(
@@ -685,7 +746,7 @@ export default {
       )
     },
 
-    calcAbsBaseLevelChange: function(basinslope, percentage) {
+    calcAbsBaseLevelChange (basinslope, percentage) {
       // This method computes the absolute values of base level change (m), based on:
       // - the basin slope angle (rad)
       // - the relative base level change (%).
@@ -716,12 +777,6 @@ export default {
         max-width: 100%;
     }
 
-    .bootstrap-tagsinput {
-        border-bottom-right-radius: 0;
-        border-top-right-radius: 0;
-        width: 100%;
-    }
-
     .btn {
         margin-right: $padding;
     }
@@ -739,62 +794,22 @@ export default {
         overflow-y: auto;
     }
 
-    // some styling to align a text with a standard butotn.
-    .align-with-button {
-        padding: 8px 16px; // Extra pixel top and bottom for border on buttons
-    }
-
-    .toggle {
-        margin-top: $padding;
-    }
-
-    .multiplytable {
-        .btn {
-            margin: $padding 0;
-        }
-    }
-
-    .table-container {
-        overflow-x: scroll;
-
-        table {
-            margin: 0;
-        }
-
-        td,
-        th {
-            text-align: center;
-        }
-    }
-
-    .form-group {
-        &:last-child {
-            margin-bottom: 0;
-        }
-    }
-
-    // DUMMY FEATURES
-
     .input-group,
     option,
     select {
         width: 100%;
     }
-
-    [type='file'] {
-        display: inline-block;
-    }
-
-    .form-file-upload {
-        margin-top: $padding;
-    }
-    .append-item {
-      border-radius: 0.25rem;
-    }
-
     .error-message {
       color: #dc3545;
     }
-
+    span.input-group-text.append-item {
+      border-bottom-right-radius: 0.25rem !important;
+      border-top-right-radius: 0.25rem !important;
+    }
+    .bootstrap-tagsinput{
+      border-bottom-right-radius: 0;
+      border-top-right-radius: 0;
+      flex: auto;
+    }
 }
 </style>

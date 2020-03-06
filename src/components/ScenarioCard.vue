@@ -66,7 +66,7 @@
 
 <script>
 import _ from 'lodash'
-import $ from 'jquery'
+
 import store from '../store'
 import ModelCard from './ModelCard'
 import ConfirmDialog from './ConfirmDialog'
