@@ -163,6 +163,8 @@ export default new Vuex.Store({
     updateModelContainers (context) {
       _.each(this.state.models, (model) => {
         var container = _.find(this.state.modelContainers, ['id', model.id])
+
+        // update css classes as indication of statuslevel
         let statusLevel = 'info'
 
         if (model.state === 'Finished') {
