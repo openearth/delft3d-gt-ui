@@ -36,7 +36,6 @@
 import {
   bus
 } from '@/event-bus.js'
-import store from '../store'
 
 export default {
   template: '#template-model-card',
