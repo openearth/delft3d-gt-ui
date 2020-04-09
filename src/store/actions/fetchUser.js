@@ -1,4 +1,4 @@
-
+import $ from 'jquery'
 
 export default function fetchUser (context) {
   if (context.state.reqUser !== undefined) {

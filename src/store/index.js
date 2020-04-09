@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import $ from 'jquery'
 
 import _ from 'lodash'
 
@@ -164,7 +165,6 @@ export default new Vuex.Store({
       _.each(this.state.models, (model) => {
         var container = _.find(this.state.modelContainers, ['id', model.id])
         if (container === undefined) {
-
           let statusLevel = 'info'
 
           if (model.state === 'Finished') {

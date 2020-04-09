@@ -55,7 +55,6 @@ export default {
       background-color: $col-bg-d3d;
     }
 
-
     #logoimage {
         float: left;
         position: relative;
