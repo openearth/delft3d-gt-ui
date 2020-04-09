@@ -6,11 +6,11 @@ module.exports = {
   devServer: {
     port: 9000,
     proxy: {
-      '^/login': {
-        target: `${apiServer}/login/?next=/`
+      '^/login/*': {
+        target: `${apiServer}`
       },
-      '^/logout': {
-        target: `${apiServer}/login/?next=/`
+      '^/logout/*': {
+        target: `${apiServer}`
       },
       '^/api/v1/*': {
         target: `${apiServer}`

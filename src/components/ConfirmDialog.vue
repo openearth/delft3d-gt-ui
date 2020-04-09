@@ -1,6 +1,6 @@
 <template>
 <div id="template-confirm-dialog">
-  <div class="modal default-hidden fade" :id="`${dialogId}-dialog`" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" :id="`${dialogId}-dialog`" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -11,13 +11,11 @@
         </div>
         <div class="modal-body">
           <slot name="body"></slot>
-          <div class="alert alert-info" role="alert" :id="`${dialogId}-dialog-alert`">
-            <slot name="alert"></slot>
-          </div>
+          <slot name="alert" class="alert alert-info" role="alert" :id="`${dialogId}-dialog-alert`"></slot>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-warning" v-on:click.stop="confirm">{{ confirmButtonTitle }}</button>
-          <button type="button" class="btn btn-primary" v-on:click.stop="hide">Cancel</button>
+          <button type="button" class="btn btn-warning" @click="confirm">{{ confirmButtonTitle }}</button>
+          <button type="button" class="btn btn-primary" @click="hide">Cancel</button>
         </div>
       </div>
     </div>
@@ -43,23 +41,13 @@ export default {
       type: Boolean
     }
   },
-  watch: {
-    modal (val) {
-      if (val) {
-        this.show()
-      } else {
-        this.hide()
-      }
-    }
+  mounted () {
+    this.show()
   },
 
   methods: {
     confirm () {
       this.$emit('confirm')
-      this.hide()
-    },
-    cancel () {
-      this.$emit('cancel')
       this.hide()
     },
     show () {

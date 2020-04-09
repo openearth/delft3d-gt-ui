@@ -3,18 +3,12 @@ import Vuex from 'vuex'
 import $ from 'jquery'
 import _ from 'lodash'
 
-import startSync from './actions/startSync'
-import stopSync from './actions/stopSync'
-import update from './actions/update'
-import updateUser from './actions/updateUser'
-import fetchUser from './actions/fetchUser'
-
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
     activeModelContainer: undefined,
-    failedUpdate: function () { }, // If promise of updates failed, this callback will be called.
+    failedUpdate: () => { }, // If promise of updates failed, this callback will be called.
     modelContainers: [],
     models: [],
     params: [],
@@ -41,11 +35,66 @@ export default new Vuex.Store({
   actions: {
 
     // ================================ SYNCHRONISATION
-    startSync,
-    stopSync,
-    update,
-    updateUser,
-    fetchUser,
+    fetchUser (context) {
+      if (context.state.reqUser !== undefined) {
+        context.state.reqUser.abort()
+      }
+      return new Promise((resolve, reject) => {
+        context.state.user = $.ajax({ url: 'api/v1/users/me/', data: context.state.params, traditional: true, dataType: 'json' })
+          .done(function (json) {
+            resolve(json[0])
+          })
+          .fail(function (jqXhr) {
+            reject(jqXhr)
+          })
+      })
+    },
+
+    startSync (store) {
+      store.interval = setInterval(() => { store.dispatch('update') }, store.state.updateInterval)
+    },
+
+    stopSync (store) {
+      clearInterval(store.interval)
+      store.interval = null
+    },
+    update (context) {
+      if (context.state.updating) {
+        return
+      }
+      context.state.updating = true
+      Promise.all([
+        context.dispatch('fetchModels'),
+        context.dispatch('fetchScenarios'),
+        context.dispatch('fetchModelDetails')
+      ])
+        .then((jsons) => {
+          context.state.models = jsons[0] // Array of Models
+          context.state.scenarios = jsons[1] // Array of Scenes
+
+          context.state.models = _.map(context.state.models, (m) => {
+            let modelDetails = jsons[2] // Dictionary of Model Details
+            return (m.id === modelDetails.id) ? modelDetails : m
+          })
+
+          context.dispatch('updateContainers')
+          context.state.updating = false
+        })
+        .catch((jqXhr) => {
+          context.state.failedUpdate(jqXhr)
+          context.state.updating = false
+        })
+    },
+    updateUser (store) {
+      store.dispatch('fetchUser').then((json) => {
+        console.log('updateuser', json)
+        store.state.user = json
+      })
+        .catch((jqXhr) => {
+          store.state.failedUpdate(jqXhr)
+          store.state.updating = false
+        })
+    },
 
     // ================================ API FETCH CALLS
     fetchModelDetails (context) {
@@ -115,6 +164,18 @@ export default new Vuex.Store({
       _.each(this.state.models, (model) => {
         var container = _.find(this.state.modelContainers, ['id', model.id])
 
+        // update css classes as indication of statuslevel
+        let statusLevel = 'info'
+
+        if (model.state === 'Finished') {
+          statusLevel = 'success'
+        } else if (model.state === 'Idle: waiting for user input') {
+          statusLevel = 'warning'
+        } else if (model.state === 'Running simulation') {
+          statusLevel = 'striped active'
+        } else if (model.state === 'Stopped') {
+          statusLevel = 'secondary'
+        }
         if (container === undefined) {
           // create new container
           container = {
@@ -122,11 +183,13 @@ export default new Vuex.Store({
             active: false,
             selected: false,
             data: model,
-            statusLevel: this.statusLevel
+            state: model.state,
+            statusLevel: statusLevel
           }
           this.state.modelContainers.push(container)
         } else {
           // update model in container
+          container.statusLevel = statusLevel
           container.data = model
         }
       })
@@ -179,7 +242,8 @@ export default new Vuex.Store({
 
     // ================================ API MODELS UPDATE CALLS
 
-    deleteModel (context, modelContainer) {
+    deleteModel (context, payload) {
+      const { modelContainer } = payload
       return new Promise((resolve, reject) => {
         // snappyness: remove modelContainer from store
         if (this.state.activeModelContainer === modelContainer) {
@@ -219,7 +283,8 @@ export default new Vuex.Store({
           })
       })
     },
-    resetModel (context, modelContainer) {
+    resetModel (context, payload) {
+      const { modelContainer } = payload
       return new Promise((resolve, reject) => {
         if (modelContainer === undefined || modelContainer.id === undefined) {
           return reject(new Error('No model id to reset'))
@@ -332,51 +397,35 @@ export default new Vuex.Store({
           })
       })
     },
-
-    // ================================ OTHER SUPPORT METHODS
-
-    statusLevel (context) {
-      if (this.data.state === 'Finished') {
-        return 'success'
-      }
-      if (this.data.state === 'Idle: waiting for user input') {
-        return 'warning'
-      }
-      return 'info'
-    },
     // ================================ MULTISELECTED MODEL UPDATE METHODS
 
-    getSelectedModels (context) {
-      return _.filter(this.state.modelContainers, ['selected', true])
-    },
-
-    resetSelectedModels (context) {
+    resetSelectedModels (state) {
       return Promise.all(
-        _.map(this.dispatch('getSelectedModels'), this.resetModel.bind(this))
+        _.map(state.getSelectedModels, state.resetModel)
       )
     },
 
-    startSelectedModels (context) {
+    startSelectedModels (state) {
       return Promise.all(
-        _.map(this.dispatch('getSelectedModels'), this.dispatch('startModel').bind(this))
+        _.map(state.getSelectedModels, state.startModel)
       )
     },
 
-    stopSelectedModels (context) {
+    stopSelectedModels (state) {
       return Promise.all(
-        _.map(this.dispatch('getSelectedModels'), this.dispatch('stopModel').bind(this))
+        _.map(state.getSelectedModels, state.sdtopModel)
       )
     },
 
-    redoSelectedModels (context) {
+    redoSelectedModels (state) {
       return Promise.all(
-        _.map(this.dispatch('getSelectedModels'), this.dispatch('redoModel').bind(this))
+        _.map(state.getSelectedModels, state.redoModel)
       )
     },
 
-    deleteSelectedModels (context) {
+    deleteSelectedModels (state) {
       return Promise.all(
-        _.map(this.dispatch('getSelectedModels'), this.dispatch('deleteModel').bind(this))
+        _.map(state.getSelectedModels, state.deleteModel)
       )
     },
 
@@ -443,6 +492,11 @@ export default new Vuex.Store({
       this.state.validbbox = val
     }
 
+  },
+  getters: {
+    getSelectedModels (state, context) {
+      return _.filter(state.modelContainers, ['selected', true])
+    }
   }
 
 })

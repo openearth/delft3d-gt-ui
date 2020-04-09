@@ -1,9 +1,11 @@
 <template>
-  <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light py-0">
-    <img src="../assets/images/logo/delft3d-gt-logo.svg" alt="logo" id="logoimage" class="p-auto" />
+  <nav class="navbar navbar-expand-lg fixed-top navbar-light py-0 pl-0">
+    <div class="logoholder">
+      <img src="../assets/images/logo/delft3d-gt-logo.svg" alt="logo" id="logoimage" class="p-auto" />
+    </div>
 
-    <a class="navbar-brand" href="/">
-      Global Tide and Surge Model
+    <a class="navbar-brand ml-2" href="/">
+      Delft3D Geological Tool
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -11,15 +13,15 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav mr-auto nav-pills">
         <li :class="{'active': $route.name === 'home'}" class="nav-item">
-          <router-link class="nav-link" :to="{name: 'home'}" title="Create scenario">Database</router-link>
+          <router-link class="nav-link my-auto" :to="{name: 'home'}" title="Create scenario">Database</router-link>
         </li>
         <li :class="{'active': $route.name === 'scenarios-create'}" class="nav-item">
-          <router-link class="nav-link" :to="{name: 'scenarios-create'}" title="Create scenario">
+          <router-link class="nav-link my-auto" :to="{name: 'scenarios-create'}" title="Create scenario">
             Scenario builder
           </router-link>
         </li>
-        <li>
-          <a class="nav-link" href="docs/User_Manual_Delft3D-Geological_Tool.pdf" title="Download Manual" target="_blank">
+        <li class="nav-item">
+          <a class="nav-link my-auto" href="docs/User_Manual_Delft3D-Geological_Tool.pdf" title="Download Manual" target="_blank">
             Manual
           </a>
         </li>
@@ -99,10 +101,22 @@ export default {
 .navbar {
     margin-bottom: 0;
     // override default bootstrap value
-    min-height: 51px;
-    background-image: -webkit-linear-gradient(left, #103551, #3a5a6f, #66818e, #96a9af, #cad2d3);
-    background-image: -o-linear-gradient(left, #103551, #3a5a6f, #66818e, #96a9af, #cad2d3);
-    background-image: linear-gradient(to right, #103551, #3a5a6f, #66818e, #96a9af, #cad2d3);
+    height: 51px;
+    background-color: $col-bw-3;
+
+    //
+    // #navbarNav {
+    //   height: 100%;
+    // }
+
+    .logoholder {
+      float: left;
+      position: relative;
+      height: 51px;
+      width: 51px;
+      background-color: $col-bg-d3d;
+    }
+
 
     #logoimage {
         float: left;
@@ -122,7 +136,19 @@ export default {
     &.navbar-default .active > a:hover {
         background: $col-bw-4;
     }
+    .nav-item.active {
+      background-color: $col-bw-5;
+      color: white;
+    }
 
+    #navbarNav, .navbar-nav {
+      height: 51px;
+    }
+    .nav-item {
+      height: 100%;
+      display: flex;
+      color: black;
+    }
     .navbar-brand {
         font-size: 1em;
     }
@@ -138,7 +164,6 @@ export default {
             color: $col-bw-4;
         }
     }
-
     .navbar-inverse .navbar-nav > li > a {
         color: $col-bw-6;
     }

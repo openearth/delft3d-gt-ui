@@ -1,32 +1,29 @@
 <template>
-<div id="template-scenario-card">
-  <div class="scenario-card" @click.stop="collapse">
-
-    <div class="panel panel-default" v-if="hasModels">
-
-      <div class="panel-heading panel-heading-scenario">
-
+<div id="scenario-card">
+  <div class="card mb-3" v-if="hasModels">
+      <div class="card-header" data-toggle="collapse" :data-target="`#collapse-${scenario.id}`">
         <div class="row">
-
           <div class="col-xs-8 col-sm-5">
             <i class="fa fa-folder-o" aria-hidden="true" title="scenario"></i>
             &nbsp;{{scenario.data.name}}
           </div>
-
           <div class="col-xs-4 col-sm-4 text-right m-auto">
             <div class="btn-group">
-              <button type="button" class="btn btn-default btn-xs" @click.stop="clone" title="Clone scenario">
+              <button type="button" class="btn btn-default btn-xs" @click="clone" title="Clone scenario">
                 <i class="fa fa-clone" aria-hidden="true"></i>
               </button>
-              <button type="button" class="btn btn-default btn-xs" @click.stop="openDeleteDialog" title="Delete scenario">
+              <button type="button" class="btn btn-default btn-xs" @click.stop="showDeleteDialog = true" title="Delete scenario">
                 <i class="fa fa-trash" aria-hidden="true"></i>
               </button>
             </div>
           </div>
-
           <div class="col-xs-11 col-sm-2 text-center no-padding m-auto">
             <div class="progress">
-              <div v-for="(status, index) in modelStatuses" class="progress-bar" :key="index" :style="{ width: status.width + '%'}" :class="[
+              <div v-for="(status, index) in modelStatuses"
+                class="progress-bar"
+                :key="index"
+                :style="{ width: status.width + '%'}"
+                :class="[
                          (status.state == 'Finished') ? 'bg-success' : '',
                          (status.state == 'Idle: waiting for user input') ? 'bg-warning' : '',
                          (status.state == 'Running simulation') ? 'bg-striped active' : '',
@@ -43,36 +40,26 @@
           </div>
         </div>
       </div>
-      <div class="collapse" :id="'collapse-' + scenario.id">
-        <div class="panel-body panel-body-scenario">
-          <div class="row">
-            <div v-if="scenario.models && scenario.models.length > 0">
-              <ul class="list-group" data-toggle="items">
-                <model-card v-for="(model, index) in scenario.models" :model="model" :key="index">
-                </model-card>
-              </ul>
-            </div>
-            <div v-else>
-              <div class="message">
+        <div class="card-body collapse p-0" :id="`collapse-${scenario.id}`">
+          <div class="row p-0 m-0">
+            <ul class="list-group" data-toggle="items" v-if="scenario.models && scenario.models.length > 0">
+              <model-card v-for="(model, index) in scenario.models" :select-all="changeScenarioSelected" :model="model" :key="index" :multipleModels="true" class="model-card-multiple">
+              </model-card>
+            </ul>
+              <div class="message" v-else>
                 This scenario is empty
               </div>
-            </div>
           </div>
         </div>
-      </div>
-      <confirm-dialog
-        @confirm="deleteScenario"
-        @cancel="showDeleteDialog = false"
-        :dialog-id="`delete-scenario-${scenario.id}`"
-        confirm-button-title="Delete">
-        <template slot="title">
-          Delete scenario
-        </template>
-        <template slot="body">
-          <p>Are you sure you want to remove this scenario and all associated models?</p>
-        </template>
-      </confirm-dialog>
-    </div>
+        <!-- Confirm dialog for control checks -->
+        <confirm-dialog v-if="showDeleteDialog" confirm-button-title="Delete" :dialog-id="`delete-scenario-${scenario.id}`" @confirm="deleteScenario">
+          <template slot="title">
+            Delete scenario
+          </template>
+          <template slot="body">
+            <p>Are you sure you want to remove this scenario and all associated models?</p>
+          </template>
+        </confirm-dialog>
   </div>
 </div>
 </template>
@@ -84,14 +71,10 @@ import store from '../store'
 import ModelCard from './ModelCard'
 import ConfirmDialog from './ConfirmDialog'
 import router from '../router.js'
-import {
-  bus
-} from '@/event-bus.js'
 
 export default {
   store,
   router,
-  template: '#template-scenario-card',
   props: {
     scenario: {
       type: Object,
@@ -104,7 +87,8 @@ export default {
   },
   data () {
     return {
-      showDeleteDialog: false
+      showDeleteDialog: false,
+      changeScenarioSelected: false
     }
   },
   computed: {
@@ -129,11 +113,7 @@ export default {
         }
       },
       set (val) {
-        if (val) {
-          bus.$emit('select-all')
-        } else {
-          bus.$emit('unselect-all')
-        }
+        this.changeScenarioSelected = val
       }
     },
     modelStatuses () {
@@ -210,20 +190,10 @@ export default {
           'name': _.get(this.scenario.data, 'name')
         }
       }
-
-      router.go(req)
-    },
-    collapse (e) {
-      e.stopPropagation()
-      $(`#collapse-${this.scenario.id}`).collapse('toggle')
-    },
-    openDeleteDialog (e) {
-      e.stopPropagation()
-      this.showDeleteDialog = true
+      router.push(req)
     },
     deleteScenario () {
       // Get a confirm dialog
-      console.log('delete scenario', this.scenario, store)
       store.dispatch('deleteScenario', this.scenario)
       this.showDeleteDialog = false
     }
@@ -233,63 +203,14 @@ export default {
 
 <style lang="scss">
 @import '../assets/variables.scss';
+.model-card-multiple {
+    border: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
 
-.scenario-card {
-    cursor: pointer;
-    user-select: none;
-
-    li {
-        padding: 0;
-    }
-
-    [class^='col-'] {
-        padding: 5px;
-    }
-
-    .col-sm-1:last-child {
-        padding-left: 0;
-    }
-
-    .list-group {
-        border: 0;
-        margin-bottom: 0;
-    }
-
-    .list-group-item {
-        border: 0;
-        border-top: 1px solid $col-bw-2;
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
-    }
-
-    .message {
-        padding: $padding;
-    }
-
-    .panel-heading-scenario {
-        background: $col-bw-1;
-    }
-
-    .panel-body-scenario {
-        padding: 0;
-    }
-
-    .progress {
-        margin-bottom: 0;
-    }
-
-    .row {
-        margin: 0;
-        padding-bottom: 0;
-    }
-
-    div {
-        [class^='col-'] {
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-    }
-
+.list-group {
+  width: 100%;
 }
 
 @media (min-width: $screen-xs-sm) {

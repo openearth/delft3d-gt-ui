@@ -15,7 +15,7 @@
         </div>
         <div class="col-sm-5 col-md-4 col-lg-4 bordered">
           <div class="btn-text">Database (search results)</div>
-          <model-control-menu :items="items" :models="models"></model-control-menu>
+          <model-control-menu :items="items" :models="models" :collapseShow="collapseScenariosShow" @expand-scenarios="expandScenarios"></model-control-menu>
         </div>
         <div class="col-sm-5 col-md-6 col-lg-6">
           <div class="btn-text">Model details</div>
@@ -31,33 +31,14 @@
       <div class="row full-height">
 
         <div class="col-sm-2 column full-height bordered scrollable">
-          <!-- <div class="visible-xs-block visible-xs-block-first">
-            <span class="btn-text">Search</span>
-            <div class="btn-group pull-right">
-              <button class="btn btn-default" @click.stop="expandSearch">
-                <i class="fa" :class="[(collapseSearchShow)? 'fa-arrow-down' : 'fa-arrow-up']" aria-hidden="true"></i>
-              </button>
-              <button type="button" class="btn btn-default" id="btn-reset-search-form" v-on:click="resetFields">Reset</button>
-            </div>
-          </div> -->
-          <search-details></search-details>
+          <search-details ></search-details>
         </div>
 
         <div class="col-sm-5 col-md-4 col-lg-4 column full-height bordered scrollable">
-          <!-- <div class="visible-xs-block">
-            <span class="btn-text">Database</span>
-            <model-control-menu :items="items" :models="models"></model-control-menu>
-          </div> -->
           <search-list :items="items" :models="models" ref="search-list"></search-list>
         </div>
 
         <div class="col-sm-5 col-md-6 col-lg-6 column full-height scrollable">
-          <!-- <div class="visible-xs-block">
-            <span class="btn-text">Model details</span>
-            <button class="btn btn-default pull-right" @click.stop="expandDetails">
-              <i class="fa" :class="[(collapseDetailsShow)? 'fa-arrow-down' : 'fa-arrow-up']" aria-hidden="true"></i>
-            </button>
-          </div> -->
           <model-details></model-details>
         </div>
 
@@ -81,11 +62,12 @@ import {
 export default {
   store,
   template: '#template-search-columns',
-  data: function () {
+  data () {
     return {
       // items that were found
       collapseDetailsShow: true,
       collapseSearchShow: true,
+      collapseScenariosShow: true,
       items: [],
       models: []
     }
@@ -102,7 +84,7 @@ export default {
     bus.$emit('updateSearch')
 
     // TODO, consistent naming
-    bus.$on('items-found', function (items, models) {
+    bus.$on('items-found', (items, models) => {
       this.set('items', items)
       this.set('models', models)
     })
@@ -111,14 +93,15 @@ export default {
   computed: {
     checkedBoxes: {
       cache: false,
-      get: function () {
+      get () {
         return 1
       }
     }
   },
 
   methods: {
-    expandDetails: function () {
+    expandDetails () {
+      console.log('expanding details')
       if (this.collapseDetailsShow) {
         $('.model-details .collapse').collapse('show')
       } else {
@@ -126,7 +109,7 @@ export default {
       }
       this.collapseDetailsShow = !this.collapseDetailsShow
     },
-    expandSearch: function () {
+    expandSearch () {
       if (this.collapseSearchShow) {
         $('.search-details .collapse').collapse('show')
       } else {
@@ -134,9 +117,18 @@ export default {
       }
       this.collapseSearchShow = !this.collapseSearchShow
     },
+    expandScenarios () {
+      console.log('expanding scnearios', this.collapseScenariosShow)
+      if (this.collapseScenariosShow) {
+        $('.search-list .collapse').collapse('show')
+      } else {
+        $('.search-list .collapse').collapse('hide')
+      }
+      this.collapseScenariosShow = !this.collapseScenariosShow
+    },
 
     // Reset all input fields.
-    resetFields: function () {
+    resetFields () {
       // Empty all fields:
       $(".search-details input[type='text'], .search-details input[type=date]").val('')
 
@@ -146,7 +138,7 @@ export default {
       // Deselect all bootstrap select pickers
       $('.search-details .select-picker').selectpicker('deselectAll')
 
-      $.each(sliders, function (key, slider) {
+      $.each(sliders, (key, slider) => {
         var irs = $(slider).data('ionRangeSlider')
 
         // Reset /from & to to min/max.
