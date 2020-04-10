@@ -1,3 +1,5 @@
+const webpack = require('webpack')
+
 const argv = require('yargs').argv
 
 const apiServer = argv.apiServer || 'http://dl-ng004.xtr.deltares.nl'
@@ -15,6 +17,29 @@ module.exports = {
       '^/api/v1/*': {
         target: `${apiServer}`
       }
+    }
+  },
+  // Needed for the making jquery global for tagsinput
+  configureWebpack: {
+    plugins: [
+      new webpack.ProvidePlugin({
+        $: 'jquery',
+        jQuery: 'jquery'
+      })
+    ],
+    module: {
+      rules: [{
+        test: require.resolve('jquery'),
+        use: [{
+          loader: 'expose-loader',
+          options: 'jQuery'
+        },
+        {
+          loader: 'expose-loader',
+          options: '$'
+        }
+        ]
+      }]
     }
   }
 }

@@ -36,7 +36,6 @@
 import {
   bus
 } from '@/event-bus.js'
-import store from '../store'
 
 export default {
   template: '#template-model-card',
@@ -73,7 +72,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 @import '../assets/variables.scss';
 
 .model-card {
@@ -87,6 +86,9 @@ export default {
     .label {
         float: right;
     }
+  .row {
+    margin-bottom: 0;
+  }
 
     // Normally use mb-2 bootstrap css, but needed to remove this from last child
     :not(:last-child.card-body) {

@@ -237,11 +237,14 @@
 
 <script>
 import _ from 'lodash'
+import $ from 'jquery'
+
 import store from '../store'
 import {
   bus
 } from '@/event-bus.js'
 import MapComponent from '../components/MapComponent'
+// eslint-disable-next-line
 import { extend, validate } from 'vee-validate'
 import { required } from 'vee-validate/dist/rules'
 
@@ -438,8 +441,6 @@ export default {
     },
     validatorsToString (obj) {
       const entries = Object.entries(obj)
-      const valString = ''
-
       const entMap = entries.map((ent) => {
         return `${ent[0]}:${ent[1]}`
       })
