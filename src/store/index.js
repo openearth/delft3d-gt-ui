@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-
+import $ from 'jquery'
 import _ from 'lodash'
 
 Vue.use(Vuex)
@@ -164,16 +164,6 @@ export default new Vuex.Store({
       _.each(this.state.models, (model) => {
         var container = _.find(this.state.modelContainers, ['id', model.id])
         if (container === undefined) {
-
-          let statusLevel = 'info'
-
-          if (model.state === 'Finished') {
-            statusLevel = 'success'
-          } else if (model.state === 'Idle: waiting for user input') {
-            statusLevel = 'warning'
-          } else if (model.state === 'Running simulation') {
-            statusLevel = 'striped active'
-          }
           // create new container
           container = {
             id: model.id,
@@ -188,6 +178,16 @@ export default new Vuex.Store({
           // update model in container
           container.data = model
         }
+        let statusLevel = 'info'
+
+        if (model.state === 'Finished') {
+          statusLevel = 'success'
+        } else if (model.state === 'Idle: waiting for user input') {
+          statusLevel = 'warning'
+        } else if (model.state === 'Running simulation') {
+          statusLevel = 'striped active'
+        }
+        container.statusLevel = statusLevel
       })
 
       // remove containers that have no associated model
@@ -361,7 +361,6 @@ export default new Vuex.Store({
         if (_.indexOf(scenarioContainer.models, this.state.activeModelContainer) > -1) {
           this.state.activeModelContainer = undefined
         }
-
         // TODO: find better solution - now we do this to trigger an update on the front-end (vm.$forceUpdate() is added in Vue 2.0)
         _.each(this.state.modelContainers, el => {
           el.selected = false
@@ -397,7 +396,7 @@ export default new Vuex.Store({
 
     resetSelectedModels (state) {
       return Promise.all(
-        this.getters.getSelectedModels.map(model => this.dispatch('resetModel', {modelContainer: model}))
+        this.getters.getSelectedModels.map(model => this.dispatch('resetModel', { modelContainer: model }))
       )
     },
 
@@ -415,14 +414,14 @@ export default new Vuex.Store({
 
     redoSelectedModels (state) {
       return Promise.all(
-        this.getters.getSelectedModels.map(model => this.dispatch('redoModel', {modelContainer: model}))
+        this.getters.getSelectedModels.map(model => this.dispatch('redoModel', { modelContainer: model }))
       )
     },
 
     deleteSelectedModels (state) {
       console.log(this.getters.getSelectedModels, this, this.getters)
       return Promise.all(
-        this.getters.getSelectedModels.map(model => this.dispatch('deleteModel', {modelContainer: model}))
+        this.getters.getSelectedModels.map(model => this.dispatch('deleteModel', { modelContainer: model }))
       )
     },
 
