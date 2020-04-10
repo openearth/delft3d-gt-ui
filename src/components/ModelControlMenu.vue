@@ -310,6 +310,7 @@ export default {
   }
 
   .dropdown-menu-checkbox {
+    min-width: 300px;
     cursor: pointer;
 
     &:hover {
