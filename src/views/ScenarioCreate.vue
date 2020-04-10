@@ -248,11 +248,11 @@ import { required } from 'vee-validate/dist/rules'
 extend('required', {
   ...required,
   message: 'This field is required'
-});
+})
 
 extend('noEmptyArray', {
-  validate(value) {
-    if (typeof value === "object") {
+  validate (value) {
+    if (typeof value === 'object') {
       return value.length > 0
     } else {
       return true
@@ -261,12 +261,12 @@ extend('noEmptyArray', {
   message: 'Field is required.'
 })
 extend('min', {
-  validate(value, args) {
-    if(typeof value === 'number') {
+  validate (value, args) {
+    if (typeof value === 'number') {
       return parseFloat(value) >= parseFloat(args.min_value)
     }
     let allVars = value
-    if (typeof value === "string") {
+    if (typeof value === 'string') {
       allVars = value.split(',')
     }
     const allBools = allVars.map(obj => {
@@ -279,19 +279,18 @@ extend('min', {
 })
 
 extend('max', {
-  validate(value, args) {
-    if(typeof value === 'number') {
+  validate (value, args) {
+    if (typeof value === 'number') {
       return parseFloat(value) <= parseFloat(args.max_value)
     }
     let allVars = value
-    if (typeof value === "string") {
+    if (typeof value === 'string') {
       allVars = value.split(',')
     }
     const allBools = allVars.map(obj => {
       return parseFloat(obj) <= parseFloat(args.max_value)
     })
     return !allBools.includes(false)
-
   },
   params: ['max_value'],
   message: `Entered value is too high.`
@@ -321,7 +320,7 @@ const factorToArray = (variable) => {
 }
 
 export default {
-  name: "scenario-builder",
+  name: 'scenario-builder',
   store,
   data () {
     return {
@@ -347,7 +346,7 @@ export default {
   components: {
     MapComponent
   },
-  mounted() {
+  mounted () {
     // We force the template to be reloaded when this page is openend
     // Otherwise old values will stay in the form, and the validator is not reactivated.
     // The data function changes the function if needed.
@@ -371,7 +370,7 @@ export default {
 
     totalRuns: {
       cache: false,
-      get() {
+      get () {
         var totalRuns = 1
 
         // lookup all variables
@@ -409,25 +408,25 @@ export default {
     },
     // get the bounding box from the map from the store
     bbox: {
-      get() {
+      get () {
         return store.state.bbox
       },
-      set(bbox) {
+      set (bbox) {
         store.dispatch('setbbox', bbox)
       }
     },
     // state for when a valid bounding box is selected
     validbbox: {
-      get() {
+      get () {
         return store.state.validbbox
       },
-      set(validbbox) {
+      set (validbbox) {
         store.dispatch('setbboxvalidation', validbbox)
       }
     }
   },
   methods: {
-    noErrors() {
+    noErrors () {
       if (this.$refs.validator) {
         const allVars = this.$refs.validator.map(val => {
           return val.errors.length === 0
@@ -452,7 +451,7 @@ export default {
       })
     },
 
-    fetchTemplates() {
+    fetchTemplates () {
       const url = '/api/v1/templates/'
       return fetch(url)
         .then(res => res.json())
@@ -462,7 +461,7 @@ export default {
       return _.includes(['numeric', 'text', 'semver'], variable.type) || variable.factor
     },
     // Moved so that we can test it better.
-    fetchTemplateList() {
+    fetchTemplateList () {
       this.fetchTemplates()
         .then((templates) => {
           this.availableTemplates = _.sortBy(templates, ['name'])
@@ -490,7 +489,7 @@ export default {
         })
     },
 
-    selectTemplate(template) {
+    selectTemplate (template) {
       if (template === null) {
         return
       }
@@ -515,30 +514,28 @@ export default {
       })
     },
 
-    updateAfterTick() {
+    updateAfterTick () {
       // initiate the multi-select input fields
       var pickers = $('.selectpicker')
       if (pickers.selectpicker !== undefined) {
         pickers.selectpicker('refresh')
       }
-        $('.input-field-tags').each((i, el) => {
-          $(el).tagsinput()
-          $(el).change(this.updateTagLabel)
-          $(el).change((val) => {
-            this.scenarioConfig.sections.forEach(sec => {
-              const variable = sec.variables.find(vari => vari.name === val.target.name)
-              if( ! variable ) {
-                return
-              }
-              variable.value = $(el).tagsinput('items')
-            })
-
-            this.$refs.validator.forEach(val => val.validate())
+      $('.input-field-tags').each((i, el) => {
+        $(el).tagsinput()
+        $(el).change(this.updateTagLabel)
+        $(el).change((val) => {
+          this.scenarioConfig.sections.forEach(sec => {
+            const variable = sec.variables.find(vari => vari.name === val.target.name)
+            if (!variable) {
+              return
+            }
+            variable.value = $(el).tagsinput('items')
           })
+
+          this.$refs.validator.forEach(val => val.validate())
         })
-        this.updateTagLabel()
-
-
+      })
+      this.updateTagLabel()
     },
 
     // Return a unique id for the variable that is validated.
@@ -595,8 +592,8 @@ export default {
       }
     },
 
-    submitScenario() {
-      if (this.noErrors() ) {
+    submitScenario () {
+      if (this.noErrors()) {
         return
       }
       var parameters = {}
@@ -664,7 +661,7 @@ export default {
     },
 
     // We have to prepare the scenario config
-    prepareScenarioConfig(data) {
+    prepareScenarioConfig (data) {
       // create a deep copy so we don't change the template
       var scenario = _.cloneDeep(data)
 
@@ -687,11 +684,11 @@ export default {
       return scenario
     },
 
-    splitString(string) {
+    splitString (string) {
       return _.split(string, ',')
     },
 
-    getVar(id) {
+    getVar (id) {
       return _.first(
         _.filter(
           _.flattenDeep(

@@ -28,7 +28,6 @@ export default {
 <style lang="scss">
 @import '../assets/variables.scss';
 
-
 .user {
   .dropdown-item {
     width: 160px;
@@ -55,7 +54,6 @@ export default {
       width: 51px;
       background-color: $col-bg-d3d;
     }
-
 
     #logoimage {
         float: left;

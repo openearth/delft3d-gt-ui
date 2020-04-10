@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import $ from 'jquery'
 import SearchDetails from '../components/SearchDetails'
 import SearchList from '../components/SearchList'
 import ModelDetails from './ModelDetails'
