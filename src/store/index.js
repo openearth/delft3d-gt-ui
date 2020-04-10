@@ -164,16 +164,20 @@ export default new Vuex.Store({
     updateModelContainers (context) {
       _.each(this.state.models, (model) => {
         var container = _.find(this.state.modelContainers, ['id', model.id])
-        if (container === undefined) {
-          let statusLevel = 'info'
 
-          if (model.state === 'Finished') {
-            statusLevel = 'success'
-          } else if (model.state === 'Idle: waiting for user input') {
-            statusLevel = 'warning'
-          } else if (model.state === 'Running simulation') {
-            statusLevel = 'striped active'
-          }
+        // update css classes as indication of statuslevel
+        let statusLevel = 'info'
+
+        if (model.state === 'Finished') {
+          statusLevel = 'success'
+        } else if (model.state === 'Idle: waiting for user input') {
+          statusLevel = 'warning'
+        } else if (model.state === 'Running simulation') {
+          statusLevel = 'striped active'
+        } else if (model.state === 'Stopped') {
+          statusLevel = 'secondary'
+        }
+        if (container === undefined) {
           // create new container
           container = {
             id: model.id,
@@ -186,6 +190,7 @@ export default new Vuex.Store({
           this.state.modelContainers.push(container)
         } else {
           // update model in container
+          container.statusLevel = statusLevel
           container.data = model
         }
       })
