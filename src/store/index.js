@@ -170,13 +170,11 @@ export default new Vuex.Store({
             active: false,
             selected: false,
             data: model,
-            state: model.state,
-            statusLevel: statusLevel
+            state: model.state
           }
           this.state.modelContainers.push(container)
         } else {
           // update model in container
-          container.statusLevel = statusLevel
           container.data = model
         }
         let statusLevel = 'info'

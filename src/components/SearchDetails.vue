@@ -62,7 +62,7 @@
           </div>
           <div class="card-body collapse" id="template-versions">
             <div class="form-group">
-              <select id="outdated" title="Choose updates..." class="select-picker form-control" data-container="body" v-model="selectedOutdated" multiple>
+              <select id="outdated" title="Choose updates..." class="selectpicker form-control" data-container="body" v-model="selectedOutdated" multiple>
                 <option data-content="No updates available">false</option>
                 <option data-content="Updates available">true</option>
               </select>
@@ -207,6 +207,7 @@ import store from '../store'
 import $ from 'jquery'
 import _ from 'lodash'
 import moment from 'moment'
+import ionRangeSlider from 'ion-rangeslider'
 
 import {
   fetchSearchTemplate
@@ -448,11 +449,6 @@ export default {
           }
         })
       }
-      /* eslint-enable camelcase */
-
-      // slider.forEach(slide => {
-      //   slide.on('slideStop', this.search)
-      // }
 
       // Add event handler that allows one to use the X next to inputs to clear the input.
       $('.button-empty-input-field').on('click', () => {
