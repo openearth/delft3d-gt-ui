@@ -66,7 +66,7 @@
 
       <li :class="{ disabled: numSelectedModels === 0 || (option.onlyFinished && !someSelectedModelsAreFinished()) }" v-for="(option, key) in downloadOptions" :key="key">
         <div class="dropdown-menu-checkbox" @click.self.stop.prevent="toggle(key)">
-          <input type="checkbox" class="downloadoption"  :value="key" v-model="downloadOptions['key']" :disabled="numSelectedModels === 0 || (option.onlyFinished && !someSelectedModelsAreFinished())"> {{ option.verbose }}
+          <input type="checkbox" class="downloadoption"  :value="downloadOptions[key].active" v-model="downloadOptions[key].active" :disabled="numSelectedModels === 0 || (option.onlyFinished && !someSelectedModelsAreFinished())"> {{ option.verbose }}
         </div>
       </li>
 
@@ -214,69 +214,6 @@ export default {
       }
       return false
     },
-    // startSelectedModels () {
-    //   if (this.someSelectedModelsArePublished()) {
-    //     return
-    //   }
-    //   store.dispatch('startSelectedModels')
-    // },
-    //
-    // stopSelectedModels () {
-    //   if (this.someSelectedModelsArePublished()) {
-    //     return
-    //   }
-    //
-    //   // Get a confirm dialog
-    //   this.deleteDialog = getDialog(this, 'confirm-dialog', 'stop-runs')
-    //
-    //   this.deleteDialog.onConfirm = () => {
-    //     store.dispatch('stopSelectedModels')
-    //
-    //     this.deleteDialog.hide()
-    //   }
-    //   this.deleteDialog.showAlert(false)
-    //
-    //   // Show the dialog:
-    //   this.deleteDialog.show()
-    // },
-
-    // deleteSelectedModels () {
-    //   if (this.someSelectedModelsArePublished()) {
-    //     return
-    //   }
-    //
-    //   // Get a confirm dialog
-    //   this.deleteDialog = getDialog(this, 'confirm-dialog', 'delete-runs')
-    //
-    //   this.deleteDialog.onConfirm = () => {
-    //     store.dispatch('deleteSelectedModels')
-    //     this.deleteDialog.hide()
-    //   }
-    //   this.deleteDialog.showAlert(false)
-    //
-    //   // Show the dialog:
-    //   this.deleteDialog.show()
-    // },
-    //
-    // shareSelectedModels (domain) {
-    //   if (!this.someSelectedModelsAreFinished || this.someSelectedModelsAreAlreadyPublished(domain)) {
-    //     return
-    //   }
-    //
-    //   // Get a confirm dialog
-    //   this.shareDialog = getDialog(this, 'confirm-dialog', 'share-runs')
-    //
-    //   this.shareDialog.onConfirm = () => {
-    //     store.dispatch('shareSelectedModels', domain)
-    //
-    //     this.shareDialog.hide()
-    //   }
-    //   this.shareDialog.showAlert(false)
-    //
-    //   // Show the dialog:
-    //   this.shareDialog.show()
-    // },
-
     downloadSelectedModels () {
       if (this.numSelectedModels === 0 || !this.anyDownloadsSelected) {
         return // nothing to do
