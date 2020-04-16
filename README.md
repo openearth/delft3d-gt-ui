@@ -17,11 +17,6 @@ $ npm run serve -- --apiServer=http://10.0.1.2
 $ npm run build
 ```
 
-### Run your tests
-```
-$ npm run test
-```
-
 ### Lints and fixes files
 ```
 $ npm run lint
