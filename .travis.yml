@@ -1,19 +1,15 @@
 language: node_js
-
 node_js:
 - 12
-
 before_script:
-  - npm install
-
+- npm install
 script: npm run test:unit && npm run lint && npm run build
-
 before_deploy:
 - zip -r delft3d-gt-ui.zip dist/*
 deploy:
   provider: releases
   api_key:
-    secure: MWHXB3wxvM1q+nTbZvP85/oxO2C6ueXnYK7sNUtaXuFm9WOIbNUA9u2wENszTxgT4dL7FIiA9Xk8EjIiYpZyYHg8Ozrwg8MyYuSrtrqQy10DZaouSOnnODRUyBNO1hxmfpYxhmFSOuomBJrNM87As7cOh35TDq/c06+sWxh7j6ptCso4TKIcDjjd708wjknItHkCp+ntHajUvG1uGUEWWqrsrA8kmQpQ/dWIpW27P26QmfuI8/oKLW/OGQRI2l00uxv8phkXO3Am6G3QXTyfO14z1yqOF/08Fa8Fe97OMv8pJZEYRpOozkIesVRnUckftthMQOaEuFWczT9x3mF/tzDNhKGeAzPgl9Sm5ThdUNG2MdRVv3paOJyq+0Kzb/RcrqT+ZaQLPjH9Oi3IdSGtqdwg/g+4fny3jjK43puOQ/Avsf0C2fPOBuNJWjKz9NvucTTjNlduo4zlVenqL1O0+9JvGbpM5kmBZ9MYy1vxaoXikONuvzfsqx/iZi8U3m9PvCfqcWqiFMPEXUbZ8m+kBceuDC7cwxpWrQQ7vRq9hpGz8a0YcDZ4V86Q/JZqfrfYhNmQUJSJum327He87a7k3KlqEr5n6/sXoWs7UzVRsxRQ/VBWnWACBywHR62sQIl6dhtPLsy23sZB42lQr986FIus1MV9HE3VLfTFiHdxaeo=
+    secure: HCUCLyqJCMZPyeZM+BZSniQM834pEE62znyAEw8C8sgOaCwajrNmdKsjw8axOpzXUyw+LhIDdhXQ1k0OXp4bZlUOUnIvFBPys20WhHcFOIMpY0Lz8XyZNoyTDGikaXOsP8/xOtCIhts++foPxmPVbHEkbRVGyOnIINJ/ioNgGClTpwg6BoyXAOs4U+tJqfOvvERMVUhLPPcMQ22QI2Y2jr9uxwlM9yGb3p+kaTMwaFdCImTLazr7zGQK057Ymk2U7HHJMwdncPb3n03WZgvV+DkWiAIaps1b6nCZvUJMQPeNkDFSZoZ/X9sr0AwqjbCGet4ATL02jc1pQiURz02QdZ+eOMXxfKeNaltou35t/yJkVS/4j4cnndsYiW9NocU11LZCnH7cLTmx08ow4rahzhURoC1gKZOZB7p+auF1VNyA3K1Ezh26AoQdoYT0DI9gOb25sS57fXh/om818wYjVfrBQUA3Dte6iFjTNLlC2iM7GKTDzruIxKjta7UuBPeLD3baTvzCRjrqZSDpAFHbjQ16FBC9AXVDfpmHUQeIsBDT1ruQX90oPhwyh3wLlogwPPg36/Syt3zehkT4fxiTdu3VUxHRGoAd5c0c9oO13w9LoYJ4q6s90o4/xXcAdv9eIOyJlCKzgFT1EBb4MvzAFMK4GHppduxdtddxs0WfUmE=
   file: delft3d-gt-ui.zip
   skip_cleanup: true
   overwrite: true
@@ -21,3 +17,4 @@ deploy:
     tags: true
     repo: openearth/delft3d-gt-ui
     branch: develop
+    
