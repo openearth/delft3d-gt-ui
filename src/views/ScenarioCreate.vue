@@ -363,7 +363,7 @@ import {
 import MapComponent from '../components/MapComponent'
 
 // a separate function that we can test.
-function factorToArray (variable) {
+const factorToArray = (variable) => {
   if (!_.get(variable, 'factor')) {
     // if variable is not a factor return the value
     return variable.value
@@ -388,7 +388,7 @@ function factorToArray (variable) {
 export default {
   store,
   template: '#template-scenario-builder',
-  data: function () {
+  data () {
     return {
       availableTemplates: [],
 
@@ -421,7 +421,6 @@ export default {
     this.currentSelectedId = null
     this.template = null
     this.fetchTemplateList()
-    console.log('route: sceaneriocreate, data')
 
     // if we have a template in the request, select that one
     if (_.has(this, '$route.query.template')) {
@@ -436,7 +435,7 @@ export default {
   },
 
   validators: { // `numeric` and `url` custom validator is local registration
-    max: function (val, rule) {
+    max: (val, rule) => {
       // create a value object and split up the value
       var vals = factorToArray({
         factor: true,
@@ -444,13 +443,13 @@ export default {
         type: 'numeric'
       })
       // check if any value is > rule
-      var valid = _.every(vals, function (x) {
+      var valid = _.every(vals, (x) => {
         return x <= rule
       })
 
       return valid
     },
-    min: function (val, rule) {
+    min: (val, rule) => {
       var vals = factorToArray({
         factor: true,
         value: val,
@@ -458,7 +457,7 @@ export default {
       })
 
       // check if any value is > rule
-      var valid = _.every(vals, function (x) {
+      var valid = _.every(vals, (x) => {
         return x >= rule
       })
 
@@ -468,7 +467,7 @@ export default {
   computed: {
     totalRuns: {
       cache: false,
-      get: function () {
+      get () {
         var totalRuns = 1
 
         // lookup all variables
@@ -507,7 +506,7 @@ export default {
 
     validForm: {
       cache: false,
-      get: function () {
+      get () {
         if (this.$validation) {
           return this.$validation.valid
         }
@@ -535,11 +534,11 @@ export default {
   },
   methods: {
     // check if variable should generate an input element
-    isInput: function (variable) {
+    isInput (variable) {
       return _.includes(['numeric', 'text', 'semver'], variable.type) || variable.factor
     },
     // Check is submit button should be disabled
-    disableSubmit: function () {
+    disableSubmit () {
       if (this.template.name === 'GTSM world template') {
         console.log('disablesubmit GTSM world template', (!(this.validForm && this.validbbox)))
         return (!(this.validForm && this.validbbox))
@@ -549,7 +548,7 @@ export default {
       }
     },
     // Moved so that we can test it better.
-    fetchTemplateList: function () {
+    fetchTemplateList () {
       fetchTemplates()
         .then((templates) => {
           this.availableTemplates = _.sortBy(templates, ['name'])
@@ -571,13 +570,13 @@ export default {
           this.dataLoaded = true
 
           // Initialize the tooltips: We do this after the DOM update.
-          this.$nextTick(function () {
+          this.$nextTick(() => {
             this.updateAfterTick()
           })
         })
     },
 
-    selectTemplate: function (template) {
+    selectTemplate (template) {
       if (template === null) {
         return
       }
@@ -591,7 +590,6 @@ export default {
 
       // First set data, then the template. Order is important!
       this.scenarioConfig = this.prepareScenarioConfig(template)
-      console.log('scenarioConfig', this.scenarioConfig)
 
       this.updateWithQueryParameters()
 
@@ -599,12 +597,12 @@ export default {
       this.template = template
 
       // Initialize the tooltips: We do this after the DOM update.
-      this.$nextTick(function () {
+      this.$nextTick(() => {
         this.updateAfterTick()
       })
     },
 
-    updateAfterTick: function () {
+    updateAfterTick () {
       // initiate the multi-select input fields
       var pickers = $('.select-picker')
 
@@ -620,7 +618,7 @@ export default {
         })
 
         // register event for closing tooltips when clicking anywhere else
-        $('html').click(function (evt) {
+        $('html').click((evt) => {
           // clicking the tooltip element also triggers a click event on accompanying input or select elements, hence the additional tagName check
           if (evt.target.getAttribute('data-toggle') === null && evt.target.tagName !== 'INPUT' && evt.target.tagName !== 'SELECT') {
             $("[data-toggle='tooltip']").tooltip('hide')
@@ -645,13 +643,11 @@ export default {
     // Return a unique id for the variable that is validated.
     // When selecting another template, the validator cannot deal
     // with variable with the same name.
-    getId: function (variable) {
-      console.log('getid', variable, variable.name, variable.default, variable.validators)
+    getId (variable) {
       return this.scenarioConfig.id + ',' + variable.id
     },
 
-    updateWithQueryParameters: function () {
-      console.log('updateWithQueryParameters')
+    updateWithQueryParameters () {
       if (_.has(this, '$route.query.parameters')) {
         // get parameters from query
         var parameters = JSON.parse(this.$route.query.parameters)
@@ -666,7 +662,7 @@ export default {
       // loop over all variables in the filled in template
       _.each(
         variables,
-        function (variable) {
+        (variable) => {
           // does this template variable have a corresponding variable in the request parameters
           if (variable.validators.max) {
             variable.validators['max_value'] = variable.validators.max
@@ -690,7 +686,6 @@ export default {
           }
         }
       )
-      console.log('after', variables)
 
       // This is a bit ugly, but if we have a name, add (copy) to it and then use it.
       if (_.has(this, '$route.query.name') && _.has(this.scenarioConfig, 'name')) {
@@ -710,7 +705,7 @@ export default {
       }
     },
 
-    submitScenario: function () {
+    submitScenario () {
       if (!this.validForm) {
         return
       }
@@ -720,12 +715,12 @@ export default {
       var name = ''
 
       // map each variable in each section to parameters
-      _.forEach(this.scenarioConfig.sections, function (section) {
-        _.forEach(section.variables, function (variable) {
+      _.forEach(this.scenarioConfig.sections, (section) => {
+        _.forEach(section.variables, (variable) => {
           if (variable.id === 'name') {
             name = variable.value
           } else {
-            var valuearray = _.map(('' + variable.value).split(','), function (d) {
+            var valuearray = _.map(('' + variable.value).split(','), (d) => {
               // try and parse
               var parsed = parseFloat(d)
 
@@ -755,10 +750,9 @@ export default {
         'template': this.currentSelectedId,
         'parameters': JSON.stringify(parameters)
       }
-      console.log('submitScenario', JSON.stringify(parameters))
 
       store.dispatch('createScenario', postdata)
-        .then(function () {
+        .then(() => {
           // This is not practical, but the only way in vue? (using $parent)
           bus.$emit('show-alert', {
             message: 'Scenario submitted',
@@ -770,7 +764,7 @@ export default {
             params: {}
           })
         })
-        .catch(function () {
+        .catch(() => {
           // This is not practical, but the only way in vue? (using $parent)
           bus.$emit('show-alert', {
             message: 'Scenario could not be submitted',
@@ -781,7 +775,7 @@ export default {
     },
 
     // We have to prepare the scenario config
-    prepareScenarioConfig: function (data) {
+    prepareScenarioConfig (data) {
       // create a deep copy so we don't change the template
       var scenario = _.cloneDeep(data)
 
@@ -789,9 +783,9 @@ export default {
       var sections = scenario.sections
 
       // flatten variables
-      _.forEach(sections, function (section) {
+      _.forEach(sections, (section) => {
         // Loop through all category vars
-        _.forEach(section.variables, function (variable) {
+        _.forEach(section.variables, (variable) => {
           // Set Default value
           variable.value = _.get(variable, 'default')
           // Set factor to false
@@ -806,15 +800,15 @@ export default {
 
     // multiplytable methods
 
-    collapseToggle: function (e) {
+    collapseToggle (e) {
       $(e.target).parent('.multiplytable').children('.collapse').collapse('toggle')
     },
 
-    split: function (string) {
+    split (string) {
       return _.split(string, ',')
     },
 
-    getVar: function (id) {
+    getVar (id) {
       return _.first(
         _.filter(
           _.flattenDeep(
@@ -825,7 +819,7 @@ export default {
       )
     },
 
-    calcAbsBaseLevelChange: function (basinslope, percentage) {
+    calcAbsBaseLevelChange (basinslope, percentage) {
       // This method computes the absolute values of base level change (m), based on:
       // - the basin slope angle (rad)
       // - the relative base level change (%).
@@ -838,11 +832,11 @@ export default {
         ((4 + (10000 * Math.tan(basinslope / 180 * Math.PI))) * percentage / 100),
         2 // digit precision
       )
-    }
+    },
+    factorToArray
   }
 }
 </script>
-
 <style lang="scss">
 @import '../assets/variables.scss';
 .scenario-builder {
