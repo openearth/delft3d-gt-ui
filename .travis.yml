@@ -1,8 +1,20 @@
 language: node_js
-
 node_js:
-- node
-
-# including lint:babel is buggy (use strict errors)
-# lint:scss is not part of the test suite
-script: npm run test:unit
+- 12
+before_script:
+- npm install
+script: npm run test:unit && npm run lint && npm run build
+before_deploy:
+- zip -r delft3d-gt-ui.zip dist/*
+deploy:
+  provider: releases
+  api_key:
+    secure: HCUCLyqJCMZPyeZM+BZSniQM834pEE62znyAEw8C8sgOaCwajrNmdKsjw8axOpzXUyw+LhIDdhXQ1k0OXp4bZlUOUnIvFBPys20WhHcFOIMpY0Lz8XyZNoyTDGikaXOsP8/xOtCIhts++foPxmPVbHEkbRVGyOnIINJ/ioNgGClTpwg6BoyXAOs4U+tJqfOvvERMVUhLPPcMQ22QI2Y2jr9uxwlM9yGb3p+kaTMwaFdCImTLazr7zGQK057Ymk2U7HHJMwdncPb3n03WZgvV+DkWiAIaps1b6nCZvUJMQPeNkDFSZoZ/X9sr0AwqjbCGet4ATL02jc1pQiURz02QdZ+eOMXxfKeNaltou35t/yJkVS/4j4cnndsYiW9NocU11LZCnH7cLTmx08ow4rahzhURoC1gKZOZB7p+auF1VNyA3K1Ezh26AoQdoYT0DI9gOb25sS57fXh/om818wYjVfrBQUA3Dte6iFjTNLlC2iM7GKTDzruIxKjta7UuBPeLD3baTvzCRjrqZSDpAFHbjQ16FBC9AXVDfpmHUQeIsBDT1ruQX90oPhwyh3wLlogwPPg36/Syt3zehkT4fxiTdu3VUxHRGoAd5c0c9oO13w9LoYJ4q6s90o4/xXcAdv9eIOyJlCKzgFT1EBb4MvzAFMK4GHppduxdtddxs0WfUmE=
+  file: delft3d-gt-ui.zip
+  skip_cleanup: true
+  overwrite: true
+  on:
+    tags: true
+    repo: openearth/delft3d-gt-ui
+    branch: develop
+    

@@ -54,6 +54,7 @@ import SearchList from '../components/SearchList'
 import ModelDetails from './ModelDetails'
 import ModelControlMenu from '../components/ModelControlMenu'
 import $ from 'jquery'
+
 import store from '../store'
 import {
   bus

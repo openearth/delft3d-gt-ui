@@ -1,5 +1,5 @@
-import $ from 'jquery'
 import _ from 'lodash'
+import $ from 'jquery'
 
 const fetchUsers = () => {
   return new Promise((resolve, reject) => {
