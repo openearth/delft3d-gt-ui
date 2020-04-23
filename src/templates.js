@@ -1,54 +1,54 @@
 import $ from 'jquery'
 import _ from 'lodash'
 
-function fetchUsers () {
-  return new Promise(function (resolve, reject) {
+const fetchUsers = () => {
+  return new Promise((resolve, reject) => {
     // Load test template data:
     $.getJSON('/api/v1/users/')
-      .done(function (data) {
+      .done((data) => {
         resolve(data)
       })
-      .fail(function (error) {
+      .fail((error) => {
         reject(error)
       })
   })
 }
 
-function fetchTemplates () {
-  return new Promise(function (resolve, reject) {
+const fetchTemplates = () => {
+  return new Promise((resolve, reject) => {
     // Load test template data:
     $.getJSON('/api/v1/templates/')
-      .done(function (data) {
+      .done((data) => {
         resolve(data)
       })
-      .fail(function (error) {
+      .fail((error) => {
         reject(error)
       })
   })
 }
 
-function fetchSearchTemplate () {
-  return new Promise(function (resolve, reject) {
+const fetchSearchTemplate = () => {
+  return new Promise((resolve, reject) => {
     // Load test template data:
     $.getJSON('/api/v1/searchforms/')
-      .done(function (data) {
+      .done((data) => {
         // return the one and only search template
         // the backend returns a list but there shall only be one
         resolve(_.first(data))
       })
-      .fail(function (error) {
+      .fail((error) => {
         reject(error)
       })
   })
 }
 
-function fetchVersions () {
-  return new Promise(function (resolve, reject) {
+const fetchVersions = () => {
+  return new Promise((resolve, reject) => {
     $.getJSON('/api/v1/scenes/versions/')
-      .done(function (data) {
+      .done((data) => {
         resolve(data)
       })
-      .fail(function (error) {
+      .fail((error) => {
         reject(error)
       })
   })
