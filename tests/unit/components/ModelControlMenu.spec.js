@@ -1,6 +1,6 @@
 import chai, { assert } from 'chai'
 import { shallowMount } from '@vue/test-utils'
-import ModelControlMenu from '@/components/ModelControlMenu.vue'
+import ModelControlMenu from '../../../components/ModelControlMenu.vue'
 import chaiAsPromised from 'chai-as-promised'
 
 import sinonChai from 'sinon-chai'

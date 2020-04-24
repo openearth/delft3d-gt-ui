@@ -5,7 +5,7 @@ import $ from 'jquery'
 import chai, {
   expect
 } from 'chai'
-import store from '@/store'
+import store from '../../../src/store'
 
 // setup chai
 chai.use(chaiAsPromised)

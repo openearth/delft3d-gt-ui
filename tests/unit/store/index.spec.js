@@ -3,7 +3,7 @@ import chaiAsPromised from 'chai-as-promised'
 import nock from 'nock'
 
 import sinonChai from 'sinon-chai'
-import store from '@/store'
+import store from '../../../src/store'
 
 // setup chai
 chai.use(chaiAsPromised)

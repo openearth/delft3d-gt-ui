@@ -3,7 +3,7 @@ import { shallowMount } from '@vue/test-utils'
 import chaiAsPromised from 'chai-as-promised'
 import sinonChai from 'sinon-chai'
 import nock from 'nock'
-import ScenarioCreate from '@/views/ScenarioCreate'
+import ScenarioCreate from '../../../views/ScenarioCreate'
 // setup chai
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
