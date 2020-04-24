@@ -1,6 +1,6 @@
 import chai, { assert } from 'chai'
 import { shallowMount } from '@vue/test-utils'
-import SearchDetails from '../../../components/SearchDetails.vue'
+import SearchDetails from '../../../src/components/SearchDetails.vue'
 import chaiAsPromised from 'chai-as-promised'
 
 import sinonChai from 'sinon-chai'
@@ -8,7 +8,7 @@ import sinon from 'sinon'
 import _ from 'lodash'
 import nock from 'nock'
 
-_.assign(global, require('@/templates.js'))
+_.assign(global, require('../../../templates.js'))
 
 // setup chai
 chai.use(chaiAsPromised)

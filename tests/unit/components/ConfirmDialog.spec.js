@@ -1,6 +1,6 @@
 import chai, { assert } from 'chai'
 import { shallowMount } from '@vue/test-utils'
-import ConfirmDialog from '../../../components/ConfirmDialog.vue'
+import ConfirmDialog from '../../../src/components/ConfirmDialog.vue'
 import chaiAsPromised from 'chai-as-promised'
 
 import sinonChai from 'sinon-chai'

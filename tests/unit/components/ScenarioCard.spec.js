@@ -1,6 +1,6 @@
 // import chai, { expect, assert } from 'chai'
 // import { shallowMount } from '@vue/test-utils'
-// import ScenarioCard from '../../../components/ScenarioCard.vue'
+// import ScenarioCard from '../../../src/components/ScenarioCard.vue'
 // import chaiAsPromised from 'chai-as-promised'
 //
 // import sinon from 'sinon'

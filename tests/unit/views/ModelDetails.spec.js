@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import ModelDetails from '../../../views/ModelDetails.vue'
+import ModelDetails from '../../../src/views/ModelDetails.vue'
 import chaiAsPromised from 'chai-as-promised'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'

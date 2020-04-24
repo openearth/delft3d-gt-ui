@@ -1,6 +1,6 @@
 import chai, { assert } from 'chai'
 import { shallowMount } from '@vue/test-utils'
-import NavigationBar from '../../../components/NavigationBar.vue'
+import NavigationBar from '../../../src/components/NavigationBar.vue'
 import chaiAsPromised from 'chai-as-promised'
 
 import sinonChai from 'sinon-chai'

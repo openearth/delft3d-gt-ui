@@ -1,6 +1,6 @@
 import chai, { assert } from 'chai'
 import { shallowMount } from '@vue/test-utils'
-import ModelCard from '../../../components/ModelCard.vue'
+import ModelCard from '../../../src/components/ModelCard.vue'
 import chaiAsPromised from 'chai-as-promised'
 
 import sinonChai from 'sinon-chai'

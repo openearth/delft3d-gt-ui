@@ -1,6 +1,6 @@
 // import chai, { expect, assert } from 'chai'
 // import { shallowMount } from '@vue/test-utils'
-// import SearchList from '../../../components/SearchList.vue'
+// import SearchList from '../../../src/components/SearchList.vue'
 // import chaiAsPromised from 'chai-as-promised'
 //
 // import sinon from 'sinon'

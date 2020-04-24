@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import Viewer3DComponent from '../../../components/Viewer3DComponent.vue'
+import Viewer3DComponent from '../../../src/components/Viewer3DComponent.vue'
 import chaiAsPromised from 'chai-as-promised'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
