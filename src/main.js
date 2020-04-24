@@ -4,6 +4,7 @@ import store from './store'
 import './registerServiceWorker'
 import router from './router'
 import $ from 'jquery'
+import 'node-fetch'
 
 import 'popper.js/dist/popper.js'
 import 'bootstrap/js/dist/util'
