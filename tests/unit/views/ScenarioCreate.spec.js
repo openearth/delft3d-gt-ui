@@ -269,6 +269,6 @@ describe('ScenarioCreate - Scenario builder', () => {
       } catch (e) {
         done(e)
       }
-    }, 100)
+    }, 200)
   })
 })
