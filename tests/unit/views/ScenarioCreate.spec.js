@@ -245,7 +245,6 @@ describe('ScenarioCreate - Scenario builder', () => {
   // Test if we can fetc htemplates through scenario builder
   // Later on it should maybe really use fake JSON to build scenarios.
   it('Should be possible to fetch templates', (done) => {
-    nock.cleanAll()
     const scenarioCreate = shallowMount(ScenarioCreate)
     var correctReply = false
 
@@ -265,8 +264,7 @@ describe('ScenarioCreate - Scenario builder', () => {
     // Make sure the nock server had the time to reply
     window.setTimeout(() => {
       try {
-        assert(correctReply === true, 'Nock server did reach reply')
-        console.log('did it work?')
+        assert(correctReply === true, 'Nock server did not reach reply')
         done()
       } catch (e) {
         done(e)

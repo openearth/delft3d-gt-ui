@@ -238,7 +238,6 @@
 <script>
 import _ from 'lodash'
 import $ from 'jquery'
-import fetch from 'node-fetch'
 
 import store from '../store'
 import {
