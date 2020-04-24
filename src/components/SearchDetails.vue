@@ -207,7 +207,6 @@ import store from '../store'
 import $ from 'jquery'
 import _ from 'lodash'
 import moment from 'moment'
-import fetch from 'node-fetch'
 
 // eslint-disable-next-line
 import ionRangeSlider from 'ion-rangeslider'
@@ -550,7 +549,6 @@ export default {
   }
 }
 </script>
-
 
 <style>
 @import '../assets/variables.scss';
