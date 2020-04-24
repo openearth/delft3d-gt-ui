@@ -8,7 +8,7 @@ import sinon from 'sinon'
 import _ from 'lodash'
 import nock from 'nock'
 
-_.assign(global, require('../../../templates.js'))
+_.assign(global, require('../../../src/templates.js'))
 
 // setup chai
 chai.use(chaiAsPromised)
