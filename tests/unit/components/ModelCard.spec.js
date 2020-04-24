@@ -1,12 +1,9 @@
-import chai, { expect, assert } from 'chai'
+import chai, { assert } from 'chai'
 import { shallowMount } from '@vue/test-utils'
 import ModelCard from '@/components/ModelCard.vue'
 import chaiAsPromised from 'chai-as-promised'
 
-import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
-import $ from 'jquery'
-import store from '@/store'
 
 // setup chai
 chai.use(chaiAsPromised)

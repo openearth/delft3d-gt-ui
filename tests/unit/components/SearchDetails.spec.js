@@ -5,10 +5,8 @@ import chaiAsPromised from 'chai-as-promised'
 
 import sinonChai from 'sinon-chai'
 import sinon from 'sinon'
-import $ from 'jquery'
 import _ from 'lodash'
 import nock from 'nock'
-import store from '@/store'
 
 _.assign(global, require('@/templates.js'))
 

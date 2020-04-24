@@ -2,10 +2,8 @@ import chai, { assert } from 'chai'
 import { shallowMount } from '@vue/test-utils'
 import ImageAnimation from '@/components/ImageAnimation.vue'
 import chaiAsPromised from 'chai-as-promised'
-import Vue from 'vue'
 
 import sinonChai from 'sinon-chai'
-import $ from 'jquery'
 
 // setup chai
 chai.use(chaiAsPromised)

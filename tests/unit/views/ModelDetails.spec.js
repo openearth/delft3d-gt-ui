@@ -4,35 +4,30 @@ import chaiAsPromised from 'chai-as-promised'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
 import $ from 'jquery'
-import chai, {
-  expect
-} from 'chai'
+import chai from 'chai'
 import store from '@/store'
 
 // setup chai
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
+/* eslint-disable */
 let should = chai.should()
 
 const modelDetails = shallowMount(ModelDetails)
 
 // stub publishDialog
-const createDialog = (name) => {
-  let el = document.createElement('confirm-dialog')
-
-  modelDetails.vm.$children.push(el)
-  el.$options = { 'name': 'confirm-dialog' }
-  el.dialogId = name
-  el.showAlert = sinon.stub()
-  el.show = sinon.stub()
-  el.hide = sinon.stub()
-
-  return el
-}
-let publishDialog = createDialog('publish')
-let deleteDialog = createDialog('delete')
-let resetDialog = createDialog('reset')
-
+// const createDialog = (name) => {
+//   let el = document.createElement('confirm-dialog')
+//
+//   modelDetails.vm.$children.push(el)
+//   el.$options = { 'name': 'confirm-dialog' }
+//   el.dialogId = name
+//   el.showAlert = sinon.stub()
+//   el.show = sinon.stub()
+//   el.hide = sinon.stub()
+//
+//   return el
+// }
 // test component
 describe('ModelDetails', () => {
   beforeEach(() => {

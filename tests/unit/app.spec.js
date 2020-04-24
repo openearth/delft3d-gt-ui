@@ -4,9 +4,7 @@ import App from '@/App.vue'
 
 import chaiAsPromised from 'chai-as-promised'
 
-import nock from 'nock'
 import $ from 'jquery'
-import Vue from 'vue'
 
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
@@ -18,7 +16,6 @@ chai.use(sinonChai)
 
 // export to global;
 global.$ = $
-global._ = _
 
 var window = document.defaultView
 global.window = window
