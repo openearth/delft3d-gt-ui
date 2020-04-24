@@ -1,6 +1,5 @@
 <template>
 <div class="search-details">
-  <input class='ion-range' />
   <!-- disable if we don't have a searchTemplate -->
   <div v-if="searchTemplate">
     <form @change="search" @input="search">
