@@ -11,7 +11,7 @@
 @import "~bootstrap4-tagsinput/tagsinput.css";
 
 $fa-font-path:"~font-awesome/fonts";
-@import "~font-awesome/scss/font-awesome";
+@import "~font-awesome/css/font-awesome.min.css";
 .icon-user {
   @extend .fa;
   @extend .fa-user;
