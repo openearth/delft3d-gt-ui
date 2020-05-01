@@ -25,7 +25,7 @@ describe('Store: Testing data exchange with api', () => {
     // This test is now working using the filteringPath option.
     // When testing get request, this seems to be the solution.
     it('Should be possible to LIST scenarios', (done) => {
-      nock('http://localhost')
+      nock('http://localhost', { allowUnmocked: true })
         .defaultReplyHeaders({
           'Content-Type': 'application/json'
         })
@@ -50,7 +50,7 @@ describe('Store: Testing data exchange with api', () => {
     })
 
     it('Should be possible to LIST scenarios - FAILURE test', (done) => {
-      nock('http://localhost')
+      nock('http://localhost', { allowUnmocked: true })
         .defaultReplyHeaders({
           'Content-Type': 'application/json'
         })
@@ -71,7 +71,7 @@ describe('Store: Testing data exchange with api', () => {
     it('Should be possible to DELETE scenarios', (done) => {
       var deleteId = 4
 
-      nock('http://localhost')
+      nock('http://localhost', { allowUnmocked: true })
         .defaultReplyHeaders({
           'Content-Type': 'application/json'
         })
@@ -88,7 +88,7 @@ describe('Store: Testing data exchange with api', () => {
     it('Should be possible to DELETE scenarios - FAILURE test', (done) => {
       var deleteId = 4
 
-      nock('http://localhost')
+      nock('http://localhost', { allowUnmocked: true })
         .defaultReplyHeaders({
           'Content-Type': 'application/json'
         })
@@ -117,7 +117,7 @@ describe('Store: Testing data exchange with api', () => {
     // This test is now working using the filteringPath option.
     // When testing get request, this seems to be the solution.
       it('Should be possible list models', (done) => {
-        nock('http://localhost')
+        nock('http://localhost', { allowUnmocked: true })
           .defaultReplyHeaders({
             'Content-Type': 'application/json'
           })
@@ -149,7 +149,7 @@ describe('Store: Testing data exchange with api', () => {
       // This test is now working using the filteringPath option.
       // When testing get request, this seems to be the solution.
       it('If we can query the model list - FAILURE test', (done) => {
-        nock('http://localhost')
+        nock('http://localhost', { allowUnmocked: true })
           .defaultReplyHeaders({
             'Content-Type': 'application/json'
           })
@@ -179,7 +179,7 @@ describe('Store: Testing data exchange with api', () => {
     it('Should be possible to delete a model', (done) => {
       var deleteID = 4
 
-      nock('http://localhost')
+      nock('http://localhost', { allowUnmocked: true })
         .defaultReplyHeaders({
           'Content-Type': 'application/json'
 
@@ -202,7 +202,7 @@ describe('Store: Testing data exchange with api', () => {
     it('Should be possible to reset a model', (done) => {
       var id = 4
 
-      nock('http://localhost')
+      nock('http://localhost', { allowUnmocked: true })
         .intercept('/api/v1/scenes/' + id + '/reset/', 'OPTIONS')
         .reply(200, () => {
           return 'Allow: GET, HEAD, PUT, DELETE, POST'
@@ -230,7 +230,7 @@ describe('Store: Testing data exchange with api', () => {
     it('Should be possible to start a model', (done) => {
       var id = 4
 
-      nock('http://localhost')
+      nock('http://localhost', { allowUnmocked: true })
         .intercept('/api/v1/scenes/' + id + '/start/', 'OPTIONS')
         .reply(200, () => {
           return 'Allow: GET, HEAD, PUT, DELETE, POST'
@@ -266,7 +266,7 @@ describe('Store: Testing data exchange with api', () => {
       var expectedCount = store.state.modelContainers.length
 
       // Mock the three requests:
-      nock('http://localhost')
+      nock('http://localhost', { allowUnmocked: true })
       // .log(console.log)
         .intercept('/api/v1/scenes/' + store.state.modelContainers[0].id + '/stop/', 'OPTIONS')
         .reply(200, () => {
@@ -312,7 +312,7 @@ describe('Store: Testing data exchange with api', () => {
       // dialog.dialogId = "stop";
       // modelDetails.$children.push(dialog);
 
-      nock('http://localhost')
+      nock('http://localhost', { allowUnmocked: true })
         .intercept('/api/v1/scenes/' + id + '/stop/', 'OPTIONS')
         .reply(200, () => {
           return 'Allow: GET, HEAD, PUT, DELETE, POST'
@@ -323,7 +323,7 @@ describe('Store: Testing data exchange with api', () => {
           return {}
         })
 
-      // Make sure the nock server had the time to reply
+      // Make sure the nock server had the time to repl, { allowUnmocked: true }y
       window.setTimeout(() => {
         try {
           assert(correctReply === true, 'Nock server did not reach reply')
@@ -339,7 +339,7 @@ describe('Store: Testing data exchange with api', () => {
     it('Should be possible to stop a model - FAILURE test', (done) => {
       var id = 4
 
-      nock('http://localhost')
+      nock('http://localhost', { allowUnmocked: true })
       // jquery calls OPTIONS first
         .intercept('/api/v1/scenes/' + id + '/stop/', 'OPTIONS')
         .reply(200, () => {
@@ -365,7 +365,7 @@ describe('Store: Testing data exchange with api', () => {
     it('Should be possible to start a model - FAILURE test', (done) => {
       var id = 4
 
-      nock('http://localhost')
+      nock('http://localhost', { allowUnmocked: true })
         .intercept('/api/v1/scenes/' + id + '/start/', 'OPTIONS')
         .reply(200, () => {
           return 'Allow: GET, HEAD, PUT, DELETE, POST'

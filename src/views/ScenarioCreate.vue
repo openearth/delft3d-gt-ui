@@ -495,8 +495,15 @@ export default {
 
     fetchTemplates () {
       const url = '/api/v1/templates/'
-      return fetch(url)
-        .then(res => res.json())
+      return new Promise((resolve, reject) => {
+        return $.ajax({ url: url, traditional: true, dataType: 'json' })
+          .done((json) => {
+            resolve(json[0])
+          })
+          .fail((jqXhr) => {
+            reject(jqXhr)
+          })
+      })
     },
     // check if variable should generate an input element
     isInput (variable) {

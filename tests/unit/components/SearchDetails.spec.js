@@ -49,7 +49,7 @@ describe('Search details', () => {
   })
 
   it('fetchSearchtemplate', (done) => {
-    nock('http://localhost')
+    nock('http://localhost', { allowUnmocked: true } )
       .defaultReplyHeaders({
         'Content-Type': 'application/json'
       })
@@ -131,7 +131,7 @@ describe('Search details', () => {
   //   const searchDetails = shallowMount(SearchDetails)
   //   var replyCount = 0;
   //
-  //   nock('http://localhost')
+  //   nock('http://localhost', { allowUnmocked: true } )
   //     .defaultReplyHeaders({
   //       'Content-Type': 'application/json'
   //     })
@@ -142,7 +142,7 @@ describe('Search details', () => {
   //       return "[{'id':357,'name':'New Delta Plain Scenario','owner_url':'http://localhost:9000/api/v1/users/500/','template':1,'parameters':{'engine':{'values':['Delft3D Curvilinear'],'name':'Model Engine'},'simstoptime':{'units':'days','values':[60],'name':'Stop time'},'clayvolcomposition':{'units':'%','values':[1],'name':'Clay volumetric composition'},'sandvolcomposition':{'units':'%','values':[1],'name':'Sand volumetric composition'},'version':{'values':['v0.1'],'name':'Version'},'riverdischarge':{'units':'m³/s','values':[1000],'name':'River discharge'},'riverwidth':{'units':'m','values':[555],'name':'River width'},'dt':{'units':'min','values':[1],'name':'Timestep'},'tidalamplitude':{'units':'m','values':[1],'name':'Tidal amplitude'},'outputinterval':{'units':'days','values':[1],'name':'Output timestep','description':'Output can be stored at certain intervals. The output that is written includes the map files (2D, 3D grids), point output and profile output.'},'basinslope':{'units':'deg','values':[0.0143],'name':'Basin slope'}},'progress':0,'scene_set':[897]}]";
   //     });
   //
-  //     nock('http://localhost')
+  //     nock('http://localhost', { allowUnmocked: true } )
   //       .defaultReplyHeaders({
   //         'Content-Type': 'application/json'
   //       })

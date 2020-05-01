@@ -1,26 +1,26 @@
-// import chai, { expect, assert } from 'chai'
+// import chai, { assert } from 'chai'
 // import { shallowMount } from '@vue/test-utils'
 // import SearchList from '../../../src/components/SearchList.vue'
 // import chaiAsPromised from 'chai-as-promised'
-//
-// import sinon from 'sinon'
 // import sinonChai from 'sinon-chai'
-// import $ from 'jquery'
-// import store from '@/store'
+// import sinon from 'sinon'
+// import _ from 'lodash'
+//
+// window.URL.createObjectURL = sinon.stub()
+// global.URL.createObjectURL = sinon.stub()
 //
 // // setup chai
 // chai.use(chaiAsPromised)
 // chai.use(sinonChai)
-
+//
 // describe('SearchList.vue', () => {
 //   it('Is possible to instantiate component SearchList', (done) => {
-//     const searchList = shallowMount(SearchList, { propsData: { items: [], models: []} })
-//
+//     const searchList = shallowMount(SearchList, { propsData: { items: [], models: [] } })
 //     assert.isOk(searchList)
 //     done()
 //   })
 // })
-
+//
 // describe('SearchList class', () => {
 //   it('Should be possible deselect all runs', (done) => {
 //     // Add an artificial sene with a model in scene_set with id 1.
