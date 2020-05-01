@@ -4,14 +4,11 @@ import chaiAsPromised from 'chai-as-promised'
 import sinonChai from 'sinon-chai'
 import nock from 'nock'
 
-import fetch from 'node-fetch'
-
 import ScenarioCreate from '../../../src/views/ScenarioCreate'
 // setup chai
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
 
-global.fetch = fetch
 // We use a setInterval mock function, otherwise setIntervals will cause Mocha to never stop!
 global.setInterval = () => {
   // args: callback, time
