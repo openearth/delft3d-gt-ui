@@ -15,7 +15,7 @@
           </div>
         </div>
         <div class="form-group">
-          <select v-model="selectedDomains" id="domain" class="select-picker form-control" title="Choose publication domain..." multiple data-selected-text-format="count > 3" data-actions-box="true">
+          <select v-model="selectedDomains" id="domain" class="selectpicker form-control" title="Choose publication domain..." multiple data-selected-text-format="count > 3" data-actions-box="true">
             <option data-content="<i class='fa fa-fw fa-user aria-hidden='true'></i> Private">
               private
             </option>
@@ -62,7 +62,7 @@
           </div>
           <div class="card-body collapse" id="template-versions">
             <div class="form-group">
-              <select id="outdated" title="Choose updates..." class="select-picker form-control" data-container="body" v-model="selectedOutdated" multiple>
+              <select id="outdated" title="Choose updates..." class="selectpicker form-control" data-container="body" v-model="selectedOutdated" multiple>
                 <option data-content="No updates available">false</option>
                 <option data-content="Updates available">true</option>
               </select>
@@ -208,9 +208,12 @@ import $ from 'jquery'
 import _ from 'lodash'
 import moment from 'moment'
 
+// eslint-disable-next-line
+import ionRangeSlider from 'ion-rangeslider'
+
 import {
   fetchSearchTemplate
-} from '../templates.js'
+} from '@/templates.js'
 import {
   bus
 } from '@/event-bus.js'
@@ -291,7 +294,7 @@ export default {
       let status = jqXhr.statusText || 'error'
       let response = jqXhr.responseText || jqXhr.responseJson || 'An error occurred.'
 
-      this.$root.$broadcast('show-alert', {
+      this.$emit('show-alert', {
         message: status + ': ' + response,
         showTime: 3000,
         type: 'danger'
@@ -328,6 +331,7 @@ export default {
     modelEngines: {
       get () {
         // flatten variables
+        console.log(this.templates)
         var variables = _.flatMap(_.flatMap(this.templates, 'sections'), 'variables')
 
         // lookup all variables with id engine (convention)
@@ -428,7 +432,7 @@ export default {
       // once the dom is updated, update the select pickers by hand
       // template data is computed into modelEngine
       var that = this
-      var pickers = $('.select-picker')
+      var pickers = $('.selectpicker')
 
       if (pickers.selectpicker !== undefined) {
         pickers.selectpicker('refresh')
@@ -448,11 +452,6 @@ export default {
           }
         })
       }
-      /* eslint-enable camelcase */
-
-      // slider.forEach(slide => {
-      //   slide.on('slideStop', this.search)
-      // }
 
       // Add event handler that allows one to use the X next to inputs to clear the input.
       $('.button-empty-input-field').on('click', () => {

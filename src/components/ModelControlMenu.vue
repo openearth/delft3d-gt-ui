@@ -16,7 +16,7 @@
       <span class="caret"></span>
     </button>
 
-    <ul class="dropdown-menu">
+    <ul class="dropdown-menu p-2">
 
       <li :class="{ disabled: numSelectedModels === 0 || someSelectedModelsArePublished() }">
         <a @click.stop="updateModelsBy = {name: 'start'}">
@@ -48,7 +48,7 @@
         </a>
       </li>
 
-      <li role="separator" class="divider"></li>
+      <li role="separator" class="dropdown-divider"></li>
 
       <li :class="{ disabled: numSelectedModels === 0  || !someSelectedModelsAreFinished() || someSelectedModelsAreAlreadyPublished('company') }">
         <a @click.stop="updateModelsBy = {name: 'share', domain: 'company'}">
@@ -62,11 +62,11 @@
         </a>
       </li>
 
-      <li role="separator" class="divider"></li>
+      <li role="separator" class="dropdown-divider"></li>
 
       <li :class="{ disabled: numSelectedModels === 0 || (option.onlyFinished && !someSelectedModelsAreFinished()) }" v-for="(option, key) in downloadOptions" :key="key">
         <div class="dropdown-menu-checkbox" @click.self.stop.prevent="toggle(key)">
-          <input type="checkbox" class="downloadoption"  :value="key" v-model="downloadOptions['key']" :disabled="numSelectedModels === 0 || (option.onlyFinished && !someSelectedModelsAreFinished())"> {{ option.verbose }}
+          <input type="checkbox" class="downloadoption"  :value="downloadOptions[key].active" v-model="downloadOptions[key].active" :disabled="numSelectedModels === 0 || (option.onlyFinished && !someSelectedModelsAreFinished())"> {{ option.verbose }}
         </div>
       </li>
 
@@ -79,7 +79,7 @@
     </ul>
 
         <!-- Confirm dialog for control checks -->
-        <confirm-dialog v-if="updateModelsBy.name" :confirm-button-title="capitalizeFirst(updateModelsBy.name)" :dialogId="`confirm-${updateModelsBy.name}`" @confirm="confirm">
+        <confirm-dialog v-if="updateModelsBy.name" :confirm-button-title="capitalizeFirst(updateModelsBy.name)" :dialogId="`confirm-${updateModelsBy.name}`" @confirm="confirm" @cancel="updateModelsBy = {}">
           <template slot="title">
             {{capitalizeFirst(updateModelsBy.name)}} models?
           </template>
@@ -191,43 +191,6 @@ export default {
       }
       this.updateModelsBy = {}
     },
-    //
-    // resetSelectedModels () {
-    //   if (this.someSelectedModelsArePublished()) {
-    //     return
-    //   }
-    //
-    //   // Get a confirm dialog
-    //   this.deleteDialog = getDialog(this, 'confirm-dialog', 'reset-runs')
-    //
-    //   this.deleteDialog.onConfirm = () => {
-    //     store.dispatch('resetSelectedModels')
-    //
-    //     this.deleteDialog.hide()
-    //   }
-    //   this.deleteDialog.showAlert(false)
-    //
-    //   // Show the dialog:
-    //   this.deleteDialog.show()
-    // },
-    // redoSelectedModels () {
-    //   if (this.someSelectedModelsArePublished()) {
-    //     return
-    //   }
-    //
-    //   // Get a confirm dialog
-    //   this.redoDialog = getDialog(this, 'confirm-dialog', 'redo-runs')
-    //
-    //   this.redoDialog.onConfirm = () => {
-    //     store.dispatch('redoSelectedModels')
-    //
-    //     this.redoDialog.hide()
-    //   }
-    //   this.redoDialog.showAlert(false)
-    //
-    //   // Show the dialog:
-    //   this.redoDialog.show()
-    // },
     someSelectedModelsAreFinished () {
       return _.values(store.getters.getSelectedModels).some((model) => {
         return model.data.state === 'Finished'
@@ -251,69 +214,6 @@ export default {
       }
       return false
     },
-    // startSelectedModels () {
-    //   if (this.someSelectedModelsArePublished()) {
-    //     return
-    //   }
-    //   store.dispatch('startSelectedModels')
-    // },
-    //
-    // stopSelectedModels () {
-    //   if (this.someSelectedModelsArePublished()) {
-    //     return
-    //   }
-    //
-    //   // Get a confirm dialog
-    //   this.deleteDialog = getDialog(this, 'confirm-dialog', 'stop-runs')
-    //
-    //   this.deleteDialog.onConfirm = () => {
-    //     store.dispatch('stopSelectedModels')
-    //
-    //     this.deleteDialog.hide()
-    //   }
-    //   this.deleteDialog.showAlert(false)
-    //
-    //   // Show the dialog:
-    //   this.deleteDialog.show()
-    // },
-
-    // deleteSelectedModels () {
-    //   if (this.someSelectedModelsArePublished()) {
-    //     return
-    //   }
-    //
-    //   // Get a confirm dialog
-    //   this.deleteDialog = getDialog(this, 'confirm-dialog', 'delete-runs')
-    //
-    //   this.deleteDialog.onConfirm = () => {
-    //     store.dispatch('deleteSelectedModels')
-    //     this.deleteDialog.hide()
-    //   }
-    //   this.deleteDialog.showAlert(false)
-    //
-    //   // Show the dialog:
-    //   this.deleteDialog.show()
-    // },
-    //
-    // shareSelectedModels (domain) {
-    //   if (!this.someSelectedModelsAreFinished || this.someSelectedModelsAreAlreadyPublished(domain)) {
-    //     return
-    //   }
-    //
-    //   // Get a confirm dialog
-    //   this.shareDialog = getDialog(this, 'confirm-dialog', 'share-runs')
-    //
-    //   this.shareDialog.onConfirm = () => {
-    //     store.dispatch('shareSelectedModels', domain)
-    //
-    //     this.shareDialog.hide()
-    //   }
-    //   this.shareDialog.showAlert(false)
-    //
-    //   // Show the dialog:
-    //   this.shareDialog.show()
-    // },
-
     downloadSelectedModels () {
       if (this.numSelectedModels === 0 || !this.anyDownloadsSelected) {
         return // nothing to do
@@ -347,27 +247,17 @@ export default {
   }
 
   .dropdown-menu-checkbox {
+    min-width: 300px;
     cursor: pointer;
-    padding: 3px 20px;
 
     &:hover {
       background-color: $col-bw-1;
-    }
-
-    input {
-      &[type='checkbox'] {
-        margin: 0;
-      }
     }
   }
 
   .disabled {
     cursor: not-allowed;
 
-    .dropdown-menu-checkbox {
-      color: $col-bw-5;
-      cursor: not-allowed;
-    }
   }
 }
 </style>

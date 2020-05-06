@@ -29,12 +29,12 @@
           <text x="24" :y="18" fill="#999" style="font-size: 1.5em;">1</text>
           <text x="20" :y="height - 6" fill="#999" style="font-size: 1.5em;">0</text>
 
-          <div v-for="(x, index) in 9" :key="index">
+          <div v-for="(x, index) in 9" :key="`svg-${index}`">
             <line x1="0" x2="10" :y1="(x + 1) / 10 * height" :y2="(x + 1) / 10 * height" style="stroke:#999;stroke-width:2" />
             <text x="13" :y="((x + 1) / 10 * height) + 5" fill="#999">0.{{9 - x}}</text>
           </div>
 
-          <div v-for="(x, index) in 10" :key="index">
+          <div v-for="(x, index) in 10" :key="`svg1-${index}`">
             <line x1="0" x2="5" :y1="(x + 0.5)  / 10 * height" :y2="(x + 0.5)  / 10 * height" style="stroke:#aaa;stroke-width:2" />
           </div>
 
@@ -126,7 +126,7 @@
             </div>
             <input class="form-control text-center" type="text" name="gradient-position" v-model="point.position" lazy>
             <div class="input-group-append">
-              <button type="button" class="btn" @click="removePoint($index)" v-if="$index < gradient.length - 1">x</button>
+              <button type="button" class="btn" @click="removePoint(index)" v-if="index < gradient.length - 1">x</button>
             </div>
           </div>
           <div class="input-group">
@@ -164,7 +164,7 @@ export default {
       }
     }
   },
-  data: function () {
+  data () {
     return {
       'canvasStyle': {
         'height': '10px'
@@ -238,24 +238,24 @@ export default {
   computed: {
     activeModel: {
       cached: false,
-      get: function () {
+      get () {
         return this.sharedState.activeModelContainer
       }
     },
     isFinished: {
       cache: false,
-      get: function () {
+      get () {
         return _.get(this.activeModel, 'data.state', '') === 'Finished'
       }
     }
   },
   watch: {
-    activated: function () {
+    activated () {
       this.loadData()
     },
     activeModel: {
       'deep': true,
-      'handler': function () {
+      'handler' () {
         let suid = _.get(this.activeModel, 'data.suid')
         let sedimentClass = _.get(this.activeModel, 'data.parameters.composition.value')
         let maxTimeStepIndex = _.get(this.activeModel, 'data.info.delta_fringe_images.images', []).length - 1 // obtain max TimeStep index based on number of Delta Fringe images
@@ -273,25 +273,25 @@ export default {
     },
     dataSetVariables: {
       'deep': true,
-      'handler': function () {
+      'handler' () {
         this.loadData()
       }
     },
     curTimeStep: {
       'deep': false,
-      'handler': function () {
+      'handler' () {
         this.loadTime()
       }
     },
     dimensions: {
       'deep': true,
-      'handler': function () {
+      'handler' () {
         this.resetSliders()
       }
     },
     gradient: {
       'deep': true,
-      'handler': function () {
+      'handler' () {
         let newGrad = _.reverse(_.sortBy(_.clone(this.gradient), 'position'))
 
         // cap position values
@@ -308,12 +308,12 @@ export default {
     },
     slices: {
       'deep': true,
-      'handler': function () {
+      'handler' () {
         this.loadSliders()
       }
     }
   },
-  ready: function () {
+  ready () {
     // get reference element from model-details
     let width = document.getElementById('col-glcanvas-container-reference').scrollWidth
 
@@ -324,11 +324,11 @@ export default {
     this.svgStyle.height = this.height + 'px'
   },
   methods: {
-    addPoint: function () {
+    addPoint () {
       this.gradient.push(_.clone(_.last(this.gradient)))
       this.initPickAColor()
     },
-    camera: function (side) {
+    camera (side) {
       if (_.isUndefined(this.viewer3d)) {
         return
       }
@@ -364,19 +364,19 @@ export default {
         this.viewer3d.camera.stepUp()
       }
     },
-    goEnd: function () {
+    goEnd () {
       this.curTimeStep = this.curFrameLength
     },
-    goNext: function () {
+    goNext () {
       this.curTimeStep = Math.min(this.curTimeStep + 1, this.curFrameLength)
     },
-    goPrev: function () {
+    goPrev () {
       this.curTimeStep = Math.max(this.curTimeStep - 1, 0)
     },
-    goStart: function () {
+    goStart () {
       this.curTimeStep = 0
     },
-    initIonSliders: function () {
+    initIonSliders () {
       this.$nextTick(() => {
         /* eslint-disable camelcase */
         if ($('.ion-range').ionRangeSlider !== undefined) {
@@ -394,7 +394,7 @@ export default {
         /* eslint-enable camelcase */
       })
     },
-    initPickAColor: function () {
+    initPickAColor () {
       this.$nextTick(() => {
         $('.pick-a-color').each((i, e) => {
           if ($(e).parent('.pick-a-color-markup').length === 0) {
@@ -405,7 +405,7 @@ export default {
         })
       })
     },
-    loadData: function () {
+    loadData () {
       if (!this.activated || _.isUndefined(this.viewer3d)) {
         return
       }
@@ -428,7 +428,7 @@ export default {
         console.error(err)
       }
     },
-    loadGradient: function () {
+    loadGradient () {
       if (_.isUndefined(this.viewer3d)) {
         return
       }
@@ -467,7 +467,7 @@ export default {
       )
       this.refreshData()
     },
-    loadSliders: function () {
+    loadSliders () {
       if (_.isUndefined(this.viewer3d)) {
         return
       }
@@ -483,7 +483,7 @@ export default {
 
       this.refreshData()
     },
-    loadTime: function () {
+    loadTime () {
       if (_.isUndefined(this.viewer3d)) {
         return
       }
@@ -502,7 +502,7 @@ export default {
     removePoint: function (index) {
       this.gradient.splice(index, 1)
     },
-    resetSliders: function () {
+    resetSliders () {
       _.each(['x', 'y', 'z'], (d) => {
         let val = _.get(this.dimensions, d)
 
@@ -526,7 +526,7 @@ export default {
         }
       })
     },
-    resetViewer: function () {
+    resetViewer () {
       if (_.isUndefined(this.viewer3d)) {
         return
       }
@@ -546,14 +546,13 @@ export default {
         return
       }
       this.started = true
-      console.log(window)
       /* eslint-disable */
       this.viewer3d = new window.Viewer3D.viewer3D()
       /* eslint-enable */
 
       this.loadData()
     },
-    startOrLoad3dViewer: function () {
+    startOrLoad3dViewer () {
       if (this.curSuid !== undefined) {
         if (!this.started) {
           this.start3dviewer()
@@ -565,7 +564,6 @@ export default {
   }
 }
 </script>
-
 <style lang="scss">
 @import '../assets/variables.scss';
 

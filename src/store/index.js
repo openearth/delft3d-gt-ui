@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import $ from 'jquery'
-
 import _ from 'lodash'
 
 Vue.use(Vuex)
@@ -36,16 +35,16 @@ export default new Vuex.Store({
   actions: {
 
     // ================================ SYNCHRONISATION
-    fetchUser (context) {
-      if (context.state.reqUser !== undefined) {
-        context.state.reqUser.abort()
+    fetchUser () {
+      if (this.state.reqUser !== undefined) {
+        this.state.reqUser.abort()
       }
       return new Promise((resolve, reject) => {
-        context.state.user = $.ajax({ url: 'api/v1/users/me/', data: context.state.params, traditional: true, dataType: 'json' })
-          .done(function (json) {
+        this.state.user = $.ajax({ url: '/api/v1/users/me/', data: this.state.params, traditional: true, dataType: 'json' })
+          .done((json) => {
             resolve(json[0])
           })
-          .fail(function (jqXhr) {
+          .fail((jqXhr) => {
             reject(jqXhr)
           })
       })
@@ -59,45 +58,47 @@ export default new Vuex.Store({
       clearInterval(store.interval)
       store.interval = null
     },
-    update (context) {
-      if (context.state.updating) {
-        return
-      }
-      context.state.updating = true
-      Promise.all([
-        context.dispatch('fetchModels'),
-        context.dispatch('fetchScenarios'),
-        context.dispatch('fetchModelDetails')
-      ])
-        .then((jsons) => {
-          context.state.models = jsons[0] // Array of Models
-          context.state.scenarios = jsons[1] // Array of Scenes
-
-          context.state.models = _.map(context.state.models, (m) => {
-            let modelDetails = jsons[2] // Dictionary of Model Details
-            return (m.id === modelDetails.id) ? modelDetails : m
-          })
-
-          context.dispatch('updateContainers')
-          context.state.updating = false
-        })
-        .catch((jqXhr) => {
-          context.state.failedUpdate(jqXhr)
-          context.state.updating = false
-        })
-    },
-    updateUser (store) {
-      store.dispatch('fetchUser').then((json) => {
-        console.log('updateuser', json)
-        store.state.user = json
+    updateUser () {
+      this.dispatch('fetchUser').then((json) => {
+        this.state.user = json
       })
         .catch((jqXhr) => {
-          store.state.failedUpdate(jqXhr)
-          store.state.updating = false
+          this.state.failedUpdate(jqXhr)
+          this.state.updating = false
         })
     },
 
     // ================================ API FETCH CALLS
+
+    update () {
+      if (this.state.updating) {
+        return
+      }
+
+      this.state.updating = true
+      Promise.all([
+        this.dispatch('fetchModels'),
+        this.dispatch('fetchScenarios'),
+        this.dispatch('fetchModelDetails')
+      ])
+        .then((jsons) => {
+          this.state.models = jsons[0] // Array of Models
+          this.state.scenarios = jsons[1] // Array of Scenes
+
+          this.state.models = _.map(this.state.models, (m) => {
+            let modelDetails = jsons[2] // Dictionary of Model Details
+            return (m.id === modelDetails.id) ? modelDetails : m
+          })
+
+          this.dispatch('updateContainers')
+          this.state.updating = false
+        })
+        .catch((jqXhr) => {
+          this.state.failedUpdate(jqXhr)
+          this.state.updating = false
+        })
+    },
+
     fetchModelDetails (context) {
       if (this.state.reqModelDetails !== undefined) {
         this.state.reqModelDetails.abort()
@@ -111,7 +112,7 @@ export default new Vuex.Store({
         })
       }
       return new Promise((resolve, reject) => {
-        this.state.reqModel = $.ajax({ url: 'api/v1/scenes/' + activeModelContainerId + '/', data: this.state.params, traditional: true, dataType: 'json' })
+        this.state.reqModel = $.ajax({ url: '/api/v1/scenes/' + activeModelContainerId + '/', data: this.state.params, traditional: true, dataType: 'json' })
           .done(function (json) {
             resolve(json)
           })
@@ -143,7 +144,7 @@ export default new Vuex.Store({
         this.state.reqScenario.abort()
       }
       return new Promise((resolve, reject) => {
-        this.state.reqScenario = $.ajax({ url: 'api/v1/scenarios/', data: this.state.params, traditional: true, dataType: 'json' })
+        this.state.reqScenario = $.ajax({ url: '/api/v1/scenarios/', data: this.state.params, traditional: true, dataType: 'json' })
           .done(function (json) {
             console.log('Succes fetchScenarios')
             resolve(json)
@@ -156,16 +157,28 @@ export default new Vuex.Store({
 
     // ================================ CONTAINER UPDATES
 
-    updateContainers (context) {
+    updateContainers () {
       this.dispatch('updateModelContainers')
       this.dispatch('updateScenarioContainers')
     },
 
-    updateModelContainers (context) {
+    updateModelContainers () {
       _.each(this.state.models, (model) => {
         var container = _.find(this.state.modelContainers, ['id', model.id])
-
-        // update css classes as indication of statuslevel
+        if (container === undefined) {
+          // create new container
+          container = {
+            id: model.id,
+            active: false,
+            selected: false,
+            data: model,
+            state: model.state
+          }
+          this.state.modelContainers.push(container)
+        } else {
+          // update model in container
+          container.data = model
+        }
         let statusLevel = 'info'
 
         if (model.state === 'Finished') {
@@ -174,25 +187,8 @@ export default new Vuex.Store({
           statusLevel = 'warning'
         } else if (model.state === 'Running simulation') {
           statusLevel = 'striped active'
-        } else if (model.state === 'Stopped') {
-          statusLevel = 'secondary'
         }
-        if (container === undefined) {
-          // create new container
-          container = {
-            id: model.id,
-            active: false,
-            selected: false,
-            data: model,
-            state: model.state,
-            statusLevel: statusLevel
-          }
-          this.state.modelContainers.push(container)
-        } else {
-          // update model in container
-          container.statusLevel = statusLevel
-          container.data = model
-        }
+        container.statusLevel = statusLevel
       })
 
       // remove containers that have no associated model
@@ -212,11 +208,11 @@ export default new Vuex.Store({
         return false
       })
     },
-    updateScenarioContainers (context) {
+    updateScenarioContainers () {
       _.each(this.state.scenarios, (scenario) => {
         var scenarioContainer = _.find(this.state.scenarioContainers, ['id', scenario.id])
 
-        var modelContainerSet = _.filter(this.state.modelContainers, function (o) {
+        var modelContainerSet = _.filter(this.state.modelContainers, (o) => {
           return _.includes(scenario.scene_set, o.id)
         })
 
@@ -251,17 +247,15 @@ export default new Vuex.Store({
           this.state.activeModelContainer = undefined
         }
         this.state.modelContainers = _.without(this.state.modelContainers, modelContainer)
-
-        _.each(this.state.scenarioContainers, function (container) {
+        _.each(this.state.scenarioContainers, (container) => {
           container.models = _.without(container.models, modelContainer)
         })
-
         // update backend
-        $.ajax({ url: 'api/v1/scenes/' + modelContainer.id + '/', method: 'DELETE', traditional: true, dataType: 'json' })
-          .done(function (data) {
+        $.ajax({ url: `/api/v1/scenes/${_.get(modelContainer, 'id')}/`, method: 'DELETE', traditional: true, dataType: 'json' })
+          .done((data) => {
             resolve(data)
           })
-          .fail(function (jqXhr) {
+          .fail((jqXhr) => {
             reject(jqXhr)
           })
       })
@@ -275,7 +269,7 @@ export default new Vuex.Store({
           return reject(new Error('Publication level unidentified'))
         }
         payload.modelContainer.data.shared = 'u'
-        $.ajax({ url: 'api/v1/scenes/' + payload.modelContainer.id + '/publish_' + payload.domain + '/', method: 'POST' })
+        $.ajax({ url: '/api/v1/scenes/' + payload.modelContainer.id + '/publish_' + payload.domain + '/', method: 'POST' })
           .done(function (data) {
             resolve(data)
           })
@@ -291,7 +285,7 @@ export default new Vuex.Store({
           return reject(new Error('No model id to reset'))
         }
         modelContainer.data.state = 'New'
-        $.ajax({ url: 'api/v1/scenes/' + modelContainer.id + '/reset/', method: 'PUT', traditional: true, dataType: 'json' })
+        $.ajax({ url: '/api/v1/scenes/' + modelContainer.id + '/reset/', method: 'PUT', traditional: true, dataType: 'json' })
           .done(function (data) {
             resolve(data)
           })
@@ -309,7 +303,7 @@ export default new Vuex.Store({
           return reject(new Error('No model id to redo'))
         }
         payload.modelContainer.data.state = 'Queued'
-        $.ajax({ url: 'api/v1/scenes/' + payload.modelContainer.id + '/redo/', method: 'PUT', traditional: true, dataType: 'json', data: body })
+        $.ajax({ url: '/api/v1/scenes/' + payload.modelContainer.id + '/redo/', method: 'PUT', traditional: true, dataType: 'json', data: body })
           .done(function (data) {
             resolve(data)
           })
@@ -325,7 +319,7 @@ export default new Vuex.Store({
           return reject(new Error('No model id to start'))
         }
         modelContainer.data.state = 'Queued'
-        $.ajax({ url: 'api/v1/scenes/' + modelContainer.id + '/start/', method: 'PUT', traditional: true, dataType: 'json' })
+        $.ajax({ url: '/api/v1/scenes/' + modelContainer.id + '/start/', method: 'PUT', traditional: true, dataType: 'json' })
           .done(function (data) {
             resolve(data)
           })
@@ -342,7 +336,7 @@ export default new Vuex.Store({
           return reject(new Error('No model id to stop'))
         }
         modelContainer.data.state = 'Stopping simulation'
-        $.ajax({ url: 'api/v1/scenes/' + modelContainer.id + '/stop/', method: 'PUT', traditional: true, dataType: 'json' })
+        $.ajax({ url: '/api/v1/scenes/' + modelContainer.id + '/stop/', method: 'PUT', traditional: true, dataType: 'json' })
           .done(function (data) {
             resolve(data)
           })
@@ -357,7 +351,7 @@ export default new Vuex.Store({
 
     deleteScenario (context, scenarioContainer) {
       return new Promise((resolve, reject) => {
-        if (scenarioContainer === undefined || scenarioContainer.id === undefined) {
+        if (scenarioContainer === undefined || _.get(scenarioContainer, 'id') === undefined) {
           reject(new Error('No scenario id to delete'))
         }
 
@@ -366,17 +360,16 @@ export default new Vuex.Store({
         if (_.indexOf(scenarioContainer.models, this.state.activeModelContainer) > -1) {
           this.state.activeModelContainer = undefined
         }
-
         // TODO: find better solution - now we do this to trigger an update on the front-end (vm.$forceUpdate() is added in Vue 2.0)
         _.each(this.state.modelContainers, el => {
           el.selected = false
         })
 
-        $.ajax({ url: 'api/v1/scenarios/' + scenarioContainer.id + '/', method: 'DELETE', traditional: true, dataType: 'json' })
-          .done(function (json) {
+        $.ajax({ url: '/api/v1/scenarios/' + scenarioContainer.id + '/', method: 'DELETE', traditional: true, dataType: 'json' })
+          .done((json) => {
             resolve(json)
           })
-          .fail(function (jqXhr) {
+          .fail((jqXhr) => {
             console.log('Error deleteScenario', jqXhr.statusText)
             reject(jqXhr)
           })
@@ -386,7 +379,7 @@ export default new Vuex.Store({
     createScenario (context, postdata) {
       return new Promise(function (resolve, reject) {
         $.ajax({
-          url: 'api/v1/scenarios/',
+          url: '/api/v1/scenarios/',
           data: postdata,
           method: 'POST'
         })
@@ -394,56 +387,56 @@ export default new Vuex.Store({
             resolve()
           })
           .fail(function (jqXhr) {
-            console.log('Error reateScenario', jqXhr.statusText)
+            console.log('Error createScenario', jqXhr.statusText)
           })
       })
     },
     // ================================ MULTISELECTED MODEL UPDATE METHODS
 
-    resetSelectedModels (state) {
+    resetSelectedModels () {
       return Promise.all(
-        _.map(state.getSelectedModels, state.resetModel)
+        _.map(this.getters.getSelectedModels, (pl) => this.dispatch('resetModel', pl))
       )
     },
 
-    startSelectedModels (state) {
+    startSelectedModels () {
       return Promise.all(
-        _.map(state.getSelectedModels, state.startModel)
+        _.map(this.getters.getSelectedModels, (pl) => this.dispatch('startModel', pl))
       )
     },
 
-    stopSelectedModels (state) {
+    stopSelectedModels () {
       return Promise.all(
-        _.map(state.getSelectedModels, state.sdtopModel)
+        _.map(this.getters.getSelectedModels, (pl) => this.dispatch('stopModel', pl))
       )
     },
 
-    redoSelectedModels (state) {
+    redoSelectedModels () {
       return Promise.all(
-        _.map(state.getSelectedModels, state.redoModel)
+        _.map(this.getters.getSelectedModels, (pl) => this.dispatch('redoModel', pl))
       )
     },
 
-    deleteSelectedModels (state) {
+    deleteSelectedModels () {
       return Promise.all(
-        _.map(state.getSelectedModels, state.deleteModel)
+        _.map(this.getters.getSelectedModels, (pl) => this.dispatch('deleteModel', pl))
       )
     },
 
     shareSelectedModels (context, domain) {
       return new Promise((resolve, reject) => {
-        if (this.getSelectedModels().length === 0) {
+        if (this.getters.getSelectedModels.length === 0) {
           return reject(new Error('No models to test'))
         }
         if (domain !== 'company' && domain !== 'world') {
           return reject(new Error('Publication level unidentified'))
         }
 
-        var selectedModelsSuid = _.map(this.getSelectedModels(), function (m) {
+        var selectedModelsSuid = _.map(this.getters.getSelectedModels, (m) => {
           return m.data.suid
         })
 
-        $.ajax({ url: 'api/v1/scenes/publish_' + domain + '_all/', method: 'POST', traditional: true, dataType: 'json', data: { 'suid': selectedModelsSuid } })
+        $.ajax({ url: '/api/v1/scenes/publish_' + domain + '_all/', method: 'POST', traditional: true, dataType: 'json', data: { 'suid': selectedModelsSuid } })
           .done(function (data) {
             resolve(data)
           })
@@ -455,15 +448,15 @@ export default new Vuex.Store({
 
     downloadSelectedModels (context, selectedDownloads) {
       return new Promise((resolve, reject) => {
-        if (this.dispatch('getSelectedModels').length === 0) {
+        if (this.getters.getSelectedModels.length === 0) {
           return reject(new Error('No models to export'))
         }
 
-        var selectedModelsSuid = _.map(this.dispatch('getSelectedModels'), function (m) {
+        var selectedModelsSuid = _.map(this.getters.getSelectedModels, (m) => {
           return m.data.suid
         })
 
-        var selectedOptions = _.reduce(selectedDownloads, function (result, value, key) {
+        var selectedOptions = _.reduce(selectedDownloads, (result, value, key) => {
           if (value.active) {
             result.push(key)
           }
@@ -475,7 +468,7 @@ export default new Vuex.Store({
         }
 
         resolve(window.open(
-          'api/v1/scenes/export_all/?format=json&suid=' + selectedModelsSuid.join('&suid=') + '&options=' + selectedOptions.join('&options=')
+          '/api/v1/scenes/export_all/?format=json&suid=' + selectedModelsSuid.join('&suid=') + '&options=' + selectedOptions.join('&options=')
         ))
       })
     },
@@ -495,7 +488,7 @@ export default new Vuex.Store({
 
   },
   getters: {
-    getSelectedModels (state, context) {
+    getSelectedModels: (state) => {
       return _.filter(state.modelContainers, ['selected', true])
     }
   }

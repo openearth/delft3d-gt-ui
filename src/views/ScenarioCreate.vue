@@ -221,8 +221,8 @@
               <h3 class="card-header">Schematic</h3>
               <!-- template details -->
               <div class="card-body text-center">
-                <map-component v-show="template.name==='GTSM world template'">
-                </map-component>
+                <!-- <map-component v-show="template.name==='GTSM world template'">
+                </map-component> -->
                 <img v-if="template.name==='River dominated delta'" src="../assets/images/schematic.svg" class="scenariobuilder-schematic" />
               </div>
             </div>
@@ -243,7 +243,7 @@ import store from '../store'
 import {
   bus
 } from '@/event-bus.js'
-import MapComponent from '../components/MapComponent'
+// import MapComponent from '../components/MapComponent'
 // eslint-disable-next-line
 import { extend, validate } from 'vee-validate'
 import { required } from 'vee-validate/dist/rules'
@@ -346,9 +346,9 @@ export default {
       maxRuns: 20
     }
   },
-  components: {
-    MapComponent
-  },
+  // components: {
+  //   MapComponent
+  // },
   mounted () {
     // We force the template to be reloaded when this page is openend
     // Otherwise old values will stay in the form, and the validator is not reactivated.
@@ -367,6 +367,37 @@ export default {
       if (template !== undefined) {
         this.selectTemplate(template)
       }
+    }
+  },
+
+  validators: { // `numeric` and `url` custom validator is local registration
+    max: (val, rule) => {
+      // create a value object and split up the value
+      var vals = factorToArray({
+        factor: true,
+        value: val,
+        type: 'numeric'
+      })
+      // check if any value is > rule
+      var valid = _.every(vals, (x) => {
+        return x <= rule
+      })
+
+      return valid
+    },
+    min: (val, rule) => {
+      var vals = factorToArray({
+        factor: true,
+        value: val,
+        type: 'numeric'
+      })
+
+      // check if any value is > rule
+      var valid = _.every(vals, (x) => {
+        return x >= rule
+      })
+
+      return valid
     }
   },
   computed: {
@@ -407,6 +438,16 @@ export default {
           return prod * n
         }, 1)
         return totalRuns
+      }
+    },
+
+    validForm: {
+      cache: false,
+      get () {
+        if (this.$validation) {
+          return this.$validation.valid
+        }
+        return true
       }
     },
     // get the bounding box from the map from the store
@@ -454,8 +495,15 @@ export default {
 
     fetchTemplates () {
       const url = '/api/v1/templates/'
-      return fetch(url)
-        .then(res => res.json())
+      return new Promise((resolve, reject) => {
+        return $.ajax({ url: url, traditional: true, dataType: 'json' })
+          .done((json) => {
+            resolve(json[0])
+          })
+          .fail((jqXhr) => {
+            reject(jqXhr)
+          })
+      })
     },
     // check if variable should generate an input element
     isInput (variable) {
@@ -491,7 +539,7 @@ export default {
     },
 
     selectTemplate (template) {
-      if (template === null) {
+      if (template === null || template === undefined) {
         return
       }
 
@@ -713,7 +761,8 @@ export default {
         ((4 + (10000 * Math.tan(basinslope / 180 * Math.PI))) * percentage / 100),
         2 // digit precision
       )
-    }
+    },
+    factorToArray
   }
 }
 </script>
