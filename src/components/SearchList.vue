@@ -56,6 +56,12 @@ export default {
       required: true
     }
   },
+  data () {
+    return {
+      companyModels: [],
+      worldModels: []
+    }
+  },
 
   mounted () {
     bus.$on('activated', (model) => {
@@ -67,20 +73,16 @@ export default {
   watch: {
     items () {
       this.$nextTick(() => {})
+    },
+    'sharedState.models' () {
+      this.companyModels = _.filter(this.sharedState.modelContainers, ['data.shared', 'c'])
+      this.worldModels = _.filter(this.sharedState.modelContainers, ['data.shared', 'w'])
     }
   },
   computed: {
     ...mapState({
       sharedState: state => state
-    }),
-    companyModels () {
-      // Get all models that are shared with the company
-      return _.filter(this.sharedState.modelContainers, ['data.shared', 'c'])
-    },
-    worldModels () {
-      // Get all models that are shared with the world
-      return _.filter(this.sharedState.modelContainers, ['data.shared', 'w'])
-    }
+    })
   },
   methods: {
     notEmpty (arr) {

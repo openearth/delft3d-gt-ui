@@ -11,7 +11,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav mr-auto nav-pills">
+      <ul class="navbar-nav mr-auto">
         <li :class="{'active': $route.name === 'home'}" class="nav-item">
           <router-link class="nav-link my-auto" :to="{name: 'home'}" title="Create scenario">Database</router-link>
         </li>
@@ -26,7 +26,7 @@
           </a>
         </li>
       </ul>
-      <user-details></user-details>
+      <user-details class="user-details"></user-details>
     </div>
   </nav>
 </template>
@@ -136,7 +136,7 @@ export default {
         background: $col-bw-4;
     }
     .nav-item.active {
-      background-color: $col-bw-5;
+      background-color: $col-bw-4;
       color: white;
     }
 
@@ -147,9 +147,11 @@ export default {
       height: 100%;
       display: flex;
       color: black;
+      background-color: $col-bw-3;
     }
     .navbar-brand {
         font-size: 1em;
+        left: 0;
     }
 }
 
@@ -183,4 +185,9 @@ export default {
         }
     }
 }
+
+.user-details {
+  float: right;
+}
+
 </style>

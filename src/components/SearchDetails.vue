@@ -207,7 +207,6 @@ import store from '../store'
 import $ from 'jquery'
 import _ from 'lodash'
 import moment from 'moment'
-import ionRangeSlider from 'ion-rangeslider'
 
 // eslint-disable-next-line
 import ionRangeSlider from 'ion-rangeslider'
