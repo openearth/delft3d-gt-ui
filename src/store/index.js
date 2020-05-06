@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import $ from 'jquery'
-
 import _ from 'lodash'
 
 Vue.use(Vuex)
@@ -166,8 +165,20 @@ export default new Vuex.Store({
     updateModelContainers () {
       _.each(this.state.models, (model) => {
         var container = _.find(this.state.modelContainers, ['id', model.id])
-
-        // update css classes as indication of statuslevel
+        if (container === undefined) {
+          // create new container
+          container = {
+            id: model.id,
+            active: false,
+            selected: false,
+            data: model,
+            state: model.state
+          }
+          this.state.modelContainers.push(container)
+        } else {
+          // update model in container
+          container.data = model
+        }
         let statusLevel = 'info'
 
         if (model.state === 'Finished') {
@@ -176,25 +187,8 @@ export default new Vuex.Store({
           statusLevel = 'warning'
         } else if (model.state === 'Running simulation') {
           statusLevel = 'striped active'
-        } else if (model.state === 'Stopped') {
-          statusLevel = 'secondary'
         }
-        if (container === undefined) {
-          // create new container
-          container = {
-            id: model.id,
-            active: false,
-            selected: false,
-            data: model,
-            state: model.state,
-            statusLevel: statusLevel
-          }
-          this.state.modelContainers.push(container)
-        } else {
-          // update model in container
-          container.statusLevel = statusLevel
-          container.data = model
-        }
+        container.statusLevel = statusLevel
       })
 
       // remove containers that have no associated model
@@ -366,7 +360,6 @@ export default new Vuex.Store({
         if (_.indexOf(scenarioContainer.models, this.state.activeModelContainer) > -1) {
           this.state.activeModelContainer = undefined
         }
-
         // TODO: find better solution - now we do this to trigger an update on the front-end (vm.$forceUpdate() is added in Vue 2.0)
         _.each(this.state.modelContainers, el => {
           el.selected = false

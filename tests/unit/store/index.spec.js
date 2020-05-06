@@ -136,7 +136,7 @@ describe('Store: Testing data exchange with api', () => {
             done()
           })
           .catch((e) => {
-            console.log(e)
+            done(e)
             // rethrow error to capture it and avoid time out
             try {
               throw e
@@ -194,7 +194,6 @@ describe('Store: Testing data exchange with api', () => {
           done()
         })
         .catch((e) => {
-          console.log('Cannot delete model', e)
           done(new Error(e))
         })
     })
@@ -222,7 +221,6 @@ describe('Store: Testing data exchange with api', () => {
           done()
         })
         .catch((e) => {
-          console.log(e)
           done(new Error(e))
         })
     })
@@ -250,7 +248,6 @@ describe('Store: Testing data exchange with api', () => {
           done()
         })
         .catch((e) => {
-          console.log(e)
           done(new Error(e))
         })
     })
@@ -267,7 +264,6 @@ describe('Store: Testing data exchange with api', () => {
 
       // Mock the three requests:
       nock('http://localhost', { allowUnmocked: true })
-      // .log(console.log)
         .intercept('/api/v1/scenes/' + store.state.modelContainers[0].id + '/stop/', 'OPTIONS')
         .reply(200, () => {
           return 'Allow: GET, HEAD, PUT, DELETE, POST'
@@ -297,13 +293,11 @@ describe('Store: Testing data exchange with api', () => {
           done()
         })
         .catch((e) => {
-          console.log('cannot stop multiple models')
           done(new Error(e))
         })
     })
 
     it('Should be possible to stop a model', (done) => {
-      var correctReply = false
       var id = 4
 
       // TODO: verification dialog testing
@@ -319,21 +313,17 @@ describe('Store: Testing data exchange with api', () => {
         })
         .put('/api/v1/scenes/' + id + '/stop/')
         .reply(200, () => {
-          correctReply = true
           return {}
         })
 
-      // Make sure the nock server had the time to repl, { allowUnmocked: true }y
-      window.setTimeout(() => {
-        try {
-          assert(correctReply === true, 'Nock server did not reach reply')
-          done()
-        } catch (e) {
-          done(e)
-        }
-      }, 150)
-
       store.dispatch('stopModel', { id: id, data: { state: '' } })
+      .then(() => {
+        done()
+      })
+    // this is what we expect
+      .catch((e) => {
+        done(e)
+      })
     })
 
     it('Should be possible to stop a model - FAILURE test', (done) => {

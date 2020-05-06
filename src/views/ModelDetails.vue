@@ -128,7 +128,7 @@
           </div>&nbsp;
           <button type="button" class="btn btn-labeled btn-spaced-right" @click="updateModelBy = {name: 'delete', modelContainer: activeModel}" :class="[ (isReadOnly) ? 'disabled' : 'btn-danger']" :disabled="isReadOnly">
             <span class="btn-label"><i class="fa fa-fw fa-times" aria-hidden="true"></i></span>
-            Remove run
+            Delete run
           </button>&nbsp;
         </div>
       </div>

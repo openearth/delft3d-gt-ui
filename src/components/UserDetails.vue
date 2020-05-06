@@ -1,5 +1,5 @@
 <template id="template-user-details">
-  <div class="dropdown">
+  <div class="dropdown user">
     <a href="#" class="dropdown-toggle my-auto dropdown-menu-item" id="dropdown-menu-item" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <span class="fa fa-user" aria-hidden="true"></span>
         {{ sharedState.first_name }}{{ sharedState.last_name }}
@@ -28,14 +28,14 @@ export default {
 <style lang="scss">
 @import '../assets/variables.scss';
 
-.dropdown-menu-item {
-  padding-left: 130px;
+.user {
+  .dropdown-item {
+    width: 160px;
+  }
+  .dropdown-menu-item {
+    padding-left: 130px;
+  }
 }
-
-.dropdown-item {
-  width: 160px;
-}
-
 .navbar {
     margin-bottom: 0;
     // override default bootstrap value

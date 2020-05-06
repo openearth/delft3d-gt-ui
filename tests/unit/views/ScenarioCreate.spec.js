@@ -199,16 +199,16 @@ describe('ScenarioCreate - Scenario builder', () => {
     const scenarioCreate = shallowMount(ScenarioCreate)
 
     // fake the router
-    scenarioCreate.vm.$route = {}
+    ScenarioCreate.$route = {}
 
-    scenarioCreate.vm.$route.query = {
+    ScenarioCreate.$route.query = {
       name: 'test'
     }
 
     // encoded in url
 
     /* eslint-disable quotes */
-    scenarioCreate.vm.$route.query.parameters = '{"engine":{"values":["Delft3D Curvilinear"],"name":"Model Engine"},"simstoptime":{"units":"days","values":[5],"name":"Stop time"},"clayvolcomposition":{"units":"%","values":[50],"name":"Clay volumetric composition"},"riverdischarge":{"units":"m³/s","values":[1000,1200,1400],"name":"River discharge"}}'
+    ScenarioCreate.$route.query.parameters = '{"engine":{"values":["Delft3D Curvilinear"],"name":"Model Engine"},"simstoptime":{"units":"days","values":[5],"name":"Stop time"},"clayvolcomposition":{"units":"%","values":[50],"name":"Clay volumetric composition"},"riverdischarge":{"units":"m³/s","values":[1000,1200,1400],"name":"River discharge"}}'
     /* eslint-enable quotes */
 
     // {

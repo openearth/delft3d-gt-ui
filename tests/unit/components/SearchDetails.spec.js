@@ -49,7 +49,7 @@ describe('Search details', () => {
   })
 
   it('fetchSearchtemplate', (done) => {
-    nock('http://localhost', { allowUnmocked: true } )
+    nock('http://localhost', { allowUnmocked: true })
       .defaultReplyHeaders({
         'Content-Type': 'application/json'
       })

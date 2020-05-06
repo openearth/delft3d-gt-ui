@@ -29,12 +29,12 @@
           <text x="24" :y="18" fill="#999" style="font-size: 1.5em;">1</text>
           <text x="20" :y="height - 6" fill="#999" style="font-size: 1.5em;">0</text>
 
-          <div v-for="(x, index) in 9" :key="index">
+          <div v-for="(x, index) in 9" :key="`svg-${index}`">
             <line x1="0" x2="10" :y1="(x + 1) / 10 * height" :y2="(x + 1) / 10 * height" style="stroke:#999;stroke-width:2" />
             <text x="13" :y="((x + 1) / 10 * height) + 5" fill="#999">0.{{9 - x}}</text>
           </div>
 
-          <div v-for="(x, index) in 10" :key="index">
+          <div v-for="(x, index) in 10" :key="`svg1-${index}`">
             <line x1="0" x2="5" :y1="(x + 0.5)  / 10 * height" :y2="(x + 0.5)  / 10 * height" style="stroke:#aaa;stroke-width:2" />
           </div>
 
@@ -126,7 +126,7 @@
             </div>
             <input class="form-control text-center" type="text" name="gradient-position" v-model="point.position" lazy>
             <div class="input-group-append">
-              <button type="button" class="btn" @click="removePoint($index)" v-if="$index < gradient.length - 1">x</button>
+              <button type="button" class="btn" @click="removePoint(index)" v-if="index < gradient.length - 1">x</button>
             </div>
           </div>
           <div class="input-group">

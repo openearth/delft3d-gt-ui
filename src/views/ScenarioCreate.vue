@@ -221,8 +221,8 @@
               <h3 class="card-header">Schematic</h3>
               <!-- template details -->
               <div class="card-body text-center">
-                <map-component v-show="template.name==='GTSM world template'">
-                </map-component>
+                <!-- <map-component v-show="template.name==='GTSM world template'">
+                </map-component> -->
                 <img v-if="template.name==='River dominated delta'" src="../assets/images/schematic.svg" class="scenariobuilder-schematic" />
               </div>
             </div>
@@ -243,7 +243,7 @@ import store from '../store'
 import {
   bus
 } from '@/event-bus.js'
-import MapComponent from '../components/MapComponent'
+// import MapComponent from '../components/MapComponent'
 // eslint-disable-next-line
 import { extend, validate } from 'vee-validate'
 import { required } from 'vee-validate/dist/rules'
@@ -346,9 +346,9 @@ export default {
       maxRuns: 20
     }
   },
-  components: {
-    MapComponent
-  },
+  // components: {
+  //   MapComponent
+  // },
   mounted () {
     // We force the template to be reloaded when this page is openend
     // Otherwise old values will stay in the form, and the validator is not reactivated.
@@ -539,7 +539,7 @@ export default {
     },
 
     selectTemplate (template) {
-      if (template === null) {
+      if (template === null || template === undefined) {
         return
       }
 

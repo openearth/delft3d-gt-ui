@@ -3,7 +3,6 @@ import ModelDetails from '../../../src/views/ModelDetails.vue'
 import chaiAsPromised from 'chai-as-promised'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
-import $ from 'jquery'
 import chai from 'chai'
 import store from '@/store'
 
@@ -29,10 +28,11 @@ const modelDetails = shallowMount(ModelDetails)
 //   return el
 // }
 // test component
+
+sinon.restore()
 describe('ModelDetails', () => {
   beforeEach(() => {
     // import component
-    sinon.spy($, 'ajax')
     sinon.spy(Promise, 'all')
     sinon.spy(Promise, 'reject')
     sinon.spy(Promise, 'resolve')
@@ -41,7 +41,6 @@ describe('ModelDetails', () => {
 
   afterEach(() => {
     // Unwrap spies
-    $.ajax.restore()
     Promise.all.restore()
     Promise.reject.restore()
     Promise.resolve.restore()

@@ -116,7 +116,6 @@ describe('Store', () => {
       // check
       expect(store.dispatch).to.have.been.calledWith('fetchUser')
       expect($.ajax).to.have.been.called
-      // console.log($.ajax.getCall(0))
       expect($.ajax.args).to.eql([[{ url: '/api/v1/users/me/',
         data: {
           key: 'val'

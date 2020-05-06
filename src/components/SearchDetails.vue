@@ -213,7 +213,7 @@ import ionRangeSlider from 'ion-rangeslider'
 
 import {
   fetchSearchTemplate
-} from '../templates.js'
+} from '@/templates.js'
 import {
   bus
 } from '@/event-bus.js'
@@ -331,6 +331,7 @@ export default {
     modelEngines: {
       get () {
         // flatten variables
+        console.log(this.templates)
         var variables = _.flatMap(_.flatMap(this.templates, 'sections'), 'variables')
 
         // lookup all variables with id engine (convention)
@@ -451,11 +452,6 @@ export default {
           }
         })
       }
-      /* eslint-enable camelcase */
-
-      // slider.forEach(slide => {
-      //   slide.on('slideStop', this.search)
-      // }
 
       // Add event handler that allows one to use the X next to inputs to clear the input.
       $('.button-empty-input-field').on('click', () => {
