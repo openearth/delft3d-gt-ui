@@ -209,9 +209,12 @@ import _ from 'lodash'
 import moment from 'moment'
 import ionRangeSlider from 'ion-rangeslider'
 
+// eslint-disable-next-line
+import ionRangeSlider from 'ion-rangeslider'
+
 import {
   fetchSearchTemplate
-} from '../templates.js'
+} from '@/templates.js'
 import {
   bus
 } from '@/event-bus.js'
@@ -329,6 +332,7 @@ export default {
     modelEngines: {
       get () {
         // flatten variables
+        console.log(this.templates)
         var variables = _.flatMap(_.flatMap(this.templates, 'sections'), 'variables')
 
         // lookup all variables with id engine (convention)

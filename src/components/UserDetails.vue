@@ -42,11 +42,6 @@ export default {
     height: 51px;
     background-color: $col-bw-3;
 
-    //
-    // #navbarNav {
-    //   height: 100%;
-    // }
-
     .logoholder {
       float: left;
       position: relative;

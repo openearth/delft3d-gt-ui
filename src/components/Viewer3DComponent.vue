@@ -29,12 +29,12 @@
           <text x="24" :y="18" fill="#999" style="font-size: 1.5em;">1</text>
           <text x="20" :y="height - 6" fill="#999" style="font-size: 1.5em;">0</text>
 
-          <div v-for="(x, index) in 10" :key="index">
+          <div v-for="(x, index) in 9" :key="`svg-${index}`">
             <line x1="0" x2="10" :y1="(x + 1) / 10 * height" :y2="(x + 1) / 10 * height" style="stroke:#999;stroke-width:2" />
             <text x="13" :y="((x + 1) / 10 * height) + 5" fill="#999">0.{{9 - x}}</text>
           </div>
 
-          <div v-for="(x, index) in 10" :key="index">
+          <div v-for="(x, index) in 10" :key="`svg1-${index}`">
             <line x1="0" x2="5" :y1="(x + 0.5)  / 10 * height" :y2="(x + 0.5)  / 10 * height" style="stroke:#aaa;stroke-width:2" />
           </div>
 
@@ -545,7 +545,6 @@ export default {
         return
       }
       this.started = true
-      console.log('test', window)
       /* eslint-disable */
       this.viewer3d = new window.Viewer3D.viewer3D()
       /* eslint-enable */
@@ -564,7 +563,6 @@ export default {
   }
 }
 </script>
-
 <style lang="scss">
 @import '../assets/variables.scss';
 
