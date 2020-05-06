@@ -317,13 +317,13 @@ describe('Store: Testing data exchange with api', () => {
         })
 
       store.dispatch('stopModel', { id: id, data: { state: '' } })
-      .then(() => {
-        done()
-      })
-    // this is what we expect
-      .catch((e) => {
-        done(e)
-      })
+        .then(() => {
+          done()
+        })
+      // this is what we expect
+        .catch((e) => {
+          done(e)
+        })
     })
 
     it('Should be possible to stop a model - FAILURE test', (done) => {
