@@ -353,6 +353,33 @@ export default {
       }
     }
   },
+  validators: { // `numeric` and `url` custom validator is local registration
+    max: (val, rule) => {
+      // create a value object and split up the value
+      var vals = factorToArray({
+        factor: true,
+        value: val,
+        type: 'numeric'
+      })
+      // check if any value is > rule
+      var valid = _.every(vals, (x) => {
+        return x <= rule
+      })
+      return valid
+    },
+    min: (val, rule) => {
+      var vals = factorToArray({
+        factor: true,
+        value: val,
+        type: 'numeric'
+      })
+      // check if any value is > rule
+      var valid = _.every(vals, (x) => {
+        return x >= rule
+      })
+      return valid
+    }
+  },
   computed: {
     totalRuns: {
       cache: false,
@@ -385,6 +412,15 @@ export default {
           return prod * n
         }, 1)
         return totalRuns
+      }
+    },
+    validForm: {
+      cache: false,
+      get () {
+        if (this.$validation) {
+          return this.$validation.valid
+        }
+        return true
       }
     },
     // get the bounding box from the map from the store
@@ -431,8 +467,15 @@ export default {
     },
     fetchTemplates () {
       const url = '/api/v1/templates/'
-      return fetch(url)
-        .then(res => res.json())
+      return new Promise((resolve, reject) => {
+        return $.ajax({ url: url, traditional: true, dataType: 'json' })
+          .done((json) => {
+            resolve(json)
+          })
+          .fail((jqXhr) => {
+            reject(jqXhr)
+          })
+      })
     },
     // check if variable should generate an input element
     isInput (variable) {
@@ -461,7 +504,7 @@ export default {
         })
     },
     selectTemplate (template) {
-      if (template === null) {
+      if (template === null || template === undefined) {
         return
       }
       //  Did the template change? Or maybe forcing an update
@@ -652,7 +695,8 @@ export default {
         ((4 + (10000 * Math.tan(basinslope / 180 * Math.PI))) * percentage / 100),
         2 // digit precision
       )
-    }
+    },
+    factorToArray
   }
 }
 </script>
