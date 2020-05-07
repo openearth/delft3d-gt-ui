@@ -79,7 +79,7 @@
     </ul>
 
         <!-- Confirm dialog for control checks -->
-        <confirm-dialog v-if="updateModelsBy.name" :confirm-button-title="capitalizeFirst(updateModelsBy.name)" :dialogId="`confirm-${updateModelsBy.name}`" @confirm="confirm" @cancel="updateModelsBy = {}">
+        <confirm-dialog v-if="updateModelsBy.name" :confirm-button-title="capitalizeFirst(updateModelsBy.name)" :dialogId="`confirm-${updateModelsBy.name}`" @confirm="confirm" @cancel="cancel">
           <template slot="title">
             {{capitalizeFirst(updateModelsBy.name)}} models?
           </template>
@@ -179,11 +179,13 @@ export default {
         return `${text.charAt(0).toUpperCase()}${text.slice(1)}`
       }
     },
+    cancel () {
+      this.updateModelsBy = {}
+    },
     confirm () {
       if (this.someSelectedModelsArePublished()) {
         return
       }
-      console.log(this.updateModelsBy)
       if (this.updateModelsBy.domain) {
         store.dispatch(`${this.updateModelsBy.name}SelectedModels`, this.updateModelsBy.domain)
       } else {
