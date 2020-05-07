@@ -192,7 +192,7 @@
                       <div class="pull-right">
                         <router-link class="btn btn-outline-secondary nav-bar-button nav-link" :to="{name: 'home'}"> Cancel </router-link>
                         <!-- <a class="btn btn-default nav-bar-button nav-link" ="{ path: '/' }">Cancel</a> -->
-                        <button type="button" class="btn btn-primary nav-bar-button default" id="scenario-submit" :disabled="noErrors()" @click="submitScenario" value="">
+                        <button type="button" class="btn btn-info nav-bar-button default" id="scenario-submit" :disabled="noErrors()" @click="submitScenario" value="">
                           Submit
                         </button>
                       </div>
@@ -238,7 +238,6 @@
 <script>
 import _ from 'lodash'
 import $ from 'jquery'
-
 import store from '../store'
 import {
   bus
@@ -247,12 +246,10 @@ import {
 // eslint-disable-next-line
 import { extend, validate } from 'vee-validate'
 import { required } from 'vee-validate/dist/rules'
-
 extend('required', {
   ...required,
   message: 'This field is required'
 })
-
 extend('noEmptyArray', {
   validate (value) {
     if (typeof value === 'object') {
@@ -280,7 +277,6 @@ extend('min', {
   params: ['min_value'],
   message: `Entered value is too low.`
 })
-
 extend('max', {
   validate (value, args) {
     if (typeof value === 'number') {
@@ -298,7 +294,6 @@ extend('max', {
   params: ['max_value'],
   message: `Entered value is too high.`
 })
-
 // a separate function that we can test.
 const factorToArray = (variable) => {
   if (!_.get(variable, 'factor')) {
@@ -307,7 +302,6 @@ const factorToArray = (variable) => {
   }
   // split it up
   var tagsArray = _.split(variable.value, ',')
-
   // if we have a number, return numbers
   if (variable.type === 'numeric') {
     // convert to number
@@ -315,13 +309,11 @@ const factorToArray = (variable) => {
       tagsArray,
       _.toNumber
     )
-
     // otherwise return the strings
     tagsArray = numbers
   }
   return tagsArray
 }
-
 export default {
   name: 'scenario-builder',
   store,
@@ -330,19 +322,13 @@ export default {
       availableTemplates: [],
       // The scenario as configured by the user at the moment.
       scenarioConfig: {},
-
       // the current template
       template: null,
-
       dataLoaded: false,
-
       currentSelectedId: null,
-
       // The DOM elements used for the fixed toolbar event listener
       navBars: null,
-
       forceTemplateUpdate: false,
-
       maxRuns: 20
     }
   },
@@ -357,19 +343,16 @@ export default {
     this.currentSelectedId = null
     this.template = null
     this.fetchTemplateList()
-
     // if we have a template in the request, select that one
     if (_.get(this, '$route.query.template')) {
       // This cannot go into the fetchTemplates, template will always be empty!
       var templateId = parseInt(this.$route.query.template)
       var template = _.first(_.filter(this.availableTemplates, ['id', templateId]))
-
       if (template !== undefined) {
         this.selectTemplate(template)
       }
     }
   },
-
   validators: { // `numeric` and `url` custom validator is local registration
     max: (val, rule) => {
       // create a value object and split up the value
@@ -382,7 +365,6 @@ export default {
       var valid = _.every(vals, (x) => {
         return x <= rule
       })
-
       return valid
     },
     min: (val, rule) => {
@@ -391,22 +373,18 @@ export default {
         value: val,
         type: 'numeric'
       })
-
       // check if any value is > rule
       var valid = _.every(vals, (x) => {
         return x >= rule
       })
-
       return valid
     }
   },
   computed: {
-
     totalRuns: {
       cache: false,
       get () {
         var totalRuns = 1
-
         // lookup all variables
         var variables = _.flatMap(
           this.scenarioConfig.sections,
@@ -414,7 +392,6 @@ export default {
             return section.variables
           }
         )
-
         // lookup number of runs per variable
         var runs = _.map(
           variables,
@@ -424,15 +401,12 @@ export default {
             if (_.isArray(variable.value)) {
               return variable.value.length
             }
-
             // unless we have a factor, then it's the number of values
             if (variable.factor) {
               return factorToArray(variable).length
             }
-
             return 1
           })
-
         // reduce product
         totalRuns = _.reduce(runs, (prod, n) => {
           return prod * n
@@ -440,7 +414,6 @@ export default {
         return totalRuns
       }
     },
-
     validForm: {
       cache: false,
       get () {
@@ -492,13 +465,12 @@ export default {
         $(el).addClass('badge badge-info')
       })
     },
-
     fetchTemplates () {
       const url = '/api/v1/templates/'
       return new Promise((resolve, reject) => {
         return $.ajax({ url: url, traditional: true, dataType: 'json' })
           .done((json) => {
-            resolve(json[0])
+            resolve(json)
           })
           .fail((jqXhr) => {
             reject(jqXhr)
@@ -514,55 +486,42 @@ export default {
       this.fetchTemplates()
         .then((templates) => {
           this.availableTemplates = _.sortBy(templates, ['name'])
-
           // Select the first template automatic:
           var template = _.get(this.availableTemplates, 0)
-
           // if we have a template in the request, select that one
           if (_.get(this, '$route.query.template')) {
             var templateId = parseInt(this.$route.query.template)
-
             template = _.first(_.filter(this.availableTemplates, ['id', templateId]))
           }
-
           // set the template, somehow a computed setter was not working...
           this.selectTemplate(template)
-
           // set the dataloaded to true, such that the <form> DOM will be rendered
           this.dataLoaded = true
-
           // Initialize the tooltips: We do this after the DOM update.
           this.$nextTick(() => {
             this.updateAfterTick()
           })
         })
     },
-
     selectTemplate (template) {
       if (template === null || template === undefined) {
         return
       }
-
       //  Did the template change? Or maybe forcing an update
       if (this.currentSelectedId === template.id) {
         return
       }
-
       this.currentSelectedId = template.id
-
       // First set data, then the template. Order is important!
       this.scenarioConfig = this.prepareScenarioConfig(template)
       this.updateWithQueryParameters()
-
       // set the selected template
       this.template = template
-
       // Initialize the tooltips: We do this after the DOM update.
       this.$nextTick(() => {
         this.updateAfterTick()
       })
     },
-
     updateAfterTick () {
       // initiate the multi-select input fields
       var pickers = $('.selectpicker')
@@ -580,29 +539,24 @@ export default {
             }
             variable.value = $(el).tagsinput('items')
           })
-
           this.$refs.validator.forEach(val => val.validate())
         })
       })
       this.updateTagLabel()
     },
-
     // Return a unique id for the variable that is validated.
     // When selecting another template, the validator cannot deal
     // with variable with the same name.
     getId (variable) {
       return `${this.scenarioConfig.id},${variable.id}`
     },
-
     updateWithQueryParameters () {
       if (_.get(this, '$route.query.parameters')) {
         // get parameters from query
         var parameters = JSON.parse(this.$route.query.parameters)
       }
-
       // the request has parameters in the form of {"variable": {"values": value}}
       // the scenarioConfig also has sections {"sections": [{"variables": [{"variable": {"value": []}}]}]}
-
       // let's create a flat list of variables
       var variables = _.flatMap(this.scenarioConfig.sections, 'variables')
       // loop over all variables in the filled in template
@@ -627,28 +581,22 @@ export default {
       if (_.get(this, '$route.query.name') && _.get(this.scenarioConfig, 'name')) {
         // we also have a name
         var name = this.$route.query.name
-
         // reuse it and create (copy) (copy) (over) (roger)
         this.scenarioConfig.name = `${name}(copy)`
-
         // the name variable is special, because it's duplicated
         var nameVariable = _.first(_.filter(variables, ['id', 'name']))
-
         if (nameVariable) {
           // also set the name to the variable
           nameVariable.value = this.scenarioConfig.name
         }
       }
     },
-
     submitScenario () {
       if (this.noErrors()) {
         return
       }
       var parameters = {}
-
       var name = ''
-
       // map each variable in each section to parameters
       _.forEach(this.scenarioConfig.sections, (section) => {
         _.forEach(section.variables, (variable) => {
@@ -658,17 +606,13 @@ export default {
             var valuearray = _.map(('' + variable.value).split(','), (d) => {
               // try and parse
               var parsed = parseFloat(d)
-
               // if we have a number return parsed otherwise original string
               var result = (_.isNumber(parsed) && !isNaN(parsed)) ? parsed : d
-
               return result
             })
-
             if (variable.type === 'bbox-array') {
               valuearray = [valuearray]
             }
-
             parameters[variable.id] = {
               values: valuearray,
               // we need these in the table
@@ -685,7 +629,6 @@ export default {
         'template': this.currentSelectedId,
         'parameters': JSON.stringify(parameters)
       }
-
       store.dispatch('createScenario', postdata)
         .then(() => {
           // This is not practical, but the only way in vue? (using $parent)
@@ -708,15 +651,12 @@ export default {
           })
         })
     },
-
     // We have to prepare the scenario config
     prepareScenarioConfig (data) {
       // create a deep copy so we don't change the template
       var scenario = _.cloneDeep(data)
-
       // Loop through all variables and set the default value:
       var sections = scenario.sections
-
       // flatten variables
       _.forEach(sections, (section) => {
         // Loop through all category vars
@@ -729,14 +669,11 @@ export default {
           variable.inputValue = variable.value
         })
       })
-
       return scenario
     },
-
     splitString (string) {
       return _.split(string, ',')
     },
-
     getVar (id) {
       return _.first(
         _.filter(
@@ -747,16 +684,13 @@ export default {
         )
       )
     },
-
     calcAbsBaseLevelChange (basinslope, percentage) {
       // This method computes the absolute values of base level change (m), based on:
       // - the basin slope angle (rad)
       // - the relative base level change (%).
       // The basin itself has a length of 10.000m and has a 4m starting depth.
-
       // This method is very specific and unique with regards to the template!!
       // TODO: implement a generic means to include calculations in tables based on template json
-
       return _.round(
         ((4 + (10000 * Math.tan(basinslope / 180 * Math.PI))) * percentage / 100),
         2 // digit precision
@@ -769,34 +703,27 @@ export default {
 
 <style lang="scss">
 @import '../assets/variables.scss';
-
 .scenario-builder {
     padding-top: 51px;
     position: static;
     height: 100vh;
-
     img {
         max-height: 768px;
         max-width: 100%;
     }
-
     .btn {
         margin-right: $padding;
     }
-
     .btn[disabled] {
         background-color: grey;
         border-color: black;
     }
-
     .row {
         padding: $padding 0;
     }
-
     .scrollable {
         overflow-y: auto;
     }
-
     .input-group,
     option,
     select {

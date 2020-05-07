@@ -235,7 +235,7 @@ describe('ModelDetails', () => {
       modelDetails.vm.hasPostProcessData().should.equal(false)
       modelDetails.vm.sharedState.activeModelContainer = { 'id': 'a' }
       modelDetails.vm.hasPostProcessData().should.equal(false)
-      modelDetails.vm.sharedState.activeModelContainer = { 'id': 'a', 'data': { 'info': { 'postprocess_output': { 'stuff': 'value' } } } }
+      modelDetails.vm.sharedState.activeModelContainer = { 'id': 'a', 'data': { 'info': { 'postprocess_output': { 'files': { 'stuff': 'value' } } } } }
       modelDetails.vm.hasPostProcessData().should.equal(true)
     })
   })

@@ -145,7 +145,6 @@
 <script>
 import _ from 'lodash'
 import $ from 'jquery'
-
 import store from '../store'
 export default {
   store,
@@ -259,14 +258,12 @@ export default {
         let suid = _.get(this.activeModel, 'data.suid')
         let sedimentClass = _.get(this.activeModel, 'data.parameters.composition.value')
         let maxTimeStepIndex = _.get(this.activeModel, 'data.info.delta_fringe_images.images', []).length - 1 // obtain max TimeStep index based on number of Delta Fringe images
-
         if (suid !== this.curSuid && maxTimeStepIndex !== -1 && sedimentClass !== undefined) {
           this.curSuid = suid
           this.curFrameLength = this.curTimeStep = maxTimeStepIndex // if the model is not finished, do not show final maxTimeStepIndex (as it will not render)
           this.curSedimentClass = sedimentClass
           this.startOrLoad3dViewer()
         }
-
         this.initPickAColor()
         this.initIonSliders()
       }
@@ -293,12 +290,10 @@ export default {
       'deep': true,
       'handler' () {
         let newGrad = _.reverse(_.sortBy(_.clone(this.gradient), 'position'))
-
         // cap position values
         _.each(newGrad, (p) => {
           p.position = Math.max(Math.min(p.position, 1), 0)
         })
-
         if (_.isEqual(this.gradient, newGrad)) {
           this.loadGradient()
         } else {
@@ -316,7 +311,6 @@ export default {
   ready () {
     // get reference element from model-details
     let width = document.getElementById('col-glcanvas-container-reference').scrollWidth
-
     this.width = width
     this.height = Math.floor(width / 1.6) // golden ratio
     this.canvasStyle.height = this.height + 'px'
@@ -332,7 +326,6 @@ export default {
       if (_.isUndefined(this.viewer3d)) {
         return
       }
-
       if (side === 'back') {
         this.viewer3d.camera.alignToSide(this.viewer3d.side.BACK, true)
       }
@@ -409,7 +402,6 @@ export default {
       if (!this.activated || _.isUndefined(this.viewer3d)) {
         return
       }
-
       try {
         if (this.curSuid !== undefined && this.curSedimentClass !== undefined) {
           this.viewer3d.dataSet.load({
@@ -432,25 +424,20 @@ export default {
       if (_.isUndefined(this.viewer3d)) {
         return
       }
-
       let colors = _.reverse(_.map(this.gradient, (c) => {
         return '#' + c.color
       }))
       let positions = _.reverse(_.map(this.gradient, 'position'))
-
       // check if all colors are according to color format
       let colorsOk = _.every(colors, function (c) {
         return /^#[0-9a-fA-F]{6}$/.test(c)
       })
-
       if (!colorsOk && colors.length === positions.length) {
         return
       }
-
       let posColors = _.reverse(_.map(colors, (c, i) => {
         return c + ' ' + Math.floor((1 - positions[i]) * 100) + '%'
       }))
-
       if (colors.length > 1) {
         this.gradientStyle.background = 'linear-gradient(' + _.join(posColors, ',') + ')'
       }
@@ -460,7 +447,6 @@ export default {
       if (colors.length === 0) {
         this.gradientStyle.background = '#000000'
       }
-
       this.viewer3d.colorMap.setColorMap(
         colors,
         positions
@@ -471,32 +457,25 @@ export default {
       if (_.isUndefined(this.viewer3d)) {
         return
       }
-
       this.viewer3d.volume.setSlicePosition(this.viewer3d.side.LEFT, this.slices.x.from - 1)
       this.viewer3d.volume.setSlicePosition(this.viewer3d.side.RIGHT, this.slices.x.to - 2)
-
       this.viewer3d.volume.setSlicePosition(this.viewer3d.side.BACK, this.slices.y.to - 1)
       this.viewer3d.volume.setSlicePosition(this.viewer3d.side.FRONT, this.slices.y.from - 1)
-
       this.viewer3d.volume.setSlicePosition(this.viewer3d.side.TOP, this.slices.z.from - 1)
       this.viewer3d.volume.setSlicePosition(this.viewer3d.side.BOTTOM, this.slices.z.to - 1)
-
       this.refreshData()
     },
     loadTime () {
       if (_.isUndefined(this.viewer3d)) {
         return
       }
-
       this.viewer3d.volume.setTimeStep(this.curTimeStep)
-
       this.refreshData()
     },
     refreshData: _.debounce(function () {
       if (_.isUndefined(this.viewer3d)) {
         return
       }
-
       this.viewer3d.volume.refreshData()
     }, 500),
     removePoint: function (index) {
@@ -505,17 +484,13 @@ export default {
     resetSliders () {
       _.each(['x', 'y', 'z'], (d) => {
         let val = _.get(this.dimensions, d)
-
         // don't show dummy values on max X
         if (d === 'x') {
           val--
         }
-
         _.set(this.slices, [d, 'from'], 1)
         _.set(this.slices, [d, 'to'], val)
-
         let ionRangeFinderData = $('.ion-range.slice-' + d + '-w').data('ionRangeSlider')
-
         if (ionRangeFinderData !== undefined) {
           ionRangeFinderData.update({
             'min': 1,
@@ -530,11 +505,9 @@ export default {
       if (_.isUndefined(this.viewer3d)) {
         return
       }
-
       this.resetSliders()
       this.loadSliders()
       this.refreshData()
-
       this.viewer3d.camera.rotateToTopRightCorner(true)
       this.viewer3d.camera.fit()
     },
@@ -549,7 +522,6 @@ export default {
       /* eslint-disable */
       this.viewer3d = new window.Viewer3D.viewer3D()
       /* eslint-enable */
-
       this.loadData()
     },
     startOrLoad3dViewer () {
@@ -566,7 +538,6 @@ export default {
 </script>
 <style lang="scss">
 @import '../assets/variables.scss';
-
 .irs--round .irs-handle {
   width: 10px;
   height: 10px;
@@ -574,11 +545,9 @@ export default {
   margin-left: 0px;
   border: 0;
 }
-
 .irs--round .irs-to, .irs--round .irs-from, .irs--round .irs-bar {
   background-color: #adb5bd;
 }
-
 .irs--round .irs-to:before, .irs--round .irs-from:before {
   border-top-color:  #adb5bd;
 }

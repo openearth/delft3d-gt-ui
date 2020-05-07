@@ -546,7 +546,8 @@ export default {
       window.open(`api/v1/scenes/${id}/export/?format=json&${downloadOptions.join('&')}`)
     },
     hasPostProcessData () {
-      return (Object.keys(_.get(this.activeModel, 'data.info.postprocess_output', {})).length > 0)
+      // Check if files in postprocess_output is not empty
+      return (Object.keys(_.get(this.activeModel, 'data.info.postprocess_output.files', {})).length > 0)
     },
     confirm () {
       store.dispatch(`${this.updateModelBy.name}Model`, this.updateModelBy)
