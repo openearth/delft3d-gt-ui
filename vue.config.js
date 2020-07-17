@@ -16,6 +16,9 @@ module.exports = {
       },
       '^/api/v1/*': {
         target: `${apiServer}`
+      },
+      '^/files/*': {
+        target: `${apiServer}`
       }
     }
   },
@@ -28,18 +31,21 @@ module.exports = {
       })
     ],
     module: {
-      rules: [{
-        test: require.resolve('jquery'),
-        use: [{
-          loader: 'expose-loader',
-          options: 'jQuery'
-        },
+      rules: [
         {
-          loader: 'expose-loader',
-          options: '$'
+          test: require.resolve('jquery'),
+          use: [
+            {
+              loader: 'expose-loader',
+              options: 'jQuery'
+            },
+            {
+              loader: 'expose-loader',
+              options: '$'
+            }
+          ]
         }
-        ]
-      }]
+      ]
     }
   }
 }
