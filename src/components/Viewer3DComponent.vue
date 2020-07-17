@@ -380,7 +380,7 @@ export default {
         background: '#fff',
         height: '100%'
       },
-      height: 400,
+      height: 0,
       sharedState: store.state,
       started: false,
       slices: {
@@ -402,7 +402,7 @@ export default {
       },
       tab: 'slices',
       viewer3d: undefined,
-      width: 400
+      width: 0
     }
   },
   computed: {
@@ -484,6 +484,7 @@ export default {
     slices: {
       deep: true,
       handler () {
+        console.log('slices')
         this.loadSliders()
       }
     }
@@ -592,9 +593,15 @@ export default {
       if (!this.activated || _.isUndefined(this.viewer3d)) {
         return
       }
-      const url = `/files/${this.curSuid}/simulation/trim-${
+      const url = `/thredds/dodsC/files//${this.curSuid}/simulation/trim-${
         this.curSedimentClass
       }.nc`
+      console.log({
+        url: url,
+        displacementVariable: this.dataSetVariables.displacementVariable,
+        dataVariable: this.dataSetVariables.dataVariable,
+        bedLevelVariable: this.dataSetVariables.bedLevelVariable
+      })
       try {
         if (this.curSuid !== undefined && this.curSedimentClass !== undefined) {
           this.viewer3d.dataSet.load(

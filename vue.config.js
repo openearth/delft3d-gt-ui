@@ -19,6 +19,9 @@ module.exports = {
       },
       '^/files/*': {
         target: `${apiServer}`
+      },
+      '^/thredds/*': {
+        target: `${apiServer}`
       }
     }
   },
