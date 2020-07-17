@@ -43,7 +43,7 @@
           class="svg-container"
           v-show="started && isFinished"
         >
-          <svg :style="svgStyle" width="100" :height="height">
+          <svg :style="svgStyle" width="500px" :height="500px">
             <line
               x1="0"
               y1="1"
@@ -347,34 +347,13 @@ export default {
         dataVariable: 'MSED',
         displacementVariable: 'DP_BEDLYR'
       },
-      dimensions: {
-        x: 10,
-        y: 10,
-        z: 10,
-        t: 10,
-        segments: 10
-      },
+      dimensions: { x: 10, y: 10, z: 10, t: 10, segments: 10 },
       gradient: [
-        {
-          color: '542437',
-          position: 1.0
-        },
-        {
-          color: 'd95b43',
-          position: 0.5
-        },
-        {
-          color: 'ecd078',
-          position: 0.2
-        },
-        {
-          color: 'c02942',
-          position: 0.1
-        },
-        {
-          color: '53777a',
-          position: 0.0
-        }
+        { color: '542437', position: 1.0 },
+        { color: 'd95b43', position: 0.5 },
+        { color: 'ecd078', position: 0.2 },
+        { color: 'c02942', position: 0.1 },
+        { color: '53777a', position: 0.0 }
       ],
       gradientStyle: {
         background: '#fff',
@@ -384,18 +363,9 @@ export default {
       sharedState: store.state,
       started: false,
       slices: {
-        x: {
-          from: 1,
-          to: 1
-        },
-        y: {
-          from: 1,
-          to: 1
-        },
-        z: {
-          from: 1,
-          to: 1
-        }
+        x: { from: 1, to: 1 },
+        y: { from: 1, to: 1 },
+        z: { from: 1, to: 1 }
       },
       svgStyle: {
         height: '100%'
@@ -774,5 +744,9 @@ export default {
 .irs--round .irs-to:before,
 .irs--round .irs-from:before {
   border-top-color: #adb5bd;
+}
+
+.col-glcanvas-container-reference {
+  width: 500px;
 }
 </style>
