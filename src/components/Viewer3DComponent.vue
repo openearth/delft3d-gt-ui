@@ -1,5 +1,5 @@
 <template id="template-viewer-threedee">
-  <div id="viewer-3d" class="panel-body viewer-3d">
+  <div id="viewer-3d" ref="viewer3d" class="panel-body viewer-3d">
     <div class="btn-group btn-group-justified" v-if="!started || !isFinished">
       <div class="btn-group" role="group">
         <button
@@ -43,7 +43,7 @@
           class="svg-container"
           v-show="started && isFinished"
         >
-          <svg :style="svgStyle" width="500px" :height="500px">
+          <svg :style="svgStyle" width="0" :height="0">
             <line
               x1="0"
               y1="1"
@@ -359,7 +359,7 @@ export default {
         background: '#fff',
         height: '100%'
       },
-      height: 0,
+      height: 400,
       sharedState: store.state,
       started: false,
       slices: {
@@ -372,7 +372,7 @@ export default {
       },
       tab: 'slices',
       viewer3d: undefined,
-      width: 0
+      width: 400
     }
   },
   computed: {
@@ -459,7 +459,7 @@ export default {
       }
     }
   },
-  created () {
+  mounted () {
     // Debounce in method is troublesome
     this.refreshData = _.debounce(() => {
       if (!this.viewer3d) {
@@ -467,13 +467,10 @@ export default {
       }
       this.viewer3d.volume.refreshData()
     }, 500)
-  },
-  ready () {
-    // get reference element from model-details
-    let width = document.getElementById('col-glcanvas-container-reference')
-      .scrollWidth
-    this.width = width
-    this.height = Math.floor(width / 1.6) // golden ratio
+
+    let width = this.$refs.viewer3d.clientWidth
+    // this.width = width
+    // this.height = Math.floor(width / 1.6) // golden ratio
     this.canvasStyle.height = this.height + 'px'
     this.gradientStyle.height = this.height + 'px'
     this.svgStyle.height = this.height + 'px'
@@ -746,7 +743,8 @@ export default {
   border-top-color: #adb5bd;
 }
 
-.col-glcanvas-container-reference {
-  width: 500px;
+.glcanvas {
+  height: 400px;
+  width: 400px;
 }
 </style>
