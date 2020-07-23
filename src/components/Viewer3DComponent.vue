@@ -43,48 +43,48 @@
           class="svg-container"
           v-show="started && isFinished"
         >
-          <svg :style="svgStyle" width="0" :height="0">
+          <svg :style="svgStyle" width="100" :height="height">
             <line
-              x1="0"
+              x1="30"
               y1="1"
-              x2="20"
+              x2="40"
               y2="1"
               style="stroke:#999;stroke-width:3"
             />
             <line
-              x1="0"
+              x1="30"
               :y1="height - 1"
-              x2="20"
+              x2="40"
               :y2="height - 1"
               style="stroke:#999;stroke-width:3"
             />
-            <text x="24" :y="18" fill="#999" style="font-size: 1.5em;">1</text>
-            <text x="20" :y="height - 6" fill="#999" style="font-size: 1.5em;">
+            <text x="41" :y="18" fill="#999" style="font-size: 1.5em;">1</text>
+            <text x="41" :y="height - 6" fill="#999" style="font-size: 1.5em;">
               0
             </text>
 
-            <div v-for="(x, index) in 9" :key="`svg-${index}`">
+            <template v-for="x in 9">
               <line
-                x1="0"
-                x2="10"
-                :y1="((x + 1) / 10) * height"
-                :y2="((x + 1) / 10) * height"
+                x1="30"
+                x2="40"
+                :y1="(x / 10) * height"
+                :y2="(x / 10) * height"
                 style="stroke:#999;stroke-width:2"
               />
-              <text x="13" :y="((x + 1) / 10) * height + 5" fill="#999">
-                0.{{ 9 - x }}
+              <text x="41" :y="(x / 10) * height + 5" fill="#999">
+                0.{{ 10 - x }}
               </text>
-            </div>
+            </template>
 
-            <div v-for="(x, index) in 10" :key="`svg1-${index}`">
+            <template v-for="x in 10">
               <line
-                x1="0"
-                x2="5"
-                :y1="((x + 0.5) / 10) * height"
-                :y2="((x + 0.5) / 10) * height"
+                x1="30"
+                x2="35"
+                :y1="((x - 0.5) / 10) * height"
+                :y2="((x - 0.5) / 10) * height"
                 style="stroke:#aaa;stroke-width:2"
               />
-            </div>
+            </template>
           </svg>
         </div>
         <div
@@ -96,72 +96,73 @@
         </div>
       </div>
     </div>
-
     <div class="text-center" v-if="started && isFinished">
       <div class="control-buttons">
-        <div class="btn-group mb-2" role="group">
-          <button
-            type="button"
-            class="btn btn-outline-secondary btn-spaced-right"
-            @click="camera('reset')"
-          >
-            Reset
-          </button>
-          <button
-            type="button"
-            class="btn btn-outline-secondary btn-spaced-right"
-            @click="camera('fit')"
-          >
-            Fit
-          </button>
-        </div>
+        <div>
+          <div class="btn-group mb-2" role="group">
+            <button
+              type="button"
+              class="btn btn-outline-secondary btn-spaced-right"
+              @click="camera('reset')"
+            >
+              Reset
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-secondary btn-spaced-right"
+              @click="camera('fit')"
+            >
+              Fit
+            </button>
+          </div>
 
-        <div class="btn-group mx-2 mb-2" role="group">
-          <button
-            type="button"
-            class="btn btn-outline-secondary btn-spaced-right"
-            @click="camera('left')"
-          >
-            South
-          </button>
-          <button
-            type="button"
-            class="btn btn-outline-secondary btn-spaced-right"
-            @click="camera('back')"
-          >
-            West
-          </button>
-          <button
-            type="button"
-            class="btn btn-outline-secondary btn-spaced-right"
-            @click="camera('right')"
-          >
-            North
-          </button>
-          <button
-            type="button"
-            class="btn btn-outline-secondary btn-spaced-right"
-            @click="camera('front')"
-          >
-            East
-          </button>
-        </div>
+          <div class="btn-group mx-2 mb-2" role="group">
+            <button
+              type="button"
+              class="btn btn-outline-secondary btn-spaced-right"
+              @click="camera('left')"
+            >
+              South
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-secondary btn-spaced-right"
+              @click="camera('back')"
+            >
+              West
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-secondary btn-spaced-right"
+              @click="camera('right')"
+            >
+              North
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-secondary btn-spaced-right"
+              @click="camera('front')"
+            >
+              East
+            </button>
+          </div>
 
-        <div class="btn-group mb-2" role="group">
-          <button
-            type="button"
-            class="btn btn-outline-secondary btn-spaced-right"
-            @click="camera('top')"
-          >
-            Top
-          </button>
-          <button
-            type="button"
-            class="btn btn-outline-secondary btn-spaced-right"
-            @click="camera('bottom')"
-          >
-            Bottom
-          </button>
+          <div class="btn-group mb-2" role="group">
+            <button
+              type="button"
+              class="btn btn-outline-secondary btn-spaced-right"
+              @click="camera('top')"
+            >
+              Top
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-secondary btn-spaced-right"
+              @click="camera('bottom')"
+            >
+              Bottom
+            </button>
+          </div>
         </div>
 
         <div class="btn-group">
@@ -336,7 +337,8 @@ export default {
   data () {
     return {
       canvasStyle: {
-        height: '10px'
+        height: '10px',
+        width: '100%'
       },
       curFrameLength: 0,
       curSedimentClass: undefined,
@@ -372,7 +374,7 @@ export default {
       },
       tab: 'slices',
       viewer3d: undefined,
-      width: 400
+      width: '100%'
     }
   },
   computed: {
@@ -471,8 +473,12 @@ export default {
     let width = this.$refs.viewer3d.clientWidth
     // this.width = width
     // this.height = Math.floor(width / 1.6) // golden ratio
+    this.canvasStyle.width = this.width + 'px'
     this.canvasStyle.height = this.height + 'px'
+
     this.gradientStyle.height = this.height + 'px'
+    this.gradientStyle.width = '30px'
+
     this.svgStyle.height = this.height + 'px'
   },
   methods: {
@@ -743,8 +749,37 @@ export default {
   border-top-color: #adb5bd;
 }
 
+// .glcanvas {
+//   height: 400px;
+//   width: 400px;
+// }
+
+.legend-container {
+  width: 50px;
+}
+
+.legend {
+  height: 100%;
+  width: 100%;
+}
+
+.svg-container {
+  float: right;
+  display: block;
+  width: 70px;
+  position: absolute;
+}
+svg {
+  height: 100%;
+  width: 100%;
+}
+
 .glcanvas {
-  height: 400px;
-  width: 400px;
+  height: 100%;
+  width: 100%;
+}
+
+#col-glcanvas-container {
+  width: 80%;
 }
 </style>
