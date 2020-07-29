@@ -210,7 +210,7 @@
               <label for="slice-x-w" class="col-lg-3 control-label slider-label"
                 >slice X</label
               >
-              <div class="col-lg-7">
+              <div class="col">
                 <input
                   type="text"
                   class="ion-range slice-x-w"
@@ -227,7 +227,7 @@
               <label for="slice-y-w" class="col-lg-3 control-label slider-label"
                 >slice Y</label
               >
-              <div class="col-lg-7">
+              <div class="col">
                 <input
                   type="text"
                   class="ion-range slice-y-w"
@@ -244,7 +244,7 @@
               <label for="slice-z-w" class="col-lg-3 control-label slider-label"
                 >slice Z</label
               >
-              <div class="col-lg-7">
+              <div class="col">
                 <input
                   type="text"
                   class="ion-range slice-z-w"
@@ -265,45 +265,55 @@
           class="tab-pane"
           :class="{ active: tab === 'colors' }"
         >
-          <form>
-            <div class="form-row ">
+          <form class="mt-2">
+            <div class="row" v-for="(point, index) in gradient" :key="index">
               <div
-                class="col-sm-12"
-                v-for="(point, index) in gradient"
-                :key="index"
+                class="col-sm-8 col-sm-offset-3 input-group pick-a-color"
+                ref="colorpicker"
               >
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">#</span>
-                  </div>
-                  <input
-                    class="form-control text-center"
-                    type="text"
-                    name="gradient-position"
-                    v-model="point.position"
-                    lazy
-                  />
-                  <div class="input-group-append">
-                    <button
-                      type="button"
-                      class="btn btn-outline-secondary button-empty-input-field"
-                      @click="removePoint(index)"
-                      v-if="index < gradient.length - 1"
-                    >
-                      x
-                    </button>
-                  </div>
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1">#</span>
                 </div>
+                <input
+                  class="form-control text-center"
+                  type="text"
+                  name="gradient-color"
+                  v-model="point.color"
+                />
+                <span class="input-group-append">
+                  <span class="input-group-text colorpicker-input-addon"
+                    ><i></i
+                  ></span>
+                </span>
               </div>
-              <div class="input-group m-3">
+              <div class="col-sm-2">
+                <input
+                  class="form-control text-center"
+                  type="text"
+                  name="gradient-position"
+                  v-model="point.position"
+                  lazy
+                />
+              </div>
+              <div class="col-sm-2">
                 <button
                   type="button"
-                  class="btn btn-block btn-outline-secondary"
-                  @click="addPoint()"
+                  class="btn btn-outline-secondary button-empty-input-field"
+                  @click="removePoint(index)"
+                  v-if="index < gradient.length - 1"
                 >
-                  add color
+                  x
                 </button>
               </div>
+            </div>
+            <div class="input-group m-3">
+              <button
+                type="button"
+                class="btn btn-block btn-outline-secondary"
+                @click="addPoint()"
+              >
+                add color
+              </button>
             </div>
           </form>
         </div>
@@ -317,6 +327,7 @@
 import _ from 'lodash'
 import $ from 'jquery'
 import store from '../store'
+
 export default {
   store,
   template: '#template-viewer-threedee',
@@ -415,8 +426,8 @@ export default {
           this.curFrameLength = this.curTimeStep = maxTimeStepIndex // if the model is not finished, do not show final maxTimeStepIndex (as it will not render)
           this.curSedimentClass = sedimentClass
           this.startOrLoad3dViewer()
+          this.initPickAColor()
         }
-        this.initPickAColor()
         this.initIonSliders()
       }
     },
@@ -441,11 +452,9 @@ export default {
     gradient: {
       deep: true,
       handler () {
-        let newGrad = _.reverse(_.sortBy(_.clone(this.gradient), 'position'))
-        // cap position values
-        _.each(newGrad, p => {
-          p.position = Math.max(Math.min(p.position, 1), 0)
-        })
+        let newGrad = _.clone(this.gradient).sort((a, b) =>
+          a.position <= b.position ? 1 : -1
+        )
         if (_.isEqual(this.gradient, newGrad)) {
           this.loadGradient()
         } else {
@@ -456,7 +465,6 @@ export default {
     slices: {
       deep: true,
       handler () {
-        console.log('slices')
         this.loadSliders()
       }
     }
@@ -555,26 +563,26 @@ export default {
       this.$nextTick(() => {
         $('.pick-a-color').each((i, e) => {
           if ($(e).parent('.pick-a-color-markup').length === 0) {
-            $(e).pickAColor({
-              inlineDropdown: true
+            $(e).colorpicker({
+              useHashPrefix: false
+            })
+            $(e).on('colorpickerChange', event => {
+              this.gradient[i].color = event.color.string().split('#')[1]
+              this.loadGradient()
             })
           }
         })
       })
     },
     loadData () {
+      console.log('loaddata')
       if (!this.activated || _.isUndefined(this.viewer3d)) {
         return
       }
       const url = `/thredds/dodsC/files//${this.curSuid}/simulation/trim-${
         this.curSedimentClass
       }.nc`
-      console.log({
-        url: url,
-        displacementVariable: this.dataSetVariables.displacementVariable,
-        dataVariable: this.dataSetVariables.dataVariable,
-        bedLevelVariable: this.dataSetVariables.bedLevelVariable
-      })
+
       try {
         if (this.curSuid !== undefined && this.curSedimentClass !== undefined) {
           this.viewer3d.dataSet.load(
@@ -613,6 +621,7 @@ export default {
       if (!colorsOk && colors.length === positions.length) {
         return
       }
+
       let posColors = _.reverse(
         _.map(colors, (c, i) => {
           return c + ' ' + Math.floor((1 - positions[i]) * 100) + '%'
@@ -622,6 +631,7 @@ export default {
         this.gradientStyle.background =
           'linear-gradient(' + _.join(posColors, ',') + ')'
       }
+
       if (colors.length === 1) {
         this.gradientStyle.background = colors[0]
       }
@@ -671,6 +681,9 @@ export default {
 
     removePoint (index) {
       this.gradient.splice(index, 1)
+      this.gradient.forEach((grad, i) => {
+        $(this.$refs.colorpicker[i]).colorpicker('setValue', `#${grad.color}`)
+      })
     },
     resetSliders () {
       _.each(['x', 'y', 'z'], d => {
@@ -719,6 +732,7 @@ export default {
       this.loadData()
     },
     startOrLoad3dViewer () {
+      console.log('startorload3d')
       if (this.curSuid !== undefined) {
         if (!this.started) {
           this.start3dviewer()

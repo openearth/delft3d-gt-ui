@@ -202,7 +202,7 @@ export default {
     return {
       currentAnimationIndex: 0,
       timerAnimation: -1,
-      currentAnimationKey: 'map_waterlevel_images',
+      currentAnimationKey: 'delta_fringe_images',
       // TODO:This information, together with the description should come from backend
       images: [
         {
@@ -306,7 +306,7 @@ export default {
     // Switch to the images:
     switchAnimation (type) {
       this.currentAnimationKey = type
-      this.currentAnimationIndex = 0
+      // this.currentAnimationIndex = 0
     },
 
     // For animations:

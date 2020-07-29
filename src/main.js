@@ -4,7 +4,7 @@ import store from './store'
 import './registerServiceWorker'
 import router from './router'
 import $ from 'jquery'
-
+import 'bootstrap'
 import 'popper.js/dist/popper.js'
 import 'bootstrap/js/dist/util'
 import 'bootstrap/js/dist/dropdown'
@@ -12,8 +12,11 @@ import 'bootstrap/js/dist/collapse'
 import 'bootstrap/js/dist/modal'
 import 'bootstrap/js/dist/tooltip'
 import 'bootstrap-datepicker/dist/js/bootstrap-datepicker'
+import 'bootstrap-colorpicker/dist/js/bootstrap-colorpicker'
 import 'bootstrap4-tagsinput/tagsinput'
 import 'bootstrap-select'
+
+import 'bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css'
 import { ValidationProvider } from 'vee-validate'
 
 Vue.config.productionTip = false
