@@ -595,6 +595,9 @@ export default {
       this.$nextTick(() => {
         $('.pick-a-color').each((i, e) => {
           if ($(e).parent('.pick-a-color-markup').length === 0) {
+            if (!$(e).colorpicker()) {
+              return
+            }
             $(e).colorpicker({
               useHashPrefix: false
             })
