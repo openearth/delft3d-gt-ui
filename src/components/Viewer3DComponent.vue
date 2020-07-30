@@ -80,19 +80,26 @@
 
               <template v-for="x in 9">
                 <line
+                  :key="`line-${x}`"
                   x1="30"
                   x2="40"
                   :y1="(x / 10) * height"
                   :y2="(x / 10) * height"
                   style="stroke:#999;stroke-width:2"
                 />
-                <text x="41" :y="(x / 10) * height + 5" fill="#999">
+                <text
+                  :key="`text-${x}`"
+                  x="41"
+                  :y="(x / 10) * height + 5"
+                  fill="#999"
+                >
                   0.{{ 10 - x }}
                 </text>
               </template>
 
               <template v-for="x in 10">
                 <line
+                  :key="`index-${x}`"
                   x1="30"
                   x2="35"
                   :y1="((x - 0.5) / 10) * height"
@@ -588,6 +595,9 @@ export default {
       this.$nextTick(() => {
         $('.pick-a-color').each((i, e) => {
           if ($(e).parent('.pick-a-color-markup').length === 0) {
+            if (typeof $(e).colorpicker !== 'function') {
+              return
+            }
             $(e).colorpicker({
               useHashPrefix: false
             })
@@ -706,6 +716,9 @@ export default {
     removePoint (index) {
       this.gradient.splice(index, 1)
       this.gradient.forEach((grad, i) => {
+        if (typeof $(this.$refs.colorpicker[i]).colorpicker !== 'function') {
+          return
+        }
         $(this.$refs.colorpicker[i]).colorpicker('setValue', `#${grad.color}`)
       })
     },

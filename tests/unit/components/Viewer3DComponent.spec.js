@@ -37,7 +37,9 @@ window.Viewer3D.viewer3D.prototype.dataSet.load = sinon.spy((set, callback) => {
 
 // test component
 describe('Viewer3DComponent', () => {
-  const viewer3dcomponent = shallowMount(Viewer3DComponent, { propsdata: { activated: true, model: {} } })
+  const viewer3dcomponent = shallowMount(Viewer3DComponent, {
+    propsdata: { activated: true, model: {} }
+  })
   beforeEach(() => {
     // import component
     sinon.spy($, 'ajax')
@@ -59,17 +61,17 @@ describe('Viewer3DComponent', () => {
   describe('.activeModel', () => {
     it('', () => {
       store.state.activeModelContainer = {
-        'data': {
-          'info': {
-            'delta_fringe_images': {
-              'images': ['image.jpg']
+        data: {
+          info: {
+            delta_fringe_images: {
+              images: ['image.jpg']
             },
-            'suid': 'ID'
+            suid: 'ID'
           },
-          'state': 'Finished',
-          'parameters': {
-            'composition': {
-              'value': 'medium-sand'
+          state: 'Finished',
+          parameters: {
+            composition: {
+              value: 'medium-sand'
             }
           }
         }
