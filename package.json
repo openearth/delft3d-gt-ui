@@ -12,6 +12,7 @@
   "dependencies": {
     "@types/jquery": "^3.3.29",
     "bootstrap": "^4.4.1",
+    "bootstrap-colorpicker": "^3.2.0",
     "bootstrap-combobox": "^1.0.2",
     "bootstrap-datepicker": "^1.9.0",
     "bootstrap-datetimepicker": "0.0.7",
@@ -25,6 +26,7 @@
     "font-awesome": "^4.7.0",
     "ion-rangeslider": "^2.3.1",
     "jquery": "^3.4.0",
+    "jsdap": "^8.1.0",
     "mapbox-gl": "^0.53.0",
     "moment": "^2.24.0",
     "nock": "^12.0.3",
