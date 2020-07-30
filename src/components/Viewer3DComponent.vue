@@ -1,5 +1,10 @@
 <template id="template-viewer-threedee">
-  <div id="viewer-3d" ref="viewer3d" class="panel-body viewer-3d">
+  <div
+    id="viewer-3d"
+    ref="viewer3d"
+    class="panel-body viewer-3d"
+    v-if="hasFrames"
+  >
     <div class="btn-group btn-group-justified" v-if="!started || !isFinished">
       <div class="btn-group" role="group">
         <button
@@ -323,6 +328,9 @@
       <!-- tab-content -->
     </div>
   </div>
+  <div v-else>
+    No data available
+  </div>
 </template>
 
 <script>
@@ -388,7 +396,7 @@ export default {
       tab: 'slices',
       viewer3d: undefined,
       width: '100%',
-      gradientOld: []
+      hasFrames: false
     }
   },
   computed: {
@@ -420,6 +428,7 @@ export default {
         let maxTimeStepIndex =
           _.get(this.activeModel, 'data.info.delta_fringe_images.files', [])
             .length - 1 // obtain max TimeStep index based on number of Delta Fringe images
+        this.hasFrames = maxTimeStepIndex > 0
         if (
           suid !== this.curSuid &&
           maxTimeStepIndex !== -1 &&
@@ -716,7 +725,6 @@ export default {
       this.tab = tab
     },
     start3dviewer () {
-      console.log('start 3d viewer')
       if (this.started || !this.isFinished) {
         return
       }
@@ -727,7 +735,6 @@ export default {
       this.loadData()
     },
     startOrLoad3dViewer () {
-      console.log('startorload3d')
       if (this.curSuid !== undefined) {
         if (!this.started) {
           this.start3dviewer()
