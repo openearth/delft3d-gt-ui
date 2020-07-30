@@ -13,6 +13,7 @@
             >
               <a
                 class="nav-link"
+                :class="{ active: currentAnimationKey === image.key }"
                 :id="`${image.key}-tab`"
                 data-toggle="tab"
                 href="#"

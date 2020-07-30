@@ -193,7 +193,9 @@
               :class="{ active: tab === name }"
               @click.stop="setTab(name)"
             >
-              <a class="nav-link" href="#">{{ name }}</a>
+              <a class="nav-link" href="#" :class="{ active: tab === name }">{{
+                name
+              }}</a>
             </li>
           </div>
         </ul>
@@ -385,7 +387,8 @@ export default {
       },
       tab: 'slices',
       viewer3d: undefined,
-      width: '100%'
+      width: '100%',
+      gradientOld: []
     }
   },
   computed: {
@@ -452,14 +455,7 @@ export default {
     gradient: {
       deep: true,
       handler () {
-        let newGrad = _.clone(this.gradient).sort((a, b) =>
-          a.position <= b.position ? 1 : -1
-        )
-        if (_.isEqual(this.gradient, newGrad)) {
-          this.loadGradient()
-        } else {
-          this.gradient = newGrad
-        }
+        this.loadGradient()
       }
     },
     slices: {
@@ -478,7 +474,7 @@ export default {
       this.viewer3d.volume.refreshData()
     }, 500)
 
-    let width = this.$refs.viewer3d.clientWidth
+    // let width = this.$refs.viewer3d.clientWidth
     // this.width = width
     // this.height = Math.floor(width / 1.6) // golden ratio
     this.canvasStyle.width = this.width + 'px'
@@ -575,7 +571,6 @@ export default {
       })
     },
     loadData () {
-      console.log('loaddata')
       if (!this.activated || _.isUndefined(this.viewer3d)) {
         return
       }
