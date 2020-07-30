@@ -595,7 +595,7 @@ export default {
       this.$nextTick(() => {
         $('.pick-a-color').each((i, e) => {
           if ($(e).parent('.pick-a-color-markup').length === 0) {
-            if (!typeof $(e).colorpicker === 'function') {
+            if (typeof $(e).colorpicker !== 'function') {
               return
             }
             $(e).colorpicker({
@@ -716,6 +716,9 @@ export default {
     removePoint (index) {
       this.gradient.splice(index, 1)
       this.gradient.forEach((grad, i) => {
+        if (typeof $(this.$refs.colorpicker[i]).colorpicker !== 'function') {
+          return
+        }
         $(this.$refs.colorpicker[i]).colorpicker('setValue', `#${grad.color}`)
       })
     },
