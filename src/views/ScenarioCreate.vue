@@ -736,10 +736,16 @@ export default {
       border-bottom-right-radius: 0.25rem !important;
       border-top-right-radius: 0.25rem !important;
     }
-    .bootstrap-tagsinput{
+    .input-field-tags {
+      display: none;
+    }
+
+    .bootstrap-tagsinput {
       border-bottom-right-radius: 0;
       border-top-right-radius: 0;
-      flex: auto;
+      flex: 1 1 auto;
+      width: auto;
+      position: relative;
     }
 }
 </style>
