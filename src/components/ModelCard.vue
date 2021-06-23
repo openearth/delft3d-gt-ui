@@ -110,4 +110,9 @@ export default {
   overflow: hidden;
   width: 100%;
 }
+
+.progress-bar {
+  height: 100%;
+}
+
 </style>
