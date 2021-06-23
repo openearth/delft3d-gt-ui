@@ -27,6 +27,11 @@ export default {
 
 <style lang="scss">
 @import '../assets/variables.scss';
+.dropdown-menu.show {
+  right: 0;
+  top: 43px;
+  float: right;
+}
 
 .user {
   .dropdown-item {
