@@ -2,7 +2,7 @@
   <div class="dropdown user">
     <a href="#" class="dropdown-toggle my-auto dropdown-menu-item" id="dropdown-menu-item" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <span class="fa fa-user" aria-hidden="true"></span>
-        {{ sharedState.first_name }}{{ sharedState.last_name }}
+        {{ sharedState.first_name }} {{ sharedState.last_name }}
     </a>
   <div class="dropdown-menu" aria-labelledby="dropdown-menu-item">
     <a href="/logout/" title="Log out" class="dropdown-item">
