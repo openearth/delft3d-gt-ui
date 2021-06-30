@@ -782,8 +782,6 @@ export default {
 <style lang="scss">
 @import '../assets/variables.scss';
 .irs--round .irs-handle {
-  width: 10px;
-  height: 10px;
   margin: 6px;
   margin-left: 0px;
   border: 0;

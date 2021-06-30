@@ -5,6 +5,7 @@ const argv = require('yargs').argv
 const apiServer = argv.apiServer || 'http://dl-ng004.xtr.deltares.nl'
 
 module.exports = {
+  filenameHashing: false,
   devServer: {
     port: 9000,
     proxy: {
@@ -21,6 +22,9 @@ module.exports = {
         target: `${apiServer}`
       },
       '^/thredds/*': {
+        target: `${apiServer}`
+      },
+      '^/oidc/*': {
         target: `${apiServer}`
       }
     }

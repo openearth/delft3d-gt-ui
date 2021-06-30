@@ -3,11 +3,13 @@
   <div class="card mb-3" v-if="hasModels">
       <div class="card-header" data-toggle="collapse" :data-target="`#collapse-${scenario.id}`">
         <div class="row">
-          <div class="col-xs-8 col-sm-5">
-            <i class="fa fa-folder-o" aria-hidden="true" title="scenario"></i>
+          <div class="col-md-2 col-lg-1 my-auto">
+            <i class="fa fa-folder-o" aria-hidden="true" title="scenario" />
+          </div>
+          <div class="col-md-10 col-lg-5">
             &nbsp;{{scenario.data.name}}
           </div>
-          <div class="col-xs-4 col-sm-4 text-right m-auto">
+          <div class="col-md-5 col-lg-3 text-right m-auto p-0">
             <div class="btn-group">
               <button type="button" class="btn btn-default btn-xs" @click="clone" title="Clone scenario">
                 <i class="fa fa-clone" aria-hidden="true"></i>
@@ -17,7 +19,7 @@
               </button>
             </div>
           </div>
-          <div class="col-xs-11 col-sm-2 text-center no-padding m-auto">
+          <div class="col-md-5 col-lg-2 text-center p-0 m-auto">
             <div class="progress">
               <div v-for="(status, index) in modelStatuses"
                 class="progress-bar"
@@ -35,7 +37,7 @@
                 role="progressbar"></div>
             </div>
           </div>
-          <div class="col-xs-1 col-sm-1 text-center m-auto">
+          <div class="col-md-2 col-lg-1 text-center m-auto">
             <input type="checkbox" class="scenario-checkbox" v-model="allModelsSelected" title="select all models">
           </div>
         </div>
