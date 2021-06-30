@@ -23,6 +23,9 @@ module.exports = {
       },
       '^/thredds/*': {
         target: `${apiServer}`
+      },
+      '^/oidc/*': {
+        target: `${apiServer}`
       }
     }
   },
