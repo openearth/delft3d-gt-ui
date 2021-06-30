@@ -13,8 +13,6 @@
 
   <link rel="stylesheet" href="/css/app.css">
   <link rel="stylesheet" href="/css/chunk-vendors.css">
-
-
 </head>
 
 <body class="login-body">
@@ -24,8 +22,10 @@
 
   <div class="panel panel-default">
     <div class="panel-heading">
-      <h3 class="panel-title"><img src="/img/delft3d-gt.svg" alt="logo" /> Delft3D Geological Tool -
-        Login</h3>
+      <img src="/img/delft3d-gt.svg" alt="logo" />
+      <h3 class="panel-title">
+        Delft3D Geological Tool -  Login
+        </h3>
     </div>
     <div class="panel-body">
       <form role="form" method="POST" action="{% url 'login' %}">
@@ -48,8 +48,17 @@
           <input type="password" class="form-control" id="id_password" name="password" placeholder="Password">
           <p class="{% if form.password.errors %}text-danger{% endif %}">{{ form.password.errors.as_text }}</p>
         </div>
-        <button type="submit" class="btn btn-success">Sign in</button><a href="/forgot/" class="pull-right">Forgot your
-          password?</a>
+        <div class="form-action">
+          <button type="submit" class="btn btn-success">
+            Sign in
+          </button>
+          or
+          <button onclick="window.location.href='/oidc/authenticate/'" class="btn btn-info">
+            Sign in with MyDeltares
+          </button>
+          <a href="/forgot/" class="form-action-text">
+            Forgot your password?</a>
+        </div>
       </form>
     </div>
 
