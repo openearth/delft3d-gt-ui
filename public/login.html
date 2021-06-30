@@ -52,12 +52,16 @@
           <button type="submit" class="btn btn-success">
             Sign in
           </button>
-          or
-          <button onclick="window.location.href='/oidc/authenticate/'" class="btn btn-info">
-            Sign in with MyDeltares
-          </button>
           <a href="/forgot/" class="form-action-text">
-            Forgot your password?</a>
+            Forgot your password?
+          </a>
+        </div>
+        <hr class="solid">
+          or Sign in with:
+        <div class="form-action">
+          <button onclick="window.location.href='/oidc/authenticate/'" class="btn btn-info">
+            MyDeltares <img src="/img/deltares.svg" alt="logo" />
+          </button>
         </div>
       </form>
     </div>
