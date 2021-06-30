@@ -1,6 +1,8 @@
 <template>
-<div id="template-scenario-builder">
   <div class="scenario-builder full-height">
+    <span v-if="availableTemplates.length === 0" class="label">
+      Log in to build a scenario.
+    </span>
     <!-- User has to select a template first -->
     <div class="container-fluid full-height scrollable" id="below-tool-bar">
       <div class="row">
@@ -232,7 +234,6 @@
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -703,10 +704,20 @@ export default {
 
 <style lang="scss">
 @import '../assets/variables.scss';
+.placeholder {
+  margin: auto;
+}
+
 .scenario-builder {
     padding-top: 51px;
-    position: static;
-    height: 100vh;
+    position: relative;
+    height: 100%;
+
+    #below-tool-bar {
+      overflow-y: auto;
+      height: 100%;
+    }
+
     img {
         max-height: 768px;
         max-width: 100%;

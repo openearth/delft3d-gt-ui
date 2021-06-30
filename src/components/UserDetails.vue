@@ -4,9 +4,15 @@
       <span class="fa fa-user" aria-hidden="true"></span>
         {{ sharedState.first_name }} {{ sharedState.last_name }}
     </a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-menu-item">
+  <div v-if="typeof sharedState.first_name !== 'string'" class="dropdown-menu" aria-labelledby="dropdown-menu-item">
+    <a href="/login/" title="Log in" class="dropdown-item">
+      Login <span class="fa fa-sign-in" aria-hidden="true"></span>
+    </a>
+  </div>
+  <div v-else class="dropdown-menu" aria-labelledby="dropdown-menu-item">
     <a href="/logout/" title="Log out" class="dropdown-item">
-      Logout <span class="fa fa-sign-out" aria-hidden="true"></span></a>
+      Logout <span class="fa fa-sign-out" aria-hidden="true"></span>
+    </a>
   </div>
 </div>
 

@@ -19,4 +19,9 @@ export default {
 
 <style lang="scss">
 @import './assets/main.scss';
+
+.app {
+  height: 100%;
+  overflow-y: hidden;
+}
 </style>
