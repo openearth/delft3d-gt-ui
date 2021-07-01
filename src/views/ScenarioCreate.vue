@@ -633,7 +633,6 @@ export default {
         'template': this.currentSelectedId,
         'parameters': JSON.stringify(parameters)
       }
-      console.log('submitting')
       store.dispatch('createScenario', postdata)
         .then(() => {
           // This is not practical, but the only way in vue? (using $parent)
@@ -646,8 +645,6 @@ export default {
             name: 'home',
             params: {}
           })
-          console.log(this.alertEvent)
-
         })
         .catch(() => {
           // This is not practical, but the only way in vue? (using $parent)
@@ -656,8 +653,6 @@ export default {
             showTime: 5000,
             type: 'warning'
           }
-          console.log(this.alertEvent)
-
         })
     },
     // We have to prepare the scenario config

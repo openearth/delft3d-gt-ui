@@ -73,7 +73,7 @@ export default {
 <style lang="scss">
 @import '../assets/variables.scss';
 .alert.message-alert {
-  position: absolute;
+  position: fixed;
   bottom: 0px;
   margin: $padding;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);

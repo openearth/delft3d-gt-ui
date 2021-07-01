@@ -7,9 +7,6 @@
     <div class="list-divider" v-if="notEmpty(companyModels)">
       Shared with company
     </div>
-    <div class="list-divider" v-else>
-      No models shared with company available.
-    </div>
     <model-card
       v-for="(model, index) in companyModels"
       class="mb-3"
