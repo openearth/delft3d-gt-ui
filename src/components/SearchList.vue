@@ -96,14 +96,17 @@ export default {
 @import '../assets/variables.scss';
 
 .search-list {
-    .progress {
-        height: 10px;
-    }
+  .progress {
+    height: 10px;
 
-    .list-divider {
-        color: $col-bw-4;
-        padding-bottom: $padding;
+    .progress-bar {
+      height: 100%;
     }
+  }
 
+  .list-divider {
+    color: $col-bw-4;
+    padding-bottom: $padding;
+  }
 }
 </style>

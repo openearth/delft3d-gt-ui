@@ -62,21 +62,40 @@ dt {
   margin-bottom: $padding;
 }
 
+.panel-body {
+  padding: $padding;
+
+  .form-action {
+    .form-action-text {
+      margin: auto;
+      float: right;
+    }
+  }
+}
+
 .panel-default {
   .panel-heading {
     background-color: $col-bw-1;
     border-bottom: 0;
     padding: $padding;
+    display: flex;
+
+    h3.panel-title {
+      margin: auto;
+    }
+
+    img {
+      height: 32px;
+      margin: auto 5px auto 5px;
+    }
   }
 }
 
 .login-body {
-  img {
-    height: 20px;
-  }
+  display: flex;
 
   &::after {
-    background: url('/static/images/delta.jpg') no-repeat center center fixed;
+    background: url('/img/delta.jpg') no-repeat center center fixed;
     background-size: cover;
     bottom: 0;
     content: '';
@@ -91,7 +110,12 @@ dt {
   .panel {
     border-color: $col-bw-4;
     box-shadow: 0 8px 6px -6px $col-bw-5;
-    margin: $padding;
+    margin: auto;
+    position: relative;
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    width: 500px;
   }
 }
 
@@ -116,7 +140,8 @@ dt {
 @media (min-width: $screen-xs-sm) {
   html,
   body {
-    height: 100%;
+    height: 100vh;
+    width: 100vw;
     overflow-y: hidden;
   }
 
@@ -131,16 +156,5 @@ dt {
   .modal-open {
     padding-right: 0px !important;
     margin: 0 !important;
-  }
-
-  .login-body {
-    .panel {
-      left: 50%;
-      margin-left: -250px;
-      margin-top: -130px;
-      position: absolute;
-      top: 38.1%;  // applies golden ratio
-      width: 500px;
-    }
   }
 }

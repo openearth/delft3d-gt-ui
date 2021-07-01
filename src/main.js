@@ -19,6 +19,8 @@ import 'bootstrap-select'
 import 'bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css'
 import { ValidationProvider } from 'vee-validate'
 
+import './assets/main.scss'
+
 Vue.config.productionTip = false
 Vue.component('ValidationProvider', ValidationProvider)
 
