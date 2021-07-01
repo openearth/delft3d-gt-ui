@@ -2,7 +2,7 @@
   <div class="dropdown user">
     <a href="#" class="dropdown-toggle my-auto dropdown-menu-item" id="dropdown-menu-item" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       <span class="fa fa-user" aria-hidden="true"></span>
-        {{ sharedState.first_name }} {{ sharedState.last_name }}
+        {{ sharedState.email }}
     </a>
   <div v-if="typeof sharedState.first_name !== 'string'" class="dropdown-menu" aria-labelledby="dropdown-menu-item">
     <a href="/login/" title="Log in" class="dropdown-item">
