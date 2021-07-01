@@ -194,14 +194,8 @@
             <div class="btn-group">
               <button
                 class="btn dropdown-toggle"
-                :class="[
-                  isReadOnly || !isFinished || outdated == false
-                    ? 'disabled'
-                    : 'btn-warning'
-                ]"
                 data-toggle="dropdown"
                 href="#"
-                :disabled="isReadOnly || !isFinished || outdated == false"
                 :data-original-title="
                   outdated == false
                     ? 'no updates available'
@@ -216,7 +210,6 @@
               </button>
               <ul
                 class="dropdown-menu"
-                :disabled="isReadOnly || !isFinished || outdated == false"
               >
                 <li v-for="(entrypoint, index) in getEntrypoints" :key="index">
                   <a
@@ -840,7 +833,8 @@ export default {
       )
     },
     confirm () {
-      store.dispatch(`${this.updateModelBy.name}Model`, this.updateModelBy)
+      const updateModel = store.dispatch(`${this.updateModelBy.name}Model`, this.updateModelBy)
+      console.log(updateModel)
       this.updateModelBy = {}
     },
     startModel () {
