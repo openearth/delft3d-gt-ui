@@ -650,7 +650,6 @@ export default {
             }
           })
       }
-
     },
     loadGradient () {
       if (_.isUndefined(this.viewer3d)) {
