@@ -377,18 +377,10 @@ export default new Vuex.Store({
     },
 
     createScenario (context, postdata) {
-      return new Promise(function (resolve, reject) {
-        $.ajax({
-          url: '/api/v1/scenarios/',
-          data: postdata,
-          method: 'POST'
-        })
-          .done(function () {
-            resolve()
-          })
-          .fail(function (jqXhr) {
-            console.log('Error createScenario', jqXhr.statusText)
-          })
+      return $.ajax({
+        url: '/api/v1/scenarios/',
+        data: postdata,
+        method: 'POST'
       })
     },
     // ================================ MULTISELECTED MODEL UPDATE METHODS

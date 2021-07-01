@@ -28,7 +28,7 @@
     <!-- ======================== COLUMNS ======================== -->
 
     <div class="container-fluid full-height">
-      <div class="row full-height">
+      <div class="row full-height search-container">
 
         <div class="col-sm-2 column full-height bordered scrollable">
           <search-details ></search-details>
@@ -167,8 +167,11 @@ export default {
 
   .action-bar {
     border-bottom: $border;
-    margin-bottom: $padding;
     padding: $padding 0;
+
+    .search-container: {
+      margin: $padding;
+    }
 
     .hidden-md {
       display: inline-block !important;

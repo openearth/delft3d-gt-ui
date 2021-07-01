@@ -233,6 +233,9 @@
 
       </div>
     </div>
+    <alert-dialog
+      :alertMessage="alertEvent"
+    />
   </div>
 </template>
 
@@ -240,13 +243,12 @@
 import _ from 'lodash'
 import $ from 'jquery'
 import store from '../store'
-import {
-  bus
-} from '@/event-bus.js'
 // import MapComponent from '../components/MapComponent'
 // eslint-disable-next-line
 import { extend, validate } from 'vee-validate'
 import { required } from 'vee-validate/dist/rules'
+import AlertDialog from '@/components/AlertDialog'
+
 extend('required', {
   ...required,
   message: 'This field is required'
@@ -330,12 +332,13 @@ export default {
       // The DOM elements used for the fixed toolbar event listener
       navBars: null,
       forceTemplateUpdate: false,
-      maxRuns: 20
+      maxRuns: 20,
+      alertEvent: null
     }
   },
-  // components: {
-  //   MapComponent
-  // },
+  components: {
+    AlertDialog
+  },
   mounted () {
     // We force the template to be reloaded when this page is openend
     // Otherwise old values will stay in the form, and the validator is not reactivated.
@@ -630,26 +633,31 @@ export default {
         'template': this.currentSelectedId,
         'parameters': JSON.stringify(parameters)
       }
+      console.log('submitting')
       store.dispatch('createScenario', postdata)
         .then(() => {
           // This is not practical, but the only way in vue? (using $parent)
-          bus.$emit('show-alert', {
+          this.alertEvent = {
             message: 'Scenario submitted',
             showTime: 5000,
             type: 'info'
-          })
+          }
           this.$router.push({
             name: 'home',
             params: {}
           })
+          console.log(this.alertEvent)
+
         })
         .catch(() => {
           // This is not practical, but the only way in vue? (using $parent)
-          bus.$emit('show-alert', {
+          this.alertEvent = {
             message: 'Scenario could not be submitted',
             showTime: 5000,
             type: 'warning'
-          })
+          }
+          console.log(this.alertEvent)
+
         })
     },
     // We have to prepare the scenario config
