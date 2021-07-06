@@ -360,7 +360,7 @@
       </div>
     </div>
     <div v-else>
-      No rights on this account to visualize data.
+      No rights on this account to visualize data. For more information and rights contact <a href = "mailto: Helena.vanderVegt@deltares.nl">Helena van der Vegt</a>.
     </div>
   </div>
 </template>
@@ -616,6 +616,7 @@ export default {
       })
     },
     loadData () {
+      console.log('loaddata')
       if (!this.activated || _.isUndefined(this.viewer3d)) {
         return
       }
@@ -628,6 +629,7 @@ export default {
             if (res.status !== 200) {
               this.noAccess = true
             } else {
+              this.noAccess = false
               try {
                 this.viewer3d.dataSet.load(
                   {
