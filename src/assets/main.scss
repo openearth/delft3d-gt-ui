@@ -135,6 +135,11 @@ dt {
 .row {
   padding-bottom: 15px;
 }
+
+// FileServer
+.container-fluid {
+  display: flex;
+}
 // ============ responsiveness
 
 @media (min-width: $screen-xs-sm) {
