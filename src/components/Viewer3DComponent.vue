@@ -360,7 +360,7 @@
       </div>
     </div>
     <div v-else>
-      No rights on this account to visualize data. For more information and rights contact <a href = "mailto: Helena.vanderVegt@deltares.nl">Helena van der Vegt</a>.
+      No rights on this account to visualize data. For more information and rights contact <a href = "mailto: delft3d-gt-support@deltares.nl">Delft3D-GT Support</a>.
     </div>
   </div>
 </template>
@@ -624,7 +624,7 @@ export default {
         this.curSedimentClass
       }.nc`
       if (this.curSuid !== undefined && this.curSedimentClass !== undefined) {
-        fetch(url)
+        fetch(`${url}.html`)
           .then(res => {
             if (res.status !== 200) {
               this.noAccess = true

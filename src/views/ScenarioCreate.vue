@@ -649,7 +649,7 @@ export default {
         .catch(() => {
           // This is not practical, but the only way in vue? (using $parent)
           this.alertEvent = {
-            message: 'Scenario could not be submitted',
+            message: 'Scenario could not be submitted. No rights on this account to create a scenario. For more information and rights contact <a href = "mailto: delft3d-gt-support@deltares.nl">Delft3D-GT Support</a>',
             showTime: 5000,
             type: 'warning'
           }

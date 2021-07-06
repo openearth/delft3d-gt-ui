@@ -1,7 +1,7 @@
 <template id="template-alert-message">
   <div v-if="visible" :class="`alert message-alert alert-dismissible alert-${type}`" role="alert">
     <button type="button" class="close" @click="hide"><span aria-hidden="true">&times;</span></button>
-    <p>{{message}}</p>
+    <div v-html="message" />
   </div>
 </template>
 
