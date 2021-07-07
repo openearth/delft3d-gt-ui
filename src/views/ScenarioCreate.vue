@@ -107,7 +107,7 @@
                                 :aria-describedby="`${variable.id}-help`"
                                 />
                               <!-- select if not form -->
-                               <select v-if="variable.type === 'select' && !variable.factor" multiple="multiple"  class="form-control selectpicker" :id="variable.id" :value="variable.value" :field="getId(variable)"
+                               <select v-if="variable.type === 'select' && !variable.factor" multiple="multiple"  class="form-control selectpicker" :id="variable.id" v-model="variable.value" :field="getId(variable)"
                                 :name="variable.name">
                                 <option v-for="(option, i) in variable.options" :value="option.value" :key="i">
                                   {{ option.text }}
