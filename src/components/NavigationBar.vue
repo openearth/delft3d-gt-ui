@@ -51,8 +51,8 @@ export default {
     }
     95% {
         -moz-transform: rotate(380deg);
-        width: 51px;
-        height: 51px;
+        width: $logo-size;
+        height: $logo-size;
     }
     100% {
         -moz-transform: rotate(360deg);
@@ -66,8 +66,8 @@ export default {
     }
     95% {
         -webkit-transform: rotate(380deg);
-        width: 51px;
-        height: 51px;
+        width: $logo-size;
+        height: $logo-size;
     }
     100% {
         -webkit-transform: rotate(360deg);
@@ -81,8 +81,8 @@ export default {
     }
     95% {
         transform: rotate(380deg);
-        width: 51px;
-        height: 51px;
+        width: $logo-size;
+        height: $logo-size;
     }
     100% {
         transform: rotate(360deg);
@@ -101,7 +101,7 @@ export default {
 .navbar {
     margin-bottom: 0;
     // override default bootstrap value
-    height: 51px;
+    height: $logo-size;
     background-color: $col-bw-3;
 
     //
@@ -112,22 +112,22 @@ export default {
     .logoholder {
       float: left;
       position: relative;
-      height: 51px;
-      width: 51px;
+      height: $logo-size;
+      width: $logo-size;
       background-color: $col-bg-d3d;
     }
 
     #logoimage {
         float: left;
         position: relative;
-        height: 51px;
-        width: 51px;
+        height: $logo-size;
+        width: $logo-size;
         // margin: -15px 0 0 -15px;
         z-index: 1;
         -webkit-animation: sping 4s ease-in;
         -moz-animation: spin 4s ease-in;
         animation: spin 4s ease-in;
-        min-width: 51px;
+        min-width: $logo-size;
     }
 
     &.navbar-default .active > a,
@@ -141,7 +141,7 @@ export default {
     }
 
     #navbarNav, .navbar-nav {
-      height: 51px;
+      height: $logo-size;
     }
     .nav-item {
       height: 100%;

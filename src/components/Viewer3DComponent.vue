@@ -1,361 +1,366 @@
 <template id="template-viewer-threedee">
   <div>
-    <div
-      id="viewer-3d"
-      ref="viewer3d"
-      class="panel-body viewer-3d"
-      v-show="hasFrames"
-    >
-      <div class="btn-group btn-group-justified" v-if="!started || !isFinished">
-        <div class="btn-group" role="group">
-          <button
-            type="button"
-            class="btn btn-outline-secondary btn-spaced-right"
-            :class="{ disabled: !isFinished }"
-            @click="start3dviewer"
-          >
-            <span class="btn-label"
-              ><i class="fa fa-fw fa-play" aria-hidden="true"></i
-            ></span>
-            Start 3D Viewer
-            <span v-if="!isFinished"
-              >(please wait for simulation to finish)</span
+    <div v-if="!noAccess">
+      <div
+        id="viewer-3d"
+        ref="viewer3d"
+        class="panel-body viewer-3d"
+        v-show="hasFrames"
+      >
+        <div class="btn-group btn-group-justified" v-if="!started || !isFinished">
+          <div class="btn-group" role="group">
+            <button
+              type="button"
+              class="btn btn-outline-secondary btn-spaced-right"
+              :class="{ disabled: !isFinished }"
+              @click="start3dviewer"
             >
-          </button>
-        </div>
-      </div>
-
-      <div class="row" v-if="started && isFinished">
-        <div class="col-sm-10 text-center">
-          <h4>Sediment Fraction</h4>
-        </div>
-      </div>
-
-      <div class="row" v-if="started && isFinished">
-        <div id="col-glcanvas-container" class="col-xs-10" :style="canvasStyle">
-          <div
-            id="glcanvas-container"
-            class="glcanvas-container text-center"
-            :style="canvasStyle"
-            v-show="started && isFinished"
-          >
-            <canvas id="glcanvas" class="glcanvas"
-              >Your browser doesn't appear to support the
-              <code>&lt;canvas&gt;</code> element.</canvas
-            >
+              <span class="btn-label"
+                ><i class="fa fa-fw fa-play" aria-hidden="true"></i
+              ></span>
+              Start 3D Viewer
+              <span v-if="!isFinished"
+                >(please wait for simulation to finish)</span
+              >
+            </button>
           </div>
         </div>
-        <div class="col-xs-2">
-          <div
-            id="svg-container"
-            class="svg-container"
-            v-show="started && isFinished"
-          >
-            <svg :style="svgStyle" width="100" :height="height">
-              <line
-                x1="30"
-                y1="1"
-                x2="40"
-                y2="1"
-                style="stroke:#999;stroke-width:3"
-              />
-              <line
-                x1="30"
-                :y1="height - 1"
-                x2="40"
-                :y2="height - 1"
-                style="stroke:#999;stroke-width:3"
-              />
-              <text x="41" :y="18" fill="#999" style="font-size: 1.5em;">
-                1
-              </text>
-              <text
-                x="41"
-                :y="height - 6"
-                fill="#999"
-                style="font-size: 1.5em;"
-              >
-                0
-              </text>
 
-              <template v-for="x in 9">
+        <div class="row" v-if="started && isFinished">
+          <div class="col-sm-10 text-center">
+            <h4>Sediment Fraction</h4>
+          </div>
+        </div>
+
+        <div class="row" v-if="started && isFinished">
+          <div id="col-glcanvas-container" class="col-xs-10" :style="canvasStyle">
+            <div
+              id="glcanvas-container"
+              class="glcanvas-container text-center"
+              :style="canvasStyle"
+              v-show="started && isFinished"
+            >
+              <canvas id="glcanvas" class="glcanvas"
+                >Your browser doesn't appear to support the
+                <code>&lt;canvas&gt;</code> element.</canvas
+              >
+            </div>
+          </div>
+          <div class="col-xs-2">
+            <div
+              id="svg-container"
+              class="svg-container"
+              v-show="started && isFinished"
+            >
+              <svg :style="svgStyle" width="100" :height="height">
                 <line
-                  :key="`line-${x}`"
                   x1="30"
+                  y1="1"
                   x2="40"
-                  :y1="(x / 10) * height"
-                  :y2="(x / 10) * height"
-                  style="stroke:#999;stroke-width:2"
+                  y2="1"
+                  style="stroke:#999;stroke-width:3"
                 />
-                <text
-                  :key="`text-${x}`"
-                  x="41"
-                  :y="(x / 10) * height + 5"
-                  fill="#999"
-                >
-                  0.{{ 10 - x }}
-                </text>
-              </template>
-
-              <template v-for="x in 10">
                 <line
-                  :key="`index-${x}`"
                   x1="30"
-                  x2="35"
-                  :y1="((x - 0.5) / 10) * height"
-                  :y2="((x - 0.5) / 10) * height"
-                  style="stroke:#aaa;stroke-width:2"
+                  :y1="height - 1"
+                  x2="40"
+                  :y2="height - 1"
+                  style="stroke:#999;stroke-width:3"
                 />
-              </template>
-            </svg>
-          </div>
-          <div
-            id="legend-container"
-            class="legend-container text-center"
-            v-show="started && isFinished"
-          >
-            <div clas="legend" :style="gradientStyle"></div>
-          </div>
-        </div>
-      </div>
-      <div class="text-center" v-if="started && isFinished">
-        <div class="control-buttons">
-          <div>
-            <div class="btn-group mb-2" role="group">
-              <button
-                type="button"
-                class="btn btn-outline-secondary btn-spaced-right"
-                @click="camera('reset')"
-              >
-                Reset
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-secondary btn-spaced-right"
-                @click="camera('fit')"
-              >
-                Fit
-              </button>
-            </div>
-
-            <div class="btn-group mx-2 mb-2" role="group">
-              <button
-                type="button"
-                class="btn btn-outline-secondary btn-spaced-right"
-                @click="camera('left')"
-              >
-                South
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-secondary btn-spaced-right"
-                @click="camera('back')"
-              >
-                West
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-secondary btn-spaced-right"
-                @click="camera('right')"
-              >
-                North
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-secondary btn-spaced-right"
-                @click="camera('front')"
-              >
-                East
-              </button>
-            </div>
-
-            <div class="btn-group mb-2" role="group">
-              <button
-                type="button"
-                class="btn btn-outline-secondary btn-spaced-right"
-                @click="camera('top')"
-              >
-                Top
-              </button>
-              <button
-                type="button"
-                class="btn btn-outline-secondary btn-spaced-right"
-                @click="camera('bottom')"
-              >
-                Bottom
-              </button>
-            </div>
-          </div>
-
-          <div class="btn-group">
-            <button type="button" class="btn btn-primary" @click="goStart">
-              <span class="fa fa-fast-backward"></span>
-            </button>
-            <button type="button" class="btn btn-primary" @click="goPrev">
-              <span class="fa fa-backward"></span>
-            </button>
-            <button type="button" class="btn btn-primary">
-              {{ curTimeStep + 1 }}
-            </button>
-            <button type="button" class="btn btn-primary" @click="goNext">
-              <span class="fa fa-forward"></span>
-            </button>
-            <button type="button" class="btn btn-primary" @click="goEnd">
-              <span class="fa fa-fast-forward"></span>
-            </button>
-          </div>
-        </div>
-
-        <div class="col-sm-12">
-          <ul class="nav nav-tabs nav-fill">
-            <div v-for="name in ['slices', 'colors']" :key="name">
-              <li
-                role="presentation"
-                class="nav-item"
-                :class="{ active: tab === name }"
-                @click.stop="setTab(name)"
-              >
-                <a
-                  class="nav-link"
-                  href="#"
-                  :class="{ active: tab === name }"
-                  >{{ name }}</a
+                <text x="41" :y="18" fill="#999" style="font-size: 1.5em;">
+                  1
+                </text>
+                <text
+                  x="41"
+                  :y="height - 6"
+                  fill="#999"
+                  style="font-size: 1.5em;"
                 >
-              </li>
-            </div>
-          </ul>
-        </div>
+                  0
+                </text>
 
-        <div class="tab-content">
-          <div
-            role="tabpanel"
-            class="tab-pane"
-            :class="{ active: tab === 'slices' }"
-          >
-            <div class="form-horizontal">
-              <div class="form-group">
-                <label
-                  for="slice-x-w"
-                  class="col-lg-3 control-label slider-label"
-                  >slice X</label
-                >
-                <div class="col">
-                  <input
-                    type="text"
-                    class="ion-range slice-x-w"
-                    id="slice-x-w"
-                    data-step="1"
-                    data-min="1"
-                    :data-max="dimensions.x"
-                    data-type="double"
-                    value="1,100"
+                <template v-for="x in 9">
+                  <line
+                    :key="`line-${x}`"
+                    x1="30"
+                    x2="40"
+                    :y1="(x / 10) * height"
+                    :y2="(x / 10) * height"
+                    style="stroke:#999;stroke-width:2"
                   />
-                </div>
-              </div>
-              <div class="form-group">
-                <label
-                  for="slice-y-w"
-                  class="col-lg-3 control-label slider-label"
-                  >slice Y</label
-                >
-                <div class="col">
-                  <input
-                    type="text"
-                    class="ion-range slice-y-w"
-                    id="slice-y-w"
-                    data-step="1"
-                    data-min="1"
-                    :data-max="dimensions.y"
-                    data-type="double"
-                    value="1,100"
-                  />
-                </div>
-              </div>
-              <div class="form-group">
-                <label
-                  for="slice-z-w"
-                  class="col-lg-3 control-label slider-label"
-                  >slice Z</label
-                >
-                <div class="col">
-                  <input
-                    type="text"
-                    class="ion-range slice-z-w"
-                    id="slice-z-w"
-                    data-step="1"
-                    data-min="1"
-                    :data-max="dimensions.z"
-                    data-type="double"
-                    value="1,100"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div
-            role="tabpanel"
-            class="tab-pane"
-            :class="{ active: tab === 'colors' }"
-          >
-            <form class="mt-2">
-              <div class="row" v-for="(point, index) in gradient" :key="index">
-                <div
-                  class="col-sm-8 col-sm-offset-3 input-group pick-a-color"
-                  ref="colorpicker"
-                >
-                  <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">#</span>
-                  </div>
-                  <input
-                    class="form-control text-center"
-                    type="text"
-                    name="gradient-color"
-                    v-model="point.color"
-                  />
-                  <span class="input-group-append">
-                    <span class="input-group-text colorpicker-input-addon"
-                      ><i></i
-                    ></span>
-                  </span>
-                </div>
-                <div class="col-sm-2">
-                  <input
-                    class="form-control text-center"
-                    type="text"
-                    name="gradient-position"
-                    v-model="point.position"
-                    lazy
-                  />
-                </div>
-                <div class="col-sm-2">
-                  <button
-                    type="button"
-                    class="btn btn-outline-secondary button-empty-input-field"
-                    @click="removePoint(index)"
-                    v-if="index < gradient.length - 1"
+                  <text
+                    :key="`text-${x}`"
+                    x="41"
+                    :y="(x / 10) * height + 5"
+                    fill="#999"
                   >
-                    x
-                  </button>
-                </div>
-              </div>
-              <div class="input-group m-3">
+                    0.{{ 10 - x }}
+                  </text>
+                </template>
+
+                <template v-for="x in 10">
+                  <line
+                    :key="`index-${x}`"
+                    x1="30"
+                    x2="35"
+                    :y1="((x - 0.5) / 10) * height"
+                    :y2="((x - 0.5) / 10) * height"
+                    style="stroke:#aaa;stroke-width:2"
+                  />
+                </template>
+              </svg>
+            </div>
+            <div
+              id="legend-container"
+              class="legend-container text-center"
+              v-show="started && isFinished"
+            >
+              <div clas="legend" :style="gradientStyle"></div>
+            </div>
+          </div>
+        </div>
+        <div class="text-center" v-if="started && isFinished">
+          <div class="control-buttons">
+            <div>
+              <div class="btn-group mb-2" role="group">
                 <button
                   type="button"
-                  class="btn btn-block btn-outline-secondary"
-                  @click="addPoint()"
+                  class="btn btn-outline-secondary btn-spaced-right"
+                  @click="camera('reset')"
                 >
-                  add color
+                  Reset
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary btn-spaced-right"
+                  @click="camera('fit')"
+                >
+                  Fit
                 </button>
               </div>
-            </form>
+
+              <div class="btn-group mx-2 mb-2" role="group">
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary btn-spaced-right"
+                  @click="camera('left')"
+                >
+                  South
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary btn-spaced-right"
+                  @click="camera('back')"
+                >
+                  West
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary btn-spaced-right"
+                  @click="camera('right')"
+                >
+                  North
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary btn-spaced-right"
+                  @click="camera('front')"
+                >
+                  East
+                </button>
+              </div>
+
+              <div class="btn-group mb-2" role="group">
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary btn-spaced-right"
+                  @click="camera('top')"
+                >
+                  Top
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary btn-spaced-right"
+                  @click="camera('bottom')"
+                >
+                  Bottom
+                </button>
+              </div>
+            </div>
+
+            <div class="btn-group">
+              <button type="button" class="btn btn-primary" @click="goStart">
+                <span class="fa fa-fast-backward"></span>
+              </button>
+              <button type="button" class="btn btn-primary" @click="goPrev">
+                <span class="fa fa-backward"></span>
+              </button>
+              <button type="button" class="btn btn-primary">
+                {{ curTimeStep + 1 }}
+              </button>
+              <button type="button" class="btn btn-primary" @click="goNext">
+                <span class="fa fa-forward"></span>
+              </button>
+              <button type="button" class="btn btn-primary" @click="goEnd">
+                <span class="fa fa-fast-forward"></span>
+              </button>
+            </div>
           </div>
+
+          <div class="col-sm-12">
+            <ul class="nav nav-tabs nav-fill">
+              <div v-for="name in ['slices', 'colors']" :key="name">
+                <li
+                  role="presentation"
+                  class="nav-item"
+                  :class="{ active: tab === name }"
+                  @click.stop="setTab(name)"
+                >
+                  <a
+                    class="nav-link"
+                    href="#"
+                    :class="{ active: tab === name }"
+                    >{{ name }}</a
+                  >
+                </li>
+              </div>
+            </ul>
+          </div>
+
+          <div class="tab-content">
+            <div
+              role="tabpanel"
+              class="tab-pane"
+              :class="{ active: tab === 'slices' }"
+            >
+              <div class="form-horizontal">
+                <div class="form-group">
+                  <label
+                    for="slice-x-w"
+                    class="col-lg-3 control-label slider-label"
+                    >slice X</label
+                  >
+                  <div class="col">
+                    <input
+                      type="text"
+                      class="ion-range slice-x-w"
+                      id="slice-x-w"
+                      data-step="1"
+                      data-min="1"
+                      :data-max="dimensions.x"
+                      data-type="double"
+                      value="1,100"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label
+                    for="slice-y-w"
+                    class="col-lg-3 control-label slider-label"
+                    >slice Y</label
+                  >
+                  <div class="col">
+                    <input
+                      type="text"
+                      class="ion-range slice-y-w"
+                      id="slice-y-w"
+                      data-step="1"
+                      data-min="1"
+                      :data-max="dimensions.y"
+                      data-type="double"
+                      value="1,100"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label
+                    for="slice-z-w"
+                    class="col-lg-3 control-label slider-label"
+                    >slice Z</label
+                  >
+                  <div class="col">
+                    <input
+                      type="text"
+                      class="ion-range slice-z-w"
+                      id="slice-z-w"
+                      data-step="1"
+                      data-min="1"
+                      :data-max="dimensions.z"
+                      data-type="double"
+                      value="1,100"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              role="tabpanel"
+              class="tab-pane"
+              :class="{ active: tab === 'colors' }"
+            >
+              <form class="mt-2">
+                <div class="row" v-for="(point, index) in gradient" :key="index">
+                  <div
+                    class="col-sm-8 col-sm-offset-3 input-group pick-a-color"
+                    ref="colorpicker"
+                  >
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1">#</span>
+                    </div>
+                    <input
+                      class="form-control text-center"
+                      type="text"
+                      name="gradient-color"
+                      v-model="point.color"
+                    />
+                    <span class="input-group-append">
+                      <span class="input-group-text colorpicker-input-addon"
+                        ><i></i
+                      ></span>
+                    </span>
+                  </div>
+                  <div class="col-sm-2">
+                    <input
+                      class="form-control text-center"
+                      type="text"
+                      name="gradient-position"
+                      v-model="point.position"
+                      lazy
+                    />
+                  </div>
+                  <div class="col-sm-2">
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary button-empty-input-field"
+                      @click="removePoint(index)"
+                      v-if="index < gradient.length - 1"
+                    >
+                      x
+                    </button>
+                  </div>
+                </div>
+                <div class="input-group m-3">
+                  <button
+                    type="button"
+                    class="btn btn-block btn-outline-secondary"
+                    @click="addPoint()"
+                  >
+                    add color
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <!-- tab-content -->
         </div>
-        <!-- tab-content -->
+      </div>
+      <div v-show="!hasFrames">
+        No data available
       </div>
     </div>
-    <div v-show="!hasFrames">
-      No data available
+    <div v-else>
+      No rights on this account to visualize data. For more information and rights contact <a href = "mailto: delft3d-gt-support@deltares.nl">Delft3D-GT Support</a>.
     </div>
   </div>
 </template>
@@ -423,7 +428,8 @@ export default {
       tab: 'slices',
       viewer3d: undefined,
       width: '100%',
-      hasFrames: false
+      hasFrames: false,
+      noAccess: false
     }
   },
   computed: {
@@ -610,32 +616,41 @@ export default {
       })
     },
     loadData () {
+      console.log('loaddata')
       if (!this.activated || _.isUndefined(this.viewer3d)) {
         return
       }
-      const url = `/thredds/dodsC/files//${this.curSuid}/simulation/trim-${
+      const url = `/thredds/dodsC/files/${this.curSuid}/simulation/trim-${
         this.curSedimentClass
       }.nc`
-
-      try {
-        if (this.curSuid !== undefined && this.curSedimentClass !== undefined) {
-          this.viewer3d.dataSet.load(
-            {
-              url: url,
-              displacementVariable: this.dataSetVariables.displacementVariable,
-              dataVariable: this.dataSetVariables.dataVariable,
-              bedLevelVariable: this.dataSetVariables.bedLevelVariable
-            },
-            () => {
-              this.dimensions = this.viewer3d.volume.getDimensions()
-              this.loadGradient()
-              this.loadTime()
-              this.resetViewer()
+      if (this.curSuid !== undefined && this.curSedimentClass !== undefined) {
+        fetch(`${url}.html`)
+          .then(res => {
+            if (res.status !== 200) {
+              this.noAccess = true
+            } else {
+              this.noAccess = false
+              try {
+                this.viewer3d.dataSet.load(
+                  {
+                    url: url,
+                    displacementVariable: this.dataSetVariables.displacementVariable,
+                    dataVariable: this.dataSetVariables.dataVariable,
+                    bedLevelVariable: this.dataSetVariables.bedLevelVariable
+                  },
+                  () => {
+                    this.dimensions = this.viewer3d.volume.getDimensions()
+                    this.loadGradient()
+                    this.loadTime()
+                    this.resetViewer()
+                    this.dataLoaded = true
+                  }
+                )
+              } catch (err) {
+                console.error(err)
+              }
             }
-          )
-        }
-      } catch (err) {
-        console.error(err)
+          })
       }
     },
     loadGradient () {

@@ -1,6 +1,8 @@
 <template>
-<div id="template-scenario-builder">
   <div class="scenario-builder full-height">
+    <span v-if="availableTemplates.length === 0" class="label">
+      Log in to build a scenario.
+    </span>
     <!-- User has to select a template first -->
     <div class="container-fluid full-height scrollable" id="below-tool-bar">
       <div class="row">
@@ -105,7 +107,7 @@
                                 :aria-describedby="`${variable.id}-help`"
                                 />
                               <!-- select if not form -->
-                               <select v-if="variable.type === 'select' && !variable.factor" multiple="multiple"  class="form-control selectpicker" :id="variable.id" :value="variable.value" :field="getId(variable)"
+                               <select v-if="variable.type === 'select' && !variable.factor" multiple="multiple"  class="form-control selectpicker" :id="variable.id" v-model="variable.value" :field="getId(variable)"
                                 :name="variable.name">
                                 <option v-for="(option, i) in variable.options" :value="option.value" :key="i">
                                   {{ option.text }}
@@ -231,21 +233,22 @@
 
       </div>
     </div>
+    <alert-dialog
+      :alertMessage="alertEvent"
+    />
   </div>
-</div>
 </template>
 
 <script>
 import _ from 'lodash'
 import $ from 'jquery'
 import store from '../store'
-import {
-  bus
-} from '@/event-bus.js'
 // import MapComponent from '../components/MapComponent'
 // eslint-disable-next-line
 import { extend, validate } from 'vee-validate'
 import { required } from 'vee-validate/dist/rules'
+import AlertDialog from '@/components/AlertDialog'
+import Vue from 'vue'
 extend('required', {
   ...required,
   message: 'This field is required'
@@ -329,12 +332,13 @@ export default {
       // The DOM elements used for the fixed toolbar event listener
       navBars: null,
       forceTemplateUpdate: false,
-      maxRuns: 20
+      maxRuns: 20,
+      alertEvent: null
     }
   },
-  // components: {
-  //   MapComponent
-  // },
+  components: {
+    AlertDialog
+  },
   mounted () {
     // We force the template to be reloaded when this page is openend
     // Otherwise old values will stay in the form, and the validator is not reactivated.
@@ -528,19 +532,23 @@ export default {
       if (pickers.selectpicker !== undefined) {
         pickers.selectpicker('refresh')
       }
+
+      const updateValidation = (val, el) => {
+        this.updateTagLabel(val)
+
+        this.scenarioConfig.sections.forEach(sec => {
+          const variable = sec.variables.find(vari => vari.name === val.target.name)
+          if (!variable) {
+            return
+          }
+          variable.value =  $(el).tagsinput('items')
+        })
+        this.$refs.validator.forEach(val => val.validate())
+      }
       $('.input-field-tags').each((i, el) => {
         $(el).tagsinput()
-        $(el).change(this.updateTagLabel)
-        $(el).change((val) => {
-          this.scenarioConfig.sections.forEach(sec => {
-            const variable = sec.variables.find(vari => vari.name === val.target.name)
-            if (!variable) {
-              return
-            }
-            variable.value = $(el).tagsinput('items')
-          })
-          this.$refs.validator.forEach(val => val.validate())
-        })
+        $(el).on('itemAdded', (val) => updateValidation(val, el))
+        $(el).on('itemRemoved', (val) => updateValidation(val, el))
       })
       this.updateTagLabel()
     },
@@ -632,11 +640,11 @@ export default {
       store.dispatch('createScenario', postdata)
         .then(() => {
           // This is not practical, but the only way in vue? (using $parent)
-          bus.$emit('show-alert', {
+          this.alertEvent = {
             message: 'Scenario submitted',
             showTime: 5000,
             type: 'info'
-          })
+          }
           this.$router.push({
             name: 'home',
             params: {}
@@ -644,11 +652,11 @@ export default {
         })
         .catch(() => {
           // This is not practical, but the only way in vue? (using $parent)
-          bus.$emit('show-alert', {
-            message: 'Scenario could not be submitted',
+          this.alertEvent = {
+            message: 'Scenario could not be submitted. No rights on this account to create a scenario. For more information and rights contact <a href = "mailto: delft3d-gt-support@deltares.nl">Delft3D-GT Support</a>',
             showTime: 5000,
             type: 'warning'
-          })
+          }
         })
     },
     // We have to prepare the scenario config
@@ -661,10 +669,14 @@ export default {
       _.forEach(sections, (section) => {
         // Loop through all category vars
         _.forEach(section.variables, (variable) => {
-          // Set Default value
-          variable.value = _.get(variable, 'default')
           // Set factor to false
           variable.factor = _.get(variable, 'factor', false)
+          // Set Default value
+          if (variable.type === 'select' && !_.get(variable, 'factor')) {
+            variable.value = [_.get(variable, 'default')]
+          } else {
+            variable.value = _.get(variable, 'default')
+          }
           // Initialise fraction so that vue can use it
           variable.inputValue = variable.value
         })
@@ -703,10 +715,20 @@ export default {
 
 <style lang="scss">
 @import '../assets/variables.scss';
+.placeholder {
+  margin: auto;
+}
+
 .scenario-builder {
     padding-top: 51px;
-    position: static;
-    height: 100vh;
+    position: relative;
+    height: 100%;
+
+    #below-tool-bar {
+      overflow-y: auto;
+      height: 100%;
+    }
+
     img {
         max-height: 768px;
         max-width: 100%;

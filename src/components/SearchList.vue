@@ -1,7 +1,7 @@
 <template>
 <div id="template-search-list">
   <div class="search-list" data-toggle="items">
-    <div  v-for="(scenario, index) in sharedState.scenarioContainers" :key="index">
+    <div v-for="(scenario, index) in sharedState.scenarioContainers" :key="index">
       <scenario-card :scenario="scenario" :multipleModels="true"></scenario-card>
     </div>
     <div class="list-divider" v-if="notEmpty(companyModels)">
