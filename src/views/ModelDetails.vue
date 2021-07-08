@@ -805,10 +805,9 @@ export default {
       const url = `api/v1/scenes/${id}/export/?format=json&${downloadOptions.join('&')}`
       fetch(url)
         .then((resp) => {
-          console.log(resp)
           if (resp.status !== 200) {
             this.alertEvent = {
-              message: 'Download not allowed for this account.',
+              message: 'Download not allowed for this account. For more information and rights contact <a href = "mailto: delft3d-gt-support@deltares.nl">Delft3D-GT Support</a>',
               showTime: 5000,
               type: 'warning'
             }
@@ -818,7 +817,7 @@ export default {
         })
         .catch(() => {
           this.alertEvent = {
-            message: 'Download not allowed for this account.',
+            message: 'Download not allowed for this account. For more information and rights contact <a href = "mailto: delft3d-gt-support@deltares.nl">Delft3D-GT Support</a>',
             showTime: 5000,
             type: 'warning'
           }

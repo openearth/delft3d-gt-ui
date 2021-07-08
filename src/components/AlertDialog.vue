@@ -79,6 +79,7 @@ export default {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
   width: 400px;
   left: calc(50% - 200px);
+  z-index: 100;
 }
 
 </style>

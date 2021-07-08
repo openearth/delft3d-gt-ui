@@ -248,7 +248,7 @@ import store from '../store'
 import { extend, validate } from 'vee-validate'
 import { required } from 'vee-validate/dist/rules'
 import AlertDialog from '@/components/AlertDialog'
-
+import Vue from 'vue'
 extend('required', {
   ...required,
   message: 'This field is required'
@@ -532,19 +532,23 @@ export default {
       if (pickers.selectpicker !== undefined) {
         pickers.selectpicker('refresh')
       }
+
+      const updateValidation = (val, el) => {
+        this.updateTagLabel(val)
+
+        this.scenarioConfig.sections.forEach(sec => {
+          const variable = sec.variables.find(vari => vari.name === val.target.name)
+          if (!variable) {
+            return
+          }
+          variable.value =  $(el).tagsinput('items')
+        })
+        this.$refs.validator.forEach(val => val.validate())
+      }
       $('.input-field-tags').each((i, el) => {
         $(el).tagsinput()
-        $(el).change(this.updateTagLabel)
-        $(el).change((val) => {
-          this.scenarioConfig.sections.forEach(sec => {
-            const variable = sec.variables.find(vari => vari.name === val.target.name)
-            if (!variable) {
-              return
-            }
-            variable.value = $(el).tagsinput('items')
-          })
-          this.$refs.validator.forEach(val => val.validate())
-        })
+        $(el).on('itemAdded', (val) => updateValidation(val, el))
+        $(el).on('itemRemoved', (val) => updateValidation(val, el))
       })
       this.updateTagLabel()
     },
@@ -665,10 +669,14 @@ export default {
       _.forEach(sections, (section) => {
         // Loop through all category vars
         _.forEach(section.variables, (variable) => {
-          // Set Default value
-          variable.value = _.get(variable, 'default')
           // Set factor to false
           variable.factor = _.get(variable, 'factor', false)
+          // Set Default value
+          if (variable.type === 'select' && !_.get(variable, 'factor')) {
+            variable.value = [_.get(variable, 'default')]
+          } else {
+            variable.value = _.get(variable, 'default')
+          }
           // Initialise fraction so that vue can use it
           variable.inputValue = variable.value
         })
