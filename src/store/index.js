@@ -45,6 +45,7 @@ export default new Vuex.Store({
             resolve(json[0])
           })
           .fail((jqXhr) => {
+            window.location.href = 'login/'
             reject(jqXhr)
           })
       })
