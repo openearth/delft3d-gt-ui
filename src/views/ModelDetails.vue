@@ -201,6 +201,7 @@
                     ? 'no updates available'
                     : getActiveModelData('outdated_workflow')
                 "
+                :disabled="isReadOnly"
               >
                 <span class="btn-label">
                   <i class="fa fa-fw fa-level-up" aria-hidden="true"></i

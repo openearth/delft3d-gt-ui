@@ -28,7 +28,7 @@
           <!-- There is also an option for an async components if one needs to load data at component instantiation. TODO: convert component. -->
           <div v-show="template && dataLoaded">
             <div>
-              <form novalidate>
+              <form>
                 <div v-for="(section, index) in scenarioConfig.sections" :key="index">
                   <div class="card mb-3">
                     <h3 class="card-header">{{section.name}}</h3>
@@ -77,7 +77,7 @@
                           [{{variable.options.map(opt => opt.text).join(', ')}}]
                         </span>
 
-                          <ValidationProvider ref="validator" :rules="`noEmptyArray|${validatorsToString(variable.validators)}`" :name="variable.value.toString()" v-slot="{ errors }">
+                          <ValidationProvider ref="validator" :rules="`noEmptyArray|${validatorsToString(variable.validators)}`" :name="variable.value.toString()" v-slot="{ errors }" immediate>
                             <div class="input-group">
 
                         <!-- tagsinput -->
@@ -356,33 +356,7 @@ export default {
         this.selectTemplate(template)
       }
     }
-  },
-  validators: { // `numeric` and `url` custom validator is local registration
-    max: (val, rule) => {
-      // create a value object and split up the value
-      var vals = factorToArray({
-        factor: true,
-        value: val,
-        type: 'numeric'
-      })
-      // check if any value is > rule
-      var valid = _.every(vals, (x) => {
-        return x <= rule
-      })
-      return valid
-    },
-    min: (val, rule) => {
-      var vals = factorToArray({
-        factor: true,
-        value: val,
-        type: 'numeric'
-      })
-      // check if any value is > rule
-      var valid = _.every(vals, (x) => {
-        return x >= rule
-      })
-      return valid
-    }
+    this.$refs.validator.forEach(val => val.validate())
   },
   computed: {
     totalRuns: {
@@ -541,9 +515,11 @@ export default {
           if (!variable) {
             return
           }
+          console.log($(el).tagsinput('items'))
           variable.value =  $(el).tagsinput('items')
         })
         this.$refs.validator.forEach(val => val.validate())
+        console.log(this.$refs.validator)
       }
       $('.input-field-tags').each((i, el) => {
         $(el).tagsinput()
