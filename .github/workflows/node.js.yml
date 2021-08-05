@@ -26,6 +26,15 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm run test:unit
+    - name: Install dependencies
+      run: npm ci
+#     - name: Test
+#       run: npm run test:unit
+    - name: Build
+      run: npm run build && zip -r delft3d-gt.zip dist
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: |
+          delft3d-gt.zip
