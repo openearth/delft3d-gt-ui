@@ -248,7 +248,6 @@ import store from '../store'
 import { extend, validate } from 'vee-validate'
 import { required } from 'vee-validate/dist/rules'
 import AlertDialog from '@/components/AlertDialog'
-import Vue from 'vue'
 extend('required', {
   ...required,
   message: 'This field is required'
@@ -356,7 +355,9 @@ export default {
         this.selectTemplate(template)
       }
     }
-    this.$refs.validator.forEach(val => val.validate())
+    console.log('refs', this.$refs, this.$refs.validator)
+    const validator = this.$refs.validator || []
+    validator.forEach(val => val.validate())
   },
   computed: {
     totalRuns: {
@@ -516,7 +517,7 @@ export default {
             return
           }
           console.log($(el).tagsinput('items'))
-          variable.value =  $(el).tagsinput('items')
+          variable.value = $(el).tagsinput('items')
         })
         this.$refs.validator.forEach(val => val.validate())
         console.log(this.$refs.validator)

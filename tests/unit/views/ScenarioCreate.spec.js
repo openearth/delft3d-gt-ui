@@ -5,6 +5,8 @@ import sinonChai from 'sinon-chai'
 import nock from 'nock'
 
 import ScenarioCreate from '../../../src/views/ScenarioCreate'
+
+// TODO: load validationProvider
 // setup chai
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
@@ -242,6 +244,8 @@ describe('ScenarioCreate - Scenario builder', () => {
   // Test if we can fetc htemplates through scenario builder
   // Later on it should maybe really use fake JSON to build scenarios.
   it('Should be possible to fetch templates', (done) => {
+
+
     const scenarioCreate = shallowMount(ScenarioCreate)
     var correctReply = false
 

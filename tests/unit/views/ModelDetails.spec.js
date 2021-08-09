@@ -6,11 +6,14 @@ import sinonChai from 'sinon-chai'
 import chai from 'chai'
 import store from '@/store'
 
+import fakeFetch from 'fake-fetch'
+
 // setup chai
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
 /* eslint-disable */
 let should = chai.should()
+
 
 const modelDetails = shallowMount(ModelDetails)
 
@@ -36,6 +39,11 @@ describe('ModelDetails', () => {
     sinon.spy(Promise, 'all')
     sinon.spy(Promise, 'reject')
     sinon.spy(Promise, 'resolve')
+
+    window.fetch = () => {}
+    fakeFetch.install()
+    global.fetch = window.fetch
+    // let stub = sinon.stub(global, 'fetch')
     // sinon.spy(window, "open");
   })
 
@@ -45,6 +53,7 @@ describe('ModelDetails', () => {
     Promise.reject.restore()
     Promise.resolve.restore()
     // window.open.restore();
+
   })
 
   // ***************************************************************************** dateCreatedText
@@ -223,6 +232,7 @@ describe('ModelDetails', () => {
       // window.open.should.have.not.been.called;
       modelDetails.vm.sharedState.activeModelContainer = { 'id': 'a' }
       modelDetails.vm.selectedDownloads.export_d3dinput = true
+
       modelDetails.vm.downloadFiles()
       // window.open.should.have.been.calledWith("/api/v1/scenes/a/export/?format=json&options=export_d3dinput");
     })
