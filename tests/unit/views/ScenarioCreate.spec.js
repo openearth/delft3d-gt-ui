@@ -45,14 +45,6 @@ describe('ScenarioCreate - Scenario builder', () => {
     done()
   })
 
-  it('Should be possible to check a value using the custom max validator', (done) => {
-    // check if we get an invalid error if we pass 0
-    var valid = ScenarioCreate.validators.min('0,2,3', 1)
-
-    assert.isFalse(valid)
-    done()
-  })
-
   it('Should be possible get the total number of runs', (done) => {
     const scenarioCreate = shallowMount(ScenarioCreate)
 
