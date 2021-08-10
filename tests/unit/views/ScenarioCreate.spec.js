@@ -5,6 +5,8 @@ import sinonChai from 'sinon-chai'
 import nock from 'nock'
 
 import ScenarioCreate from '../../../src/views/ScenarioCreate'
+
+// TODO: load validationProvider
 // setup chai
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
@@ -40,14 +42,6 @@ describe('ScenarioCreate - Scenario builder', () => {
     })
 
     assert.equal(0, array[0])
-    done()
-  })
-
-  it('Should be possible to check a value using the custom max validator', (done) => {
-    // check if we get an invalid error if we pass 0
-    var valid = ScenarioCreate.validators.min('0,2,3', 1)
-
-    assert.isFalse(valid)
     done()
   })
 
@@ -242,6 +236,8 @@ describe('ScenarioCreate - Scenario builder', () => {
   // Test if we can fetc htemplates through scenario builder
   // Later on it should maybe really use fake JSON to build scenarios.
   it('Should be possible to fetch templates', (done) => {
+
+
     const scenarioCreate = shallowMount(ScenarioCreate)
     var correctReply = false
 

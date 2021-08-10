@@ -1,12 +1,16 @@
 <template id="template-user-details">
   <div class="dropdown user">
-    <a href="#" class="dropdown-toggle my-auto dropdown-menu-item" id="dropdown-menu-item" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      <span class="fa fa-user" aria-hidden="true"></span>
-        {{ sharedState.first_name }} {{ sharedState.last_name }}
+    <a href="#" class="dropdown-toggle my-auto dropdown-menu-item" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+      <span class="fa fa-user"></span>
+        {{ sharedState.email }}
     </a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-menu-item">
-    <a href="/logout/" title="Log out" class="dropdown-item">
-      Logout <span class="fa fa-sign-out" aria-hidden="true"></span></a>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a v-if="loggedIn" href="/login/" title="Log in" class="dropdown-item">
+      Login <span class="fa fa-sign-in"></span>
+    </a>
+    <a v-else href="/logout/" title="Log out" class="dropdown-item">
+      Logout <span class="fa fa-sign-out"></span>
+    </a>
   </div>
 </div>
 
@@ -20,7 +24,10 @@ export default {
   store,
   template: '#template-user-details',
   computed: mapState({
-    sharedState: state => state.user
+    sharedState: state => state.user,
+    loggedIn () {
+      return typeof this.sharedState.first_name !== 'string'
+    }
   })
 }
 </script>

@@ -91,6 +91,27 @@ dt {
   }
 }
 
+.navbar {
+  #static-logoimage {
+      float: left;
+      position: relative;
+      height: $logo-size;
+      width: $logo-size;
+      min-width: $logo-size;
+  }
+
+  .brand-wrapper {
+    height: $logo-size;
+    padding: 10px 10px 10px 61px;
+
+    .navbar-brand {
+      margin-left: 0.5rem;
+      font-size: 18px;
+      top: calc(50% - 9px);
+    }
+  }
+}
+
 .login-body {
   display: flex;
 
@@ -135,6 +156,7 @@ dt {
 .row {
   padding-bottom: 15px;
 }
+
 // ============ responsiveness
 
 @media (min-width: $screen-xs-sm) {

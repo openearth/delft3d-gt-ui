@@ -5,6 +5,15 @@ const argv = require('yargs').argv
 const apiServer = argv.apiServer || 'http://dl-ng004.xtr.deltares.nl'
 
 module.exports = {
+  chainWebpack: (config) => {
+    if (process.env.NODE_ENV === 'test') {
+      const scssRule = config.module.rule('scss')
+      scssRule.uses.clear()
+      scssRule
+        .use('null-loader')
+        .loader('null-loader')
+    }
+  },
   filenameHashing: false,
   devServer: {
     port: 9000,

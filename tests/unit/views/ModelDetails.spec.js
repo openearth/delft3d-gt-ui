@@ -5,12 +5,13 @@ import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
 import chai from 'chai'
 import store from '@/store'
-
+import 'isomorphic-fetch'
 // setup chai
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
 /* eslint-disable */
 let should = chai.should()
+
 
 const modelDetails = shallowMount(ModelDetails)
 
@@ -29,6 +30,20 @@ const modelDetails = shallowMount(ModelDetails)
 // }
 // test component
 
+export function jsonOk (body) {
+  let mockResponse = new Response(JSON.stringify(body), {
+      status: 200,
+      headers: {
+          'Content-type': 'application/json'
+      }
+  })
+
+  return Promise.resolve(mockResponse)
+}
+
+global.fetch = jsonOk
+
+
 sinon.restore()
 describe('ModelDetails', () => {
   beforeEach(() => {
@@ -36,7 +51,7 @@ describe('ModelDetails', () => {
     sinon.spy(Promise, 'all')
     sinon.spy(Promise, 'reject')
     sinon.spy(Promise, 'resolve')
-    // sinon.spy(window, "open");
+    sinon.spy(global, 'fetch')
   })
 
   afterEach(() => {
@@ -45,6 +60,7 @@ describe('ModelDetails', () => {
     Promise.reject.restore()
     Promise.resolve.restore()
     // window.open.restore();
+    global.fetch.restore()
   })
 
   // ***************************************************************************** dateCreatedText
@@ -220,11 +236,12 @@ describe('ModelDetails', () => {
   describe('.downloadFiles()', () => {
     it('', () => {
       modelDetails.vm.downloadFiles()
-      // window.open.should.have.not.been.called;
+      global.fetch.should.have.not.been.called;
       modelDetails.vm.sharedState.activeModelContainer = { 'id': 'a' }
       modelDetails.vm.selectedDownloads.export_d3dinput = true
+
       modelDetails.vm.downloadFiles()
-      // window.open.should.have.been.calledWith("/api/v1/scenes/a/export/?format=json&options=export_d3dinput");
+      global.fetch.should.have.been.called
     })
   })
 

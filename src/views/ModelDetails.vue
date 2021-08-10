@@ -194,19 +194,14 @@
             <div class="btn-group">
               <button
                 class="btn dropdown-toggle"
-                :class="[
-                  isReadOnly || !isFinished || outdated == false
-                    ? 'disabled'
-                    : 'btn-warning'
-                ]"
                 data-toggle="dropdown"
                 href="#"
-                :disabled="isReadOnly || !isFinished || outdated == false"
                 :data-original-title="
                   outdated == false
                     ? 'no updates available'
                     : getActiveModelData('outdated_workflow')
                 "
+                :disabled="isReadOnly"
               >
                 <span class="btn-label">
                   <i class="fa fa-fw fa-level-up" aria-hidden="true"></i
@@ -216,7 +211,6 @@
               </button>
               <ul
                 class="dropdown-menu"
-                :disabled="isReadOnly || !isFinished || outdated == false"
               >
                 <li v-for="(entrypoint, index) in getEntrypoints" :key="index">
                   <a
@@ -539,6 +533,9 @@
         Clicking a model will show details here.
       </p>
     </div>
+    <alert-dialog
+      :alertMessage="alertEvent"
+    />
   </div>
 </template>
 
@@ -548,6 +545,7 @@ import store from '../store'
 import ImageAnimation from '../components/ImageAnimation'
 import ConfirmDialog from '../components/ConfirmDialog'
 import Viewer3DComponent from '../components/Viewer3DComponent'
+import AlertDialog from '@/components/AlertDialog'
 import $ from 'jquery'
 
 import { mapState } from 'vuex'
@@ -558,7 +556,8 @@ export default {
   components: {
     'image-animation': ImageAnimation,
     'confirm-dialog': ConfirmDialog,
-    'viewer-3d': Viewer3DComponent
+    'viewer-3d': Viewer3DComponent,
+    AlertDialog
   },
   data () {
     return {
@@ -571,7 +570,8 @@ export default {
       viewerActive: false,
       selectedUpdate: '',
       owner: '',
-      updateModelBy: {}
+      updateModelBy: {},
+      alertEvent: null
     }
   },
   created () {
@@ -803,9 +803,26 @@ export default {
         }
       }
 
-      window.open(
-        `api/v1/scenes/${id}/export/?format=json&${downloadOptions.join('&')}`
-      )
+      const url = `api/v1/scenes/${id}/export/?format=json&${downloadOptions.join('&')}`
+      fetch(url)
+        .then((resp) => {
+          if (resp.status !== 200) {
+            this.alertEvent = {
+              message: 'Download not allowed for this account. For more information and rights contact <a href = "mailto: delft3d-gt-support@deltares.nl">Delft3D-GT Support</a>',
+              showTime: 5000,
+              type: 'warning'
+            }
+          } else {
+            window.open(url)
+          }
+        })
+        .catch(() => {
+          this.alertEvent = {
+            message: 'Download not allowed for this account. For more information and rights contact <a href = "mailto: delft3d-gt-support@deltares.nl">Delft3D-GT Support</a>',
+            showTime: 5000,
+            type: 'warning'
+          }
+        })
     },
     hasPostProcessData () {
       // Check if files in postprocess_output is not empty
@@ -816,7 +833,8 @@ export default {
       )
     },
     confirm () {
-      store.dispatch(`${this.updateModelBy.name}Model`, this.updateModelBy)
+      const updateModel = store.dispatch(`${this.updateModelBy.name}Model`, this.updateModelBy)
+      console.log(updateModel)
       this.updateModelBy = {}
     },
     startModel () {

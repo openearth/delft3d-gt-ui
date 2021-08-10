@@ -78,15 +78,16 @@
 
     </ul>
 
-        <!-- Confirm dialog for control checks -->
-        <confirm-dialog v-if="updateModelsBy.name" :confirm-button-title="capitalizeFirst(updateModelsBy.name)" :dialogId="`confirm-${updateModelsBy.name}`" @confirm="confirm" @cancel="cancel">
-          <template slot="title">
-            {{capitalizeFirst(updateModelsBy.name)}} models?
-          </template>
-          <template slot="body">
-            <p>Are you sure you want to {{updateModelsBy.name}} this model? This action cannot be undone.</p>
-          </template>
-        </confirm-dialog>
+    <!-- Confirm dialog for control checks -->
+    <confirm-dialog v-if="updateModelsBy.name" :confirm-button-title="capitalizeFirst(updateModelsBy.name)" :dialogId="`confirm-${updateModelsBy.name}`" @confirm="confirm" @cancel="cancel">
+      <template slot="title">
+        {{capitalizeFirst(updateModelsBy.name)}} models?
+      </template>
+      <template slot="body">
+        <p>Are you sure you want to {{updateModelsBy.name}} this model? This action cannot be undone.</p>
+      </template>
+    </confirm-dialog>
+    <alert-dialog :alertMessage="alertEvent" />
   </div>
 </div>
 </template>
@@ -95,6 +96,7 @@
 import store from '../store'
 import _ from 'lodash'
 import ConfirmDialog from './ConfirmDialog'
+import AlertDialog from '@/components/AlertDialog'
 
 export default {
   template: '#template-model-control-menu',
@@ -130,11 +132,13 @@ export default {
           'verbose': 'Export: RMS / Petrel'
         }
       },
-      sharedState: store.state
+      sharedState: store.state,
+      alertEvent: null
     }
   },
   components: {
-    ConfirmDialog
+    ConfirmDialog,
+    AlertDialog
   },
 
   computed: {
@@ -220,7 +224,45 @@ export default {
       if (this.numSelectedModels === 0 || !this.anyDownloadsSelected) {
         return // nothing to do
       }
-      store.dispatch('downloadSelectedModels', this.downloadOptions)
+
+      var selectedModelsSuid = _.map(store.getters.getSelectedModels, (m) => {
+        return m.data.suid
+      })
+
+      var selectedOptions = _.reduce(this.downloadOptions, (result, value, key) => {
+        if (value.active) {
+          result.push(key)
+        }
+        return result
+      }, [])
+
+      if (selectedOptions.length === 0) {
+        return new Error('No downloads selected')
+      }
+
+      const url = '/api/v1/scenes/export_all/?format=json&suid=' + selectedModelsSuid.join('&suid=') + '&options=' + selectedOptions.join('&options=')
+
+      if (typeof url === 'string') {
+        fetch(url)
+          .then((resp) => {
+            if (resp.status !== 200) {
+              this.alertEvent = {
+                message: 'Download not allowed for this account. For more information and rights contact <a href = "mailto: delft3d-gt-support@deltares.nl">Delft3D-GT Support</a>',
+                showTime: 5000,
+                type: 'warning'
+              }
+            } else {
+              window.open(url)
+            }
+          })
+          .catch(() => {
+            this.alertEvent = {
+              message: 'Download not allowed for this account. For more information and rights contact <a href = "mailto: delft3d-gt-support@deltares.nl">Delft3D-GT Support</a>',
+              showTime: 5000,
+              type: 'warning'
+            }
+          })
+      }
     },
 
     toggle (id) {
