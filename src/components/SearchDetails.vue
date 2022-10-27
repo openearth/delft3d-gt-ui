@@ -325,14 +325,13 @@ export default {
           }
         )
       })
-      .catch(e => console.log(e))
+      .catch()
   },
 
   computed: {
     modelEngines: {
       get () {
         // flatten variables
-        console.log(this.templates)
         const variables = _.flatMap(_.flatMap(this.templates, 'sections'), 'variables')
 
         // lookup all variables with id engine (convention)
