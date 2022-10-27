@@ -481,6 +481,7 @@ export default {
             this.updateAfterTick()
           })
         })
+        .catch(e => console.log(e))
     },
     selectTemplate (template) {
       if (template === null || template === undefined) {

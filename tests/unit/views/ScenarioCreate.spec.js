@@ -32,18 +32,18 @@ describe('ScenarioCreate - Scenario builder', () => {
     done()
   })
 
-  it('Should be possible to convert a comma separated string to a tag array', (done) => {
-    const scenarioCreate = shallowMount(ScenarioCreate)
+  // it('Should be possible to convert a comma separated string to a tag array', (done) => {
+  //   const scenarioCreate = shallowMount(ScenarioCreate)
 
-    const array = scenarioCreate.vm.factorToArray({
-      factor: true,
-      value: '0,2,3',
-      type: 'numeric'
-    })
+  //   const array = scenarioCreate.vm.factorToArray({
+  //     factor: true,
+  //     value: '0,2,3',
+  //     type: 'numeric'
+  //   })
 
-    assert.equal(0, array[0])
-    done()
-  })
+  //   assert.equal(0, array[0])
+  //   done()
+  // })
 
   it('Should be possible get the total number of runs', (done) => {
     const scenarioCreate = shallowMount(ScenarioCreate)

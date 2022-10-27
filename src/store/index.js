@@ -437,6 +437,7 @@ export default new Vuex.Store({
             reject(jqXhr)
           })
       })
+        .catch(e => console.log(e))
     },
 
     downloadSelectedModels (context, selectedDownloads) {
