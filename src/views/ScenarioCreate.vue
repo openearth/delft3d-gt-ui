@@ -277,7 +277,7 @@ extend('min', {
     return !allBools.includes(false)
   },
   params: ['min_value'],
-  message: `Entered value is too low.`
+  message: 'Entered value is too low.'
 })
 extend('max', {
   validate (value, args) {
@@ -294,7 +294,7 @@ extend('max', {
     return !allBools.includes(false)
   },
   params: ['max_value'],
-  message: `Entered value is too high.`
+  message: 'Entered value is too high.'
 })
 // a separate function that we can test.
 const factorToArray = (variable) => {
@@ -303,11 +303,11 @@ const factorToArray = (variable) => {
     return variable.value
   }
   // split it up
-  var tagsArray = _.split(variable.value, ',')
+  let tagsArray = _.split(variable.value, ',')
   // if we have a number, return numbers
   if (variable.type === 'numeric') {
     // convert to number
-    var numbers = _.map(
+    const numbers = _.map(
       tagsArray,
       _.toNumber
     )
@@ -349,8 +349,8 @@ export default {
     // if we have a template in the request, select that one
     if (_.get(this, '$route.query.template')) {
       // This cannot go into the fetchTemplates, template will always be empty!
-      var templateId = parseInt(this.$route.query.template)
-      var template = _.first(_.filter(this.availableTemplates, ['id', templateId]))
+      const templateId = parseInt(this.$route.query.template)
+      const template = _.first(_.filter(this.availableTemplates, ['id', templateId]))
       if (template !== undefined) {
         this.selectTemplate(template)
       }
@@ -363,16 +363,16 @@ export default {
     totalRuns: {
       cache: false,
       get () {
-        var totalRuns = 1
+        let totalRuns = 1
         // lookup all variables
-        var variables = _.flatMap(
+        const variables = _.flatMap(
           this.scenarioConfig.sections,
           (section) => {
             return section.variables
           }
         )
         // lookup number of runs per variable
-        var runs = _.map(
+        const runs = _.map(
           variables,
           // use an arrow because we need this
           (variable) => {
@@ -466,10 +466,10 @@ export default {
         .then((templates) => {
           this.availableTemplates = _.sortBy(templates, ['name'])
           // Select the first template automatic:
-          var template = _.get(this.availableTemplates, 0)
+          let template = _.get(this.availableTemplates, 0)
           // if we have a template in the request, select that one
           if (_.get(this, '$route.query.template')) {
-            var templateId = parseInt(this.$route.query.template)
+            const templateId = parseInt(this.$route.query.template)
             template = _.first(_.filter(this.availableTemplates, ['id', templateId]))
           }
           // set the template, somehow a computed setter was not working...
@@ -503,7 +503,7 @@ export default {
     },
     updateAfterTick () {
       // initiate the multi-select input fields
-      var pickers = $('.selectpicker')
+      const pickers = $('.selectpicker')
       if (pickers.selectpicker !== undefined) {
         pickers.selectpicker('refresh')
       }
@@ -543,7 +543,7 @@ export default {
       // the request has parameters in the form of {"variable": {"values": value}}
       // the scenarioConfig also has sections {"sections": [{"variables": [{"variable": {"value": []}}]}]}
       // let's create a flat list of variables
-      var variables = _.flatMap(this.scenarioConfig.sections, 'variables')
+      const variables = _.flatMap(this.scenarioConfig.sections, 'variables')
       // loop over all variables in the filled in template
       _.each(
         variables,
@@ -565,11 +565,11 @@ export default {
       // This is a bit ugly, but if we have a name, add (copy) to it and then use it.
       if (_.get(this, '$route.query.name') && _.get(this.scenarioConfig, 'name')) {
         // we also have a name
-        var name = this.$route.query.name
+        const name = this.$route.query.name
         // reuse it and create (copy) (copy) (over) (roger)
         this.scenarioConfig.name = `${name}(copy)`
         // the name variable is special, because it's duplicated
-        var nameVariable = _.first(_.filter(variables, ['id', 'name']))
+        const nameVariable = _.first(_.filter(variables, ['id', 'name']))
         if (nameVariable) {
           // also set the name to the variable
           nameVariable.value = this.scenarioConfig.name
@@ -580,19 +580,19 @@ export default {
       if (this.noErrors()) {
         return
       }
-      var parameters = {}
-      var name = ''
+      const parameters = {}
+      let name = ''
       // map each variable in each section to parameters
       _.forEach(this.scenarioConfig.sections, (section) => {
         _.forEach(section.variables, (variable) => {
           if (variable.id === 'name') {
             name = variable.value
           } else {
-            var valuearray = _.map(('' + variable.value).split(','), (d) => {
+            let valuearray = _.map(('' + variable.value).split(','), (d) => {
               // try and parse
-              var parsed = parseFloat(d)
+              const parsed = parseFloat(d)
               // if we have a number return parsed otherwise original string
-              var result = (_.isNumber(parsed) && !isNaN(parsed)) ? parsed : d
+              const result = (_.isNumber(parsed) && !isNaN(parsed)) ? parsed : d
               return result
             })
             if (variable.type === 'bbox-array') {
@@ -609,10 +609,10 @@ export default {
           }
         })
       })
-      var postdata = {
-        'name': name,
-        'template': this.currentSelectedId,
-        'parameters': JSON.stringify(parameters)
+      const postdata = {
+        name: name,
+        template: this.currentSelectedId,
+        parameters: JSON.stringify(parameters)
       }
       store.dispatch('createScenario', postdata)
         .then(() => {
@@ -639,9 +639,9 @@ export default {
     // We have to prepare the scenario config
     prepareScenarioConfig (data) {
       // create a deep copy so we don't change the template
-      var scenario = _.cloneDeep(data)
+      const scenario = _.cloneDeep(data)
       // Loop through all variables and set the default value:
-      var sections = scenario.sections
+      const sections = scenario.sections
       // flatten variables
       _.forEach(sections, (section) => {
         // Loop through all category vars

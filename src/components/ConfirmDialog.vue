@@ -29,15 +29,15 @@ export default {
   // not much in here.
   template: '#template-confirm-dialog',
   props: {
-    'dialogId': {
+    dialogId: {
       type: String,
       required: true
     },
-    'confirmButtonTitle': {
+    confirmButtonTitle: {
       type: String,
       required: true
     },
-    'modal': {
+    modal: {
       type: Boolean
     }
   },
@@ -55,7 +55,7 @@ export default {
       this.hide()
     },
     show () {
-      var el = $(`#${this.dialogId}-dialog`)
+      const el = $(`#${this.dialogId}-dialog`)
 
       // Hide extra alert by default.
       $(`#${this.dialogId}-dialog-alert`).hide()
@@ -66,7 +66,7 @@ export default {
     },
 
     hide () {
-      var el = $(`#${this.dialogId}-dialog`)
+      const el = $(`#${this.dialogId}-dialog`)
 
       if (el.modal !== undefined) {
         el.modal('hide')

@@ -111,25 +111,25 @@ export default {
       showDialog: false,
       updateModelsBy: {},
       downloadOptions: {
-        'export_d3dinput': {
-          'active': false,
-          'onlyFinished': false,
-          'verbose': 'Delft3D: input files'
+        export_d3dinput: {
+          active: false,
+          onlyFinished: false,
+          verbose: 'Delft3D: input files'
         },
-        'export_images': {
-          'active': false,
-          'onlyFinished': false,
-          'verbose': 'Media: output images'
+        export_images: {
+          active: false,
+          onlyFinished: false,
+          verbose: 'Media: output images'
         },
-        'export_movie': {
-          'active': false,
-          'onlyFinished': false,
-          'verbose': 'Media: output movies'
+        export_movie: {
+          active: false,
+          onlyFinished: false,
+          verbose: 'Media: output movies'
         },
-        'export_thirdparty': {
-          'active': false,
-          'onlyFinished': true,
-          'verbose': 'Export: RMS / Petrel'
+        export_thirdparty: {
+          active: false,
+          onlyFinished: true,
+          verbose: 'Export: RMS / Petrel'
         }
       },
       sharedState: store.state,
@@ -225,11 +225,11 @@ export default {
         return // nothing to do
       }
 
-      var selectedModelsSuid = _.map(store.getters.getSelectedModels, (m) => {
+      const selectedModelsSuid = _.map(store.getters.getSelectedModels, (m) => {
         return m.data.suid
       })
 
-      var selectedOptions = _.reduce(this.downloadOptions, (result, value, key) => {
+      const selectedOptions = _.reduce(this.downloadOptions, (result, value, key) => {
         if (value.active) {
           result.push(key)
         }

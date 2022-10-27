@@ -31,8 +31,8 @@ export default {
       map: null,
       popup: null,
       selection: {
-        'type': 'FeatureCollection',
-        'features': []
+        type: 'FeatureCollection',
+        features: []
       },
       fixate: false
     }
@@ -50,13 +50,13 @@ export default {
   methods: {
     getbbox () {
       // Get the bounding box of the current map view
-      var bounds = this.map.getBounds()
+      const bounds = this.map.getBounds()
 
-      var bbox = {
-        'latmin': bounds.getWest().toFixed(4),
-        'lonmin': bounds.getSouth().toFixed(4),
-        'latmax': bounds.getEast().toFixed(4),
-        'lonmax': bounds.getNorth().toFixed(4)
+      const bbox = {
+        latmin: bounds.getWest().toFixed(4),
+        lonmin: bounds.getSouth().toFixed(4),
+        latmax: bounds.getEast().toFixed(4),
+        lonmax: bounds.getNorth().toFixed(4)
       }
 
       return bbox
@@ -73,36 +73,37 @@ export default {
     },
 
     setMapBbox () {
-      var bbox = store.state.bbox
+      const bbox = store.state.bbox
 
       this.map.getSource('boundingbox').setData({
-        'type': 'LineString',
-        'coordinates': [
+        type: 'LineString',
+        coordinates: [
           [bbox[0], bbox[1]],
           [bbox[2], bbox[1]],
           [bbox[2], bbox[3]],
           [bbox[0], bbox[3]],
           [bbox[0], bbox[1]]
-        ] })
+        ]
+      })
     },
     initialBbox () {
       this.map.setZoom(1)
       this.map.setCenter([0, 0])
-      var bbox = this.getbbox()
+      const bbox = this.getbbox()
 
       this.$parent.validbbox = false
       store.dispatch('setbbox', [bbox.latmin, bbox.lonmin, bbox.latmax, bbox.lonmax])
       if (this.map.getSource('boundingbox') !== undefined) {
         this.map.getSource('boundingbox').setData({
-          'type': 'LineString',
-          'coordinates': []
+          type: 'LineString',
+          coordinates: []
         }
         )
       }
       if (this.map.getSource('selection') !== undefined) {
         this.map.getSource('selection').setData({
-          'type': 'LineString',
-          'coordinates': []
+          type: 'LineString',
+          coordinates: []
         }
         )
       }
@@ -110,9 +111,9 @@ export default {
     },
 
     setSelection (bbox) {
-      var features = this.map.queryRenderedFeatures(bbox).filter(x => (x.layer.id === 'locations'))
-      var insiderect = features.filter(x => {
-        var coords = x.geometry.coordinates
+      const features = this.map.queryRenderedFeatures(bbox).filter(x => (x.layer.id === 'locations'))
+      const insiderect = features.filter(x => {
+        const coords = x.geometry.coordinates
 
         if (coords[0] >= bbox.latmin &
             coords[0] <= bbox.latmax &
@@ -124,15 +125,15 @@ export default {
 
       this.selection.features = []
       insiderect.forEach((feature) => {
-        var location = feature.geometry.coordinates.slice()
+        const location = feature.geometry.coordinates.slice()
 
         this.selection.features.push({
-          'type': 'Feature',
-          'geometry': {
-            'type': 'Point',
-            'coordinates': location
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: location
           },
-          'properties': feature.properties
+          properties: feature.properties
         })
       })
     }
@@ -164,13 +165,13 @@ export default {
 
       // Add geojson with locations to the map
       this.map.addLayer({
-        'id': 'locations',
-        'type': 'circle',
-        'source': {
-          'type': 'geojson',
-          'data': './worldpoints.json'
+        id: 'locations',
+        type: 'circle',
+        source: {
+          type: 'geojson',
+          data: './worldpoints.json'
         },
-        'paint': {
+        paint: {
           'circle-opacity': 0.5,
           'circle-color': '#009AEB',
           'circle-stroke-color': '#000000',
@@ -180,13 +181,13 @@ export default {
       })
 
       this.map.addLayer({
-        'id': 'selection',
-        'type': 'circle',
-        'source': {
-          'type': 'geojson',
-          'data': this.selection
+        id: 'selection',
+        type: 'circle',
+        source: {
+          type: 'geojson',
+          data: this.selection
         },
-        'paint': {
+        paint: {
           'circle-opacity': 0,
           'circle-stroke-width': 2,
           'circle-stroke-color': '#00b300'
@@ -194,25 +195,25 @@ export default {
       })
 
       this.map.addLayer({
-        'id': 'boundingbox',
-        'type': 'line',
-        'source': {
-          'type': 'geojson',
-          'data': {
-            'type': 'LineString',
-            'coordinates': []
+        id: 'boundingbox',
+        type: 'line',
+        source: {
+          type: 'geojson',
+          data: {
+            type: 'LineString',
+            coordinates: []
           }
         },
-        'paint': {
+        paint: {
         }
       })
 
       // When hovering over a location, show a popup and change the cursor
       this.map.on('mouseenter', 'locations', (e) => {
         this.map.getCanvas().style.cursor = 'pointer'
-        var features = e.features
-        var coords = features[0].geometry.coordinates
-        var title = features[0].properties.title
+        const features = e.features
+        const coords = features[0].geometry.coordinates
+        const title = features[0].properties.title
 
         this.popup.setLngLat(coords)
           .setHTML(title.slice(1, -1))
@@ -226,7 +227,7 @@ export default {
       })
 
       this.map.on('moveend', () => {
-        var bboxvar = this.getbbox()
+        const bboxvar = this.getbbox()
 
         this.setSelection(bboxvar)
 

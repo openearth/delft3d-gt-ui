@@ -22,7 +22,7 @@ describe('ScenarioCreate - Scenario builder', () => {
   it('Should be possible to convert a single value to a tag array', (done) => {
     const scenarioCreate = shallowMount(ScenarioCreate)
 
-    var array = scenarioCreate.vm.factorToArray({
+    const array = scenarioCreate.vm.factorToArray({
       factor: true,
       value: 0.3,
       type: 'numeric'
@@ -35,7 +35,7 @@ describe('ScenarioCreate - Scenario builder', () => {
   it('Should be possible to convert a comma separated string to a tag array', (done) => {
     const scenarioCreate = shallowMount(ScenarioCreate)
 
-    var array = scenarioCreate.vm.factorToArray({
+    const array = scenarioCreate.vm.factorToArray({
       factor: true,
       value: '0,2,3',
       type: 'numeric'
@@ -50,9 +50,9 @@ describe('ScenarioCreate - Scenario builder', () => {
 
     // check if we get an invalid error if we pass 0
     scenarioCreate.vm.scenarioConfig = scenarioCreate.vm.prepareScenarioConfig({
-      'sections': [
+      sections: [
         {
-          'variables': [
+          variables: [
             {
               id: 'var1',
               value: '0,3',
@@ -96,7 +96,7 @@ describe('ScenarioCreate - Scenario builder', () => {
     const scenarioCreate = shallowMount(ScenarioCreate)
 
     // empty template
-    var template = {}
+    const template = {}
 
     scenarioCreate.vm.selectTemplate(template)
 
@@ -120,9 +120,9 @@ describe('ScenarioCreate - Scenario builder', () => {
 
     // Set some vars:
     scenarioCreate.vm.prepareScenarioConfig({
-      'sections': [
+      sections: [
         {
-          'variables': [
+          variables: [
             {
               id: 'var1',
               default: 0,
@@ -152,9 +152,9 @@ describe('ScenarioCreate - Scenario builder', () => {
     const scenarioCreate = shallowMount(ScenarioCreate)
 
     scenarioCreate.vm.prepareScenarioConfig({
-      'sections': [
+      sections: [
         {
-          'variables': [
+          variables: [
             {
               id: 'var1',
               default: 0,
@@ -173,7 +173,7 @@ describe('ScenarioCreate - Scenario builder', () => {
   it('Should be possible to use getId ', (done) => {
     const scenarioCreate = shallowMount(ScenarioCreate)
 
-    var variable = {
+    const variable = {
       id: 'testvar'
     }
 
@@ -181,8 +181,8 @@ describe('ScenarioCreate - Scenario builder', () => {
       id: 1
     }
 
-    var result = scenarioCreate.vm.getId(variable)
-    var expected = 1 + ',' + variable.id
+    const result = scenarioCreate.vm.getId(variable)
+    const expected = 1 + ',' + variable.id
 
     assert.isTrue(result === expected, 'getId matches')
 
@@ -236,10 +236,8 @@ describe('ScenarioCreate - Scenario builder', () => {
   // Test if we can fetc htemplates through scenario builder
   // Later on it should maybe really use fake JSON to build scenarios.
   it('Should be possible to fetch templates', (done) => {
-
-
     const scenarioCreate = shallowMount(ScenarioCreate)
-    var correctReply = false
+    let correctReply = false
 
     nock('http://localhost')
       .get('/api/v1/templates/')

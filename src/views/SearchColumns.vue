@@ -134,13 +134,13 @@ export default {
       $(".search-details input[type='text'], .search-details input[type=date]").val('')
 
       // Todo, reset sliders to min/max
-      var sliders = $('.ion-range')
+      const sliders = $('.ion-range')
 
       // Deselect all bootstrap select pickers
       $('.search-details .select-picker').selectpicker('deselectAll')
 
       $.each(sliders, (key, slider) => {
-        var irs = $(slider).data('ionRangeSlider')
+        const irs = $(slider).data('ionRangeSlider')
 
         // Reset /from & to to min/max.
         irs.update({

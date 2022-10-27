@@ -453,12 +453,12 @@ export default {
     activeModel: {
       deep: true,
       handler () {
-        let suid = _.get(this.activeModel, 'data.suid')
-        let sedimentClass = _.get(
+        const suid = _.get(this.activeModel, 'data.suid')
+        const sedimentClass = _.get(
           this.activeModel,
           'data.parameters.composition.value'
         )
-        let maxTimeStepIndex =
+        const maxTimeStepIndex =
           _.get(this.activeModel, 'data.info.delta_fringe_images.files', [])
             .length - 1 // obtain max TimeStep index based on number of Delta Fringe images
         this.hasFrames = maxTimeStepIndex > 0
@@ -657,21 +657,21 @@ export default {
       if (_.isUndefined(this.viewer3d)) {
         return
       }
-      let colors = _.reverse(
+      const colors = _.reverse(
         _.map(this.gradient, c => {
           return '#' + c.color
         })
       )
-      let positions = _.reverse(_.map(this.gradient, 'position'))
+      const positions = _.reverse(_.map(this.gradient, 'position'))
       // check if all colors are according to color format
-      let colorsOk = _.every(colors, c => {
+      const colorsOk = _.every(colors, c => {
         return /^#[0-9a-fA-F]{6}$/.test(c)
       })
       if (!colorsOk && colors.length === positions.length) {
         return
       }
 
-      let posColors = _.reverse(
+      const posColors = _.reverse(
         _.map(colors, (c, i) => {
           return c + ' ' + Math.floor((1 - positions[i]) * 100) + '%'
         })
@@ -746,7 +746,7 @@ export default {
         }
         _.set(this.slices, [d, 'from'], 1)
         _.set(this.slices, [d, 'to'], val)
-        let ionRangeFinderData = $('.ion-range.slice-' + d + '-w').data(
+        const ionRangeFinderData = $('.ion-range.slice-' + d + '-w').data(
           'ionRangeSlider'
         )
         if (ionRangeFinderData !== undefined) {

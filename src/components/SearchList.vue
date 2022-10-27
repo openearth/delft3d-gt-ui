@@ -47,11 +47,11 @@ export default {
   },
   props: {
     // can contain scenarios and models
-    'items': {
+    items: {
       type: Array,
       required: true
     },
-    'models': {
+    models: {
       type: Array,
       required: true
     }

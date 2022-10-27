@@ -26,7 +26,7 @@ describe('SearchDetails.vue', () => {
 
 describe('Search details', () => {
   it('Does Searchdetails have the initial values', (done) => {
-    var defaultData = {
+    const defaultData = {
       activatedPostProc: {},
       searchTemplate: null,
       createdAfter: '',
@@ -94,7 +94,7 @@ describe('Search details', () => {
       }]
     }]
 
-    var comp = {
+    const comp = {
       riverwidth: {
         id: 'riverwidth',
         min: 3,
@@ -111,7 +111,7 @@ describe('Search details', () => {
 
     /* eslint-disable camelcase */
     // no values set
-    var params = {
+    const params = {
       created_after: '',
       created_before: '',
       search: '',

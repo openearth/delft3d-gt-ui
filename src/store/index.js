@@ -87,7 +87,7 @@ export default new Vuex.Store({
           this.state.scenarios = jsons[1] // Array of Scenes
 
           this.state.models = _.map(this.state.models, (m) => {
-            let modelDetails = jsons[2] // Dictionary of Model Details
+            const modelDetails = jsons[2] // Dictionary of Model Details
             return (m.id === modelDetails.id) ? modelDetails : m
           })
 
@@ -105,11 +105,11 @@ export default new Vuex.Store({
         this.state.reqModelDetails.abort()
       }
 
-      let activeModelContainerId = _.get(this.state, 'activeModelContainer.id', -1)
+      const activeModelContainerId = _.get(this.state, 'activeModelContainer.id', -1)
 
       if (activeModelContainerId === -1) {
         return new Promise((resolve) => {
-          resolve({ 'id': -1 })
+          resolve({ id: -1 })
         })
       }
       return new Promise((resolve, reject) => {
@@ -165,7 +165,7 @@ export default new Vuex.Store({
 
     updateModelContainers () {
       _.each(this.state.models, (model) => {
-        var container = _.find(this.state.modelContainers, ['id', model.id])
+        let container = _.find(this.state.modelContainers, ['id', model.id])
         if (container === undefined) {
           // create new container
           container = {
@@ -193,7 +193,7 @@ export default new Vuex.Store({
       })
 
       // remove containers that have no associated model
-      var modelIds = _.map(this.state.models, (model) => {
+      const modelIds = _.map(this.state.models, (model) => {
         return model.id
       })
 
@@ -211,15 +211,15 @@ export default new Vuex.Store({
     },
     updateScenarioContainers () {
       _.each(this.state.scenarios, (scenario) => {
-        var scenarioContainer = _.find(this.state.scenarioContainers, ['id', scenario.id])
+        let scenarioContainer = _.find(this.state.scenarioContainers, ['id', scenario.id])
 
-        var modelContainerSet = _.filter(this.state.modelContainers, (o) => {
+        const modelContainerSet = _.filter(this.state.modelContainers, (o) => {
           return _.includes(scenario.scene_set, o.id)
         })
 
         if (scenarioContainer === undefined) {
           // create new scenarioContainer
-          scenarioContainer = { 'id': scenario.id, data: scenario, models: modelContainerSet }
+          scenarioContainer = { id: scenario.id, data: scenario, models: modelContainerSet }
           this.state.scenarioContainers.push(scenarioContainer)
         } else {
           // update scenario in scenarioContainer
@@ -229,7 +229,7 @@ export default new Vuex.Store({
       })
 
       // remove containers that have no associated scenario
-      var scenarioIds = _.map(this.state.scenarios, (scenario) => {
+      const scenarioIds = _.map(this.state.scenarios, (scenario) => {
         return scenario.id
       })
 
@@ -297,7 +297,7 @@ export default new Vuex.Store({
       })
     },
     redoModel (context, payload) {
-      var body = { 'entrypoint': payload.entrypoint }
+      const body = { entrypoint: payload.entrypoint }
 
       return new Promise((resolve, reject) => {
         if (payload.modelContainer === undefined || payload.modelContainer.id === undefined) {
@@ -425,11 +425,11 @@ export default new Vuex.Store({
           return reject(new Error('Publication level unidentified'))
         }
 
-        var selectedModelsSuid = _.map(this.getters.getSelectedModels, (m) => {
+        const selectedModelsSuid = _.map(this.getters.getSelectedModels, (m) => {
           return m.data.suid
         })
 
-        $.ajax({ url: '/api/v1/scenes/publish_' + domain + '_all/', method: 'POST', traditional: true, dataType: 'json', data: { 'suid': selectedModelsSuid } })
+        $.ajax({ url: '/api/v1/scenes/publish_' + domain + '_all/', method: 'POST', traditional: true, dataType: 'json', data: { suid: selectedModelsSuid } })
           .done(function (data) {
             resolve(data)
           })
@@ -445,11 +445,11 @@ export default new Vuex.Store({
           return reject(new Error('No models to export'))
         }
 
-        var selectedModelsSuid = _.map(this.getters.getSelectedModels, (m) => {
+        const selectedModelsSuid = _.map(this.getters.getSelectedModels, (m) => {
           return m.data.suid
         })
 
-        var selectedOptions = _.reduce(selectedDownloads, (result, value, key) => {
+        const selectedOptions = _.reduce(selectedDownloads, (result, value, key) => {
           if (value.active) {
             result.push(key)
           }

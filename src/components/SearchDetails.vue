@@ -249,50 +249,50 @@ export default {
       this.selectedUsers = []
       this.selectedOutdated = []
       this.activatedPostProc = {
-        'ProDeltaD50': false,
-        'DeltaFrontD50': false,
-        'DeltaTopD50': false,
-        'ProDeltaSandFraction': false,
-        'DeltaFrontSandFraction': false,
-        'DeltaTopSandFraction': false,
-        'ProDeltasorting': false,
-        'DeltaFrontsorting': false,
-        'DeltaTopsorting': false
+        ProDeltaD50: false,
+        DeltaFrontD50: false,
+        DeltaTopD50: false,
+        ProDeltaSandFraction: false,
+        DeltaFrontSandFraction: false,
+        DeltaTopSandFraction: false,
+        ProDeltasorting: false,
+        DeltaFrontsorting: false,
+        DeltaTopsorting: false
       }
 
       this.selectedPostProc = {
-        'ProDeltaD50': '01',
-        'DeltaFrontD50': '01',
-        'DeltaTopD50': '01',
-        'ProDeltaSandFraction': '0100',
-        'DeltaFrontSandFraction': '0100',
-        'DeltaTopSandFraction': '0100',
-        'ProDeltasorting': '-1010',
-        'DeltaFrontsorting': '-1010',
-        'DeltaTopsorting': '-1010'
+        ProDeltaD50: '01',
+        DeltaFrontD50: '01',
+        DeltaTopD50: '01',
+        ProDeltaSandFraction: '0100',
+        DeltaFrontSandFraction: '0100',
+        DeltaTopSandFraction: '0100',
+        ProDeltasorting: '-1010',
+        DeltaFrontsorting: '-1010',
+        DeltaTopsorting: '-1010'
       }
 
       this.search()
     })
     // should be initialised with values: it needs values when post processing search is activated
     this.selectedPostProc = {
-      'DeltaTopD50': '02',
-      'DeltaTopsand_fraction': '0100',
-      'DeltaTopsorting': '010',
-      'DeltaFrontD50': '02',
-      'DeltaFrontsand_fraction': '0100',
-      'DeltaFrontsorting': '010',
-      'ProDeltaD50': '02',
-      'ProDeltasand_fraction': '0100',
-      'ProDeltasorting': '010'
+      DeltaTopD50: '02',
+      DeltaTopsand_fraction: '0100',
+      DeltaTopsorting: '010',
+      DeltaFrontD50: '02',
+      DeltaFrontsand_fraction: '0100',
+      DeltaFrontsorting: '010',
+      ProDeltaD50: '02',
+      ProDeltasand_fraction: '0100',
+      ProDeltasorting: '010'
     }
 
     // set store failedUpdate handling
     store.state.failedUpdate = (jqXhr) => {
       console.error(jqXhr)
 
-      let status = jqXhr.statusText || 'error'
-      let response = jqXhr.responseText || jqXhr.responseJson || 'An error occurred.'
+      const status = jqXhr.statusText || 'error'
+      const response = jqXhr.responseText || jqXhr.responseJson || 'An error occurred.'
 
       this.$emit('show-alert', {
         message: status + ': ' + response,
@@ -304,8 +304,8 @@ export default {
     // get search templates
     Promise.all([store.dispatch('fetchUser'), fetchSearchTemplate()])
       .then((jsons) => {
-        var users = jsons[0]
-        var template = jsons[1]
+        const users = jsons[0]
+        const template = jsons[1]
 
         // store them
         this.users = _.sortBy(users, ['last_name', 'first_name'])
@@ -332,21 +332,21 @@ export default {
       get () {
         // flatten variables
         console.log(this.templates)
-        var variables = _.flatMap(_.flatMap(this.templates, 'sections'), 'variables')
+        const variables = _.flatMap(_.flatMap(this.templates, 'sections'), 'variables')
 
         // lookup all variables with id engine (convention)
-        var engines = _.filter(variables, ['id', 'engine'])
+        const engines = _.filter(variables, ['id', 'engine'])
 
         // lookup default values (filter on model/scenarios later)
-        var defaultEngines = _.uniq(_.map(engines, 'default'))
+        const defaultEngines = _.uniq(_.map(engines, 'default'))
 
         return defaultEngines
       }
     },
     parameters: {
       get () {
-        var parameters = {}
-        var variables = _.flatMap(
+        const parameters = {}
+        const variables = _.flatMap(
           _.flatMap(this.templates, 'sections'),
           'variables'
         )
@@ -354,7 +354,7 @@ export default {
         variables.forEach((variable) => {
           if (_.has(variable, 'validators.min') && _.has(variable, 'validators.max')) {
             // create parameter info for forms
-            var obj = {
+            const obj = {
               id: variable.id,
               min: _.get(variable, 'validators.min'),
               max: _.get(variable, 'validators.max')
@@ -431,8 +431,8 @@ export default {
     initializeForm () {
       // once the dom is updated, update the select pickers by hand
       // template data is computed into modelEngine
-      var that = this
-      var pickers = $('.selectpicker')
+      const that = this
+      const pickers = $('.selectpicker')
 
       if (pickers.selectpicker !== undefined) {
         pickers.selectpicker('refresh')
@@ -455,11 +455,11 @@ export default {
 
       // Add event handler that allows one to use the X next to inputs to clear the input.
       $('.button-empty-input-field').on('click', () => {
-        var input = $(this).closest('.input-group').find('input')
+        const input = $(this).closest('.input-group').find('input')
 
         // Force update selected parameters.
         // Quick fix for selected parameter, should be a parameter later.
-        var id = input.attr('id')
+        const id = input.attr('id')
 
         if (id === 'search') {
           that.searchText = ''
@@ -478,7 +478,7 @@ export default {
       // for now we just copy everything
 
       /* eslint-disable camelcase */
-      var params = {
+      const params = {
         search: this.searchText,
         shared: this.selectedDomains,
         template: this.selectedTemplates,
@@ -498,10 +498,10 @@ export default {
       /* eslint-enable camelcase */
 
       // serialize the post-processing params
-      var paramArray = _.map(
+      const paramArray = _.map(
         this.selectedParameters,
         (value, key) => {
-          var result = ''
+          let result = ''
 
           if (_.isString(value) && _.includes(value, '')) {
             // replace  by , =>  key,min,max
@@ -516,7 +516,7 @@ export default {
         }
       )
 
-      var postProcArray = _.map(
+      const postProcArray = _.map(
         this.selectedPostProc,
         (value, key) => {
           if (this.activatedPostProc[key]) {
@@ -538,7 +538,7 @@ export default {
       return params
     },
     search () {
-      var params = this.buildParams()
+      const params = this.buildParams()
       store.dispatch('updateParams', params)
       store.dispatch('update')
     }
