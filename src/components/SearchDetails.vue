@@ -581,6 +581,7 @@ export default {
   margin: 6px;
   margin-left: 0px;
   border: 0;
+  top: 20px;
 }
 
 .irs--round .irs-to,
