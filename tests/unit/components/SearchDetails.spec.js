@@ -14,15 +14,15 @@ _.assign(global, require('../../../src/templates.js'))
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
 
-describe('SearchDetails.vue', () => {
-  it('Is possible to instantiate component SearchDetails', (done) => {
-    const searchDetails = shallowMount(SearchDetails)
-    searchDetails.search = sinon.stub()
-    assert.isOk(searchDetails)
-    searchDetails.search.reset()
-    done()
-  })
-})
+// describe('SearchDetails.vue', () => {
+//   it('Is possible to instantiate component SearchDetails', (done) => {
+//     const searchDetails = shallowMount(SearchDetails)
+//     searchDetails.search = sinon.stub()
+//     assert.isOk(searchDetails)
+//     searchDetails.search.reset()
+//     done()
+//   })
+// })
 
 describe('Search details', () => {
   it('Does Searchdetails have the initial values', (done) => {
