@@ -4,7 +4,7 @@ import SearchDetails from '../../../src/components/SearchDetails.vue'
 import chaiAsPromised from 'chai-as-promised'
 
 import sinonChai from 'sinon-chai'
-import sinon from 'sinon'
+// import sinon from 'sinon'
 import _ from 'lodash'
 import nock from 'nock'
 
