@@ -289,6 +289,7 @@ export default {
 
     // set store failedUpdate handling
     store.state.failedUpdate = (jqXhr) => {
+      // eslint-disable-next-line
       console.error(jqXhr)
 
       const status = jqXhr.statusText || 'error'
@@ -325,7 +326,7 @@ export default {
           }
         )
       })
-      .catch()
+      .catch((e) => console.error(e))
   },
 
   computed: {

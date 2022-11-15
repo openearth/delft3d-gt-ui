@@ -102,7 +102,6 @@ export default {
 
   methods: {
     expandDetails () {
-      console.log('expanding details')
       if (this.collapseDetailsShow) {
         $('.model-details .collapse').collapse('show')
       } else {
@@ -119,7 +118,6 @@ export default {
       this.collapseSearchShow = !this.collapseSearchShow
     },
     expandScenarios () {
-      console.log('expanding scnearios', this.collapseScenariosShow)
       if (this.collapseScenariosShow) {
         $('.search-list .collapse').collapse('show')
       } else {

@@ -355,7 +355,6 @@ export default {
         this.selectTemplate(template)
       }
     }
-    console.log('refs', this.$refs, this.$refs.validator)
     const validator = this.$refs.validator || []
     validator.forEach(val => val.validate())
   },
@@ -481,7 +480,7 @@ export default {
             this.updateAfterTick()
           })
         })
-        .catch(e => console.log(e))
+        .catch((e) => console.error(e))
     },
     selectTemplate (template) {
       if (template === null || template === undefined) {
@@ -517,11 +516,9 @@ export default {
           if (!variable) {
             return
           }
-          console.log($(el).tagsinput('items'))
           variable.value = $(el).tagsinput('items')
         })
         this.$refs.validator.forEach(val => val.validate())
-        console.log(this.$refs.validator)
       }
       $('.input-field-tags').each((i, el) => {
         $(el).tagsinput()

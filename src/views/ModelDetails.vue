@@ -833,8 +833,7 @@ export default {
       )
     },
     confirm () {
-      const updateModel = store.dispatch(`${this.updateModelBy.name}Model`, this.updateModelBy)
-      console.log(updateModel)
+      store.dispatch(`${this.updateModelBy.name}Model`, this.updateModelBy)
       this.updateModelBy = {}
     },
     startModel () {

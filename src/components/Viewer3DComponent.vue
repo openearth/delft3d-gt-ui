@@ -616,7 +616,6 @@ export default {
       })
     },
     loadData () {
-      console.log('loaddata')
       if (!this.activated || _.isUndefined(this.viewer3d)) {
         return
       }
@@ -647,6 +646,7 @@ export default {
                   }
                 )
               } catch (err) {
+                // eslint-disable-next-line
                 console.error(err)
               }
             }
