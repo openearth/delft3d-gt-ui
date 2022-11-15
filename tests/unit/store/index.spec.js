@@ -9,7 +9,7 @@ import store from '../../../src/store'
 chai.use(chaiAsPromised)
 chai.use(sinonChai)
 
-var window = document.defaultView
+const window = document.defaultView
 global.window = window
 global.store = store
 
@@ -69,7 +69,7 @@ describe('Store: Testing data exchange with api', () => {
 
     // Can we remove scenarios?
     it('Should be possible to DELETE scenarios', (done) => {
-      var deleteId = 4
+      const deleteId = 4
 
       nock('http://localhost', { allowUnmocked: true })
         .defaultReplyHeaders({
@@ -77,7 +77,7 @@ describe('Store: Testing data exchange with api', () => {
         })
         .delete('/api/v1/scenarios/' + deleteId + '/')
         .reply(200, () => {
-          return { 'result': 'ok' }
+          return { result: 'ok' }
         })
 
       store.dispatch('deleteScenario', { id: deleteId })
@@ -86,7 +86,7 @@ describe('Store: Testing data exchange with api', () => {
         })
     })
     it('Should be possible to DELETE scenarios - FAILURE test', (done) => {
-      var deleteId = 4
+      const deleteId = 4
 
       nock('http://localhost', { allowUnmocked: true })
         .defaultReplyHeaders({
@@ -177,7 +177,7 @@ describe('Store: Testing data exchange with api', () => {
 
   describe('Store: Test model related API calls', () => {
     it('Should be possible to delete a model', (done) => {
-      var deleteID = 4
+      const deleteID = 4
 
       nock('http://localhost', { allowUnmocked: true })
         .defaultReplyHeaders({
@@ -199,7 +199,7 @@ describe('Store: Testing data exchange with api', () => {
     })
 
     it('Should be possible to reset a model', (done) => {
-      var id = 4
+      const id = 4
 
       nock('http://localhost', { allowUnmocked: true })
         .intercept('/api/v1/scenes/' + id + '/reset/', 'OPTIONS')
@@ -212,10 +212,12 @@ describe('Store: Testing data exchange with api', () => {
           return '{"a":' + id + '}'
         })
 
-      store.dispatch('resetModel', { modelContainer: {
-        id: id,
-        data: { state: null }
-      } })
+      store.dispatch('resetModel', {
+        modelContainer: {
+          id: id,
+          data: { state: null }
+        }
+      })
         .then(() => {
         // doesn't return anything, so nothing to check....
           done()
@@ -226,7 +228,7 @@ describe('Store: Testing data exchange with api', () => {
     })
 
     it('Should be possible to start a model', (done) => {
-      var id = 4
+      const id = 4
 
       nock('http://localhost', { allowUnmocked: true })
         .intercept('/api/v1/scenes/' + id + '/start/', 'OPTIONS')
@@ -259,8 +261,8 @@ describe('Store: Testing data exchange with api', () => {
         { id: 2, selected: true, data: { state: null } }
       ]
 
-      var observedCount = 0
-      var expectedCount = store.state.modelContainers.length
+      let observedCount = 0
+      const expectedCount = store.state.modelContainers.length
 
       // Mock the three requests:
       nock('http://localhost', { allowUnmocked: true })
@@ -298,7 +300,7 @@ describe('Store: Testing data exchange with api', () => {
     })
 
     it('Should be possible to stop a model', (done) => {
-      var id = 4
+      const id = 4
 
       // TODO: verification dialog testing
       // To get dialogs, manually have to create and add them to the component. So that is what we do here:
@@ -327,7 +329,7 @@ describe('Store: Testing data exchange with api', () => {
     })
 
     it('Should be possible to stop a model - FAILURE test', (done) => {
-      var id = 4
+      const id = 4
 
       nock('http://localhost', { allowUnmocked: true })
       // jquery calls OPTIONS first
@@ -353,7 +355,7 @@ describe('Store: Testing data exchange with api', () => {
     })
 
     it('Should be possible to start a model - FAILURE test', (done) => {
-      var id = 4
+      const id = 4
 
       nock('http://localhost', { allowUnmocked: true })
         .intercept('/api/v1/scenes/' + id + '/start/', 'OPTIONS')

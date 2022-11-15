@@ -244,7 +244,7 @@ export default {
     animationIndex: {
       cache: false,
       get () {
-        var idx = 0
+        let idx = 0
 
         // if we have frames this can be used
         if (this.frameCount > 0) {
@@ -264,10 +264,10 @@ export default {
     animationFrame: {
       cache: false,
       get () {
-        var animationKey = this.currentAnimationKey
+        const animationKey = this.currentAnimationKey
 
         if (animationKey.length > 0) {
-          var imgs = this.model.info[animationKey]
+          const imgs = this.model.info[animationKey]
 
           if (imgs !== undefined) {
             return (
@@ -289,8 +289,8 @@ export default {
     frameCount: {
       cache: false,
       get () {
-        var animationKey = this.currentAnimationKey
-        var imgs = _.get(this.model.info, animationKey)
+        const animationKey = this.currentAnimationKey
+        const imgs = _.get(this.model.info, animationKey)
 
         if (_.has(imgs, 'files')) {
           return imgs.files.length
@@ -364,7 +364,7 @@ export default {
     gotoLastFrame () {
       this.stopImageFrame()
 
-      var imgs = this.model.info[this.currentAnimationKey]
+      const imgs = this.model.info[this.currentAnimationKey]
 
       if (imgs !== undefined) {
         this.currentAnimationIndex = imgs.files.length - 1
@@ -389,7 +389,7 @@ export default {
 
       this.currentAnimationIndex++
 
-      var imgs = this.model.info[this.currentAnimationKey]
+      const imgs = this.model.info[this.currentAnimationKey]
 
       if (imgs !== undefined) {
         // Probably wrap.

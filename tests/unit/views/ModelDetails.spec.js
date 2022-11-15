@@ -46,22 +46,11 @@ global.fetch = jsonOk
 
 sinon.restore()
 describe('ModelDetails', () => {
-  beforeEach(() => {
-    // import component
-    sinon.spy(Promise, 'all')
-    sinon.spy(Promise, 'reject')
-    sinon.spy(Promise, 'resolve')
-    sinon.spy(global, 'fetch')
-  })
-
-  afterEach(() => {
-    // Unwrap spies
-    Promise.all.restore()
-    Promise.reject.restore()
-    Promise.resolve.restore()
-    // window.open.restore();
-    global.fetch.restore()
-  })
+  // import component
+  sinon.spy(Promise, 'all')
+  sinon.spy(Promise, 'reject')
+  sinon.spy(Promise, 'resolve')
+  sinon.spy(global, 'fetch')
 
   // ***************************************************************************** dateCreatedText
 
@@ -235,6 +224,7 @@ describe('ModelDetails', () => {
 
   describe('.downloadFiles()', () => {
     it('', () => {
+      sinon.spy(global, 'fetch')
       modelDetails.vm.downloadFiles()
       global.fetch.should.have.not.been.called;
       modelDetails.vm.sharedState.activeModelContainer = { 'id': 'a' }
@@ -264,4 +254,11 @@ describe('ModelDetails', () => {
       modelDetails.vm.doNothing().should.equal(false)
     })
   })
+
+  // Unwrap spies
+  Promise.all.restore()
+  Promise.reject.restore()
+  Promise.resolve.restore()
+  // window.open.restore();
+  global.fetch.restore()
 })

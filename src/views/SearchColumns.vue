@@ -102,7 +102,6 @@ export default {
 
   methods: {
     expandDetails () {
-      console.log('expanding details')
       if (this.collapseDetailsShow) {
         $('.model-details .collapse').collapse('show')
       } else {
@@ -119,7 +118,6 @@ export default {
       this.collapseSearchShow = !this.collapseSearchShow
     },
     expandScenarios () {
-      console.log('expanding scnearios', this.collapseScenariosShow)
       if (this.collapseScenariosShow) {
         $('.search-list .collapse').collapse('show')
       } else {
@@ -134,13 +132,13 @@ export default {
       $(".search-details input[type='text'], .search-details input[type=date]").val('')
 
       // Todo, reset sliders to min/max
-      var sliders = $('.ion-range')
+      const sliders = $('.ion-range')
 
       // Deselect all bootstrap select pickers
       $('.search-details .select-picker').selectpicker('deselectAll')
 
       $.each(sliders, (key, slider) => {
-        var irs = $(slider).data('ionRangeSlider')
+        const irs = $(slider).data('ionRangeSlider')
 
         // Reset /from & to to min/max.
         irs.update({

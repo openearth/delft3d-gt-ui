@@ -586,7 +586,7 @@ export default {
     activeModel: {
       cached: false,
       get () {
-        var model = this.sharedState.activeModelContainer
+        const model = this.sharedState.activeModelContainer
         return model
       }
     },
@@ -601,7 +601,7 @@ export default {
     dateCreatedText: {
       cached: false,
       get () {
-        var d = new Date(_.get(this.activeModel, 'data.date_created', ''))
+        const d = new Date(_.get(this.activeModel, 'data.date_created', ''))
 
         if (isNaN(d.getTime())) {
           // something went wront here
@@ -620,7 +620,7 @@ export default {
     getEntrypoints: {
       cache: false,
       get () {
-        var entrypoints = _.get(this.activeModel, 'data.entrypoints', '')
+        const entrypoints = _.get(this.activeModel, 'data.entrypoints', '')
         if (entrypoints != null) {
           if (entrypoints.length > 0) {
             return entrypoints
@@ -662,7 +662,7 @@ export default {
     shareLevelText: {
       cache: false,
       get () {
-        var niceStrings = {
+        const niceStrings = {
           '': '-',
           p: 'private',
           c: 'company',
@@ -713,7 +713,7 @@ export default {
     orderByKey (obj) {
       // Function to order a object alphabetically
       if (typeof obj === 'object') {
-        var ordered = {}
+        const ordered = {}
         const objKeys = Object.keys(obj)
         const sortedKeys = objKeys.sort()
         sortedKeys.forEach(key => {
@@ -728,7 +728,7 @@ export default {
     },
     getActiveModelPPData () {
       // TODO: This needs to come from the backend/database not hardcoded in FE
-      let rv = {
+      const rv = {
         DeltaTopD50: {
           name: 'D50 for Delta Top',
           unit: 'mm',
@@ -775,7 +775,7 @@ export default {
           value: undefined
         }
       }
-      let ppJson = _.get(
+      const ppJson = _.get(
         this.activeModel,
         'data.info.postprocess_output.files.output'
       )
@@ -794,10 +794,10 @@ export default {
         return
       }
 
-      var id = this.activeModel.id
-      var downloadOptions = []
+      const id = this.activeModel.id
+      const downloadOptions = []
 
-      for (var option in this.selectedDownloads) {
+      for (const option in this.selectedDownloads) {
         if (this.selectedDownloads[option] === true) {
           downloadOptions.push(`options=${option}`)
         }
@@ -833,8 +833,7 @@ export default {
       )
     },
     confirm () {
-      const updateModel = store.dispatch(`${this.updateModelBy.name}Model`, this.updateModelBy)
-      console.log(updateModel)
+      store.dispatch(`${this.updateModelBy.name}Model`, this.updateModelBy)
       this.updateModelBy = {}
     },
     startModel () {

@@ -20,7 +20,7 @@ describe('ImageAnimation.vue', () => {
 
 describe('ImageAnimation', () => {
   it('Does ImageAnimation have the initial values', done => {
-    var defaultData = {
+    const defaultData = {
       currentAnimationIndex: 0,
       timerAnimation: -1,
       currentAnimationKey: 'delta_fringe_images',
@@ -159,7 +159,7 @@ describe('ImageAnimation', () => {
     imageAnimation.vm.currentAnimationKey = 'delta_fringe_images'
 
     // Loop some times, we should end at the last image anyway.
-    for (var i = 0; i < 10; i++) {
+    for (let i = 0; i < 10; i++) {
       imageAnimation.vm.nextImageFrame()
     }
 
@@ -223,7 +223,7 @@ describe('ImageAnimation', () => {
     const imageAnimation = shallowMount(ImageAnimation)
 
     imageAnimation.vm.stopImageFrame()
-    var isAnimating = imageAnimation.vm.isAnimating
+    const isAnimating = imageAnimation.vm.isAnimating
 
     assert.isFalse(isAnimating, 'Animation is indeed not playing')
     done()
@@ -275,7 +275,7 @@ describe('ImageAnimation', () => {
     imageAnimation.vm.model.fileurl = 'fileurl/'
     imageAnimation.vm.currentAnimationKey = 'delta_fringe_images'
 
-    var imgurl = imageAnimation.vm.animationFrame
+    const imgurl = imageAnimation.vm.animationFrame
     assert.equal(
       'fileurl/location/firstframe.jpg',
       imgurl,
@@ -299,7 +299,7 @@ describe('ImageAnimation', () => {
     imageAnimation.vm.model.fileurl = 'fileurl/'
     imageAnimation.vm.currentAnimationKey = ''
 
-    var imgurl = imageAnimation.vm.animationFrame
+    const imgurl = imageAnimation.vm.animationFrame
 
     assert.isTrue(imgurl === '', 'Animation frame file matches expectation')
 

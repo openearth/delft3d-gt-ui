@@ -23,7 +23,7 @@
       </div>
       <div class="col-md-2 col-lg-1 my-auto">
         <form class="form-inline m-auto">
-          <input type="checkbox" v-model="model.selected">
+          <input type="checkbox" value="model.selected" @input="setModelProp('selected', $event)">
         </form>
       </div>
     </div>
@@ -38,10 +38,10 @@
 import {
   bus
 } from '@/event-bus.js'
+import _ from 'lodash'
 
 export default {
   template: '#template-model-card',
-
   props: {
     model: {
       required: true
@@ -50,32 +50,40 @@ export default {
       type: Boolean
     }
   },
-  methods: {
-    toggleActive () {
-      this.model.active = true
-      bus.$emit('activated', this.model)
-    }
-  },
 
   watch: {
     selectAll (val) {
-      this.model.selected = val
+      this.setModelProp('selected', val)
     }
   },
-
   mounted () {
     bus.$on('deactivate', (clickedmodel) => {
       if (this.model !== clickedmodel) {
-        this.model.active = false
+        this.toggleActive(false)
       }
     })
-  }
+  },
 
+  methods: {
+    toggleActive (value = true) {
+      let model = this.model
+      model = _.set(model, 'active', value)
+      bus.$emit('activated', model)
+    },
+    setModelProp (prop, value) {
+      let model = this.model
+      model = _.set(model, prop, value)
+      bus.$emit('update: model', model)
+    }
+  }
 }
 </script>
 
 <style lang="scss">
 @import '../assets/variables.scss';
+ul.list-group {
+  padding: 0;
+}
 
 .model-card {
     cursor: pointer;

@@ -21,16 +21,16 @@ describe('ConfirmDialog.vue', () => {
 
 describe('ConfirmDialog', () => {
   it("Does confirmdialog have right 'props'", (done) => {
-    var defaultProps = {
-      'dialogId': {
+    const defaultProps = {
+      dialogId: {
         type: String,
         required: true
       },
-      'confirmButtonTitle': {
+      confirmButtonTitle: {
         type: String,
         required: true
       },
-      'modal': {
+      modal: {
         type: Boolean
       }
     }

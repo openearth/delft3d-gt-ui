@@ -100,7 +100,7 @@ export default {
     someModelsSelected: {
       cache: false,
       get () {
-        var someSelected = _.some(this.scenario.models, ['selected', true])
+        const someSelected = _.some(this.scenario.models, ['selected', true])
 
         return someSelected
       }
@@ -119,7 +119,7 @@ export default {
       }
     },
     modelStatuses () {
-      var array = _.map(this.scenario.models, (model) => {
+      let array = _.map(this.scenario.models, (model) => {
         return {
           state: model.data.state
         }
@@ -173,7 +173,7 @@ export default {
       e.stopPropagation()
 
       // Clone this scenario
-      var parameters = _.assign(
+      const parameters = _.assign(
         // create a new object (no data binding)
         {},
         // fill it with the parameters
@@ -183,13 +183,13 @@ export default {
 
       // These parameters are passed to the other view
       // alternative would be to store them in the app or to call an event
-      var req = {
+      const req = {
         name: 'scenarios-create',
         params: {},
         query: {
-          'template': this.scenario.data.template,
-          'parameters': JSON.stringify(parameters),
-          'name': _.get(this.scenario.data, 'name')
+          template: this.scenario.data.template,
+          parameters: JSON.stringify(parameters),
+          name: _.get(this.scenario.data, 'name')
         }
       }
       router.push(req)
