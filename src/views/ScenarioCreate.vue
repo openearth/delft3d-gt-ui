@@ -213,8 +213,9 @@
               <div class="card-body text-center">
                 <!-- <map-component v-show="template.name==='GTSM world template'">
                 </map-component> -->
+                <img v-if="template.name==='River dominated delta (deprecated)'" src="../assets/images/River_dominated_delta.jpg" class="scenariobuilder-schematic" />
                 <img v-if="template.name==='River dominated delta'" src="../assets/images/River_dominated_delta.jpg" class="scenariobuilder-schematic" />
-                <img v-if="template.name==='Gule Horn/Neslen'" src="../assets/images/GuleHorn_Neslen.jpg" class="scenariobuilder-schematic" />
+                <img v-if="template.name==='GuleHorn/Neslen'" src="../assets/images/GuleHorn_Neslen.jpg" class="scenariobuilder-schematic" />
                 <img v-if="template.name==='Roda'" src="../assets/images/Roda.jpg" class="scenariobuilder-schematic" />
                 <img v-if="template.name==='Sobrarbe'" src="../assets/images/Sobrarbe.jpg" class="scenariobuilder-schematic" />
               </div>
