@@ -347,7 +347,7 @@
         </div>
         <div class="collapse" id="generated-images-collapse">
           <div class="card-body">
-            <image-animation :model="activeModel.data"></image-animation>
+            <image-animation :model="activeModel.data" :images="generatedImagesInfo"></image-animation>
           </div>
         </div>
       </div>
@@ -580,6 +580,7 @@ export default {
     })
   },
   computed: {
+    ...mapState(['generatedImagesInfo']),
     ...mapState({
       sharedState: state => state
     }),
@@ -802,7 +803,6 @@ export default {
           downloadOptions.push(`options=${option}`)
         }
       }
-
       const url = `api/v1/scenes/${id}/export/?format=json&${downloadOptions.join('&')}`
       fetch(url)
         .then((resp) => {

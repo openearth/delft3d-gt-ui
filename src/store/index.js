@@ -13,6 +13,7 @@ export default new Vuex.Store({
     models: [],
     params: [],
     reqModel: undefined,
+    generatedImagesInfo: null,
     reqModelDetails: undefined,
     reqScenario: undefined,
     reqUser: undefined,
@@ -31,6 +32,21 @@ export default new Vuex.Store({
     validbbox: false
   },
   mutations: {
+    SET_GENERATED_IMAGES_INFO (state, info) {
+      // TODO: read them in a correct way
+      const filteredGenInfo = Object.entries(info).filter(([key, value]) => key.includes('images'))
+      const filteredObjInfo = Object.fromEntries(filteredGenInfo)
+
+      state.generatedImagesInfo = Object.entries(filteredObjInfo).map(([key, value]) => ({
+        key,
+        files: value.files,
+        text: value.text,
+        extensions: value.extensions,
+        name: value.name,
+        filetype: value.filetype,
+        location: value.location
+      }))
+    }
   },
   actions: {
 
@@ -90,6 +106,10 @@ export default new Vuex.Store({
             const modelDetails = jsons[2] // Dictionary of Model Details
             return (m.id === modelDetails.id) ? modelDetails : m
           })
+
+          if (_.get(jsons[2], 'info')) {
+            this.commit('SET_GENERATED_IMAGES_INFO', _.get(jsons[2], 'info'))
+          }
 
           this.dispatch('updateContainers')
           this.state.updating = false

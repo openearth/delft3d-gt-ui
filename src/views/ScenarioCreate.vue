@@ -50,26 +50,20 @@
                             </select>
                           </div>
                         </div>
-                        <div class="form-group">
-                          <label class="control-label pr-1" for="run-env-2">
-                            Delft3D Version
-                          </label>
-                          <span class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="Specifies the Delft3D version used for simulation."></span>
-                          <div class="input-group">
-                            <select class="form-control" id="run-env-2">
-                              <option selected>Deltares, Delft3D Flexible Mesh Version 1.2.0.61839</option>
-                              <option disabled>Deltares, Delft3D Flexible Mesh Suite (disabled: this feature will be added in future versions)</option>
-                            </select>
-                          </div>
-                        </div>
                       </template>
                       <!-- =====  DUMMY FEATURES END  ===== -->
                       <div class="form-group" v-for="(variable, index) in section.variables" :key="index">
                         <label class="control-label pr-1" :for="variable.id">
                           {{ variable.name }}
                         </label>
-                        <span v-if="variable.validators.min !== undefined">
+                        <span v-if="variable.validators.min !== undefined && variable.validators?.showInName">
                           [{{ variable.validators.min }} - {{ variable.validators.max }}]
+                        </span>
+                        <div>
+
+                        </div>
+                        <span v-if="variable.validators?.allowedValues">
+                          [{{ variable.validators.allowedValues.join(" or ") }}]
                         </span>
                         <span v-if="variable.description" class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" :title="variable.description"></span>
 
@@ -138,15 +132,9 @@
                         </ValidationProvider>
                         <!-- ===== DUMMY FEATURES START ===== -->
                         <div class="form-file-upload pt-2" v-if="variable.name === 'Tidal amplitude'">
-                          <p class="help-block">
-                            Import tidal components
-                            <span class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="Uploading of tidal components is disabled. This feature will be added in future versions.">
-                            </span>:
-                            <input type="file" id="tidalInputFile" class="" disabled></p>
                         </div>
                         <div class="form-file-upload pt-2" v-if="variable.name === 'River discharge'">
-                          <p class="help-block">Import time series <span class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="Uploading of time series is disabled. This feature will be added in future versions."></span>:
-                            <input type="file" id="timeseriesInputFile" class="" disabled></p>
+                            <input type="file" id="timeseriesInputFile" class="" disabled>
                         </div>
                         <div class="form-file-upload pt-2" v-if="variable.name === 'Sediment classes'">
                           <p class="help-block">Import spacially varying field <span class="fa fa-info-circle" data-toggle="tooltip" data-placement="right" title="Uploading of a spacially varying field is disabled. This feature will be added in future versions."></span>:
@@ -186,7 +174,7 @@
                 <div class="card">
                   <div class="card-body">
                     <div class="form-group">
-                      Number of runs: <strong>{{totalRuns}}</strong>
+                      Number of currently running simulations: <strong>{{totalRuns}}</strong>
                       <small class="form-text">
                         You must have at least one run, but you cannot submit more than {{maxRuns}} runs in one scenario.
                       </small>
@@ -214,7 +202,7 @@
                 <dl class="dl-horizontal">
                   <div v-for="(key, val) in template.meta" :key="val">
                     <dt>{{ key }}</dt>
-                    <dd>{{ val }}</dd>
+                   <!--  <dd>{{ val }}</dd> -->
                   </div>
                 </dl>
               </div>
@@ -225,7 +213,10 @@
               <div class="card-body text-center">
                 <!-- <map-component v-show="template.name==='GTSM world template'">
                 </map-component> -->
-                <img v-if="template.name==='River dominated delta'" src="../assets/images/schematic.svg" class="scenariobuilder-schematic" />
+                <img v-if="template.name==='River dominated delta'" src="../assets/images/River_dominated_delta.jpg" class="scenariobuilder-schematic" />
+                <img v-if="template.name==='Gule Horn/Neslen'" src="../assets/images/GuleHorn_Neslen.jpg" class="scenariobuilder-schematic" />
+                <img v-if="template.name==='Roda'" src="../assets/images/Roda.jpg" class="scenariobuilder-schematic" />
+                <img v-if="template.name==='Sobrarbe'" src="../assets/images/Sobrarbe.jpg" class="scenariobuilder-schematic" />
               </div>
             </div>
           </div>
@@ -295,6 +286,14 @@ extend('max', {
   },
   params: ['max_value'],
   message: 'Entered value is too high.'
+})
+extend('allowedValues', {
+  validate (value, { values }) {
+    const valuesNumbers = values.map(v => parseFloat(v))
+    return valuesNumbers.includes(parseFloat(value))
+  },
+  params: ['values'],
+  message: 'The field must be one of {values}.'
 })
 // a separate function that we can test.
 const factorToArray = (variable) => {
@@ -464,6 +463,7 @@ export default {
       this.fetchTemplates()
         .then((templates) => {
           this.availableTemplates = _.sortBy(templates, ['name'])
+          this.$forceUpdate()
           // Select the first template automatic:
           let template = _.get(this.availableTemplates, 0)
           // if we have a template in the request, select that one
@@ -575,6 +575,7 @@ export default {
       }
     },
     submitScenario () {
+      console.log('submitScenario')
       if (this.noErrors()) {
         return
       }
@@ -612,6 +613,7 @@ export default {
         template: this.currentSelectedId,
         parameters: JSON.stringify(parameters)
       }
+      console.log('postData', postdata)
       store.dispatch('createScenario', postdata)
         .then(() => {
           // This is not practical, but the only way in vue? (using $parent)
