@@ -56,7 +56,8 @@
                         <label class="control-label pr-1" :for="variable.id">
                           {{ variable.name }}
                         </label>
-                        <span v-if="variable.validators.min !== undefined && variable.validators?.showInName">
+                        <!-- showInName when we want to pick up the validator and show it in the name -->
+                        <span v-if="variable.validators.min !== undefined && (variable.showValidatorInName ?? false)">
                           [{{ variable.validators.min }} - {{ variable.validators.max }}]
                         </span>
                         <div>
@@ -576,7 +577,6 @@ export default {
       }
     },
     submitScenario () {
-      console.log('submitScenario')
       if (this.noErrors()) {
         return
       }
@@ -614,7 +614,6 @@ export default {
         template: this.currentSelectedId,
         parameters: JSON.stringify(parameters)
       }
-      console.log('postData', postdata)
       store.dispatch('createScenario', postdata)
         .then(() => {
           // This is not practical, but the only way in vue? (using $parent)

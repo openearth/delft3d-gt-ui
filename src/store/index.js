@@ -167,7 +167,6 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         this.state.reqScenario = $.ajax({ url: '/api/v1/scenarios/', data: this.state.params, traditional: true, dataType: 'json' })
           .done(function (json) {
-            console.log('Succes fetchScenarios')
             resolve(json)
           })
           .fail(function (jqXhr) {

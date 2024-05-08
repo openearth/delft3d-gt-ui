@@ -39,6 +39,7 @@ import {
   bus
 } from '@/event-bus.js'
 import _ from 'lodash'
+import { mapState } from 'vuex'
 
 export default {
   template: '#template-model-card',
@@ -56,10 +57,19 @@ export default {
       this.setModelProp('selected', val)
     }
   },
+  computed: {
+    ...mapState({
+      sharedState: state => state
+    })
+  },
+
   mounted () {
     bus.$on('deactivate', (clickedmodel) => {
       if (this.model !== clickedmodel) {
-        this.toggleActive(false)
+        let model = this.model
+        model = _.set(model, 'active', false)
+        this.sharedState.activeModelContainer = model
+        // this.toggleActive(false) It was creating the recursive error.
       }
     })
   },

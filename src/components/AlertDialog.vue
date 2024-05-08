@@ -30,7 +30,6 @@ export default {
   watch: {
     alertMessage () {
       this.showAlert()
-      console.log('watching alertmessage')
     }
   },
   mounted () {
