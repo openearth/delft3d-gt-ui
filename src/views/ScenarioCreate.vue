@@ -26,7 +26,7 @@
 
           <!-- if user selected something, show GUI -->
           <!-- There is also an option for an async components if one needs to load data at component instantiation. TODO: convert component. -->
-          <div v-show="template && dataLoaded">
+          <div v-if="template && dataLoaded">
             <div>
               <form>
                 <div v-for="(section, index) in scenarioConfig.sections" :key="index">
@@ -73,7 +73,7 @@
                         </span>
 
                           <ValidationProvider ref="validator" :rules="`noEmptyArray|${validatorsToString(variable.validators)}`" :name="variable.value.toString()" v-slot="{ errors }" immediate>
-                            <div class="input-group">
+                            <div class="input-group"  :key="`${template.name}`">
 
                         <!-- tagsinput -->
                             <input
@@ -88,6 +88,7 @@
                                 :class="{'is-invalid': errors.length > 0}"
                                 :name="variable.name"
                                 :aria-describedby="`${variable.id}-help`"
+
                                 />
                               <!-- numeric, text, semver or factor are inputs-->
                               <input v-if="isInput(variable) && !variable.factor"
@@ -334,6 +335,7 @@ export default {
       forceTemplateUpdate: false,
       maxRuns: 20,
       alertEvent: null
+
     }
   },
   components: {
@@ -359,6 +361,7 @@ export default {
     const validator = this.$refs.validator || []
     validator.forEach(val => val.validate())
   },
+
   computed: {
     totalRuns: {
       cache: false,
@@ -421,7 +424,9 @@ export default {
       }
     }
   },
+
   methods: {
+
     noErrors () {
       if (this.$refs.validator) {
         const allVars = this.$refs.validator.map(val => {
@@ -488,16 +493,20 @@ export default {
       if (template === null || template === undefined) {
         return
       }
+
       //  Did the template change? Or maybe forcing an update
       if (this.currentSelectedId === template.id) {
         return
       }
+
       this.currentSelectedId = template.id
+
       // First set data, then the template. Order is important!
       this.scenarioConfig = this.prepareScenarioConfig(template)
       this.updateWithQueryParameters()
       // set the selected template
       this.template = template
+
       // Initialize the tooltips: We do this after the DOM update.
       this.$nextTick(() => {
         this.updateAfterTick()
@@ -656,6 +665,7 @@ export default {
           }
           // Initialise fraction so that vue can use it
           variable.inputValue = variable.value
+          console.log('variable.inputValue', variable.inputValue)
         })
       })
       return scenario
